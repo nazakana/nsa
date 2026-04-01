@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NSA - Nurjaya Smart Archive</title>
+    <link rel="icon" href="https://lh3.googleusercontent.com/d/1oFsDUom_DXlLgHjsC7kWDRqWeL46xpsU">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-base: #F8F9F5;
+            --mint-pastel: #A7D7C5;
+            --mint-deep: #8FBFA8;
+            --yellow-pastel: #F9E5AF;
+            --whatsapp-green: #25D366;
+            --ios-glass: rgba(255, 255, 255, 0.85);
+            --ios-border: rgba(255, 255, 255, 0.4);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-base);
+            color: #2D3436;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        .glass-element {
+            background: var(--ios-glass);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--ios-border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.03);
+        }
+
+        .sidebar {
+            background: rgba(167, 215, 197, 0.15);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-right: 1px solid rgba(167, 215, 197, 0.2);
+            z-index: 50;
+        }
+
+        .header-banner {
+            width: 100%;
+            height: 380px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, var(--bg-base) 100%),
+                        url('https://lh3.googleusercontent.com/d/1jOnARlmFMuKn3dxJDQh1YSJN-u52dTCT') center/cover;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 3rem 4.5rem;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--mint-pastel) 0%, var(--mint-deep) 100%);
+            color: white !important;
+            box-shadow: 0 8px 20px rgba(143, 191, 168, 0.3);
+            transform: scale(1.02);
+        }
+
+        .nav-link {
+            border-radius: 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 8px;
+            color: #576574;
+            font-weight: 600;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .viewer-container {
+            width: 100%;
+            height: calc(100vh - 280px);
+            border-radius: 25px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+            border: 2px solid white;
+        }
+
+        iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none;
+        }
+
+        /* Tombol Opsi Aktif (Darker Mint) */
+        .month-btn.active, .sub-tab-btn.active {
+            background-color: var(--mint-deep) !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(143, 191, 168, 0.4);
+        }
+
+        /* MOBILE STABILIZER */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                bottom: 0; 
+                left: 0;
+                right: 0;
+                height: auto; 
+                display: grid !important;
+                grid-template-columns: repeat(5, 1fr);
+                background: #FFFFFF !important;
+                border-top: 1px solid #EEEEEE;
+                border-right: none;
+                border-radius: 0;
+                padding-top: 10px;
+                padding-bottom: env(safe-area-inset-bottom, 25px); 
+                box-shadow: 0 -5px 25px rgba(0,0,0,0.12);
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                z-index: 100;
+            }
+            
+            .sidebar-logo, .sidebar-footer { display: none; }
+            
+            .nav-link { 
+                margin-bottom: 0; 
+                flex-direction: column; 
+                font-size: 11px; 
+                padding: 5px 0;
+                min-width: 0;
+                border-radius: 0;
+                background: transparent !important;
+                box-shadow: none !important;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+            }
+            
+            .nav-link.active { 
+                color: var(--mint-deep) !important; 
+                transform: none; 
+            }
+            
+            .nav-link i { 
+                font-size: 20px; 
+                margin-bottom: 0; 
+            }
+            
+            .main-content { padding-bottom: 120px; } 
+            
+            .header-banner { height: 260px; padding: 0 1.5rem 3.5rem; }
+            
+            #page-title { font-size: 1.6rem !important; line-height: 1.2; }
+            #page-subtitle { font-size: 0.85rem !important; margin-top: 0.4rem !important; }
+
+            .viewer-container { height: 65vh; border-radius: 20px; }
+            .tab-content { padding: 1.25rem !important; }
+
+            #owner-name { font-size: 1.5rem !important; line-height: 1.3; }
+        }
+
+        #photo-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            cursor: zoom-out;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card-accent {
+            border-left: 8px solid var(--mint-pastel);
+            background: linear-gradient(90deg, rgba(167, 215, 197, 0.08) 0%, rgba(255, 255, 255, 0.9) 100%);
+        }
+
+        .btn-yellow { background-color: var(--yellow-pastel); color: #7B6221; }
+        .btn-whatsapp { background-color: var(--whatsapp-green); color: white !important; }
+
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row">
+
+    <!-- MODAL PHOTO PREVIEW -->
+    <div id="photo-modal" onclick="this.style.display='none'">
+        <img id="modal-img" src="" class="max-w-full max-h-[80%] rounded-[30px] shadow-2xl object-contain">
+    </div>
+
+    <!-- SIDEBAR / BOTTOM NAV -->
+    <aside class="sidebar w-full md:w-80 flex md:flex-col p-4 md:p-8">
+        <div class="sidebar-logo mb-14 px-2 hidden md:block">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-2 rounded-2xl shadow-sm">
+                    <img src="https://lh3.googleusercontent.com/d/1oFsDUom_DXlLgHjsC7kWDRqWeL46xpsU" alt="Logo" class="w-10 h-10 object-contain">
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold text-[#3B4D45] tracking-tighter">NSA</h1>
+                    <p class="text-[10px] text-gray-400 font-bold tracking-[0.2em] uppercase">Digital Archive</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex flex-row md:flex-col flex-1 items-center md:items-start contents md:block">
+            <button onclick="showTab('dashboard')" id="btn-dashboard" class="nav-link active flex items-center px-6 py-4 w-full">
+                <i class="fa-solid fa-house-user md:w-8 text-xl"></i>
+                <span>Beranda</span>
+            </button>
+            <button onclick="showTab('archive')" id="btn-archive" class="nav-link flex items-center px-6 py-4 w-full">
+                <i class="fa-solid fa-folder-open md:w-8 text-xl"></i>
+                <span>Arsip</span>
+            </button>
+            <button onclick="showTab('presensi')" id="btn-presensi" class="nav-link flex items-center px-6 py-4 w-full">
+                <i class="fa-solid fa-id-badge md:w-8 text-xl"></i>
+                <span>Presensi</span>
+            </button>
+            <button onclick="showTab('calendar')" id="btn-calendar" class="nav-link flex items-center px-6 py-4 w-full">
+                <i class="fa-solid fa-clock md:w-8 text-xl"></i>
+                <span>Jadwal</span>
+            </button>
+            <button onclick="showTab('about')" id="btn-about" class="nav-link flex items-center px-6 py-4 w-full">
+                <i class="fa-solid fa-info-circle md:w-8 text-xl"></i>
+                <span>Profil</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer mt-auto hidden md:block">
+            <div class="glass-element p-5 rounded-[25px]">
+                <p class="text-[9px] text-gray-400 font-bold mb-3 uppercase tracking-widest text-center">Bantuan</p>
+                <a href="https://wa.me/6285211029598" target="_blank" class="flex items-center justify-center btn-whatsapp py-3 rounded-2xl text-[10px] font-black uppercase">
+                    <i class="fa-brands fa-whatsapp mr-2 text-base"></i> WA Admin
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- HEADER -->
+        <div class="header-banner">
+            <div class="flex flex-col md:flex-row md:items-end justify-between w-full">
+                <div class="fade-in">
+                    <h2 class="text-white/80 text-[10px] md:text-sm font-bold tracking-widest uppercase mb-1 md:mb-2">Dashboard System</h2>
+                    <h1 id="page-title" class="text-white text-2xl md:text-5xl font-black leading-tight drop-shadow-md">NSA (Nurjaya Smart Archive)</h1>
+                    <p id="page-subtitle" class="text-white/70 font-bold mt-2 text-sm md:text-xl">Arsip Operasional Nurjaya Abadi</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD CONTENT -->
+        <div id="tab-dashboard" class="tab-content p-6 md:p-14 fade-in">
+            <div class="max-w-5xl">
+                <div class="flex items-center gap-3 mb-6 md:mb-10">
+                    <div class="w-1.5 h-8 bg-yellow-400 rounded-full"></div>
+                    <h3 class="text-xl md:text-3xl font-extrabold text-[#3B4D45] uppercase tracking-tighter">Pemberitahuan:</h3>
+                </div>
+
+                <div class="glass-element card-accent p-6 md:p-12 mb-10 relative overflow-hidden group rounded-[30px]">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-4 py-1 btn-yellow rounded-full text-[9px] font-black uppercase tracking-wider">Final Report</span>
+                        <span class="text-gray-400 text-[10px] font-bold">31 Maret 2026</span>
+                    </div>
+                    <h4 class="text-xl md:text-4xl font-black text-gray-900 mb-4">MARET 2026 - Status Selesai</h4>
+                    <p class="text-gray-600 text-sm md:text-xl leading-relaxed font-medium">
+                        Seluruh laporan periode Maret 2026 telah <strong>Rampung</strong> secara akurat. Silakan cek di tab Arsip untuk melihat detailnya.
+                    </p>
+                </div>
+
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-lg md:text-2xl font-black text-[#3B4D45] uppercase tracking-tighter">GALERI NURJAYA</h3>
+                    <div class="h-[1px] flex-1 mx-4 bg-gray-200"></div>
+                </div>
+                
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                    <div class="group relative overflow-hidden rounded-[25px] cursor-zoom-in shadow-md bg-white p-2" onclick="openPreview('https://lh3.googleusercontent.com/d/1Qn3WeV8BPBedAjBCxUEMNZ2oEikCjIP3')">
+                        <img src="https://lh3.googleusercontent.com/d/1Qn3WeV8BPBedAjBCxUEMNZ2oEikCjIP3" class="w-full aspect-[4/5] object-cover rounded-[18px]">
+                    </div>
+                    <div class="group relative overflow-hidden rounded-[25px] cursor-zoom-in shadow-md bg-white p-2" onclick="openPreview('https://lh3.googleusercontent.com/d/1rOD24g_IAwaSIYJpREYs-9a864quiYzM')">
+                        <img src="https://lh3.googleusercontent.com/d/1rOD24g_IAwaSIYJpREYs-9a864quiYzM" class="w-full aspect-[4/5] object-cover rounded-[18px]">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ARCHIVE CONTENT -->
+        <div id="tab-archive" class="tab-content p-6 md:p-14 hidden fade-in">
+            <div class="flex flex-wrap gap-3 md:gap-5 mb-8 md:mb-12">
+                <button onclick="loadDrive('1Bd1Dh_RkNXEtCHXI9D6nqQvYwplwIocC', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+                    <i class="fa-solid fa-file-pdf text-green-500"></i>
+                    <span>Januari 2026</span>
+                </button>
+                <button onclick="loadDrive('1T1Wi-kNxj28kALm25LMVZHqW6Qy8Gu0h', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+                    <i class="fa-solid fa-file-pdf text-green-500"></i>
+                    <span>Februari 2026</span>
+                </button>
+                <button onclick="loadDrive('1AJZondElG07YmLE45huqgOH99LL015ce', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+                    <i class="fa-solid fa-file-pdf text-green-500"></i>
+                    <span>Maret 2026</span>
+                </button>
+            </div>
+            
+            <div id="viewer-container-archive" class="viewer-container">
+                <div class="flex flex-col items-center justify-center h-full text-gray-300 p-10 text-center">
+                    <i class="fa-solid fa-layer-group text-6xl opacity-10 mb-6"></i>
+                    <p class="font-black text-lg md:text-2xl text-gray-400">Pilih Laporan</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRESENSI CONTENT (WITH SUB-TABS) -->
+        <div id="tab-presensi" class="tab-content p-6 md:p-14 hidden fade-in">
+            <div class="flex flex-wrap gap-3 md:gap-5 mb-8 md:mb-12">
+                <button onclick="loadDriveSub('1s9GTi4B8dpnT2HNx0f2gE512dFV-8YX0', this, 'viewer-container-presensi')" class="sub-tab-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+                    <i class="fa-solid fa-user text-blue-500"></i>
+                    <span>M. Cahya Ardiansyah</span>
+                </button>
+                <button onclick="loadDriveSub('1rW-zWYt-BoKlKcM49lgszU9dAeK_nwlU', this, 'viewer-container-presensi')" class="sub-tab-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+                    <i class="fa-solid fa-user text-orange-500"></i>
+                    <span>Dadan Nurafaizal</span>
+                </button>
+            </div>
+            
+            <div id="viewer-container-presensi" class="viewer-container">
+                <div class="flex flex-col items-center justify-center h-full text-gray-300 p-10 text-center">
+                    <i class="fa-solid fa-id-card-clip text-6xl opacity-10 mb-6"></i>
+                    <p class="font-black text-lg md:text-2xl text-gray-400">Pilih Nama Karyawan</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALENDAR CONTENT -->
+        <div id="tab-calendar" class="tab-content p-6 md:p-14 hidden fade-in">
+             <div class="viewer-container">
+                <iframe src="https://drive.google.com/file/d/1ESUq7-Zgxr2WufIA3zuPiSyMPpaXzXi3/preview" allow="autoplay" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <!-- ABOUT CONTENT -->
+        <div id="tab-about" class="tab-content p-6 md:p-14 hidden fade-in">
+            <div class="glass-element rounded-[35px] md:rounded-[50px] overflow-hidden bg-white shadow-sm">
+                <div class="p-8 md:p-16">
+                    <div class="flex flex-col lg:flex-row gap-10 md:gap-16 items-center">
+                        <img src="https://lh3.googleusercontent.com/d/1ba0QrHW9IQ84MzzbFvZZAUObT4WMHOXl" class="w-40 h-40 md:w-64 md:h-64 object-cover rounded-full shadow-xl border-[8px] border-white">
+                        <div class="text-center lg:text-left">
+                            <h3 id="owner-name" class="text-2xl md:text-5xl font-black text-gray-800 leading-tight">apt. Siti Nurjanah, S.Farm.</h3>
+                            <p class="text-mint-deep font-black text-sm md:text-xl mt-2 md:mt-4 uppercase tracking-wider">Owner Nurjaya Group</p>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 md:mt-12">
+                                <a href="https://wa.me/6282126162025" target="_blank" onclick="playClickSound()" class="px-6 py-4 btn-whatsapp rounded-2xl flex items-center justify-center gap-3">
+                                    <i class="fa-brands fa-whatsapp text-xl"></i> 
+                                    <span class="font-bold text-sm md:text-base">Chat Owner</span>
+                                </a>
+                                <a href="https://wa.me/6285211029598" target="_blank" onclick="playClickSound()" class="px-6 py-4 btn-whatsapp rounded-2xl flex items-center justify-center gap-3">
+                                    <i class="fa-brands fa-whatsapp text-xl"></i> 
+                                    <span class="font-bold text-sm md:text-base">Chat Admin</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <h4 class="text-xl font-black flex items-center gap-3 text-[#3B4D45] uppercase tracking-tighter">
+                                <span class="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center"><i class="fa-solid fa-briefcase text-yellow-600 text-xs"></i></span> 
+                                Informasi Toko
+                            </h4>
+                            <div class="text-gray-500 text-sm md:text-base leading-relaxed font-medium space-y-4 text-justify">
+                                <p><strong>Nurjaya Abadi Photocopy</strong> adalah unit usaha yang bergerak di bidang jasa dokumentasi, alat tulis kantor, dan percetakan.</p>
+                                <p>Toko ini merupakan bagian dari <strong>NURJAYA GROUP</strong> milik <strong>apt. Siti Nurjanah, S.Farm.</strong>, yang juga memiliki unit usaha lain yaitu <strong>APOTEK NURJAYA (Farmasi)</strong>.</p>
+                                <p>Sistem NSA ini didesain khusus untuk mengelola seluruh data operasional dan arsip digital agar lebih terorganisir.</p>
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <h4 class="text-xl font-black flex items-center gap-3 text-[#3B4D45] uppercase tracking-tighter">
+                                <span class="w-8 h-8 rounded-lg bg-mint-pastel/20 flex items-center justify-center"><i class="fa-solid fa-map-location-dot text-mint-deep text-xs"></i></span> 
+                                Layanan & Lokasi
+                            </h4>
+                            <div class="text-gray-500 text-sm md:text-base leading-relaxed font-medium">
+                                <ul class="list-disc list-inside space-y-1 mb-4 ml-1">
+                                    <li>Fotokopi & Scan Dokumen</li>
+                                    <li>Alat Tulis Kantor (ATK)</li>
+                                    <li>Penjilidan & Laminating</li>
+                                    <li>Cetak Foto & Dokumen Digital</li>
+                                </ul>
+                                <div class="p-5 bg-gray-50 rounded-2xl border border-gray-100">
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Alamat:</p>
+                                    <p class="text-gray-800 font-bold text-sm">Jl. Bantar No. 145, Kota Tasikmalaya, Jawa Barat.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Soft Click SFX Base64
+        const clickSfx = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU1vT19fV0FWRWZtdCAQAAAAAQABAFAfAABQHwAAAQAgAGRhdGE=");
+        
+        function playClickSound() {
+            clickSfx.currentTime = 0;
+            clickSfx.volume = 0.4;
+            clickSfx.play().catch(e => console.log("Audio play deferred"));
+        }
+
+        function showTab(tabId) {
+            playClickSound();
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+
+            const pageData = {
+                'dashboard': ['NSA (Nurjaya Smart Archive)', 'Arsip Operasional Nurjaya Abadi'],
+                'archive': ['Arsip Digital Laporan', 'Pusat Dokumentasi Keuangan'],
+                'presensi': ['Presensi Kehadiran', 'Monitor Staf Nurjaya Abadi'],
+                'calendar': ['Jadwal & Shift Kerja', 'Pengaturan Operasional Toko'],
+                'about': ['Tentang Nurjaya Group', 'Informasi Kepemilikan & Manajemen']
+            };
+
+            document.getElementById('page-title').innerText = pageData[tabId][0];
+            document.getElementById('page-subtitle').innerText = pageData[tabId][1];
+
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+
+        // Fungsi khusus load arsip (Januari/Februari/Maret)
+        function loadDrive(fileId, element) {
+            loadDriveSub(fileId, element, 'viewer-container-archive');
+        }
+
+        // Fungsi general untuk sub-tab dengan container dinamis
+        function loadDriveSub(fileId, element, containerId) {
+            playClickSound();
+            
+            // Handle active indicator pada kelompok tombol yang diklik
+            const groupClass = element.classList.contains('month-btn') ? '.month-btn' : '.sub-tab-btn';
+            document.querySelectorAll(groupClass).forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+
+            const container = document.getElementById(containerId);
+            const url = `https://drive.google.com/file/d/${fileId}/preview`;
+            container.innerHTML = `<iframe src="${url}" allow="autoplay" loading="lazy"></iframe>`;
+        }
+
+        function openPreview(src) {
+            playClickSound();
+            document.getElementById('modal-img').src = src;
+            document.getElementById('photo-modal').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
