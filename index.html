@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>NSA - Nurjaya Smart Archive</title>
-    <meta name="google-site-verification" content="mL87deaiwglGc_OrAmw_OmX_7ytpPRhgescRPcoz7qk" />
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1oFsDUom_DXlLgHjsC7kWDRqWeL46xpsU">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -25,10 +24,93 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-base);
             color: #2D3436;
-            overflow-x: hidden;
+            overflow: hidden; /* Lock scroll during login */
             height: 100vh;
         }
 
+        /* LOGIN SCREEN STYLES */
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: linear-gradient(135deg, #f0f4f1 0%, #e0ece6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 40px;
+            border: 1px solid white;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            text-align: center;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 18px 25px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            background: white;
+            font-size: 16px;
+            font-weight: 600;
+            color: #3B4D45;
+            transition: all 0.3s ease;
+            outline: none;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .login-input:focus {
+            border-color: var(--mint-pastel);
+            box-shadow: 0 8px 20px rgba(167, 215, 197, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--mint-pastel) 0%, var(--mint-deep) 100%);
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 25px rgba(143, 191, 168, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ANIMATIONS */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .shake { animation: shake 0.4s ease-in-out; border-color: #ff7675 !important; }
+
+        .login-exit {
+            opacity: 0;
+            transform: scale(1.2);
+            pointer-events: none;
+        }
+
+        /* MAIN UI STYLES */
         .glass-element {
             background: var(--ios-glass);
             backdrop-filter: blur(20px) saturate(180%);
@@ -94,7 +176,6 @@
             border: none;
         }
 
-        /* Tombol Opsi Aktif (Darker Mint) */
         .month-btn.active, .sub-tab-btn.active {
             background-color: var(--mint-deep) !important;
             color: white !important;
@@ -189,6 +270,29 @@
 </head>
 <body class="flex flex-col md:flex-row">
 
+    <!-- LOGIN OVERLAY -->
+    <div id="login-overlay">
+        <div class="login-card fade-in">
+            <div class="flex flex-col items-center mb-8">
+                <div class="bg-white p-4 rounded-3xl shadow-sm mb-4">
+                    <img src="https://lh3.googleusercontent.com/d/1oFsDUom_DXlLgHjsC7kWDRqWeL46xpsU" class="w-16 h-16 object-contain" alt="Logo">
+                </div>
+                <h1 class="text-3xl font-black text-[#3B4D45] tracking-tighter">NSA LOGIN</h1>
+                <p class="text-gray-400 text-xs font-bold uppercase tracking-[0.2em] mt-1">Nurjaya Smart Archive</p>
+            </div>
+            
+            <div class="space-y-4">
+                <p id="login-msg" class="text-sm font-semibold text-gray-500">Silakan masukkan akses kode Admin</p>
+                <input type="password" id="pass-input" class="login-input" placeholder="••••••••" onkeypress="if(event.key === 'Enter') attemptLogin()">
+                <button onclick="attemptLogin()" class="login-btn">
+                    <span>Masuk Aplikasi</span>
+                </button>
+            </div>
+            
+            <p class="mt-10 text-[10px] font-bold text-gray-300 uppercase tracking-widest">© 2026 Nurjaya Abadi Photocopy</p>
+        </div>
+    </div>
+
     <!-- MODAL PHOTO PREVIEW -->
     <div id="photo-modal" onclick="this.style.display='none'">
         <img id="modal-img" src="" class="max-w-full max-h-[80%] rounded-[30px] shadow-2xl object-contain">
@@ -262,14 +366,27 @@
                     <h3 class="text-xl md:text-3xl font-extrabold text-[#3B4D45] uppercase tracking-tighter">Pemberitahuan:</h3>
                 </div>
 
-                <div class="glass-element card-accent p-6 md:p-12 mb-10 relative overflow-hidden group rounded-[30px]">
+                <div class="glass-element p-6 md:p-8 mb-6 rounded-[25px] border-l-4 border-blue-400">
+                    <p class="text-gray-600 text-sm md:text-lg leading-relaxed font-semibold">
+                        NSA kini sepenuhnya daring/online dan tersedia di pencarian Google dengan keyword: <span class="text-blue-600 italic">Nurjaya Smart Archive</span>. Maka ketika waktunya pengecekan penutupan pembukuan, Owner ataupun karyawan dapat mengaksesnya pada perangkat masing-masing.
+                    </p>
+                </div>
+
+                <div class="glass-element card-accent p-6 md:p-12 mb-6 relative overflow-hidden group rounded-[30px]">
                     <div class="flex justify-between items-start mb-4">
-                        <span class="px-4 py-1 btn-yellow rounded-full text-[9px] font-black uppercase tracking-wider">Final Report</span>
-                        <span class="text-gray-400 text-[10px] font-bold">31 Maret 2026</span>
+                        <span class="px-4 py-1 btn-yellow rounded-full text-[9px] font-black uppercase tracking-wider">Operational Update</span>
+                        <span class="text-gray-400 text-[10px] font-bold">April 2026</span>
                     </div>
-                    <h4 class="text-xl md:text-4xl font-black text-gray-900 mb-4">MARET 2026 - Status Selesai</h4>
+                    <h4 class="text-xl md:text-4xl font-black text-gray-900 mb-4 uppercase">Periode April 2026 Dimulai</h4>
                     <p class="text-gray-600 text-sm md:text-xl leading-relaxed font-medium">
-                        Seluruh laporan periode Maret 2026 telah <strong>Rampung</strong> secara akurat. Silakan cek di tab Arsip untuk melihat detailnya.
+                        Bulan April 2026 telah resmi dimulai. Mari kita tingkatkan performa pelayanan yang profesional dan menjaga akurasi administrasi demi kemajuan bersama <strong>Nurjaya Abadi Photocopy</strong>.
+                    </p>
+                </div>
+
+                <div class="glass-element p-6 md:p-8 mb-10 rounded-[25px] bg-yellow-50/30 border-l-4 border-yellow-400">
+                    <h5 class="text-xs font-black text-yellow-700 uppercase mb-2 tracking-widest">Kebijakan Baru:</h5>
+                    <p class="text-gray-600 text-sm md:text-lg leading-relaxed font-semibold">
+                        Sesuai kebijakan Owner per April 2026, Tabungan Operasional (Rp 300.000) kembali di-split menjadi Tabungan Operasional (A) (Rp 255.000), dan Tabungan B (Rp 45.000), guna mengoptimalkan pemisahan keuangan untuk keperluan operasional.
                     </p>
                 </div>
 
@@ -278,12 +395,22 @@
                     <div class="h-[1px] flex-1 mx-4 bg-gray-200"></div>
                 </div>
                 
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    <!-- FOTO 1 -->
                     <div class="group relative overflow-hidden rounded-[25px] cursor-zoom-in shadow-md bg-white p-2" onclick="openPreview('https://lh3.googleusercontent.com/d/1Qn3WeV8BPBedAjBCxUEMNZ2oEikCjIP3')">
                         <img src="https://lh3.googleusercontent.com/d/1Qn3WeV8BPBedAjBCxUEMNZ2oEikCjIP3" class="w-full aspect-[4/5] object-cover rounded-[18px]">
                     </div>
+                    <!-- FOTO 2 -->
                     <div class="group relative overflow-hidden rounded-[25px] cursor-zoom-in shadow-md bg-white p-2" onclick="openPreview('https://lh3.googleusercontent.com/d/1rOD24g_IAwaSIYJpREYs-9a864quiYzM')">
                         <img src="https://lh3.googleusercontent.com/d/1rOD24g_IAwaSIYJpREYs-9a864quiYzM" class="w-full aspect-[4/5] object-cover rounded-[18px]">
+                    </div>
+                    <!-- FOTO 3 (Baru) -->
+                    <div class="group relative overflow-hidden rounded-[25px] cursor-zoom-in shadow-md bg-white p-2" onclick="openPreview('https://lh3.googleusercontent.com/d/11RN0NW0EXqaz-l1lPpBsA7XVro-M-Xuw')">
+                        <img src="https://lh3.googleusercontent.com/d/11RN0NW0EXqaz-l1lPpBsA7XVro-M-Xuw" class="w-full aspect-[4/5] object-cover rounded-[18px]">
+                    </div>
+                    <!-- FOTO 4 (Baru) -->
+                    <div class="group relative overflow-hidden rounded-[25px] cursor-zoom-in shadow-md bg-white p-2" onclick="openPreview('https://lh3.googleusercontent.com/d/1Lbh-Qln7whMhrFcFshBLfb9l-FX3FwF5')">
+                        <img src="https://lh3.googleusercontent.com/d/1Lbh-Qln7whMhrFcFshBLfb9l-FX3FwF5" class="w-full aspect-[4/5] object-cover rounded-[18px]">
                     </div>
                 </div>
             </div>
@@ -304,6 +431,10 @@
                     <i class="fa-solid fa-file-pdf text-green-500"></i>
                     <span>Maret 2026</span>
                 </button>
+                <button onclick="infoPending('April 2026 sedang dalam proses rekapitulasi data operasional.')" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 opacity-60 border-dashed border-2 border-gray-300">
+                    <i class="fa-solid fa-spinner fa-spin text-blue-400"></i>
+                    <span>April 2026</span>
+                </button>
             </div>
             
             <div id="viewer-container-archive" class="viewer-container">
@@ -314,7 +445,7 @@
             </div>
         </div>
 
-        <!-- PRESENSI CONTENT (WITH SUB-TABS) -->
+        <!-- PRESENSI CONTENT -->
         <div id="tab-presensi" class="tab-content p-6 md:p-14 hidden fade-in">
             <div class="flex flex-wrap gap-3 md:gap-5 mb-8 md:mb-12">
                 <button onclick="loadDriveSub('1s9GTi4B8dpnT2HNx0f2gE512dFV-8YX0', this, 'viewer-container-presensi')" class="sub-tab-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
@@ -403,9 +534,40 @@
     </main>
 
     <script>
-        // Soft Click SFX Base64
         const clickSfx = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU1vT19fV0FWRWZtdCAQAAAAAQABAFAfAABQHwAAAQAgAGRhdGE=");
         
+        // LOGIN LOGIC
+        // Password "Nurjaya Marema" encoded in Base64
+        const ENCODED_PASS = "TnVyamF5YSBNYXJlbWE="; 
+
+        function attemptLogin() {
+            const input = document.getElementById('pass-input');
+            const overlay = document.getElementById('login-overlay');
+            const card = document.querySelector('.login-card');
+            const msg = document.getElementById('login-msg');
+
+            if (btoa(input.value) === ENCODED_PASS) {
+                // Success Animation
+                playClickSound();
+                overlay.classList.add('login-exit');
+                document.body.style.overflow = 'auto';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 800);
+            } else {
+                // Fail Animation
+                input.value = "";
+                card.classList.add('shake');
+                msg.innerText = "Akses Ditolak. Silakan coba lagi.";
+                msg.classList.remove('text-gray-500');
+                msg.classList.add('text-red-500');
+                
+                setTimeout(() => {
+                    card.classList.remove('shake');
+                }, 400);
+            }
+        }
+
         function playClickSound() {
             clickSfx.currentTime = 0;
             clickSfx.volume = 0.4;
@@ -434,16 +596,12 @@
             document.querySelector('.main-content').scrollTop = 0;
         }
 
-        // Fungsi khusus load arsip (Januari/Februari/Maret)
         function loadDrive(fileId, element) {
             loadDriveSub(fileId, element, 'viewer-container-archive');
         }
 
-        // Fungsi general untuk sub-tab dengan container dinamis
         function loadDriveSub(fileId, element, containerId) {
             playClickSound();
-            
-            // Handle active indicator pada kelompok tombol yang diklik
             const groupClass = element.classList.contains('month-btn') ? '.month-btn' : '.sub-tab-btn';
             document.querySelectorAll(groupClass).forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
@@ -453,10 +611,26 @@
             container.innerHTML = `<iframe src="${url}" allow="autoplay" loading="lazy"></iframe>`;
         }
 
+        function infoPending(msg) {
+            playClickSound();
+            const container = document.getElementById('viewer-container-archive');
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full text-blue-400 p-10 text-center animate-pulse">
+                    <i class="fa-solid fa-clock-rotate-left text-6xl mb-6"></i>
+                    <p class="font-black text-lg md:text-2xl">${msg}</p>
+                </div>
+            `;
+        }
+
         function openPreview(src) {
             playClickSound();
             document.getElementById('modal-img').src = src;
             document.getElementById('photo-modal').style.display = 'flex';
+        }
+
+        // Auto focus input on load
+        window.onload = () => {
+            document.getElementById('pass-input').focus();
         }
     </script>
 </body>
