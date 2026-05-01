@@ -57,9 +57,14 @@
             transition: transform 0.3s ease;
         }
 
+        .login-input-container {
+            position: relative;
+            width: 100%;
+        }
+
         .login-input {
             width: 100%;
-            padding: 18px 25px;
+            padding: 18px 50px 18px 25px;
             border-radius: 20px;
             border: 2px solid transparent;
             background: white;
@@ -75,6 +80,21 @@
         .login-input:focus {
             border-color: var(--mint-pastel);
             box-shadow: 0 8px 20px rgba(167, 215, 197, 0.2);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #A7D7C5;
+            transition: color 0.3s ease;
+            padding: 5px;
+        }
+
+        .toggle-password:hover {
+            color: var(--mint-deep);
         }
 
         .login-btn {
@@ -284,7 +304,10 @@
             
             <div class="space-y-4">
                 <p id="login-msg" class="text-sm font-semibold text-gray-500">Silakan masukkan akses kode Admin</p>
-                <input type="password" id="pass-input" class="login-input" placeholder="••••••••" onkeypress="if(event.key === 'Enter') attemptLogin()">
+                <div class="login-input-container">
+                    <input type="password" id="pass-input" class="login-input" placeholder="••••••••" onkeypress="if(event.key === 'Enter') attemptLogin()">
+                    <i id="toggle-icon" class="fa-solid fa-eye toggle-password" onclick="togglePassword()"></i>
+                </div>
                 <button onclick="attemptLogin()" class="login-btn">
                     <span>Masuk Aplikasi</span>
                 </button>
@@ -385,7 +408,7 @@
 
                 <!-- POIN 2: UPDATE FORMAT PENUTUPAN -->
                 <div class="glass-element card-accent p-6 md:p-10 mb-10 relative overflow-hidden group rounded-[30px] border-l-8 border-mint-pastel">
-                    <div class="absolute top-4 right-6 px-3 py-1 bg-mint-deep text-white text-[9px] font-black rounded-full uppercase tracking-widest shadow-sm">KEBIJAKAN BARU & REVISI</div>
+                    <div class="absolute top-4 right-6 px-3 py-1 bg-blue-500 text-white text-[9px] font-black rounded-full uppercase tracking-widest shadow-sm">KEBIJAKAN BARU & UPDATE</div>
                     <div class="flex justify-between items-start mb-4">
                         <span class="px-4 py-1 btn-yellow rounded-full text-[9px] font-black uppercase tracking-wider">Versi 29 April 2026</span>
                         <span class="text-gray-400 text-[10px] font-bold">PENTING</span>
@@ -583,6 +606,22 @@
                 setTimeout(() => {
                     card.classList.remove('shake');
                 }, 400);
+            }
+        }
+
+        function togglePassword() {
+            playClickSound();
+            const input = document.getElementById('pass-input');
+            const icon = document.getElementById('toggle-icon');
+            
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         }
 
