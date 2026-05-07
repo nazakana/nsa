@@ -212,7 +212,7 @@
                 right: 0;
                 height: auto; 
                 display: grid !important;
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns: repeat(6, 1fr); /* Diubah ke 6 kolom untuk menampung tab baru */
                 background: #FFFFFF !important;
                 border-top: 1px solid #EEEEEE;
                 border-right: none;
@@ -339,7 +339,12 @@
         <nav class="flex flex-row md:flex-col flex-1 items-center md:items-start contents md:block">
             <button onclick="showTab('dashboard')" id="btn-dashboard" class="nav-link active flex items-center px-6 py-4 w-full">
                 <i class="fa-solid fa-house-user md:w-8 text-xl"></i>
-                <span>Beranda</span>
+                <span>Nurjaya Home</span>
+            </button>
+            <!-- TAB BARU: DAILY INPUT -->
+            <button onclick="showTab('dailyinput')" id="btn-dailyinput" class="nav-link flex items-center px-6 py-4 w-full">
+                <i class="fa-solid fa-pen-to-square md:w-8 text-xl"></i>
+                <span>Daily Input</span>
             </button>
             <button onclick="showTab('archive')" id="btn-archive" class="nav-link flex items-center px-6 py-4 w-full">
                 <i class="fa-solid fa-folder-open md:w-8 text-xl"></i>
@@ -458,6 +463,13 @@
                         <img src="https://lh3.googleusercontent.com/d/1Lbh-Qln7whMhrFcFshBLfb9l-FX3FwF5" class="w-full aspect-[4/5] object-cover rounded-[18px]">
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- DAILY INPUT CONTENT (TAB BARU) -->
+        <div id="tab-dailyinput" class="tab-content p-6 md:p-14 hidden fade-in">
+             <div class="viewer-container">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSf51hiUnILkoNFYos1OY-8otSunUR6tDaXYhOW06K9dIrjFrA/viewform?usp=dialog" allow="autoplay" loading="lazy"></iframe>
             </div>
         </div>
 
@@ -641,6 +653,7 @@
 
             const pageData = {
                 'dashboard': ['NSA (Nurjaya Smart Archive)', 'Arsip Operasional Nurjaya Abadi'],
+                'dailyinput': ['Daily Input Harian', 'Formulir Laporan Operasional Harian'], // Data untuk tab baru
                 'archive': ['Arsip Digital Laporan', 'Pusat Dokumentasi Keuangan'],
                 'presensi': ['Presensi Kehadiran', 'Monitor Staf Nurjaya Abadi'],
                 'calendar': ['Jadwal & Shift Kerja', 'Pengaturan Operasional Toko'],
