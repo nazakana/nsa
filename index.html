@@ -311,15 +311,18 @@
                 </div>
             </div>
         </div>
-
+	
+	
+	
         <nav class="flex flex-row md:flex-col flex-1 items-center md:items-start contents md:block">
     <!-- Tambahkan setTimeout pada onclick agar grafik muncul setelah tab dashboard terbuka -->
     <!-- REVISI TOMBOL NAVIGASI -->
-<button onclick="location.href='?target=dashboard&r=' + Math.random();" id="btn-dashboard" class="nav-link active flex items-center px-6 py-4 w-full">
+<button onclick="location.href='?target=dashboard';" id="btn-dashboard" class="nav-link active flex items-center px-6 py-4 w-full">
     <i class="fa-solid fa-house-user md:w-8 text-xl"></i>
     <span>Nurjaya Home</span>
 </button>
 </nav>
+
             <!-- TAB BARU: DAILY INPUT -->
             <button onclick="showTab('dailyinput')" id="btn-dailyinput" class="nav-link flex items-center px-6 py-4 w-full">
                 <i class="fa-solid fa-pen-to-square md:w-8 text-xl"></i>
@@ -371,10 +374,27 @@
 
     </div>
 
+
         <!-- DASHBOARD CONTENT -->
 		<!-- Kontainer Utama Konten -->
     <!-- Pastikan ID ini sama dengan yang dipanggil di fungsi showTab -->
-    <div id="dashboard" class="tab-content"> 
+
+        <!-- Konten beranda lainnya bisa diletakkan di bawah sini -->
+    </div>
+		
+		<div id="dashboard" class="tab-content">
+            <!-- Tombol Refresh Halaman Total -->
+			<!-- Kontainer Grafik Utama -->
+    <div style="max-width: 800px; margin: 20px auto; padding: 0 15px;">
+        
+        <div id="wadah-grafik" style="background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; position: relative; width: 100%;">
+            <button onclick="location.reload()" 
+                    style="position: absolute; right: 15px; top: 15px; z-index: 10; background: #3b82f6; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; display: flex; align-items: center; gap: 5px; transition: background 0.2s;">
+                <i class="fa-solid fa-arrows-rotate"></i> Muat Ulang Halaman
+            </button>
+
+            <!-- Tempat Canvas -->
+            <div id="dashboard" class="tab-content"> 
         
         <!-- Sesi Grafik di bagian atas tab beranda -->
         <div id="sesi-grafik" style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: 10px auto;">
@@ -382,12 +402,13 @@
             
             <div style="position: relative; height: 40vh; width: 100%;">
                 <canvas id="grafikPendapatan"></canvas>
+				
             </div>
         </div>
-
-        <!-- Konten beranda lainnya bisa diletakkan di bawah sini -->
+            
+        </div>
     </div>
-		
+</div>
 		
         <div id="tab-dashboard" class="tab-content p-6 md:p-14 fade-in">
             <div class="max-w-5xl">
@@ -777,7 +798,19 @@
                     Tutup Jendela
                 </button>
 				
-				
+	<main>
+    <div id="wadah-grafik" style="max-width: 800px; margin: auto; padding: 20px; position: relative;">
+        <!-- Tombol Trigger Manual di Pojok Kanan Atas Grafik -->
+        <button onclick="forceRender()" 
+                style="position: absolute; right: 25px; top: 25px; z-index: 10; background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">
+            <i class="fa-solid fa-sync-alt"></i> Refresh Grafik
+        </button>
+        
+        <div id="container-canvas" style="height: 350px;">
+            <canvas id="grafikPendapatan"></canvas>
+        </div>
+    </div>
+</main>			
 
     <script>
         const clickSfx = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU1vT19fV0FWRWZtdCAQAAAAAQABAFAfAABQHwAAAQAgAGRhdGE=");
@@ -968,36 +1001,27 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-<main>
-    <div style="max-width: 800px; margin: auto; padding: 20px;">
-        <canvas id="grafikPendapatan"></canvas>
-    </div>
-</main>
-
-
 <script>
     // Daftarkan plugin
     Chart.register(ChartDataLabels);
 
-    // Fungsi utama untuk menggambar
     function renderChart() {
+        const container = document.getElementById('container-canvas');
+        if (!container) return;
+
+        // 1. HARD RESET: Hapus canvas lama agar tidak ada konflik di memori HP
+        container.innerHTML = '<canvas id="grafikPendapatan"></canvas>';
+        
         const canvas = document.getElementById('grafikPendapatan');
-        if (!canvas) return;
-
-        // Hancurkan grafik lama jika ada
-        let chartStatus = Chart.getChart("grafikPendapatan");
-        if (chartStatus !== undefined) {
-            chartStatus.destroy();
-        }
-
         const ctx = canvas.getContext('2d');
+
         new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei'],
                 datasets: [{
                     label: 'Pendapatan (Rp)',
-                    data: [13214500, 10560500, 11715000, 15283500, ], 
+                    data: [13214500, 10560500, 11715000, 15283500, 0], 
                     backgroundColor: [
                         'rgba(255, 5, 132, 0.5)',
                         'rgba(54, 162, 235, 0.5)',
@@ -1026,7 +1050,7 @@
                     datalabels: {
                         anchor: 'end',
                         align: 'top',
-                        formatter: (v) => 'Rp ' + (v / 1000000).toLocaleString('id-ID', {minimumFractionDigits: 1}) + ' jt',
+                        formatter: (v) => v > 0 ? 'Rp ' + (v / 1000000).toLocaleString('id-ID', {minimumFractionDigits: 1}) + ' jt' : '',
                         font: { weight: 'bold', size: 10 }
                     }
                 }
@@ -1034,14 +1058,21 @@
         });
     }
 
-    // Fungsi paksa untuk dipanggil tombol
+    // Fungsi paksa dengan jeda lebih panjang untuk HP
     function forceRender() {
-        // Jeda 200ms agar tab benar-benar muncul dulu
-        setTimeout(renderChart, 200);
+        setTimeout(renderChart, 350);
     }
 
     // Jalankan saat pertama kali buka
     document.addEventListener('DOMContentLoaded', renderChart);
+
+    // Tambahan: Jalankan otomatis jika user kembali dari tab lain ke tab Nurjaya Home
+    // Ini menangkap aksi klik pada tombol sidebar/navigasi secara global
+    document.addEventListener('click', function(e) {
+        if(e.target.closest('#btn-dashboard')) {
+            forceRender();
+        }
+    });
 </script>
 
 
