@@ -364,12 +364,26 @@
             </div>
         </div>
 
+<main>
+    <!-- Sesi atau Section untuk Grafik -->
+    <div id="sesi-grafik" style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: 20px auto;">
+        
+        <h2 style="text-align: center;">PENDAPATAN  JANUARI - APRIL 2026</h2>
+        
+        <!-- Wadah khusus untuk grafik Chart.js -->
+        <div>
+            <canvas id="grafikPendapatan"></canvas>
+        </div>
+
+    </div>
+</main>
+
         <!-- DASHBOARD CONTENT -->
         <div id="tab-dashboard" class="tab-content p-6 md:p-14 fade-in">
             <div class="max-w-5xl">
                 <div class="flex items-center gap-3 mb-6 md:mb-10">
                     <div class="w-1.5 h-8 bg-yellow-400 rounded-full"></div>
-                    <h3 class="text-xl md:text-3xl font-extrabold text-[#3B4D45] uppercase tracking-tighter">Pemberitahuan:</h3>
+                    <h3 class="text-xl md:text-3xl font-extrabold text-[#3B4D45] uppercase tracking-tighter">Notifikasi Terkini:</h3>
                 </div>
 
 				<!-- LAPORAN HARIAN -->
@@ -938,6 +952,72 @@
         animation: ios-zoom 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
     }
 </style>
+
+
+<!-- 1. Panggil Chart.js dan Plugin Datalabels -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<main>
+    <div style="max-width: 800px; margin: auto; padding: 20px;">
+        <canvas id="grafikPendapatan"></canvas>
+    </div>
+</main>
+
+<script>
+    // 2. Daftarkan pluginnya agar bisa digunakan
+    Chart.register(ChartDataLabels);
+
+    var ctx = document.getElementById('grafikPendapatan').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei'],
+            datasets: [{
+                label: 'Pendapatan (Rp)',
+                data: [13214500, 10560500, 11715000, 15283500,],
+                // UBAH DI SINI: Array Warna untuk Batang (Transparan 50%)
+                backgroundColor: [
+                    'rgba(255, 5, 132, 0.5)',  // Merah untuk Januari
+                    'rgba(54, 162, 235, 0.5)',  // Biru untuk Februari
+                    'rgba(255, 206, 86, 0.5)',  // Kuning untuk Maret
+                    'rgba(75, 192, 192, 0.5)'   // Hijau Toska untuk April
+                ],
+                // UBAH DI SINI: Array Warna untuk Garis Pinggir (Penuh)
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grace: '10%' 
+                }
+            },
+            plugins: {
+                // Menampilkan nominal di atas batang
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: function(value) {
+                        return 'Rp ' + (value / 1000000).toLocaleString('id-ID') + ' jt';
+                    },
+                    font: {
+            weight: 'bold',
+            size: 10 // Ubah angka ini untuk memperkecil/memperbesar (default biasanya 12)
+        },
+                }
+            }
+        }
+    });
+</script>
+
 
 </div>
 </div>
