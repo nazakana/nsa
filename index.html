@@ -536,12 +536,55 @@
                     <i class="fa-solid fa-file-pdf text-green-500"></i>
                     <span>April 2026</span>
                 </button>
+				<!-- Tombol Mei -->
+<!-- Container Tombol Mei -->
+<div class="relative inline-block">
+    <!-- Tombol Mei -->
+    <button onclick="document.getElementById('popup-mei-final').style.display = 'flex'" 
+            class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 hover:bg-white/10 relative z-10 active:scale-95">
+        <i class="fa-solid fa-file-pdf text-gray-400"></i>
+        <span class="text-gray-500">Mei 2026</span>
+    </button>
+
+    <!-- Popup Khusus Mei -->
+    <div id="popup-mei-final" 
+         style="display: none; position: fixed; inset: 0; z-index: 999999; align-items: center; justify-content: center; padding: 1rem;">
+        
+        <!-- Background Gelap Blur -->
+        <div onclick="this.parentElement.style.display = 'none'" 
+             style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"></div>
+
+        <!-- Kartu Pesan (Dengan Class Animasi) -->
+        <div class="animate-ios" 
+             style="position: relative; background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+            
+            <div style="width: 65px; height: 65px; background: #fff7ed; color: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                <i class="fa-solid fa-clock fa-2xl"></i>
+            </div>
+            
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Data Belum Tersedia</h3>
+            <p style="font-size: 0.9rem; color: #4b5563; line-height: 1.6; margin-bottom: 1.8rem;">
+                Data untuk bulan <b>Mei 2026</b> baru akan muncul setelah rekapitulasi akhir bulan selesai diproses.
+            </p>
+
+            <button onclick="document.getElementById('popup-mei-final').style.display = 'none'" 
+                    style="width: 100%; background: #111827; color: white; padding: 1.1rem; border-radius: 20px; font-weight: 700; border: none; cursor: pointer; transition: transform 0.2s;"
+                    onmouseover="this.style.opacity='0.9'" 
+                    onmouseout="this.style.opacity='1'">
+                Saya Mengerti
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
             </div>
             
             <div id="viewer-container-archive" class="viewer-container">
                 <div class="flex flex-col items-center justify-center h-full text-gray-300 p-10 text-center">
                     <i class="fa-solid fa-layer-group text-6xl opacity-10 mb-6"></i>
-                    <p class="font-black text-lg md:text-2xl text-gray-400">Pilih Laporan (Untuk laporan Mei 2026 masih dalam proses rekapitulasi)</p>
+                    <p class="font-black text-lg md:text-2xl text-gray-400">Pilih Laporan untuk diperiksa</p>
                 </div>
             </div>
         </div>
@@ -659,17 +702,28 @@
 </button>
 
     <div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
-        <!-- Background Overlay -->
-        <div id="modalOverlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-        
-        <div class="relative bg-white w-full max-w-sm mx-4 rounded-2xl shadow-2xl overflow-hidden modal-animate-in">
+        <!-- Main Modal Wrapper -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    
+    <!-- 1. Background Overlay (iOS Blur) -->
+    <!-- transition & animate-in untuk memicu animasi saat muncul -->
+    <div id="modalOverlay" 
+         class="absolute inset-0 bg-black/40 backdrop-blur-md duration-300 ease-out animate-in fade-in">
+    </div>
+
+    <!-- 2. Modal Content (iOS Style) -->
+    <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden 
+                /* Animasi ala iOS: Zoom Out + Fade In */
+                transition-all duration-500 
+                [transition-timing-function:cubic-bezier(0.32,0.72,0,1)]
+                animate-in fade-in zoom-in-110">
             <!-- Header dengan Ikon Maintenance -->
-            <div class="bg-amber-50 p-6 text-center border-b border-amber-100">
+            <div class="bg-amber-200 p-6 text-center border-b border-amber-100">
                 <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-screwdriver-wrench fa-2xl"></i>
+                    <i class="fas fa-screwdriver-wrench fa-2xl "></i>
                 </div>
-                <h2 class="text-xl font-bold text-gray-800">Opsi Khusus Developer</h2>
-                <p class="text-sm text-gray-500 mt-1">Konfigurasi & Pemeliharaan Sistem</p>
+                <h2 class="text-xl font-bold text-gray-800">Opsi Developer</h2>
+                <p class="text-sm text-gray-500 mt-1">Update Data & Maintenance (Khusus Admin)</p>
             </div>
 
             <div class="p-6 space-y-4">
@@ -677,7 +731,7 @@
                 <a href="https://github.com/nazakana/" target="_blank" 
                    class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-medium shadow-sm active:scale-95">
                     <div class="w-8 flex justify-center">
-                        <i class="fas fa-rotate fa-lg"></i>
+                        <i class="fas fa-rotate fa-lg "></i>
                     </div>
                     <span>Update Informasi</span>
                     <i class="fas fa-chevron-right ml-auto text-blue-200"></i>
@@ -698,6 +752,8 @@
                 <button id="closeDevModal" class="w-full py-3 text-gray-500 hover:text-gray-700 font-semibold text-sm transition-colors uppercase tracking-wider">
                     Tutup Jendela
                 </button>
+				
+				
 
     <script>
         const clickSfx = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU1vT19fV0FWRWZtdCAQAAAAAQABAFAfAABQHwAAAQAgAGRhdGE=");
@@ -839,6 +895,51 @@
                 closeModal();
             }
         });
+		
     </script>
+	
+	<script>
+    function bukaModalMei() {
+        // Baris ini akan menghapus class 'hidden' pada modal
+        document.getElementById('modalMei').classList.remove('hidden');
+        // Baris ini mengunci scroll agar tidak bisa digeser saat modal muncul
+        document.body.style.overflow = 'hidden';
+    }
+
+    function tutupModalMei() {
+        document.getElementById('modalMei').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+</script>
+</script>
+<style>
+  .my-button {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  /* Ikon akan berputar saat .my-button di-hover */
+  .my-button:hover .fa-rotate {
+    transform: rotate(360deg);
+  }
+
+  .fa-rotate {
+    transition: transform 0.6s ease;
+  }
+</style>
+
+
+<style>
+    @keyframes ios-zoom {
+        from { opacity: 0; transform: scale(1.1); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .animate-ios {
+        animation: ios-zoom 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+</style>
+
+</div>
+</div>
 </body>
 </html>
