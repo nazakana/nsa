@@ -343,7 +343,18 @@
 </head>
 <body class="flex flex-col md:flex-row">
 
-    
+ <div id="imageModal" class="fixed inset-0 z-[10000] hidden flex items-center justify-center p-4 backdrop-blur-0 bg-black/0 transition-all duration-500 ease-out">
+    <!-- Tombol Close -->
+    <div class="absolute top-8 right-8 z-[10001] text-white/50 opacity-0 transition-opacity duration-500" id="closeBtn">
+        <i class="fa-solid fa-xmark text-4xl cursor-pointer"></i>
+    </div>
+
+    <!-- Container Gambar -->
+    <div class="relative max-w-4xl w-full flex flex-col items-center justify-center z-[10002] transition-all duration-500 ease-out scale-90 opacity-0 translate-y-10" id="modalContent">
+        <img id="modalImage" src="" class="max-h-[75vh] max-w-full rounded-[40px] shadow-2xl border border-white/20 object-contain ring-1 ring-white/10">
+        <p class="mt-6 text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] pointer-events-none">Klik di mana saja untuk menutup</p>
+    </div>
+</div>
 
     <!-- MODAL PHOTO PREVIEW: GALERI NURJAYA -->
     <div id="photo-modal" onclick="this.style.display='none'">
@@ -383,10 +394,12 @@
                 <span>Daily Input</span>
             </button>
 			<!-- TAB: ARSIP LAPORAN -->
-            <button onclick="showTab('archive')" id="btn-archive" class="nav-link flex items-center px-6 py-3 w-full">
-                <i class="fa-solid fa-folder-open md:w-8 text-xl"></i>
-                <span>Arsip Laporan</span>
-            </button>
+<button onclick="event.stopPropagation(); showTab('archive')" 
+        id="btn-archive" 
+        class="nav-link flex items-center px-6 py-3 w-full focus:outline-none">
+    <i class="fa-solid fa-folder-open md:w-8 text-xl"></i>
+    <span>Arsip Laporan</span>
+</button>
 			<!-- TAB: PRESENSI STAF-->
             <button onclick="showTab('presensi')" id="btn-presensi" class="nav-link flex items-center px-6 py-3 w-full">
                 <i class="fa-solid fa-id-badge md:w-8 text-xl"></i>
@@ -646,41 +659,42 @@
 				<!-- Container Tombol Mei -->
 				<div class="relative inline-block">
 				<!-- Tombol Mei -->
-				<button onclick="document.getElementById('popup-mei-final').style.display = 'flex'" 
-				class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 hover:bg-white/10 relative z-10 active:scale-95">
-					<i class="fa-solid fa-file-pdf text-gray-400"></i>
-					<span class="text-gray-500">Mei 2026</span>
-				</button>
+<button onclick="event.stopPropagation(); document.getElementById('popup-mei-final').style.display = 'flex'" 
+        class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 hover:bg-white/10 relative z-10 active:scale-95">
+    <i class="fa-solid fa-file-pdf text-gray-400"></i>
+    <span class="text-gray-500">Mei 2026</span>
+</button>
 
 						<!-- Popup Khusus Mei -->
-						<div id="popup-mei-final" 
-						style="display: none; position: fixed; inset: 0; z-index: 999999; align-items: center; justify-content: center; padding: 1rem;">
-        
-						Background Gelap Blur -->
-						<div onclick="this.parentElement.style.display = 'none'" 
-						style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"></div>
+<div id="popup-mei-final" 
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; padding: 1rem;"
+     onclick="this.style.display = 'none'"> <!-- Klik background untuk tutup -->
+    
+    <!-- Background Gelap -->
+    <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"></div>
 
-							<!-- Kartu Pesan (Dengan Class Animasi) -->
-							<div class="animate-ios" 
-							style="position: relative; background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+    <!-- Kartu Pesan -->
+    <div class="animate-ios" 
+         style="position: relative; background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 2.5rem 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);"
+         onclick="event.stopPropagation()"> <!-- Klik kartu TIDAK menutup popup -->
             
-							<div style="width: 65px; height: 65px; background: #fff7ed; color: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-								<i class="fa-solid fa-clock fa-2xl"></i>
-							</div>
+        <div style="width: 65px; height: 65px; background: #fff7ed; color: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+            <i class="fa-solid fa-clock fa-2xl"></i>
+        </div>
             
-							<h3 style="font-size: 1.3rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Data Belum Tersedia</h3>
-							<p style="font-size: 0.9rem; color: #4b5563; line-height: 1.6; margin-bottom: 1.8rem;">
-							Data untuk bulan <b>Mei 2026</b> baru akan muncul setelah rekapitulasi akhir bulan selesai diproses.
-							</p>
+        <h3 style="font-size: 1.3rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">Data Belum Tersedia</h3>
+        <p style="font-size: 0.9rem; color: #4b5563; line-height: 1.6; margin-bottom: 1.8rem;">
+            Data untuk bulan <b>Mei 2026</b> baru akan muncul setelah rekapitulasi akhir bulan selesai diproses.
+        </p>
 
-							<button onclick="document.getElementById('popup-mei-final').style.display = 'none'" 
-							style="width: 100%; background: #111827; color: white; padding: 1.1rem; border-radius: 20px; font-weight: 700; border: none; cursor: pointer; transition: transform 0.2s;"
-							onmouseover="this.style.opacity='0.9'" 
-							onmouseout="this.style.opacity='1'">
-							Saya Mengerti
-							</button>
-						</div>
-					</div>
+        <button onclick="document.getElementById('popup-mei-final').style.display = 'none'" 
+                style="width: 100%; background: #111827; color: white; padding: 1.1rem; border-radius: 20px; font-weight: 700; border: none; cursor: pointer;">
+            Saya Mengerti
+        </button>
+    </div>
+</div>
+					
+					
 				</div>
             </div>
             
@@ -831,81 +845,49 @@
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
 			
 			<!-- Karyawan 1 -->
-			<div class="bg-gray-50/50 mt-6 p-0 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
-
-			<!-- Chip Identitas (Aksen Biru) -->
-			<div class="flex items-center gap-6 w-full bg-blue-50 p-5 rounded-[40px] shadow-sm border border-blue-100">
-        
-			<!-- Foto Karyawan: Support Klik & Preview HD -->
-			<div class="relative shrink-0 group">
-            <img src="https://lh3.googleusercontent.com/d/19Sujdw3IaUtF7npqv06HmrruHAXYykcg" 
-                 onclick="openModal(this.src)"
-                 class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md cursor-pointer transition-all duration-300 group-hover:brightness-90 group-hover:scale-105 active:scale-95"
-                 title="Klik untuk melihat foto asli">
-            <!-- Icon Overlay kecil untuk indikator klik -->
-            <div class="absolute bottom-1 right-1 bg-white w-7 h-7 rounded-full flex items-center justify-center shadow text-blue-500 pointer-events-none">
-                <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+    <div class="bg-gray-50/50 mt-6 p-0 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
+        <div class="flex items-center gap-6 w-full bg-blue-50 p-5 rounded-[40px] shadow-sm border border-blue-100">
+            <div class="relative shrink-0 group">
+                <img src="https://lh3.googleusercontent.com/d/19Sujdw3IaUtF7npqv06HmrruHAXYykcg" 
+                     onclick="openModal(this.src)"
+                     class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md cursor-pointer transition-all duration-300 group-hover:brightness-90 group-hover:scale-105 active:scale-95">
+                <div class="absolute bottom-1 right-1 bg-white w-7 h-7 rounded-full flex items-center justify-center shadow text-blue-500 pointer-events-none">
+                    <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+                </div>
             </div>
-			</div>
-
-			<div class="flex flex-col min-w-0">
-            <!-- Nama (Auto wrap jika kepanjangan) -->
-            <span class="text-[20px] font-black text-gray-800 border-b-2 border-blue-400 leading-tight truncate-none">
-                M. Cahya Ardiansyah
-            </span>
-            <span class="text-[12px] font-bold text-blue-600 uppercase tracking-widest mt-2">
-                Staf / Operator
-            </span>
-			</div>
-			</div>
-
-			<!-- Tombol WhatsApp -->
-			<a href="https://wa.me/6285721962654" target="_blank" onclick="playClickSound()" 
-			class="mt-6 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-center transition-all active:scale-95 flex items-center justify-center gap-3 shadow-md group">
-        
-			<i class="fa-brands fa-whatsapp text-2xl group-hover:rotate-12 transition-transform"></i> 
-			<span class="text-[14px] font-black uppercase tracking-wide">Kontak WhatsApp</span>
-			</a>
-			</div>
-
-			<!-- Karyawan 2 -->
-			<div class="bg-gray-50/50 mt-6 p-0 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
-
-			<!-- Chip Identitas (Aksen Orange) -->
-			<div class="flex items-center gap-6 w-full bg-orange-50 p-5 rounded-[40px] shadow-sm border border-orange-100">
-        
-			<!-- Foto Karyawan: Support Klik & Preview HD -->
-			<div class="relative shrink-0 group">
-            <img src="https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL" 
-                 onclick="openModal(this.src)"
-                 class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md cursor-pointer transition-all duration-300 group-hover:brightness-90 group-hover:scale-105 active:scale-95"
-                 title="Klik untuk melihat foto asli">
-            
-            <!-- Icon Overlay kecil untuk indikator klik -->
-            <div class="absolute bottom-1 right-1 bg-white w-7 h-7 rounded-full flex items-center justify-center shadow text-orange-500 pointer-events-none">
-                <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+            <div class="flex flex-col min-w-0">
+                <span class="text-[20px] font-black text-gray-800 border-b-2 border-blue-400 leading-tight">M. Cahya Ardiansyah</span>
+                <span class="text-[12px] font-bold text-blue-600 uppercase tracking-widest mt-2">Staf / Operator</span>
             </div>
-			</div>
+        </div>
+        <a href="https://wa.me/6285721962654" target="_blank" class="mt-4 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-center flex items-center justify-center gap-3 shadow-md transition-all active:scale-95 group">
+            <i class="fa-brands fa-whatsapp text-2xl group-hover:rotate-12 transition-transform"></i> 
+            <span class="text-[14px] font-black uppercase tracking-wide">Kontak WhatsApp</span>
+        </a>
+    </div>
 
-			<div class="flex flex-col min-w-0">
-            <!-- Nama -->
-            <span class="text-[20px] font-black text-gray-800 border-b-2 border-orange-400 leading-tight">
-                Dadan Nurfaizal
-            </span>
-            <span class="text-[12px] font-bold text-orange-600 uppercase tracking-widest mt-2">
-                Staf / Operator
-            </span>
-			</div>
-			</div>
-
-			<!-- Tombol WhatsApp -->
-			<a href="https://wa.me/6283130578886" target="_blank" onclick="playClickSound()" 
-			class="mt-6 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-center transition-all active:scale-95 flex items-center justify-center gap-3 shadow-md group">
-        
-			<i class="fa-brands fa-whatsapp text-2xl group-hover:rotate-12 transition-transform"></i> 
-			<span class="text-[14px] font-black uppercase tracking-wide">Kontak WhatsApp</span>
-			</a>
-			</div>
+    <!-- Karyawan 2 -->
+    <div class="bg-gray-50/50 mt-6 p-0 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
+        <div class="flex items-center gap-6 w-full bg-orange-50 p-5 rounded-[40px] shadow-sm border border-orange-100">
+            <div class="relative shrink-0 group">
+                <img src="https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL" 
+                     onclick="openModal(this.src)"
+                     class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md cursor-pointer transition-all duration-300 group-hover:brightness-90 group-hover:scale-105 active:scale-95">
+                <div class="absolute bottom-1 right-1 bg-white w-7 h-7 rounded-full flex items-center justify-center shadow text-orange-500 pointer-events-none">
+                    <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+                </div>
+            </div>
+            <div class="flex flex-col min-w-0">
+                <span class="text-[20px] font-black text-gray-800 border-b-2 border-orange-400 leading-tight">Dadan Nurfaizal</span>
+                <span class="text-[12px] font-bold text-orange-600 uppercase tracking-widest mt-2">Staf / Operator</span>
+            </div>
+        </div>
+        <a href="https://wa.me/6283130578886" target="_blank" class="mt-4 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-center flex items-center justify-center gap-3 shadow-md transition-all active:scale-95 group">
+            <i class="fa-brands fa-whatsapp text-2xl group-hover:rotate-12 transition-transform"></i> 
+            <span class="text-[14px] font-black uppercase tracking-wide">Kontak WhatsApp</span>
+        </a>
+    </div>
+</div>
 
 			<!-- CHIP ALAMAT NURJAYA -->
 			<div class="p-5 bg-gray-50 rounded-2xl border border-gray-100 text-center w-full">
@@ -968,27 +950,7 @@
     </main>
 	
 
-<!-- Modal Image Viewer (Struktur Pop-up) -->
-<div id="imageModal" 
-     class="fixed inset-0 z-[999] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-6">
-    
-    <!-- Latar Belakang Glassmorphism iOS -->
-    <div class="absolute inset-0 bg-white/30 backdrop-blur-xl" onclick="closeModal()"></div>
-    
-    <!-- Kontainer Foto & Animasi -->
-    <div id="modalContent" 
-         class="relative transform scale-90 transition-all duration-300 ease-out">
-        
-        <img id="modalImage" src="" 
-             class="max-w-full max-h-[80vh] rounded-[50px] shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-[12px] border-white object-contain">
-        
-        <!-- Tombol Tutup (Floating) -->
-        <button onclick="closeModal()" 
-                class="absolute -top-4 -right-4 bg-white text-gray-900 w-12 h-12 rounded-full shadow-xl flex items-center justify-center hover:bg-red-50 transition-colors">
-            <i class="fa-solid fa-xmark text-xl"></i>
-        </button>
-    </div>
-</div>
+
 
 
 <!-- TOMBOL REFRESH -->
@@ -1047,7 +1009,11 @@
         </div>
     </div>
 </div>
-	
+
+
+
+
+
 <!-- KHUSUS SKRIP -->
 
 
@@ -1292,48 +1258,65 @@
 </script>
 
 <script>
-    function openModal(imageSrc) {
-        const modal = document.getElementById('imageModal');
-        const modalContent = document.getElementById('modalContent');
-        const modalImg = document.getElementById('modalImage');
 
-        // Set sumber gambar
-        modalImg.src = imageSrc;
-        
-        // Hapus hidden dulu agar elemen ada di DOM
-        modal.classList.remove('hidden');
-        
-        // Berikan sedikit delay agar transisi CSS terbaca oleh browser
-        setTimeout(() => {
-            modal.classList.add('opacity-100');
-            modalContent.classList.remove('scale-90');
-            modalContent.classList.add('scale-100');
-        }, 20);
-    }
+// Fungsi untuk membuka modal (Dipanggil dari atribut onclick di gambar karyawan)
+window.openModal = function(src) {
+    const modal = document.getElementById('imageModal');
+    const content = document.getElementById('modalContent');
+    const img = document.getElementById('modalImage');
+    const closeBtn = document.getElementById('closeBtn');
 
-    function closeModal() {
-        const modal = document.getElementById('imageModal');
-        const modalContent = document.getElementById('modalContent');
+    img.src = src;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
 
-        // Jalankan animasi keluar
-        modal.classList.remove('opacity-100');
-        modalContent.classList.remove('scale-100');
-        modalContent.classList.add('scale-90');
+    // Animasi masuk
+    setTimeout(() => {
+        modal.classList.replace('backdrop-blur-0', 'backdrop-blur-2xl');
+        modal.classList.replace('bg-black/0', 'bg-black/40');
+        content.classList.remove('scale-90', 'opacity-0', 'translate-y-10');
+        content.classList.add('scale-100', 'opacity-100', 'translate-y-0');
+        closeBtn.classList.add('opacity-100');
+    }, 20);
+};
 
-        // Sembunyikan total setelah animasi selesai (300ms)
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    }
+// Fungsi untuk menutup modal
+window.closeModalManual = function() {
+    const modal = document.getElementById('imageModal');
+    const content = document.getElementById('modalContent');
+    const closeBtn = document.getElementById('closeBtn');
 
-    // Tutup modal dengan tombol Escape di keyboard
-    document.addEventListener('keydown', function(event) {
-        if (event.key === "Escape") {
-            closeModal();
-        }
+    // Animasi keluar
+    modal.classList.replace('backdrop-blur-2xl', 'backdrop-blur-0');
+    modal.classList.replace('bg-black/40', 'bg-black/0');
+    content.classList.replace('scale-100', 'scale-90');
+    content.classList.replace('opacity-100', 'opacity-0');
+    content.classList.replace('translate-y-0', 'translate-y-10');
+    closeBtn.classList.remove('opacity-100');
+
+    // Sembunyikan elemen setelah animasi selesai
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }, 500);
+};
+
+// Pasang event listener klik pada modal setelah halaman siap
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('imageModal');
+    const content = document.getElementById('modalContent');
+
+    // Jika area modal (hitam/blur) diklik, tutup modal
+    modal.addEventListener('click', () => {
+        window.closeModalManual();
     });
-</script>
 
+    // Jika area konten (gambar) diklik, JANGAN tutup (stop propagation)
+    content.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+});
+</script>
 
 </div>
 </div>
