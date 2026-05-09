@@ -383,26 +383,28 @@
     </div>
 		
 		<div id="dashboard" class="tab-content">
-            <!-- Tombol Refresh Halaman Total -->
 			<!-- Kontainer Grafik Utama -->
-    <div style="max-width: 800px; margin: 20px auto; padding: 0 15px;">
+    <div style="max-width: 1000px; margin: 20px auto; padding: 0px;">
         
-        <div id="wadah-grafik" style="background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; position: relative; width: 100%;">
-            <button onclick="location.reload()" 
-                    style="position: absolute; right: 15px; top: 15px; z-index: 10; background: #3b82f6; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; display: flex; align-items: center; gap: 5px; transition: background 0.2s;">
-                <i class="fa-solid fa-arrows-rotate"></i> Muat Ulang Halaman
-            </button>
-
+        <div id="wadah-grafik" style="background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 8px; position: relative; width: 100%;">
+          
             <!-- Tempat Canvas -->
             <div id="dashboard" class="tab-content"> 
         
         <!-- Sesi Grafik di bagian atas tab beranda -->
-        <div id="sesi-grafik" style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: 10px auto;">
+        <div id="sesi-grafik" style="padding: 0px; border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: 0px auto;">
             <h2 style="text-align: center; font-family: sans-serif; font-size: 1.2rem;">PENDAPATAN JANUARI - APRIL 2026</h2>
             
             <div style="position: relative; height: 40vh; width: 100%;">
-                <canvas id="grafikPendapatan"></canvas>
-				
+                <canvas id="grafikPendapatan"></canvas>	
+	<main>
+    <!-- Container Grafik -->
+    <div id="wadah-grafik" style="max-width: 800px; margin: auto; padding: 20px;">
+        <div id="container-canvas" style="height: 350px; position: relative;">
+            <canvas id="grafikPendapatan"></canvas>
+        </div>
+    </div>
+</main>
             </div>
         </div>
             
@@ -741,76 +743,62 @@
 
     </main>
 	
-	<!-- Tombol ini bisa diletakkan di mana saja di web kamu -->
-   <button id="openDevModal" class="fixed top-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all flex items-center justify-center focus:outline-none z-40 group">
+<!-- TOMBOL REFRESH (Samping Kiri) -->
+<button onclick="location.reload()" 
+        class="fixed top-6 right-24 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-all flex items-center justify-center focus:outline-none z-40 group">
+    <i class="fas fa-arrows-rotate fa-lg group-hover:rotate-180 transition-transform duration-500"></i>
+</button>	
+
+<!-- Tombol Developer (Floating) -->
+<button id="openDevModal" class="fixed top-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all flex items-center justify-center focus:outline-none z-40 group">
     <i class="fas fa-cog fa-lg group-hover:rotate-90 transition-transform duration-300"></i>
 </button>
 
-    <div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
-        <!-- Main Modal Wrapper -->
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+<!-- Modal Wrapper -->
+<!-- Pastikan ID ini yang diatur hidden/block via JS -->
+<div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
     
-    <!-- 1. Background Overlay (iOS Blur) -->
-    <!-- transition & animate-in untuk memicu animasi saat muncul -->
-    <div id="modalOverlay" 
-         class="absolute inset-0 bg-black/40 backdrop-blur-md duration-300 ease-out animate-in fade-in">
-    </div>
+    <!-- 1. Background Overlay -->
+    <div id="modalOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
 
     <!-- 2. Modal Content (iOS Style) -->
-    <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden 
-                /* Animasi ala iOS: Zoom Out + Fade In */
-                transition-all duration-500 
-                [transition-timing-function:cubic-bezier(0.32,0.72,0,1)]
-                animate-in fade-in zoom-in-110">
-            <!-- Header dengan Ikon Maintenance -->
-            <div class="bg-amber-200 p-6 text-center border-b border-amber-100">
-                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-screwdriver-wrench fa-2xl "></i>
-                </div>
-                <h2 class="text-xl font-bold text-gray-800">Opsi Developer</h2>
-                <p class="text-sm text-gray-500 mt-1">Update Data & Maintenance (Khusus Admin)</p>
-            </div>
-
-            <div class="p-6 space-y-4">
-                <!-- Button Update Informasi (Blue/Github Style) -->
-                <a href="https://github.com/nazakana/" target="_blank" 
-                   class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-medium shadow-sm active:scale-95">
-                    <div class="w-8 flex justify-center">
-                        <i class="fas fa-rotate fa-lg "></i>
-                    </div>
-                    <span>Update Informasi</span>
-                    <i class="fas fa-chevron-right ml-auto text-blue-200"></i>
-                </a>
-
-                <!-- Button Kontak Developer (WhatsApp Green) -->
-                <a href="https://wa.me/6283130578886" target="_blank" 
-                   class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-colors font-medium shadow-sm active:scale-95">
-                    <div class="w-8 flex justify-center">
-                        <i class="fab fa-whatsapp fa-xl"></i>
-                    </div>
-                    <span>Kontak Developer</span>
-                    <i class="fas fa-chevron-right ml-auto text-emerald-200"></i>
-                </a>
-            </div>
-
-            <div class="px-6 pb-6">
-                <button id="closeDevModal" class="w-full py-3 text-gray-500 hover:text-gray-700 font-semibold text-sm transition-colors uppercase tracking-wider">
-                    Tutup Jendela
-                </button>
-				
-	<main>
-    <div id="wadah-grafik" style="max-width: 800px; margin: auto; padding: 20px; position: relative;">
-        <!-- Tombol Trigger Manual di Pojok Kanan Atas Grafik -->
-        <button onclick="forceRender()" 
-                style="position: absolute; right: 25px; top: 25px; z-index: 10; background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">
-            <i class="fa-solid fa-sync-alt"></i> Refresh Grafik
-        </button>
+    <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden mx-4 transform transition-all duration-500">
         
-        <div id="container-canvas" style="height: 350px;">
-            <canvas id="grafikPendapatan"></canvas>
+        <!-- Header -->
+        <div class="bg-amber-200 p-6 text-center border-b border-amber-100">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-screwdriver-wrench fa-2xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800">Opsi Developer</h2>
+            <p class="text-sm text-gray-500 mt-1">Update Data & Maintenance (Khusus Admin)</p>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 space-y-4">
+            <a href="https://github.com/nazakana/" target="_blank" 
+               class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-medium shadow-sm active:scale-95">
+                <div class="w-8 flex justify-center"><i class="fas fa-rotate fa-lg"></i></div>
+                <span>Update Informasi</span>
+                <i class="fas fa-chevron-right ml-auto text-blue-200"></i>
+            </a>
+
+            <a href="https://wa.me/6283130578886" target="_blank" 
+               class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-colors font-medium shadow-sm active:scale-95">
+                <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
+                <span>Kontak Developer</span>
+                <i class="fas fa-chevron-right ml-auto text-emerald-200"></i>
+            </a>
+        </div>
+
+        <!-- Footer/Close -->
+        <div class="px-6 pb-6">
+            <button id="closeDevModal" class="w-full py-3 text-gray-500 hover:text-gray-700 font-semibold text-sm transition-colors uppercase tracking-wider">
+                Tutup Jendela
+            </button>
         </div>
     </div>
-</main>			
+</div>
+				
 
     <script>
         const clickSfx = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU1vT19fV0FWRWZtdCAQAAAAAQABAFAfAABQHwAAAQAgAGRhdGE=");
