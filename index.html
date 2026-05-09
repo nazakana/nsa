@@ -313,10 +313,13 @@
         </div>
 
         <nav class="flex flex-row md:flex-col flex-1 items-center md:items-start contents md:block">
-            <button onclick="showTab('dashboard')" id="btn-dashboard" class="nav-link active flex items-center px-6 py-4 w-full">
-                <i class="fa-solid fa-house-user md:w-8 text-xl"></i>
-                <span>Nurjaya Home</span>
-            </button>
+    <!-- Tambahkan setTimeout pada onclick agar grafik muncul setelah tab dashboard terbuka -->
+    <!-- REVISI TOMBOL NAVIGASI -->
+<button onclick="location.href='index.html#dashboard'; location.reload();" id="btn-dashboard" class="nav-link active flex items-center px-6 py-4 w-full">
+    <i class="fa-solid fa-house-user md:w-8 text-xl"></i>
+    <span>Nurjaya Home</span>
+</button>
+</nav>
             <!-- TAB BARU: DAILY INPUT -->
             <button onclick="showTab('dailyinput')" id="btn-dailyinput" class="nav-link flex items-center px-6 py-4 w-full">
                 <i class="fa-solid fa-pen-to-square md:w-8 text-xl"></i>
@@ -364,21 +367,28 @@
             </div>
         </div>
 
-<main>
-    <!-- Sesi atau Section untuk Grafik -->
-    <div id="sesi-grafik" style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: 20px auto;">
-        
-        <h2 style="text-align: center;">PENDAPATAN  JANUARI - APRIL 2026</h2>
-        
-        <!-- Wadah khusus untuk grafik Chart.js -->
-        <div>
-            <canvas id="grafikPendapatan"></canvas>
-        </div>
+    
 
     </div>
-</main>
 
         <!-- DASHBOARD CONTENT -->
+		<!-- Kontainer Utama Konten -->
+    <!-- Pastikan ID ini sama dengan yang dipanggil di fungsi showTab -->
+    <div id="dashboard" class="tab-content"> 
+        
+        <!-- Sesi Grafik di bagian atas tab beranda -->
+        <div id="sesi-grafik" style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: 10px auto;">
+            <h2 style="text-align: center; font-family: sans-serif; font-size: 1.2rem;">PENDAPATAN JANUARI - APRIL 2026</h2>
+            
+            <div style="position: relative; height: 40vh; width: 100%;">
+                <canvas id="grafikPendapatan"></canvas>
+            </div>
+        </div>
+
+        <!-- Konten beranda lainnya bisa diletakkan di bawah sini -->
+    </div>
+		
+		
         <div id="tab-dashboard" class="tab-content p-6 md:p-14 fade-in">
             <div class="max-w-5xl">
                 <div class="flex items-center gap-3 mb-6 md:mb-10">
@@ -965,59 +975,73 @@
 </main>
 
 <script>
-    // 2. Daftarkan pluginnya agar bisa digunakan
+    // Daftarkan plugin
     Chart.register(ChartDataLabels);
 
-    var ctx = document.getElementById('grafikPendapatan').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei'],
-            datasets: [{
-                label: 'Pendapatan (Rp)',
-                data: [13214500, 10560500, 11715000, 15283500,],
-                // UBAH DI SINI: Array Warna untuk Batang (Transparan 50%)
-                backgroundColor: [
-                    'rgba(255, 5, 132, 0.5)',  // Merah untuk Januari
-                    'rgba(54, 162, 235, 0.5)',  // Biru untuk Februari
-                    'rgba(255, 206, 86, 0.5)',  // Kuning untuk Maret
-                    'rgba(75, 192, 192, 0.5)'   // Hijau Toska untuk April
-                ],
-                // UBAH DI SINI: Array Warna untuk Garis Pinggir (Penuh)
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grace: '10%' 
-                }
+    // Fungsi utama untuk menggambar
+    function renderChart() {
+        const canvas = document.getElementById('grafikPendapatan');
+        if (!canvas) return;
+
+        // Hancurkan grafik lama jika ada
+        let chartStatus = Chart.getChart("grafikPendapatan");
+        if (chartStatus !== undefined) {
+            chartStatus.destroy();
+        }
+
+        const ctx = canvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei'],
+                datasets: [{
+                    label: 'Pendapatan (Rp)',
+                    data: [13214500, 10560500, 11715000, 15283500, ], 
+                    backgroundColor: [
+                        'rgba(255, 5, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             },
-            plugins: {
-                // Menampilkan nominal di atas batang
-                datalabels: {
-                    anchor: 'end',
-                    align: 'top',
-                    formatter: function(value) {
-                        return 'Rp ' + (value / 1000000).toLocaleString('id-ID') + ' jt';
-                    },
-                    font: {
-            weight: 'bold',
-            size: 10 // Ubah angka ini untuk memperkecil/memperbesar (default biasanya 12)
-        },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grace: '15%' }
+                },
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (v) => 'Rp ' + (v / 1000000).toLocaleString('id-ID', {minimumFractionDigits: 1}) + ' jt',
+                        font: { weight: 'bold', size: 10 }
+                    }
                 }
             }
-        }
-    });
-</script>
+        });
+    }
 
+    // Fungsi paksa untuk dipanggil tombol
+    function forceRender() {
+        // Jeda 200ms agar tab benar-benar muncul dulu
+        setTimeout(renderChart, 200);
+    }
+
+    // Jalankan saat pertama kali buka
+    document.addEventListener('DOMContentLoaded', renderChart);
+</script>
 
 </div>
 </div>
