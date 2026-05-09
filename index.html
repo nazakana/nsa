@@ -315,7 +315,7 @@
         <nav class="flex flex-row md:flex-col flex-1 items-center md:items-start contents md:block">
     <!-- Tambahkan setTimeout pada onclick agar grafik muncul setelah tab dashboard terbuka -->
     <!-- REVISI TOMBOL NAVIGASI -->
-<button onclick="location.href='index.html#dashboard'; location.reload();" id="btn-dashboard" class="nav-link active flex items-center px-6 py-4 w-full">
+<button onclick="location.href='?target=dashboard&r=' + Math.random();" id="btn-dashboard" class="nav-link active flex items-center px-6 py-4 w-full">
     <i class="fa-solid fa-house-user md:w-8 text-xl"></i>
     <span>Nurjaya Home</span>
 </button>
@@ -974,6 +974,7 @@
     </div>
 </main>
 
+
 <script>
     // Daftarkan plugin
     Chart.register(ChartDataLabels);
@@ -1042,6 +1043,8 @@
     // Jalankan saat pertama kali buka
     document.addEventListener('DOMContentLoaded', renderChart);
 </script>
+
+
 
 </div>
 </div>
