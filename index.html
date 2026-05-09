@@ -720,80 +720,81 @@
             </div>
         </div>
 
-        <!-- KONTEN TAB: PROFIL NURJAYA -->
-		
-
-       
-           <!-- Container Utama untuk membatasi lebar di PC -->
-<div class="container mx-auto px-6 md:px-12 lg:px-20">
-    
-    <!-- Header Profil Owner -->
-	<div id="tab-about" class="tab-content p-3 md:p-2 hidden fade-in">
-		<div class="glass-element rounded-[35px] md:rounded-[50px] overflow-hidden bg-white shadow-sm">
-        <div class="p-4 md:p-8">
-	
-    <div class="flex flex-col lg:flex-row gap-10 md:gap-16 items-center">
-        <!-- Foto Profil -->
-        <img src="https://lh3.googleusercontent.com/d/1ba0QrHW9IQ84MzzbFvZZAUObT4WMHOXl" 
-             class="w-40 h-40 md:w-64 md:h-64 object-cover rounded-full shadow-xl border-[8px] border-white shrink-0">
+<!-- KONTEN TAB: PROFIL NURJAYA -->
+<div id="tab-about" class="tab-content hidden fade-in">
+    <!-- Container Utama: Kita kecilkan padding samping di mobile (px-4) agar kartu lebih lebar -->
+    <div class="container mx-auto px-4 md:px-8 lg:px-12 py-4">
         
-        <div class="text-center lg:text-left">
-            <h3 id="owner-name" class="text-2xl md:text-5xl font-black text-gray-800 leading-tight">
-                apt. Siti Nurjanah, S.Farm.
-            </h3>
-            <p class="text-mint-deep font-black text-sm md:text-xl mt-2 md:mt-4 uppercase tracking-wider">
-                Owner Nurjaya Group
-            </p>
-            
-            <!-- Grid Tombol -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 md:mt-12">
-                <a href="https://wa.me/6282126162025" target="_blank" onclick="playClickSound()" 
-                   class="px-6 py-4 btn-whatsapp rounded-full flex items-center justify-center gap-3 transition-transform hover:scale-105">
-                    <i class="fa-brands fa-whatsapp text-xl"></i> 
-                    <span class="font-bold text-sm md:text-base">Chat Owner</span>
-                </a>
-                
-                <a href="https://wa.me/6285211029598" target="_blank" onclick="playClickSound()" 
-                   class="px-6 py-4 btn-whatsapp rounded-full flex items-center justify-center gap-3 transition-transform hover:scale-105">
-                    <i class="fa-brands fa-whatsapp text-xl"></i> 
-                    <span class="font-bold text-sm md:text-base">Chat Admin</span>
-                </a>
+        <!-- Header Profil Owner (Kartu Putih Utama) -->
+        <div class="glass-element rounded-[30px] md:rounded-[50px] overflow-hidden bg-white shadow-sm border border-gray-100">
+            <!-- Padding Internal: Di mobile p-6 agar teks tidak menempel ke pinggir kartu -->
+            <div class="p-6 md:p-12 lg:p-16">
+                <div class="flex flex-col lg:flex-row gap-8 md:gap-16 items-center">
+                    <!-- Foto Profil -->
+                    <img src="https://lh3.googleusercontent.com/d/1ba0QrHW9IQ84MzzbFvZZAUObT4WMHOXl" 
+                         class="w-40 h-40 md:w-64 md:h-64 object-cover rounded-full shadow-xl border-[8px] border-white shrink-0">
+                    
+                    <div class="text-center lg:text-left">
+                        <h3 id="owner-name" class="text-2xl md:text-5xl font-black text-gray-800 leading-tight">
+                            apt. Siti Nurjanah, S.Farm.
+                        </h3>
+                        <p class="text-mint-deep font-black text-sm md:text-xl mt-2 md:mt-4 uppercase tracking-wider">
+                            Owner Nurjaya Group
+                        </p>
+                        
+                        <!-- Grid Tombol -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 md:mt-12">
+                            <a href="https://wa.me/6282126162025" target="_blank" onclick="playClickSound()" 
+                               class="px-6 py-4 btn-whatsapp rounded-full flex items-center justify-center gap-3 transition-transform hover:scale-105 shadow-md">
+                                <i class="fa-brands fa-whatsapp text-xl"></i> 
+                                <span class="font-bold text-sm md:text-base">Chat Owner</span>
+                            </a>
+                            
+                            <a href="https://wa.me/6285211029598" target="_blank" onclick="playClickSound()" 
+                               class="px-6 py-4 btn-whatsapp rounded-full flex items-center justify-center gap-3 transition-transform hover:scale-105 shadow-md">
+                                <i class="fa-brands fa-whatsapp text-xl"></i> 
+                                <span class="font-bold text-sm md:text-base">Chat Admin</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        
+        <!-- Bagian Logo & Info (Di Luar Kartu Owner) -->
+        <div class="mt-12">
+            <!-- FRAME FOTO LOGO -->
+            <div class="mb-6 flex justify-center">
+                <div class="rounded-2xl overflow-hidden border-4 border-white shadow-lg inline-block bg-white">
+                    <img src="https://lh3.googleusercontent.com/d/1Ab9sh5DMI9OP9CdZ46p1wS1m_US6wmJj" 
+                         class="w-full max-w-[280px] md:max-w-md object-contain" 
+                         alt="Logo Nurjaya Abadi">
+                </div>
+            </div>
 
-</div>
-			
-			
-          
-			
-			<!-- FRAME FOTO LOGO (ASPEK RASIO ASLI & BESAR) - RATA TENGAH -->
-			<div class="mb-8 flex justify-center">
-			<div class="rounded-2xl overflow-hidden border-4 border-green-50 shadow-xl inline-block bg-white">
-				<img src="https://lh3.googleusercontent.com/d/1Ab9sh5DMI9OP9CdZ46p1wS1m_US6wmJj" 
-				class="max-w-full h-auto md:max-w-md object-contain" 
-				alt="Logo Nurjaya Abadi">
-				</div>
-			</div>
+            <!-- LABEL JUDUL (CHIP HIJAU) -->
+            <div class="mb-16 flex justify-center">
+                <div class="bg-emerald-500 px-8 py-2.5 rounded-full shadow-lg border border-emerald-400">
+                    <span class="text-white font-black text-xs md:text-sm uppercase tracking-[0.2em]">
+                        Logo Nurjaya Abadi
+                    </span>
+                </div>
+            </div>
 
-			<!-- LABEL JUDUL (CHIP HIJAU) - RATA TENGAH -->
-			<div class="mb-12 flex justify-center">
-			<div class="bg-emerald-500 px-6 py-2 rounded-full shadow-md border border-emerald-400">
-			<span class="text-white font-black text-sm md:text-base uppercase tracking-[0.2em]">
-            Logo Nurjaya Abadi
-			</span>
-			</div>
-			</div>
-
-            <!-- Informasi Toko & Layanan -->
-            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+            <!-- Grid Informasi Toko & Layanan -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 px-2">
+                <!-- Kolom 1 -->
                 <div class="space-y-6">
-                    <h4 class="text-xl font-black flex items-center gap-3 text-[#3B4D45] uppercase tracking-tighter">
-                        <span class="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center"><i class="fa-solid fa-briefcase text-yellow-600 text-xs"></i></span> 
+                    <h4 class="text-xl font-black flex items-center gap-4 text-[#3B4D45] uppercase tracking-tighter">
+                        <span class="w-10 h-10 rounded-xl bg-yellow-100 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-briefcase text-yellow-600"></i>
+                        </span> 
                         Informasi Toko
                     </h4>
-                    <div class="text-gray-500 text-sm md:text-base leading-relaxed font-medium space-y-4 text-justify">
-                        <p>Nurjaya Abadi Photocopy adalah penyedia layanan jasa fotokopi, print, dan pusat ATK yang tergabung dalam NURJAYA GROUP milik apt. Siti Nurjanah, S.Farm. Kami mengutamakan kualitas layanan dan kelengkapan produk untuk memenuhi segala kebutuhan dokumentasi harian, baik bagi perorangan maupun instansi.</p>
+                    <div class="text-gray-600 text-sm md:text-base leading-relaxed font-medium space-y-4 text-justify">
+                        <p>Nurjaya Abadi Photocopy adalah penyedia layanan jasa fotokopi, print, dan pusat ATK yang tergabung dalam <span class="text-emerald-600 font-bold">NURJAYA GROUP</span> milik apt. Siti Nurjanah, S.Farm.</p>
+                        <p>Kami mengutamakan kualitas layanan dan kelengkapan produk untuk memenuhi segala kebutuhan dokumentasi harian, baik bagi perorangan maupun instansi.</p>
+                        
                         <p>Sistem NSA ini didesain khusus untuk mengelola seluruh data operasional dan arsip digital agar lebih terorganisir.</p>
                     </div>
                 </div>
@@ -801,7 +802,7 @@
                 <div class="space-y-6">
                     <h4 class="text-xl font-black flex items-center gap-3 text-[#3B4D45] uppercase tracking-tighter">
                         <span class="w-8 h-8 rounded-lg bg-mint-pastel/20 flex items-center justify-center"><i class="fa-solid fa-map-location-dot text-mint-deep text-xs"></i></span> 
-                        Layanan & Lokasi
+                        Layanan & Jasa
                     </h4>
                     <div class="text-gray-500 text-sm md:text-base leading-relaxed font-medium">
                          <ul class="list-disc list-inside space-y-1 mb-4 ml-1">
@@ -830,7 +831,7 @@
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
 			
 			<!-- Karyawan 1 -->
-			<div class="bg-gray-50/50 p-6 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
+			<div class="bg-gray-50/50 mt-6 p-0 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
 
 			<!-- Chip Identitas (Aksen Biru) -->
 			<div class="flex items-center gap-6 w-full bg-blue-50 p-5 rounded-[40px] shadow-sm border border-blue-100">
@@ -868,7 +869,7 @@
 			</div>
 
 			<!-- Karyawan 2 -->
-			<div class="bg-gray-50/50 p-6 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
+			<div class="bg-gray-50/50 mt-6 p-0 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
 
 			<!-- Chip Identitas (Aksen Orange) -->
 			<div class="flex items-center gap-6 w-full bg-orange-50 p-5 rounded-[40px] shadow-sm border border-orange-100">
@@ -913,7 +914,7 @@
 			<!-- Chip Alamat: Menggunakan rounded-full dan background putih -->
 			<div class="inline-flex items-center justify-center bg-blue-500 border border-gray-200 px-6 py-3 rounded-full shadow-sm">
 				<i class="fa-solid fa-location-dot text-white mr-3"></i>
-				<p class="text-white font-bold text-sm leading-relaxed">
+				<p class="text-[12px] font-bold text-white">
 				Jl. Bantar No. 145 RT 02 RW 007 Kel. Argasari Kec. Cihideung Kota Tasikmalaya, Jawa Barat.
 					</p>
 				</div>
