@@ -150,7 +150,7 @@
 
         .header-banner {
             width: 100%;
-            height: 380px;
+            height: 340px;
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, var(--bg-base) 100%),
                         url('https://lh3.googleusercontent.com/d/1jOnARlmFMuKn3dxJDQh1YSJN-u52dTCT') center/cover;
             position: relative;
@@ -341,20 +341,22 @@
 
 
 </head>
-<body class="flex flex-col md:flex-row">
 
- <div id="imageModal" class="fixed inset-0 z-[10000] hidden flex items-center justify-center p-4 backdrop-blur-0 bg-black/0 transition-all duration-500 ease-out">
-    <!-- Tombol Close -->
-    <div class="absolute top-8 right-8 z-[10001] text-white/50 opacity-0 transition-opacity duration-500" id="closeBtn">
+		<!-- MODAL PHOTO PREVIEW: FOTO KARYAWAN -->
+		<body class="flex flex-col md:flex-row">
+
+		<div id="imageModal" class="fixed inset-0 z-[10000] hidden flex items-center justify-center p-4 backdrop-blur-0 bg-black/0 transition-all duration-500 ease-out">
+		<!-- Tombol Close -->
+		<div class="absolute top-8 right-8 z-[10001] text-white/50 opacity-0 transition-opacity duration-500" id="closeBtn">
         <i class="fa-solid fa-xmark text-4xl cursor-pointer"></i>
-    </div>
+		</div>
 
-    <!-- Container Gambar -->
-    <div class="relative max-w-4xl w-full flex flex-col items-center justify-center z-[10002] transition-all duration-500 ease-out scale-90 opacity-0 translate-y-10" id="modalContent">
+		<!-- Container Gambar -->
+		<div class="relative max-w-4xl w-full flex flex-col items-center justify-center z-[10002] transition-all duration-500 ease-out scale-90 opacity-0 translate-y-10" id="modalContent">
         <img id="modalImage" src="" class="max-h-[75vh] max-w-full rounded-[40px] shadow-2xl border border-white/20 object-contain ring-1 ring-white/10">
         <p class="mt-6 text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] pointer-events-none">Klik di mana saja untuk menutup</p>
-    </div>
-</div>
+		</div>
+		</div>
 
     <!-- MODAL PHOTO PREVIEW: GALERI NURJAYA -->
     <div id="photo-modal" onclick="this.style.display='none'">
@@ -376,9 +378,10 @@
         </div>
 	
 	
-	
+		<!-- SESI TAB UTAMA -->
         <nav class="flex flex-row md:flex-col flex-1 items-center md:items-start contents md:block">
 		
+			<!-- TAB: NURJAYA HOME -->
 			<!-- TOMBOL NAVIGASI/TAB -->
 			<button onclick="location.href='?target=dashboard';" 
 			id="btn-dashboard" 
@@ -389,54 +392,58 @@
 			</nav>
 
             <!-- TAB: DAILY INPUT -->
-            <button onclick="showTab('dailyinput')" id="btn-dailyinput" class="nav-link flex items-center px-6 py-3 w-full">
+            <button onclick="showTab('dailyinput')" id="btn-dailyinput" class="nav-link flex items-center px-6 py-3 w-full" data-search="daily input">
                 <i class="fa-solid fa-pen-to-square md:w-8 text-xl"></i>
                 <span>Daily Input</span>
             </button>
 			<!-- TAB: ARSIP LAPORAN -->
-<button onclick="event.stopPropagation(); showTab('archive')" 
-        id="btn-archive" 
-        class="nav-link flex items-center px-6 py-3 w-full focus:outline-none">
-    <i class="fa-solid fa-folder-open md:w-8 text-xl"></i>
-    <span>Arsip Laporan</span>
-</button>
+			<button onclick="event.stopPropagation(); showTab('archive')" 
+			id="btn-archive" 
+			class="nav-link flex items-center px-6 py-3 w-full focus:outline-none" data-search="arsip laporan">
+			<i class="fa-solid fa-folder-open md:w-8 text-xl"></i>
+			<span>Arsip Laporan</span>
+			</button>
 			<!-- TAB: PRESENSI STAF-->
-            <button onclick="showTab('presensi')" id="btn-presensi" class="nav-link flex items-center px-6 py-3 w-full">
+            <button onclick="showTab('presensi')" id="btn-presensi" class="nav-link flex items-center px-6 py-3 w-full" data-search="presensi absensi jadwal kerja">
                 <i class="fa-solid fa-id-badge md:w-8 text-xl"></i>
                 <span>Presensi Staf</span>
             </button>
 			<!-- TAB: JADWAL STAF-->
-            <button onclick="showTab('calendar')" id="btn-calendar" class="nav-link flex items-center px-6 py-3 w-full">
+            <button onclick="showTab('calendar')" id="btn-calendar" class="nav-link flex items-center px-6 py-3 w-full" data-search="jadwal staf kalender kerja">
                 <i class="fa-solid fa-clock md:w-8 text-xl"></i>
                 <span>Jadwal Staf</span>
             </button>
 			<!-- TAB: PROFIL NURJAYA-->
-            <button onclick="showTab('about')" id="btn-about" class="nav-link flex items-center px-6 py-3 w-full">
+            <button onclick="showTab('about')" id="btn-about" class="nav-link flex items-center px-6 py-3 w-full" data-search="profil nurjaya tentang about">
                 <i class="fa-solid fa-info-circle md:w-8 text-xl"></i>
                 <span>Profil Nurjaya</span>
             </button>
-        </nav>
+			</nav>
 
-       <div class="sidebar-footer mt-3 mb-12 hidden md:block">
-    <!-- P-3 membuat box lebih pendek, gap-2 untuk merapatkan jarak antar elemen -->
-    <div class="glass-element p-3 rounded-[20px] flex flex-col gap-2">
-        <p class="text-[8px] text-gray-800 font-bold uppercase tracking-widest text-center">
+			<div class="sidebar-footer mt-3 mb-12 hidden md:block">
+			<!-- P-3 membuat box lebih pendek, gap-2 untuk merapatkan jarak antar elemen -->
+			<div class="glass-element p-3 rounded-[20px] flex flex-col gap-2">
+			<p class="text-[8px] text-gray-800 font-bold uppercase tracking-widest text-center">
             Informasi & Bantuan
-        </p>
-        <!-- py-2 membuat tombol lebih slim -->
-        <a href="https://wa.me/6285211029598" target="_blank" 
-           class="flex items-center justify-center btn-whatsapp py-3 rounded-full text-[9px] font-black uppercase transition-transform active:scale-95">
+			</p>
+			<!-- py-2 membuat tombol lebih slim -->
+			<a href="https://wa.me/6285211029598" target="_blank" 
+			class="flex items-center justify-center btn-whatsapp py-3 rounded-full text-[9px] font-black uppercase transition-transform active:scale-95">
             <i class="fa-brands fa-whatsapp mr-2 text-sm"></i> KONTAK ADMIN
-        </a>
-    </div>
-</div>
-    </aside>
+			</a>
+			</div>
+			</div>
+			</aside>
 
-    <!-- KONTEN TAB: NURJAYA HOME -->
+
+
+
+			<!-- KONTEN TAB: NURJAYA HOME -->
 	
-    <main class="main-content">
-        <!-- HEADER -->
-        <div class="header-banner">
+			<main class="main-content">
+			
+			<!-- HEADER -->
+			<div class="header-banner">
             <div class="flex flex-col md:flex-row md:items-end justify-between w-full">
                 <div class="fade-in">
                     <h2 class="text-white/80 text-[10px] md:text-sm font-bold tracking-widest uppercase mb-1 md:mb-2">Dashboard System</h2>
@@ -444,8 +451,8 @@
                     <p id="page-subtitle" class="text-white/70 font-bold mt-2 text-sm md:text-xl">Arsip Operasional Nurjaya Abadi</p>
                 </div>
             </div>
-        </div>
-    </div>
+			</div>
+			</div>
 
 
         <!-- KONTEN: NURJAYA HOME -->
@@ -454,14 +461,11 @@
 		<!-- LATAR BELAKANG KONTEN GRAFIK -->
 		<div style="max-width: 1000px; margin: 20px auto; padding: 0px;">
         
-        <div id="wadah-grafik" style="background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 8px; position: relative; width: 100%;">
-          
-        <!-- LAHAN CANVAS -->
-        <div id="dashboard" class="tab-content"> 
+        <div id="wadah-grafik" style="background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 8px; position: relative; width: 100%">
         
         <!-- SESI GRAFIK: BAGIAN ATAS BERANDA -->
-        <div id="sesi-grafik" style="padding: 0px; border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: 0px auto;">
-            <h2 style="text-align: center; font-family: sans-serif; font-size: 1.2rem;">PENDAPATAN <br> JANUARI - APRIL 2026</h2>
+        <div id="sesi-grafik" style="padding: 5px; border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: 5px auto;" class="searchable-content" data-search="grafik bagan statistik pendapatan 2026">
+            <h2 style="text-align: center; font-family: sans-serif; font-size: 1rem;"><strong>STATISTIK PENDAPATAN</strong> <br> Januari - April 2026</h2>
             
             <div style="position: relative; height: 25vh; width: 100%;">
                 <canvas id="grafikPendapatan"></canvas>	
@@ -639,19 +643,19 @@
         <!-- KONTEN TAB: ARSIP LAPORAN -->
         <div id="tab-archive" class="tab-content p-6 md:p-14 hidden fade-in">
             <div class="flex flex-wrap gap-3 md:gap-5 mb-8 md:mb-12">
-                <button onclick="loadDrive('1Bd1Dh_RkNXEtCHXI9D6nqQvYwplwIocC', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+                <button data-search="januari 2026" onclick="loadDrive('1Bd1Dh_RkNXEtCHXI9D6nqQvYwplwIocC', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
                     <i class="fa-solid fa-file-pdf text-green-500"></i>
                     <span>Januari 2026</span>
                 </button>
-                <button onclick="loadDrive('1T1Wi-kNxj28kALm25LMVZHqW6Qy8Gu0h', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+                <button data-search="februari 2026" onclick="loadDrive('1T1Wi-kNxj28kALm25LMVZHqW6Qy8Gu0h', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
                     <i class="fa-solid fa-file-pdf text-green-500"></i>
                     <span>Februari 2026</span>
                 </button>
-                <button onclick="loadDrive('1AJZondElG07YmLE45huqgOH99LL015ce', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+                <button data-search="maret 2026" onclick="loadDrive('1AJZondElG07YmLE45huqgOH99LL015ce', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
                     <i class="fa-solid fa-file-pdf text-green-500"></i>
                     <span>Maret 2026</span>
                 </button>
-                <button onclick="loadDrive('1g2YILv2OMYo8y2uQSi1Z8aVZIm4Eou8G', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+                <button data-search="april 2026" onclick="loadDrive('1g2YILv2OMYo8y2uQSi1Z8aVZIm4Eou8G', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
                     <i class="fa-solid fa-file-pdf text-green-500"></i>
                     <span>April 2026</span>
                 </button>
@@ -659,48 +663,48 @@
 				<!-- Container Tombol Mei -->
 				<div class="relative inline-block">
 				<!-- Tombol Mei -->
-<button onclick="event.stopPropagation(); document.getElementById('popup-mei-final').style.display = 'flex'" 
-        class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 hover:bg-white/10 relative z-10 active:scale-95">
-    <i class="fa-solid fa-file-pdf text-gray-400"></i>
-    <span class="text-gray-500">Mei 2026</span>
-</button>
+				<button data-search="mei 2026" onclick="event.stopPropagation(); document.getElementById('popup-mei-final').style.display = 'flex'" 
+				class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 hover:bg-white/10 relative z-10 active:scale-95">
+					<i class="fa-solid fa-file-pdf text-gray-400"></i>
+					<span class="text-gray-500">Mei 2026</span>
+				</button>
 
 						<!-- Popup Khusus Mei -->
-<div id="popup-mei-final" 
-     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; padding: 1rem;"
-     onclick="this.style.display = 'none'"> <!-- Klik background untuk tutup -->
+						<div id="popup-mei-final" 
+						style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; padding: 1rem;"
+						onclick="this.style.display = 'none'"> <!-- Klik background untuk tutup -->
     
-    <!-- Background Gelap -->
-    <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"></div>
+						<!-- Background Gelap -->
+						<div style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"></div>
 
-    <!-- Kartu Pesan -->
-    <div class="animate-ios" 
-         style="position: relative; background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 2.5rem 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);"
-         onclick="event.stopPropagation()"> <!-- Klik kartu TIDAK menutup popup -->
+						<!-- Kartu Pesan -->
+						<div class="animate-ios" 
+						style="position: relative; background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 2.5rem 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);"
+						onclick="event.stopPropagation()"> <!-- Klik kartu TIDAK menutup popup -->
             
-        <div style="width: 65px; height: 65px; background: #fff7ed; color: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-            <i class="fa-solid fa-clock fa-2xl"></i>
-        </div>
+						<div style="width: 65px; height: 65px; background: #fff7ed; color: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+						<i class="fa-solid fa-clock fa-2xl"></i>
+						</div>
             
-        <h3 style="font-size: 1.3rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">Data Belum Tersedia</h3>
-        <p style="font-size: 0.9rem; color: #4b5563; line-height: 1.6; margin-bottom: 1.8rem;">
-            Data untuk bulan <b>Mei 2026</b> baru akan muncul setelah rekapitulasi akhir bulan selesai diproses.
-        </p>
+						<h3 style="font-size: 1.3rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">Data Belum Tersedia</h3>
+						<p style="font-size: 0.9rem; color: #4b5563; line-height: 1.6; margin-bottom: 1.8rem;">
+							Data untuk bulan <b>Mei 2026</b> baru akan muncul setelah rekapitulasi akhir bulan selesai diproses.
+						</p>
 
-        <button onclick="document.getElementById('popup-mei-final').style.display = 'none'" 
-                style="width: 100%; background: #111827; color: white; padding: 1.1rem; border-radius: 20px; font-weight: 700; border: none; cursor: pointer;">
-            Saya Mengerti
-        </button>
-    </div>
-</div>
+						<button onclick="document.getElementById('popup-mei-final').style.display = 'none'" 
+						style="width: 100%; background: #111827; color: white; padding: 1.1rem; border-radius: 20px; font-weight: 700; border: none; cursor: pointer;">
+						Saya Mengerti
+						</button>
+						</div>
+						</div>
 					
 					
-				</div>
-            </div>
+						</div>
+						</div>
             
-            <div id="viewer-container-archive" class="viewer-container">
-                <div class="flex flex-col items-center justify-center h-full text-gray-300 p-10 text-center">
-                    <i class="fa-solid fa-layer-group text-6xl opacity-10 mb-6"></i>
+						<div id="viewer-container-archive" class="viewer-container">
+						<div class="flex flex-col items-center justify-center h-full text-gray-300 p-10 text-center">
+						<i class="fa-solid fa-layer-group text-6xl opacity-10 mb-6"></i>
                     <p class="font-black text-lg md:text-2xl text-gray-400">Pilih Laporan untuk diperiksa</p>
                 </div>
             </div>
@@ -734,10 +738,10 @@
             </div>
         </div>
 
-<!-- KONTEN TAB: PROFIL NURJAYA -->
-<div id="tab-about" class="tab-content hidden fade-in">
-    <!-- Container Utama: Kita kecilkan padding samping di mobile (px-4) agar kartu lebih lebar -->
-    <div class="container mx-auto px-4 md:px-8 lg:px-12 py-4">
+		<!-- KONTEN TAB: PROFIL NURJAYA -->
+		<div id="tab-about" class="tab-content hidden fade-in">
+		<!-- Container Utama: Kita kecilkan padding samping di mobile (px-4) agar kartu lebih lebar -->
+		<div class="container mx-auto px-4 md:px-8 lg:px-12 py-4">
         
         <!-- Header Profil Owner (Kartu Putih Utama) -->
         <div class="glass-element rounded-[30px] md:rounded-[50px] overflow-hidden bg-white shadow-sm border border-gray-100">
@@ -905,8 +909,8 @@
                                 
 								
 				<!-- LOKASI NURJAYA -->
-<section class="w-full max-w-5xl mx-auto my-10 px-4">
-    <div class="text-center mb-8">
+				<section class="w-full max-w-5xl mx-auto my-10 px-4">
+			<div class="text-center mb-8">
         <h2 class="text-2xl md:text-4xl font-black text-gray-800 tracking-tight">Lokasi Kami</h2>
         <div class="h-1.5 w-20 bg-blue-500 mx-auto mt-2 rounded-full"></div>
     </div>
@@ -949,66 +953,6 @@
         </div>
     </main>
 	
-
-
-
-
-<!-- TOMBOL REFRESH -->
-<button onclick="location.reload()" 
-        class="fixed top-6 right-24 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-all flex items-center justify-center focus:outline-none z-40 group">
-    <i class="fas fa-arrows-rotate fa-lg group-hover:rotate-180 transition-transform duration-500"></i>
-</button>	
-
-<!-- TOMBOL DEVELOPER -->
-<button id="openDevModal" class="fixed top-6 right-6 w-14 h-14 bg-green-500 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all flex items-center justify-center focus:outline-none z-40 group">
-    <i class="fas fa-cog fa-lg group-hover:rotate-90 transition-transform duration-300"></i>
-</button>
-
-<!-- Modal Wrapper -->
-<div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
-    
-    <!-- 1. Background Overlay (iOS Blur Aktif) -->
-    <div id="modalOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-md overlay-animate-in"></div>
-
-    <!-- 2. Modal Content (iOS Style + Animasi Zoom) -->
-    <div class="relative bg-white/90 backdrop-blur-xl w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in">
-        
-        <!-- Header (Warna Amber Lembut) -->
-        <div class="bg-amber-200/50 p-6 text-center border-b border-gray-100">
-            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                <i class="fas fa-screwdriver-wrench fa-2xl"></i>
-            </div>
-            <h2 class="text-xl font-bold text-gray-800">Opsi Developer</h2>
-            <p class="text-sm text-gray-500 mt-1">Update Data & Maintenance</p>
-        </div>
-
-       <!-- Body -->
- <div class="p-6 space-y-4">
-    <!-- Button GitHub - Diubah ke rounded-full -->
-    <a href="https://github.com/nazakana/" target="_blank" 
-       class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all active:scale-95 shadow-md">
-        <div class="w-8 flex justify-center"><i class="fas fa-rotate fa-lg"></i></div>
-        <span class="font-semibold">Update Informasi</span>
-        <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
-    </a>
-
-    <!-- Button WhatsApp - Diubah ke rounded-full -->
-    <a href="https://wa.me/6283130578886" target="_blank" 
-       class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition-all active:scale-95 shadow-md">
-        <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
-        <span class="font-semibold">Kontak Developer</span>
-        <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
-    </a>
- </div>
-
-        <!-- Footer -->
-        <div class="px-6 pb-6 text-center">
-            <button id="closeDevModal" class="w-full py-3 text-blue-600 hover:text-blue-800 font-bold text-lg transition-colors">
-                Selesai
-            </button>
-        </div>
-    </div>
-</div>
 
 
 
@@ -1198,11 +1142,11 @@
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei'],
+                labels: ['Januari', 'Februari', 'Maret', 'April'],
                 datasets: [{
                     label: 'Pendapatan (Rp)',
-                    data: [13214500, 10560500, 11715000, 15283500, 0], 
-					barPercentage: 0.5,      // Mengatur lebar batang (0.1 sampai 1.0)
+                    data: [13214500, 10560500, 11715000, 15283500], 
+					barPercentage: 0.6,      // Mengatur lebar batang (0.1 sampai 1.0)
     categoryPercentage: 0.8, // Mengatur lebar ruang antar kelompok batang
                     backgroundColor: [
                         'rgba(255, 5, 132, 0.5)',
@@ -1318,7 +1262,540 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+
+
+<script>
+function openNSASearch() {
+    const box = document.getElementById('boxSearchNSA');
+    box.style.display = 'flex';
+    document.getElementById('inputNSA').focus();
+    document.body.style.overflow = 'hidden';
+}
+
+function closeNSASearch() {
+    const box = document.getElementById('boxSearchNSA');
+    box.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    document.getElementById('inputNSA').value = '';
+    document.getElementById('resultNSA').innerHTML = '';
+}
+
+document.getElementById('inputNSA').addEventListener('input', function(e) {
+    const key = e.target.value.toLowerCase().trim();
+    const resultDiv = document.getElementById('resultNSA');
+    resultDiv.innerHTML = '';
+
+    if (key === "") return;
+
+    // Ambil tombol asli dari Arsip & Presensi
+    const sourceButtons = document.querySelectorAll('.month-btn, .sub-tab-btn, .searchable-content');
+
+    sourceButtons.forEach(originalBtn => {
+        const dataSearch = originalBtn.getAttribute('data-search') || "";
+        const label = originalBtn.innerText || "";
+        const combined = (dataSearch + " " + label).toLowerCase();
+
+        if (combined.includes(key)) {
+            const clone = originalBtn.cloneNode(true);
+            
+            // Style kloning agar konsisten di layar blur
+            clone.style.display = "flex";
+            clone.className = originalBtn.className + " shadow-xl border border-white/50";
+
+            clone.onclick = function() {
+                const parentTab = originalBtn.closest('.tab-content');
+                if (parentTab) {
+                    const tabId = parentTab.id;
+                    // Pastikan fungsi ganti tab Anda terpanggil
+                    if (typeof showTab === 'function') showTab(tabId.replace('tab-', ''));
+                }
+                originalBtn.click();
+                closeNSASearch();
+            };
+            
+            resultDiv.appendChild(clone);
+        }
+    });
+
+    if (resultDiv.innerHTML === '') {
+        resultDiv.innerHTML = '<div class="bg-white/50 backdrop-blur px-6 py-3 rounded-full text-gray-400">Tidak ditemukan...</div>';
+    }
+});
+
+// ESC to Close
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape") closeNSASearch();
+});
+</script>
+
+
+
 </div>
 </div>
+
+
+
+		<!-- SESI TOMBOL AKSI -->
+
+
+		<!-- TOMBOL SEARCH -->
+		<div class="fixed top-6 left-1/2 -translate-x-1/2 md:left-auto md:right-6 md:translate-x-0 w-[92%] md:w-auto z-[9998] flex items-center justify-center md:justify-end gap-3 transition-all duration-500">
+    
+		<div onclick="openNSASearch()" 
+         class="w-full max-w-[300px] md:w-[350px] bg-white/60 backdrop-blur-md border border-white/40 px-5 py-2.5 md:py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:bg-white/80 transition-all duration-300 group">
+        <i class="fas fa-search text-blue-600 group-hover:scale-110 transition-transform text-sm md:text-base"></i>
+        <span class="text-gray-900 font-medium text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Cari laporan atau staf...</span>
+		</div>
+
+		<!-- TOMBOL REFRESH -->
+		<button onclick="location.reload()" 
+        class="w-10 h-10 md:w-12 md:h-12 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-all flex items-center justify-center focus:outline-none group">
+		<i class="fas fa-arrows-rotate text-xs md:text-base group-hover:rotate-180 transition-transform duration-500"></i>
+		</button>
+
+        <button id="openDevModal" 
+                class="w-10 h-10 md:w-12 md:h-12 bg-green-500 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all flex items-center justify-center focus:outline-none group">
+            <i class="fas fa-cog text-xs md:text-base group-hover:rotate-90 transition-transform duration-300"></i>
+        </button>
+		</div>
+		</div>
+
+		<div id="boxSearchNSA" style="display:none;" class="fixed inset-0 z-[10000] bg-white/40 backdrop-blur-[30px] flex-col items-center p-6 pt-24">
+		<div style="width:100%; max-width:600px;">
+        <div class="relative">
+            <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-indigo-600 text-l"></i>
+            <input type="text" id="inputNSA" placeholder="Cari misal: Januari, Laporan, Cahya ..." 
+                   style="width:100%; padding:18px 25px 18px 60px; border-radius:30px; border:1px solid rgba(255,255,255,0.5); font-size:1.1rem; font-weight:600; outline:none; box-shadow:0 15px 30px rgba(0,0,0,0.1); background: rgba(255,255,255,0.85);">
+        </div>
+        <div id="resultNSA" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center; max-height:65vh; overflow-y:auto; padding:10px;"></div>
+        <button onclick="closeNSASearch()" class="mt-6 w-full py-3 text-gray-400 font-bold hover:text-indigo-600 transition-colors uppercase tracking-widest text-[12px]">Klik untuk membatalkan pencarian</button>
+		</div>
+		</div>
+
+		<!-- TOMBOL DEVELOPER -->
+		<!-- Modal Wrapper -->
+		<div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
+    
+		<!-- 1. Background Overlay (iOS Blur Aktif) -->
+		<div id="modalOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-md overlay-animate-in"></div>
+
+		<!-- 2. Modal Content (iOS Style + Animasi Zoom) -->
+		<div class="relative bg-white/90 backdrop-blur-xl w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in">
+        
+        <!-- Header (Warna Amber Lembut) -->
+        <div class="bg-amber-200/50 p-6 text-center border-b border-gray-100">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <i class="fas fa-screwdriver-wrench fa-2xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800">Opsi Developer</h2>
+            <p class="text-sm text-gray-500 mt-1">Update Data & Maintenance</p>
+        </div>
+
+		<!-- Body -->
+		<div class="p-6 space-y-4">
+		<!-- Button GitHub - Diubah ke rounded-full -->
+		<a href="https://github.com/nazakana/" target="_blank" 
+		class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all active:scale-95 shadow-md">
+        <div class="w-8 flex justify-center"><i class="fas fa-rotate fa-lg"></i></div>
+        <span class="font-semibold">Update Informasi</span>
+        <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
+		</a>
+
+		<!-- Button WhatsApp - Diubah ke rounded-full -->
+		<a href="https://wa.me/6283130578886" target="_blank" 
+		class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition-all active:scale-95 shadow-md">
+        <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
+        <span class="font-semibold">Kontak Developer</span>
+        <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
+		</a>
+		</div>
+
+        <!-- Footer -->
+        <div class="px-6 pb-6 text-center">
+            <button id="closeDevModal" class="w-full py-3 text-blue-600 hover:text-blue-800 font-bold text-lg transition-colors">
+                Selesai
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- TOMBOL DARK/LIGHT MODE -->
+<!-- Proses Pengembangan -->
+
+
+
+		<!-- SKRIP SEARCH -->
+		<script>
+		// --- LOGIKA MODAL DEVELOPER (UPGRADED) ---
+		const devModal = document.getElementById('devModal');
+		const openDevBtn = document.getElementById('openDevModal');
+		const closeDevBtn = document.getElementById('closeDevModal');
+		const modalOverlay = document.getElementById('modalOverlay'); // Kita ambil overlay-nya
+
+		// Buka Modal
+		openDevBtn.onclick = () => { 
+			devModal.classList.remove('hidden'); 
+			document.body.style.overflow = 'hidden'; 
+		};
+
+		// Fungsi Tutup Modal
+		const closeAction = () => { 
+			devModal.classList.add('hidden'); 
+			document.body.style.overflow = 'auto'; 
+		};
+
+		// Tutup lewat tombol "Selesai"
+		closeDevBtn.onclick = closeAction;
+
+		// TUTUP JIKA KLIK DI MANA SAJA DI LUAR POPUP (OVERLAY)
+		devModal.onclick = (e) => {
+			// Jika yang diklik adalah background (devModal itu sendiri) 
+			// dan bukan kotak konten di dalamnya, maka tutup.
+			if (e.target === devModal || e.target === modalOverlay) {
+				closeAction();
+			}
+		};
+		window.addEventListener('keydown', (e) => {
+			if (e.key === "Escape" && !devModal.classList.contains('hidden')) {
+				closeAction();
+			}
+		});
+
+		// --- LOGIKA SEARCH (FUNGSI ASLI YANG SUDAH WORK) ---
+		function openNSASearch() {
+			document.getElementById('boxSearchNSA').style.display = 'flex';
+			document.getElementById('inputNSA').focus();
+			document.body.style.overflow = 'hidden';
+		}
+
+		function closeNSASearch() {
+			document.getElementById('boxSearchNSA').style.display = 'none';
+			document.body.style.overflow = 'auto';
+			document.getElementById('inputNSA').value = '';
+			document.getElementById('resultNSA').innerHTML = '';
+		}
+
+		document.getElementById('inputNSA').addEventListener('input', function(e) {
+			const key = e.target.value.toLowerCase().trim();
+			const resultDiv = document.getElementById('resultNSA');
+			resultDiv.innerHTML = '';
+
+			if (key === "") return;
+
+			// TAMBAHKAN .searchable-content di sini agar Satpam mau meriksa
+			const sourceElements = document.querySelectorAll('.month-btn, .sub-tab-btn, .nav-link, .searchable-content');
+
+			sourceElements.forEach(originalEl => {
+				const dataSearch = originalEl.getAttribute('data-search') || "";
+				const labelText = originalEl.innerText || "";
+				const combined = (dataSearch + " " + labelText).toLowerCase();
+
+				if (combined.includes(key)) {
+					let resultItem;
+
+					// KONDISI 1: Jika yang ditemukan adalah KONTEN/GRAFIK (DIV)
+				   // ... di dalam loop sourceElements.forEach ...
+
+		if (originalEl.classList.contains('searchable-content')) {
+			resultItem = document.createElement('button');
+			resultItem.className = "glass-element px-6 py-4 rounded-[20px] font-bold flex items-center gap-3 transition-all shadow-md bg-indigo-600 text-white hover:bg-indigo-700";
+			resultItem.className = "glass-element px-6 py-4 rounded-[20px] font-bold flex items-center gap-3 transition-all shadow-md bg-indigo-600 text-white hover:bg-indigo-700";
+			resultItem.innerHTML = `<i class="fas fa-chart-line"></i> <span>Lihat Statistik Pendapatan</span>`;
+			
+			resultItem.onclick = function() {
+				// 1. Cari tombol refresh biru Anda di dalam halaman
+				const tombolRefreshAsli = document.querySelector('button[onclick="location.reload()"]');
+				
+				if (tombolRefreshAsli) {
+					// 2. Simulasikan klik pada tombol biru tersebut
+					tombolRefreshAsli.click();
+				} else {
+					// 3. Cadangan: Jika tombol tidak ketemu, tetap reload manual
+					location.reload();
+				}
+
+				closeNSASearch();
+			};
+		}
+// ... sisa kode kloning tombol lainnya ...
+            // KONDISI 2: Jika yang ditemukan adalah TOMBOL BIASA
+            else {
+                resultItem = originalEl.cloneNode(true);
+                resultItem.style.display = "flex";
+                resultItem.style.width = "auto";
+                resultItem.style.margin = "0";
+
+                if (originalEl.classList.contains('nav-link')) {
+                    resultItem.className = "glass-element px-6 py-4 rounded-[20px] font-bold flex items-center gap-3 transition-all shadow-md bg-white/80 text-gray-800";
+                }
+
+                resultItem.onclick = function() {
+                    const parentTab = originalEl.closest('.tab-content');
+                    if (parentTab) {
+                        const tabId = parentTab.id;
+                        if (typeof showTab === 'function') showTab(tabId.replace('tab-', ''));
+                    }
+                    originalEl.click();
+                    closeNSASearch();
+                };
+            }
+            
+            resultDiv.appendChild(resultItem);
+        }
+    });
+
+    if (resultDiv.innerHTML === '') {
+        resultDiv.innerHTML = '<div class="bg-white/50 backdrop-blur px-6 py-3 rounded-full text-gray-400">Tidak ditemukan...</div>';
+    }
+});
+
+document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeNSASearch(); });
+</script>
+
+
+
+		<!-- SKRIP ANIMASI -->
+		<script>
+		function jalankanAnimasi(callback) {
+			const loader = document.getElementById('loadingLiquid');
+			const content = document.getElementById('loaderContent');
+
+			// --- FASE 1: MUNCUL (FADE IN) ---
+			// Tampilkan container utama
+			loader.classList.remove('hidden');
+			
+			// Gunakan requestAnimationFrame agar browser siap melakukan transisi
+			requestAnimationFrame(() => {
+				// Munculkan background putih
+				loader.style.opacity = '1';
+				
+				// Munculkan konten (ikon & teks) sedikit lebih lambat agar estetik
+				setTimeout(() => {
+					content.style.opacity = '1';
+				}, 150);
+			});
+
+			// --- FASE 2: MENUNGGU (ANIMASI BERJALAN) ---
+			// Tahan selama 1.5 detik agar user bisa melihat animasi bounce
+			setTimeout(() => {
+				
+				// --- FASE 3: KELUAR (FADE OUT BERURUTAN) ---
+				// 1. Ikon dan Teks fade out duluan (Cepat: 300ms)
+				content.classList.add('fade-out-forced');
+
+				// 2. Setelah ikon hilang, Background putih ikut fade out
+				setTimeout(() => {
+					loader.classList.add('fade-out-forced');
+
+					// 3. Eksekusi Reload/Navigasi tepat saat background hampir hilang total
+					// Ini trik agar transisinya 'menyambung' dengan halaman baru
+					setTimeout(() => {
+						callback();
+					}, 250); // Jeda tipis sebelum reload benar-benar terjadi
+
+				}, 300); // Jeda setelah ikon mulai fade out
+
+			}, 1500); // Durasi total menunggu
+		}
+		</script>
+
+
+		<!-- SKRIP ANIMASI OTOMATIS -->
+		<script>
+		// Jalankan animasi otomatis saat halaman SELESAI dimuat (Refresh F5)
+		window.addEventListener('load', () => {
+			const loader = document.getElementById('loadingLiquid');
+			const content = document.getElementById('loaderContent');
+
+			// Tampilkan loader langsung (tanpa transisi masuk agar menutupi proses loading asli)
+			loader.classList.remove('hidden');
+			loader.style.opacity = '1';
+			content.style.opacity = '1';
+
+			// Beri waktu 1 detik agar user merasa ada proses 'sync', lalu fade out
+			setTimeout(() => {
+				content.classList.add('fade-out-forced');
+				
+				setTimeout(() => {
+					loader.classList.add('fade-out-forced');
+					
+					// Hilangkan total dari DOM setelah benar-benar transparan
+					setTimeout(() => {
+						loader.classList.add('hidden');
+					}, 500);
+				}, 300);
+			}, 1000); 
+		});
+		</script>
+
+
+<!-- LOGIKA DARK LIGHT MODE -->
+<!-- Belum sempurna --
+
+<!-- OVERLAY DARK MODE -->
+<!-- Belum Sempurna -->
+
+
+		<!-- OVERLAY ANIMASI LIQUID -->
+		<style>
+			/* Transisi standar untuk Opacity agar halus */
+			.fade-element {
+				transition: opacity 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out;
+				opacity: 0;
+			}
+
+			/* Class untuk memaksa fade out cepat di akhir */
+			.fade-out-forced {
+				opacity: 0 !important;
+				backdrop-filter: blur(0px) !important;
+				transition: opacity 0.4s ease-in, backdrop-filter 0.4s ease-in !important;
+			}
+
+			/* Efek Icon Bounce */
+			.icon-bounce {
+				animation: gentleBounce 1.2s ease-in-out infinite;
+			}
+
+			@keyframes gentleBounce {
+				0%, 100% { transform: scale(1); }
+				50% { transform: scale(1.1); }
+			}
+		</style>
+
+		<div id="loadingLiquid" 
+			 class="fixed inset-0 z-[11000] hidden flex items-center justify-center fade-element" 
+			 style="background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+			
+			<div id="loaderContent" class="relative flex flex-col items-center fade-element">
+				<div class="text-7xl text-indigo-600 icon-bounce">
+					<i class="fa-solid fa-house-user"></i>
+				</div>
+				<div class="mt-6 flex flex-col items-center gap-2">
+					<p class="text-indigo-900/60 font-bold tracking-[0.3em] text-[10px] uppercase">Nurjaya Smart Archive</p>
+					<div class="w-20 h-1 bg-indigo-100/50 rounded-full overflow-hidden">
+						<div class="bg-indigo-600 h-full w-full animate-[loading_1.2s_ease-in-out]"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center fade-element" style="background-color: rgba(255, 255, 255, 0.96);">
+			<div id="loaderContent" class="relative flex flex-col items-center fade-element">
+				<div class="text-7xl text-indigo-600 icon-bounce">
+					<i class="fa-solid fa-house-user"></i>
+				</div>
+				<div class="mt-6 flex flex-col items-center gap-2">
+					<p class="text-gray-400 font-bold tracking-[0.3em] text-[10px] uppercase">Nurjaya Smart Archive</p>
+					<div class="w-20 h-1 bg-gray-100 rounded-full overflow-hidden">
+						<div class="bg-indigo-600 h-full w-full animate-[loading_1.2s_ease-in-out]"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<style>
+			@keyframes loading {
+				0% { transform: translateX(-100%); }
+				100% { transform: translateX(0%); }
+			}
+		</style>
+
+		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center fade-overlay">
+			<div class="relative flex flex-col items-center">
+				<div id="loaderIcon" class="text-7xl text-indigo-600 icon-bounce">
+					<i class="fa-solid fa-house-user"></i>
+				</div>
+				<div class="mt-6 flex flex-col items-center gap-2">
+					<p class="text-gray-400 font-bold tracking-[0.3em] text-[10px] uppercase">Nurjaya Smart Archive</p>
+					<div class="w-20 h-1 bg-gray-100 rounded-full overflow-hidden">
+						<div class="bg-indigo-600 h-full w-full animate-[loading_1s_ease-in-out]"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<style>
+			@keyframes loading {
+				0% { transform: translateX(-100%); }
+				100% { transform: translateX(0%); }
+			}
+		</style>
+
+		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center fade-overlay">
+			<div class="relative flex flex-col items-center">
+				<div class="text-7xl text-indigo-600 icon-bounce">
+					<i class="fa-solid fa-house-user"></i>
+				</div>
+				
+				<div class="mt-6 flex flex-col items-center gap-2">
+					<p class="text-gray-500 font-bold tracking-[0.3em] text-[10px] uppercase">Nurjaya Smart Archive</p>
+					<div class="w-24 h-1 bg-gray-100 rounded-full overflow-hidden">
+						<div class="bg-indigo-600 h-full w-full animate-[loading_1.2s_ease-in-out]"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<style>
+			@keyframes loading {
+				0% { transform: translateX(-100%); }
+				100% { transform: translateX(0%); }
+			}
+		</style>
+
+		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center">
+			<div id="glassLayer" class="absolute inset-0"></div>
+			
+			<div class="relative flex flex-col items-center">
+				<div class="text-9xl text-indigo-600 icon-glow">
+					<i class="fa-solid fa-house-user"></i>
+				</div>
+				
+				<div class="mt-8 flex flex-col items-center gap-2">
+					<p class="text-indigo-900 font-medium tracking-[0.4em] text-xs uppercase opacity-80">Menyinkronkan Data</p>
+					<div class="w-32 h-[2px] bg-indigo-100 rounded-full overflow-hidden">
+						<div class="bg-indigo-600 h-full w-1/2 animate-[shimmer_1.5s_infinite_linear]"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<style>
+			@keyframes shimmer {
+				0% { transform: translateX(-150%); }
+				100% { transform: translateX(250%); }
+			}
+		</style>
+
+		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center">
+			<div class="absolute inset-0 bg-white/60 backdrop-blur-xl"></div>
+			
+			<div id="liquidBg" class="absolute bottom-0 left-0 right-0 bg-indigo-600 smooth-fill h-0 opacity-20"></div>
+
+			<div id="loaderContent" class="relative flex flex-col items-center">
+				<div class="relative text-9xl text-gray-200">
+					<i class="fa-solid fa-house-user"></i>
+					<div id="liquidFill" class="absolute bottom-0 left-0 right-0 overflow-hidden text-indigo-600 h-0 smooth-fill">
+						<i class="fa-solid fa-house-user"></i>
+					</div>
+				</div>
+				<div class="mt-6 flex flex-col items-center">
+					<span class="text-indigo-600 font-black tracking-[0.3em] text-sm uppercase">Nurjaya Smart Archive</span>
+					<div class="w-12 h-1 bg-indigo-100 mt-2 rounded-full overflow-hidden">
+						<div class="bg-indigo-600 h-full w-full -translate-x-full animate-[progress_1.6s_infinite]"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<style>
+			@keyframes progress {
+				0% { transform: translateX(-100%); }
+				100% { transform: translateX(100%); }
+			}
+		</style>
+
+
 </body>
 </html>
