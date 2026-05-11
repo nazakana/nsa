@@ -339,6 +339,20 @@
     }
 </style>
 
+<style>
+    /* Menghilangkan panah atas bawah di Chrome, Safari, Edge, dan Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Menghilangkan panah atas bawah di Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
 
 </head>
 
@@ -494,65 +508,68 @@
                 </div>
 
 				<!-- SUB JUDUL: LAPORAN HARIAN -->
-                <div class="glass-element p-6 md:p-8 mb-6 rounded-[25px] border-l-4 border-yellow-500 relative">
-                    <div class="absolute top-4 right-6 px-3 py-1 bg-green-600 text-white text-[9px] font-black rounded-full uppercase tracking-widest shadow-sm">LAPORAN HARIAN</div>
-                    <h4 class="text-xl md:text-2xl font-black text-gray-900 mb-6 uppercase leading-tight pr-24">PENDAPATAN TERBARU <br> Sabtu, (09/05/2026)</h4>
-                    <div class="space-y-4 text-gray-600 text-sm md:text-lg leading-relaxed font-medium">
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Pendapatan Kotor : Rp 223.000</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Pengeluaran Kasir : Rp 25.000</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Sisa Akhir : Rp 0</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Tabungan (A) : Rp 45.000</p>
-                        </div>
-						<div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Tabungan (B) : Rp 133.000</p>
-                        </div>
-						<div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>TARGET TERPENUHI : TIDAK</p>
-                        </div>
-					</div>
-                </div>
-				
-				<!-- SUB JUDUL: SUMMARY BUKU KEUANGAN -->
-                <div class="glass-element p-6 md:p-8 mb-6 rounded-[25px] border-l-4 border-purple-500 relative">
-                    <div class="absolute top-4 right-6 px-3 py-1 bg-green-600 text-white text-[9px] font-black rounded-full uppercase tracking-widest shadow-sm">SUMMARY HARIAN</div>
-					<h4 class="text-xl md:text-2xl font-black text-gray-900 mb-6 uppercase leading-tight pr-24">SUMMARY HARIAN <br> Sabtu, (09/05/2026)</h4>
-                    <div class="space-y-4 text-gray-600 text-sm md:text-lg leading-relaxed font-medium">
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Penjualan Meterai : Rp 223.000</p>
-                        </div>
-						<div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Laba Meterai : Rp 100.000</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Tabungan (A) : Rp 405.000</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Tabungan (B) : Rp 748.000</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Sisa Akhir : Rp 225.000</p>
-                        </div>
-                    </div>
-                </div>
-                </div>
+<div class="glass-element p-6 md:p-8 mb-6 rounded-[25px] border-l-4 border-yellow-500 relative">
+    <div class="absolute top-4 right-6 px-3 py-1 bg-green-600 text-white text-[9px] font-black rounded-full uppercase tracking-widest shadow-sm">LAPORAN HARIAN</div>
+    <h4 class="text-xl md:text-2xl font-black text-gray-900 mb-6 uppercase leading-tight pr-24">
+        PENDAPATAN TERBARU <br> <span id="view-tgl-1">...</span>
+    </h4>
+    <div class="space-y-4 text-gray-600 text-sm md:text-lg leading-relaxed font-medium">
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Pendapatan Kotor : Rp <span id="view-kotor">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Pengeluaran Kasir : Rp <span id="view-kasir">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Sisa Akhir : Rp <span id="view-sisa">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Tabungan (A) : Rp <span id="view-tab-a">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Tabungan (B) : Rp <span id="view-tab-b">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>TARGET TERPENUHI : <span id="view-target">...</span></p>
+        </div>
+    </div>
+</div>
+
+<!-- SUB JUDUL: SUMMARY BUKU KEUANGAN -->
+<div class="glass-element p-6 md:p-8 mb-6 rounded-[25px] border-l-4 border-purple-500 relative">
+    <div class="absolute top-4 right-6 px-3 py-1 bg-green-600 text-white text-[9px] font-black rounded-full uppercase tracking-widest shadow-sm">SUMMARY HARIAN</div>
+    <h4 class="text-xl md:text-2xl font-black text-gray-900 mb-6 uppercase leading-tight pr-24">
+        SUMMARY HARIAN <br> <span id="view-tgl-2">...</span>
+    </h4>
+    <div class="space-y-4 text-gray-600 text-sm md:text-lg leading-relaxed font-medium">
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Penjualan Meterai : Rp <span id="view-jual-met">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Laba Meterai : Rp <span id="view-laba-met">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Tabungan (A) : Rp <span id="view-sum-tab-a">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Tabungan (B) : Rp <span id="view-sum-tab-b">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Sisa Akhir : Rp <span id="view-sum-sisa">0</span></p>
+        </div>
+    </div>
+</div>
 				
                 <!-- SUB JUDUL: UPDATE APRIL 2026 -->
                 <div class="glass-element p-6 md:p-8 mb-6 rounded-[25px] border-l-4 border-green-500 relative">
@@ -1392,23 +1409,31 @@ document.addEventListener('keydown', function(e) {
         </div>
 
 		<!-- Body -->
-		<div class="p-6 space-y-4">
-		<!-- Button GitHub - Diubah ke rounded-full -->
-		<a href="https://github.com/nazakana/" target="_blank" 
-		class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all active:scale-95 shadow-md">
+<div class="p-6 space-y-4">
+    <!-- Tombol 1: Update Informasi (GitHub) -->
+    <a href="https://github.com/nazakana/" target="_blank" 
+       class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all active:scale-95 shadow-md">
         <div class="w-8 flex justify-center"><i class="fas fa-rotate fa-lg"></i></div>
         <span class="font-semibold">Update Informasi</span>
         <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
-		</a>
+    </a>
 
-		<!-- Button WhatsApp - Diubah ke rounded-full -->
-		<a href="https://wa.me/6283130578886" target="_blank" 
-		class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition-all active:scale-95 shadow-md">
+    <!-- Tombol 2: ISI DATA (MODAL FORM NSA) -->
+    <button onclick="openFormNSA()" 
+       class="flex items-center gap-4 w-full p-4 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-all active:scale-95 shadow-md">
+        <div class="w-8 flex justify-center"><i class="fas fa-database fa-lg"></i></div>
+        <span class="font-semibold">Update Data Cloud</span>
+        <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
+    </button>
+
+    <!-- Tombol 3: Kontak Developer -->
+    <a href="https://wa.me/6283130578886" target="_blank" 
+       class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition-all active:scale-95 shadow-md">
         <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
         <span class="font-semibold">Kontak Developer</span>
         <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
-		</a>
-		</div>
+    </a>
+</div>
 
         <!-- Footer -->
         <div class="px-6 pb-6 text-center">
@@ -1553,248 +1578,252 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeNSASearch(); });
 </script>
 
+<script>
+// 1. KONFIGURASI & VARIABEL GLOBAL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwB-tAfNyyibQRUOv9f8T75dtuAjLozX3G4PDiZKKBKrrDbamqctQlQVgGBjNvlmTvO/exec";
+let currentData = {};
+
+// 2. FUNGSI FORMATTING (TAMPILAN)
+
+// Mengubah angka murni menjadi format Rp 200.000 saat mengetik
+function formatRupiah(input) {
+    let value = input.value.replace(/[^,\d]/g, '').toString();
+    let split = value.split(',');
+    let sisa = split[0].length % 3;
+    let rupiah = split[0].substr(0, sisa);
+    let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+    input.value = value ? 'Rp ' + rupiah : '';
+}
+
+// Mengubah "Rp 200.000" kembali menjadi angka 200000 agar bisa dihitung/disimpan
+function parseAngka(rupiahString) {
+    if (!rupiahString) return 0;
+    return Number(rupiahString.replace(/[^0-9]/g, ''));
+}
+
+function formatTanggalNSA(dateString) {
+    if(!dateString) return "";
+    const date = new Date(dateString);
+    const opsiHari = { weekday: 'long' };
+    const hari = new Intl.DateTimeFormat('id-ID', opsiHari).format(date);
+    const d = String(date.getDate()).padStart(2, '0');
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const y = date.getFullYear();
+    return `${hari}, (${d}/${m}/${y})`;
+}
+
+// 3. FUNGSI UTAMA (LOAD & UPDATE)
+
+async function loadData() {
+    try {
+        const response = await fetch(SCRIPT_URL);
+        const d = await response.json();
+        currentData = d; 
+
+        const fmt = (num) => new Intl.NumberFormat('id-ID').format(num);
+
+        // Update View di Dashboard
+        document.getElementById('view-tgl-1').innerText = d.tanggal;
+        document.getElementById('view-tgl-2').innerText = d.tanggal;
+        document.getElementById('view-kotor').innerText = fmt(d.kotor);
+        document.getElementById('view-kasir').innerText = fmt(d.kasir);
+        document.getElementById('view-sisa').innerText = fmt(d.sisa_akhir);
+        document.getElementById('view-tab-a').innerText = fmt(d.tab_a);
+        document.getElementById('view-tab-b').innerText = fmt(d.tab_b);
+        document.getElementById('view-target').innerText = d.target;
+        
+        document.getElementById('view-jual-met').innerText = fmt(d.jual_meterai);
+        document.getElementById('view-laba-met').innerText = fmt(d.laba_meterai);
+        document.getElementById('view-sum-tab-a').innerText = fmt(d.sum_tab_a);
+        document.getElementById('view-sum-tab-b').innerText = fmt(d.sum_tab_b);
+        document.getElementById('view-sum-sisa').innerText = fmt(d.sum_sisa);
+        
+        console.log("Data NSA Berhasil Dimuat");
+    } catch (e) {
+        console.error("Gagal sinkronisasi cloud.");
+    }
+}
+
+async function updateData() {
+    const btn = document.getElementById('btn-save');
+    const rawDate = document.getElementById('in-tgl-raw').value;
+    const tanggalTeks = formatTanggalNSA(rawDate);
+
+    // Mengambil data dari form dan dibersihkan (parseAngka) sebelum dikirim
+    const payload = {
+        tanggal: tanggalTeks,
+        kotor: parseAngka(document.getElementById('in-kotor').value),
+        kasir: parseAngka(document.getElementById('in-kasir').value),
+        sisa_akhir: parseAngka(document.getElementById('in-sisa').value),
+        tab_a: parseAngka(document.getElementById('in-tab-a').value),
+        tab_b: parseAngka(document.getElementById('in-tab-b').value),
+        target: document.getElementById('in-target').value,
+        jual_meterai: parseAngka(document.getElementById('in-jual-met').value),
+        laba_meterai: parseAngka(document.getElementById('in-laba-met').value),
+        sum_tab_a: parseAngka(document.getElementById('in-sum-tab-a').value),
+        sum_tab_b: parseAngka(document.getElementById('in-sum-tab-b').value),
+        sum_sisa: parseAngka(document.getElementById('in-sum-sisa').value)
+    };
+
+    btn.innerText = "SINKRONISASI KE CLOUD...";
+    btn.classList.replace('bg-gray-900', 'bg-blue-600');
+    btn.disabled = true;
+
+    try {
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+        alert("Data NSA Berhasil Diperbarui!");
+        location.reload();
+    } catch (e) {
+        alert("Gagal Terhubung!");
+        btn.disabled = false;
+        btn.innerText = "UPLOAD KE CLOUD";
+        btn.classList.replace('bg-blue-600', 'bg-gray-900');
+    }
+}
+
+// 4. KONTROL MODAL
+
+function openFormNSA() {
+    document.getElementById('devModal').classList.add('hidden');
+    document.getElementById('modalFormNSA').classList.remove('hidden');
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('in-tgl-raw').value = today;
+
+    // Helper untuk load data lama ke form dengan format Rp
+    const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        el.value = val ? 'Rp ' + new Intl.NumberFormat('id-ID').format(val) : '';
+    };
+
+    setVal('in-kotor', currentData.kotor);
+    setVal('in-kasir', currentData.kasir);
+    setVal('in-sisa', currentData.sisa_akhir);
+    setVal('in-tab-a', currentData.tab_a);
+    setVal('in-tab-b', currentData.tab_b);
+    setVal('in-jual-met', currentData.jual_meterai);
+    setVal('in-laba-met', currentData.laba_meterai);
+    setVal('in-sum-tab-a', currentData.sum_tab_a);
+    setVal('in-sum-tab-b', currentData.sum_tab_b);
+    setVal('in-sum-sisa', currentData.sum_sisa);
+    
+    document.getElementById('in-target').value = currentData.target || "TIDAK";
+}
+
+function closeFormNSA() {
+    document.getElementById('modalFormNSA').classList.add('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', loadData);
+</script>
 
 
-		<!-- SKRIP ANIMASI -->
-		<script>
-		function jalankanAnimasi(callback) {
-			const loader = document.getElementById('loadingLiquid');
-			const content = document.getElementById('loaderContent');
-
-			// --- FASE 1: MUNCUL (FADE IN) ---
-			// Tampilkan container utama
-			loader.classList.remove('hidden');
-			
-			// Gunakan requestAnimationFrame agar browser siap melakukan transisi
-			requestAnimationFrame(() => {
-				// Munculkan background putih
-				loader.style.opacity = '1';
-				
-				// Munculkan konten (ikon & teks) sedikit lebih lambat agar estetik
-				setTimeout(() => {
-					content.style.opacity = '1';
-				}, 150);
-			});
-
-			// --- FASE 2: MENUNGGU (ANIMASI BERJALAN) ---
-			// Tahan selama 1.5 detik agar user bisa melihat animasi bounce
-			setTimeout(() => {
-				
-				// --- FASE 3: KELUAR (FADE OUT BERURUTAN) ---
-				// 1. Ikon dan Teks fade out duluan (Cepat: 300ms)
-				content.classList.add('fade-out-forced');
-
-				// 2. Setelah ikon hilang, Background putih ikut fade out
-				setTimeout(() => {
-					loader.classList.add('fade-out-forced');
-
-					// 3. Eksekusi Reload/Navigasi tepat saat background hampir hilang total
-					// Ini trik agar transisinya 'menyambung' dengan halaman baru
-					setTimeout(() => {
-						callback();
-					}, 250); // Jeda tipis sebelum reload benar-benar terjadi
-
-				}, 300); // Jeda setelah ikon mulai fade out
-
-			}, 1500); // Durasi total menunggu
-		}
-		</script>
-
-
-		<!-- SKRIP ANIMASI OTOMATIS -->
-		<script>
-		// Jalankan animasi otomatis saat halaman SELESAI dimuat (Refresh F5)
-		window.addEventListener('load', () => {
-			const loader = document.getElementById('loadingLiquid');
-			const content = document.getElementById('loaderContent');
-
-			// Tampilkan loader langsung (tanpa transisi masuk agar menutupi proses loading asli)
-			loader.classList.remove('hidden');
-			loader.style.opacity = '1';
-			content.style.opacity = '1';
-
-			// Beri waktu 1 detik agar user merasa ada proses 'sync', lalu fade out
-			setTimeout(() => {
-				content.classList.add('fade-out-forced');
-				
-				setTimeout(() => {
-					loader.classList.add('fade-out-forced');
-					
-					// Hilangkan total dari DOM setelah benar-benar transparan
-					setTimeout(() => {
-						loader.classList.add('hidden');
-					}, 500);
-				}, 300);
-			}, 1000); 
-		});
-		</script>
-
+<!-- SKRIP ANIMASI -->
+<!-- Belum sempurna -->
+		
 
 <!-- LOGIKA DARK LIGHT MODE -->
-<!-- Belum sempurna --
+<!-- Belum sempurna -->
 
 <!-- OVERLAY DARK MODE -->
 <!-- Belum Sempurna -->
 
 
-		<!-- OVERLAY ANIMASI LIQUID -->
-		<style>
-			/* Transisi standar untuk Opacity agar halus */
-			.fade-element {
-				transition: opacity 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out;
-				opacity: 0;
-			}
+<!-- MODAL FORM NSA SINKRONISASI -->
+<div id="modalFormNSA" class="fixed inset-0 z-[9999] flex items-center justify-center hidden p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
+    
+    <div class="relative bg-white w-full max-w-2xl rounded-[30px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        
+        <div class="p-6 bg-gray-50 border-b flex justify-between items-center">
+            <h2 class="font-black text-xl tracking-tighter text-gray-800">SINKRONISASI DATA NSA</h2>
+            <button onclick="closeFormNSA()" class="text-gray-400 hover:text-black">
+                <i class="fa-solid fa-xmark fa-xl"></i>
+            </button>
+        </div>
 
-			/* Class untuk memaksa fade out cepat di akhir */
-			.fade-out-forced {
-				opacity: 0 !important;
-				backdrop-filter: blur(0px) !important;
-				transition: opacity 0.4s ease-in, backdrop-filter 0.4s ease-in !important;
-			}
+        <div class="p-6 overflow-y-auto space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <div class="space-y-5">
+                    <p class="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-2 bg-amber-50 py-1 px-3 rounded-full w-fit">Bagian Laporan</p>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pilih Tanggal</label>
+                        <input type="date" id="in-tgl-raw" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors bg-transparent">
+                        <input type="hidden" id="in-tgl">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pendapatan Kotor</label>
+                        <input type="text" id="in-kotor" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pengeluaran Kasir</label>
+                        <input type="text" id="in-kasir" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Sisa Akhir</label>
+                        <input type="text" id="in-sisa" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (A)</label>
+                        <input type="text" id="in-tab-a" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (B)</label>
+                        <input type="text" id="in-tab-b" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Status Target Harian</label>
+                        <select id="in-target" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm bg-transparent transition-colors">
+                            <option value="TIDAK">TARGET: TIDAK TERPENUHI</option>
+                            <option value="YA">TARGET: TERPENUHI (YA)</option>
+                        </select>
+                    </div>
+                </div>
 
-			/* Efek Icon Bounce */
-			.icon-bounce {
-				animation: gentleBounce 1.2s ease-in-out infinite;
-			}
+                <div class="space-y-5 border-l-0 md:border-l md:pl-8 border-gray-100">
+                    <p class="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] mb-2 bg-purple-50 py-1 px-3 rounded-full w-fit">Bagian Summary</p>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Penjualan Meterai</label>
+                        <input type="text" id="in-jual-met" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Laba Meterai</label>
+                        <input type="text" id="in-laba-met" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (A) - Summary</label>
+                        <input type="text" id="in-sum-tab-a" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (B) - Summary</label>
+                        <input type="text" id="in-sum-tab-b" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Sisa Akhir Summary</label>
+                        <input type="text" id="in-sum-sisa" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                    </div>
+                </div>
+            </div>
+        </div> <div class="p-6 bg-gray-50 border-t flex gap-4">
+            <button id="btn-save" onclick="updateData()" class="flex-1 py-4 bg-gray-900 text-white rounded-2xl font-black shadow-lg active:scale-95 transition-all hover:bg-amber-600">
+                UPLOAD KE CLOUD
+            </button>
+        </div>
+        
+    </div> </div> ```
 
-			@keyframes gentleBounce {
-				0%, 100% { transform: scale(1); }
-				50% { transform: scale(1.1); }
-			}
-		</style>
 
-		<div id="loadingLiquid" 
-			 class="fixed inset-0 z-[11000] hidden flex items-center justify-center fade-element" 
-			 style="background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
-			
-			<div id="loaderContent" class="relative flex flex-col items-center fade-element">
-				<div class="text-7xl text-indigo-600 icon-bounce">
-					<i class="fa-solid fa-house-user"></i>
-				</div>
-				<div class="mt-6 flex flex-col items-center gap-2">
-					<p class="text-indigo-900/60 font-bold tracking-[0.3em] text-[10px] uppercase">Nurjaya Smart Archive</p>
-					<div class="w-20 h-1 bg-indigo-100/50 rounded-full overflow-hidden">
-						<div class="bg-indigo-600 h-full w-full animate-[loading_1.2s_ease-in-out]"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center fade-element" style="background-color: rgba(255, 255, 255, 0.96);">
-			<div id="loaderContent" class="relative flex flex-col items-center fade-element">
-				<div class="text-7xl text-indigo-600 icon-bounce">
-					<i class="fa-solid fa-house-user"></i>
-				</div>
-				<div class="mt-6 flex flex-col items-center gap-2">
-					<p class="text-gray-400 font-bold tracking-[0.3em] text-[10px] uppercase">Nurjaya Smart Archive</p>
-					<div class="w-20 h-1 bg-gray-100 rounded-full overflow-hidden">
-						<div class="bg-indigo-600 h-full w-full animate-[loading_1.2s_ease-in-out]"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<style>
-			@keyframes loading {
-				0% { transform: translateX(-100%); }
-				100% { transform: translateX(0%); }
-			}
-		</style>
-
-		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center fade-overlay">
-			<div class="relative flex flex-col items-center">
-				<div id="loaderIcon" class="text-7xl text-indigo-600 icon-bounce">
-					<i class="fa-solid fa-house-user"></i>
-				</div>
-				<div class="mt-6 flex flex-col items-center gap-2">
-					<p class="text-gray-400 font-bold tracking-[0.3em] text-[10px] uppercase">Nurjaya Smart Archive</p>
-					<div class="w-20 h-1 bg-gray-100 rounded-full overflow-hidden">
-						<div class="bg-indigo-600 h-full w-full animate-[loading_1s_ease-in-out]"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<style>
-			@keyframes loading {
-				0% { transform: translateX(-100%); }
-				100% { transform: translateX(0%); }
-			}
-		</style>
-
-		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center fade-overlay">
-			<div class="relative flex flex-col items-center">
-				<div class="text-7xl text-indigo-600 icon-bounce">
-					<i class="fa-solid fa-house-user"></i>
-				</div>
-				
-				<div class="mt-6 flex flex-col items-center gap-2">
-					<p class="text-gray-500 font-bold tracking-[0.3em] text-[10px] uppercase">Nurjaya Smart Archive</p>
-					<div class="w-24 h-1 bg-gray-100 rounded-full overflow-hidden">
-						<div class="bg-indigo-600 h-full w-full animate-[loading_1.2s_ease-in-out]"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<style>
-			@keyframes loading {
-				0% { transform: translateX(-100%); }
-				100% { transform: translateX(0%); }
-			}
-		</style>
-
-		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center">
-			<div id="glassLayer" class="absolute inset-0"></div>
-			
-			<div class="relative flex flex-col items-center">
-				<div class="text-9xl text-indigo-600 icon-glow">
-					<i class="fa-solid fa-house-user"></i>
-				</div>
-				
-				<div class="mt-8 flex flex-col items-center gap-2">
-					<p class="text-indigo-900 font-medium tracking-[0.4em] text-xs uppercase opacity-80">Menyinkronkan Data</p>
-					<div class="w-32 h-[2px] bg-indigo-100 rounded-full overflow-hidden">
-						<div class="bg-indigo-600 h-full w-1/2 animate-[shimmer_1.5s_infinite_linear]"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<style>
-			@keyframes shimmer {
-				0% { transform: translateX(-150%); }
-				100% { transform: translateX(250%); }
-			}
-		</style>
-
-		<div id="loadingLiquid" class="fixed inset-0 z-[11000] hidden flex items-center justify-center">
-			<div class="absolute inset-0 bg-white/60 backdrop-blur-xl"></div>
-			
-			<div id="liquidBg" class="absolute bottom-0 left-0 right-0 bg-indigo-600 smooth-fill h-0 opacity-20"></div>
-
-			<div id="loaderContent" class="relative flex flex-col items-center">
-				<div class="relative text-9xl text-gray-200">
-					<i class="fa-solid fa-house-user"></i>
-					<div id="liquidFill" class="absolute bottom-0 left-0 right-0 overflow-hidden text-indigo-600 h-0 smooth-fill">
-						<i class="fa-solid fa-house-user"></i>
-					</div>
-				</div>
-				<div class="mt-6 flex flex-col items-center">
-					<span class="text-indigo-600 font-black tracking-[0.3em] text-sm uppercase">Nurjaya Smart Archive</span>
-					<div class="w-12 h-1 bg-indigo-100 mt-2 rounded-full overflow-hidden">
-						<div class="bg-indigo-600 h-full w-full -translate-x-full animate-[progress_1.6s_infinite]"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<style>
-			@keyframes progress {
-				0% { transform: translateX(-100%); }
-				100% { transform: translateX(100%); }
-			}
-		</style>
 
 
 </body>
