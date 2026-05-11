@@ -586,7 +586,15 @@
 					<h4 class="text-xl md:text-2xl font-black text-gray-900 mb-6 uppercase leading-tight pr-24">PEMBARUAN & FITUR</h4>
 					<div class="flex gap-4">
                             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-                            <p>Tampilan login dengan password dihilangkan sementara untuk efisiensi akses.</p>
+                            <p>Tampilan login dengan password kembali tersedia untuk alasan keamanan, namun hanya muncul ketika pertama kali membuka aplikasi.</p>
+                        </div>
+					<div class="flex gap-4">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+                            <p>Sekarang tersedia grafik statistik pendapatan beberapa bulan terakhir.</p>
+                        </div>
+					<div class="flex gap-4">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+                            <p>Tersedia informasi realtime pendapatan harian (ter-update setelah tutup kasir) atau setelah jam operasional berakhir.</p>
                         </div>
 					<div class="flex gap-4">
                             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
@@ -596,7 +604,16 @@
                             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
                             <p>Tersedia Tab Baru (DAILY INPUT) yang berfungsi sebagai form isian harian yang dikerjakan oleh karyawan, sehingga akan sangat mengefisiensi waktu penutupan pembukuan pada akhir bulan (bisa disebut laporan akan langsung dibuat secara otomatis secara keseluruhan).</p>
                         </div> 
+					<div class="flex gap-4">
+						<div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+                            <p>Fitur Baru: Kolom Pencarian, anda bisa mencari data secara instan.</p>
+                        </div>
+					<div class="flex gap-4">
+						<div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+                            <p>Fitur Baru: Tersedia Tombol Opsi Developer, yang berisi menu-menu untuk update data dan sinkronisasi data cloud (Akses terbatas Admin atau Developer).</p>
+                        </div>
                 </div>
+				</div>
 
                 <!-- SUB JUDUL: KEBIJAKAN BARU -->
                 <div class="glass-element card-accent p-6 md:p-10 mb-10 relative overflow-hidden group rounded-[30px] border-l-8 border-mint-pastel">
@@ -1346,6 +1363,85 @@ document.addEventListener('keydown', function(e) {
 </script>
 
 
+<script>
+// 1. Munculkan Modal Password
+function openGate() {
+    document.getElementById('gateModal').classList.remove('hidden');
+    document.getElementById('gatePass').value = ''; // Reset input
+    document.getElementById('gatePass').focus();
+}
+
+// 2. Tutup Modal Password
+function closeGate() {
+    document.getElementById('gateModal').classList.add('hidden');
+}
+
+// 3. Lihat/Sembunyikan Password
+function toggleGatePass() {
+    const input = document.getElementById('gatePass');
+    const icon = document.getElementById('gateEyeIcon');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+
+// 4. Verifikasi Password
+function verifyGate() {
+    const inputArea = document.querySelector('#gateModal .relative.bg-white'); // Target kotak putih untuk getar
+    const chip = document.getElementById('errorChip');
+    const pass = document.getElementById('gatePass').value;
+    const correctPass = "Nazakana.123";
+
+    if (pass === correctPass) {
+        // Jika Benar
+        chip.classList.add('hidden');
+        closeGate(); 
+        openFormNSA(); 
+    } else {
+        // Jika Salah
+        // 1. Tampilkan Chip
+        chip.classList.remove('hidden');
+        
+        // 2. Efek Getar pada Modal
+        inputArea.classList.add('animate-shake');
+        
+        // 3. Reset Input
+        document.getElementById('gatePass').value = '';
+        document.getElementById('gatePass').focus();
+
+        // 4. Bersihkan class animasi setelah selesai (agar bisa dipicu lagi)
+        setTimeout(() => {
+            inputArea.classList.remove('animate-shake');
+        }, 500);
+    }
+}
+</script>
+
+
+<script>
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-shake {
+    animation: shake 0.2s ease-in-out 0s 2;
+}
+
+.animate-pop {
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+</script>
 
 </div>
 </div>
@@ -1393,13 +1489,10 @@ document.addEventListener('keydown', function(e) {
 		<!-- Modal Wrapper -->
 		<div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
     
-		<!-- 1. Background Overlay (iOS Blur Aktif) -->
-		<div id="modalOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-md overlay-animate-in"></div>
+    <div id="modalOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-md overlay-animate-in" onclick="closeDevModalFunction()"></div>
 
-		<!-- 2. Modal Content (iOS Style + Animasi Zoom) -->
-		<div class="relative bg-white/90 backdrop-blur-xl w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in">
+    <div class="relative bg-white/90 backdrop-blur-xl w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in">
         
-        <!-- Header (Warna Amber Lembut) -->
         <div class="bg-amber-200/50 p-6 text-center border-b border-gray-100">
             <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
                 <i class="fas fa-screwdriver-wrench fa-2xl"></i>
@@ -1408,35 +1501,32 @@ document.addEventListener('keydown', function(e) {
             <p class="text-sm text-gray-500 mt-1">Update Data & Maintenance</p>
         </div>
 
-		<!-- Body -->
-<div class="p-6 space-y-4">
-    <!-- Tombol 1: Update Informasi (GitHub) -->
-    <a href="https://github.com/nazakana/" target="_blank" 
-       class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all active:scale-95 shadow-md">
-        <div class="w-8 flex justify-center"><i class="fas fa-rotate fa-lg"></i></div>
-        <span class="font-semibold">Update Informasi</span>
-        <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
-    </a>
+        <div class="p-6 space-y-4">
+            
+            <a href="https://github.com/nazakana/" target="_blank" 
+               class="flex items-center gap-4 w-full p-4 bg-gray-900 hover:bg-black text-white rounded-full transition-all active:scale-95 shadow-md">
+                <div class="w-8 flex justify-center">
+                    <i class="fab fa-github fa-lg"></i>
+                </div>
+                <span class="font-semibold">View on GitHub</span>
+                <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
+            </a>
 
-    <!-- Tombol 2: ISI DATA (MODAL FORM NSA) -->
-    <button onclick="openFormNSA()" 
-       class="flex items-center gap-4 w-full p-4 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-all active:scale-95 shadow-md">
-        <div class="w-8 flex justify-center"><i class="fas fa-database fa-lg"></i></div>
-        <span class="font-semibold">Update Data Cloud</span>
-        <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
-    </button>
+           <button onclick="openGate()" 
+        class="flex items-center gap-4 w-full p-4 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-all active:scale-95 shadow-md">
+    <div class="w-8 flex justify-center"><i class="fas fa-database fa-lg"></i></div>
+    <span class="font-semibold">Update Data Cloud</span>
+    <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
+</button>
 
-    <!-- Tombol 3: Kontak Developer -->
-    <a href="https://wa.me/6283130578886" target="_blank" 
-       class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition-all active:scale-95 shadow-md">
-        <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
-        <span class="font-semibold">Kontak Developer</span>
-        <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
-    </a>
-</div>
+            <a href="https://wa.me/6283130578886" target="_blank" 
+               class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition-all active:scale-95 shadow-md">
+                <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
+                <span class="font-semibold">Kontak Developer</span>
+                <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
+            </a>
 
-        <!-- Footer -->
-        <div class="px-6 pb-6 text-center">
+        </div> <div class="px-6 pb-6 text-center">
             <button id="closeDevModal" class="w-full py-3 text-blue-600 hover:text-blue-800 font-bold text-lg transition-colors">
                 Selesai
             </button>
@@ -1727,6 +1817,77 @@ function closeFormNSA() {
 document.addEventListener('DOMContentLoaded', loadData);
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Cek apakah ada tanda 'lulus' di memori sesi browser
+    const loginStatus = sessionStorage.getItem("nsa_main_login");
+
+    const overlay = document.getElementById('login-overlay');
+
+    if (loginStatus === "verified") {
+        // Jika sudah pernah login, hilangkan overlay langsung tanpa animasi
+        overlay.style.display = 'none';
+    } else {
+        // Jika belum, pastikan overlay muncul dan fokus ke input
+        overlay.style.display = 'flex';
+        document.getElementById('pass-input').focus();
+    }
+});
+</script>
+
+<script>
+function attemptLogin() {
+    const input = document.getElementById('pass-input').value;
+    const msg = document.getElementById('login-msg');
+    const overlay = document.getElementById('login-overlay');
+    const correctPass = "Nurjaya Marema";
+
+    if (input === correctPass) {
+        // 1. Simpan status ke sessionStorage
+        sessionStorage.setItem("nsa_main_login", "verified");
+
+        // 2. Feedback visual sukses
+        msg.innerText = "Akses Diterima! Membuka Aplikasi...";
+        msg.style.color = "#10b981"; // Warna Emerald
+
+        // 3. Animasi keluar (Fade Out)
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.5s ease';
+        
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 500);
+        
+    } else {
+        // Logika jika salah
+        msg.innerText = "PASSWORD SALAH!";
+        msg.style.color = "#ef4444"; // Warna Merah
+        
+        // Efek getar pada card (jika ada class animate-shake)
+        const card = document.querySelector('.login-card');
+        card.classList.add('animate-shake');
+        
+        document.getElementById('pass-input').value = '';
+        setTimeout(() => card.classList.remove('animate-shake'), 500);
+    }
+}
+
+// Fungsi tambahan untuk tombol mata (Toggle Password)
+function togglePassword() {
+    const input = document.getElementById('pass-input');
+    const icon = document.getElementById('toggle-icon');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+</script>
+
+
 
 <!-- SKRIP ANIMASI -->
 <!-- Belum sempurna -->
@@ -1737,6 +1898,37 @@ document.addEventListener('DOMContentLoaded', loadData);
 
 <!-- OVERLAY DARK MODE -->
 <!-- Belum Sempurna -->
+
+<!-- MODAL PASSWORD UPDATE DATA CLOUD -->
+<div id="gateModal" class="fixed inset-0 z-[10000] flex items-center justify-center hidden p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-lg"></div>
+    <div class="relative bg-white w-full max-w-xs rounded-[30px] shadow-2xl p-6 text-center">
+        <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-lock fa-xl"></i>
+        </div>
+		
+        <h3 class="font-bold text-gray-800 text-lg">Akses Terbatas</h3>
+        <p class="text-xs text-gray-500 mb-6">Masukkan sandi developer untuk lanjut</p>
+        <div id="errorChip" class="hidden mb-4 animate-pop">
+    <div class="bg-red-50 text-red-600 px-4 py-2 rounded-full text-[11px] font-black tracking-widest border border-red-100 flex items-center justify-center gap-2 mx-auto w-fit shadow-sm">
+        <i class="fas fa-circle-exclamation"></i>
+        <span>SANDI TIDAK BENAR</span>
+    </div>
+</div>
+        <div class="relative mb-4">
+            <input type="password" id="gatePass" onkeydown="if(event.key === 'Enter') verifyGate()" placeholder="Sandi Keamanan" 
+                   class="w-full bg-gray-100 border-2 border-transparent rounded-2xl p-4 pr-12 outline-none focus:border-amber-500 transition-all text-center font-bold tracking-widest">
+            <button type="button" onclick="toggleGatePass()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+                <i id="gateEyeIcon" class="fa-solid fa-eye"></i>
+            </button>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <button onclick="verifyGate()" class="w-full py-4 bg-gray-900 text-white rounded-2xl font-bold active:scale-95 transition-all">VERIFIKASI</button>
+            <button onclick="closeGate()" class="w-full py-2 text-gray-400 text-sm font-semibold">Batal</button>
+        </div>
+    </div>
+</div>
 
 
 <!-- MODAL FORM NSA SINKRONISASI -->
@@ -1823,7 +2015,31 @@ document.addEventListener('DOMContentLoaded', loadData);
         
     </div> </div> ```
 
-
+<!-- LOGIN OVERLAY -->
+    <div id="login-overlay">
+        <div class="login-card fade-in">
+            <div class="flex flex-col items-center mb-8">
+                <div class="bg-white p-4 rounded-3xl shadow-sm mb-4">
+                    <img src="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk" class="w-16 h-16 object-contain" alt="Logo">
+                </div>
+                <h1 class="text-3xl font-black text-[#3B4D45] tracking-tighter">NSA LOGIN</h1>
+                <p class="text-gray-400 text-xs font-bold uppercase tracking-[0.2em] mt-1">Nurjaya Smart Archive</p>
+            </div>
+            
+            <div class="space-y-4">
+                <p id="login-msg" class="text-sm font-semibold text-gray-500">Silakan masukkan akses kode Admin</p>
+                <div class="login-input-container">
+                    <input type="password" id="pass-input" class="login-input" placeholder="••••••••" onkeypress="if(event.key === 'Enter') attemptLogin()">
+                    <i id="toggle-icon" class="fa-solid fa-eye toggle-password" onclick="togglePassword()"></i>
+                </div>
+                <button onclick="attemptLogin()" class="login-btn">
+                    <span>Masuk</span>
+                </button>
+            </div>
+            
+            <p class="mt-10 text-[10px] font-bold text-gray-300 uppercase tracking-widest">© 2026 Nurjaya Abadi Photocopy</p>
+        </div>
+    </div>
 
 
 </body>
