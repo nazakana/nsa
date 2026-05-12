@@ -516,15 +516,19 @@
     <div class="space-y-4 text-gray-600 text-sm md:text-lg leading-relaxed font-medium">
         <div class="flex gap-4">
             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Total Kasir : Rp <span id="view-tot-kasir">0</span></p>
+        </div>
+		<div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Pengeluaran Kasir : Rp <span id="view-peng-kasir">0</span></p>
+        </div>
+		<div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Uang Makan : Rp <span id="view-um">0</span></p>
+        </div>
+		<div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
             <p>Pendapatan Kotor : Rp <span id="view-kotor">0</span></p>
-        </div>
-        <div class="flex gap-4">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Pengeluaran Kasir : Rp <span id="view-kasir">0</span></p>
-        </div>
-        <div class="flex gap-4">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Sisa Akhir : Rp <span id="view-sisa">0</span></p>
         </div>
         <div class="flex gap-4">
             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
@@ -536,37 +540,58 @@
         </div>
         <div class="flex gap-4">
             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Meterai Pokok : Rp <span id="view-met-pok">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Laba Meterai : Rp <span id="view-lab-met">0</span></p>
+        </div>
+		<div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>Sisa Akhir : Rp <span id="view-sisa-ak">0</span></p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
             <p>TARGET TERPENUHI : <span id="view-target">...</span></p>
         </div>
+		<div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>QRIS Harian : Rp <span id="view-qris-har">0</span></p>
+        </div>
+		
     </div>
 </div>
 
-<!-- SUB JUDUL: SUMMARY BUKU KEUANGAN -->
+<!-- SUB JUDUL: BUKU REKAP -->
 <div class="glass-element p-6 md:p-8 mb-6 rounded-[25px] border-l-4 border-purple-500 relative">
-    <div class="absolute top-4 right-6 px-3 py-1 bg-green-600 text-white text-[9px] font-black rounded-full uppercase tracking-widest shadow-sm">SUMMARY HARIAN</div>
+    <div class="absolute top-4 right-6 px-3 py-1 bg-green-600 text-white text-[9px] font-black rounded-full uppercase tracking-widest shadow-sm">BUKU REKAP</div>
     <h4 class="text-xl md:text-2xl font-black text-gray-900 mb-6 uppercase leading-tight pr-24">
-        SUMMARY HARIAN <br> <span id="view-tgl-2">...</span>
+        BUKU REKAP TERBARU <br> <span id="view-tgl-2">...</span>
     </h4>
     <div class="space-y-4 text-gray-600 text-sm md:text-lg leading-relaxed font-medium">
         <div class="flex gap-4">
             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Penjualan Meterai : Rp <span id="view-jual-met">0</span></p>
+            <p>Penjualan Meterai : Rp <span id="view-buku-met">0</span></p>
         </div>
         <div class="flex gap-4">
             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Laba Meterai : Rp <span id="view-laba-met">0</span></p>
+            <p>Laba Meterai : Rp <span id="view-buku-lab">0</span></p>
         </div>
         <div class="flex gap-4">
             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Tabungan (A) : Rp <span id="view-sum-tab-a">0</span></p>
+            <p>Tabungan (A) : Rp <span id="view-buku-taba">0</span></p>
         </div>
         <div class="flex gap-4">
             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Tabungan (B) : Rp <span id="view-sum-tab-b">0</span></p>
+            <p>Tabungan (B) : Rp <span id="view-buku-tabb">0</span></p>
         </div>
         <div class="flex gap-4">
             <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Sisa Akhir : Rp <span id="view-sum-sisa">0</span></p>
+            <p>Sisa Akhir : Rp <span id="view-buku-sisa">0</span></p>
+        </div>
+		<div class="flex gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-pastel/20 flex items-center justify-center text-mint-deep font-bold text-xs"><i class="fa-solid fa-circle-check"></i></div>
+            <p>QRIS Bulan Ini : Rp <span id="view-buku-qris">0</span></p>
         </div>
     </div>
 </div>
@@ -1669,13 +1694,11 @@ document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeNSASe
 </script>
 
 <script>
-// 1. KONFIGURASI & VARIABEL GLOBAL
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwB-tAfNyyibQRUOv9f8T75dtuAjLozX3G4PDiZKKBKrrDbamqctQlQVgGBjNvlmTvO/exec";
+// 1. KONFIGURASI
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbychlmNzcq7HLoG989T_cYJ1sW-wAd_2RwU4KqEHMi5faNtTwitBHUeCD6UzlvRE5Rk/exec";
 let currentData = {};
 
-// 2. FUNGSI FORMATTING (TAMPILAN)
-
-// Mengubah angka murni menjadi format Rp 200.000 saat mengetik
+// 2. FUNGSI FORMATTING
 function formatRupiah(input) {
     let value = input.value.replace(/[^,\d]/g, '').toString();
     let split = value.split(',');
@@ -1687,83 +1710,98 @@ function formatRupiah(input) {
         let separator = sisa ? '.' : '';
         rupiah += separator + ribuan.join('.');
     }
-
     rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
     input.value = value ? 'Rp ' + rupiah : '';
 }
 
-// Mengubah "Rp 200.000" kembali menjadi angka 200000 agar bisa dihitung/disimpan
 function parseAngka(rupiahString) {
     if (!rupiahString) return 0;
     return Number(rupiahString.replace(/[^0-9]/g, ''));
 }
 
 function formatTanggalNSA(dateString) {
-    if(!dateString) return "";
+    if (!dateString || dateString === "-") return "-";
+    
+    // Mengubah string ISO menjadi objek Date
     const date = new Date(dateString);
+    
+    // Cek apakah tanggal valid
+    if (isNaN(date.getTime())) return dateString; 
+
     const opsiHari = { weekday: 'long' };
     const hari = new Intl.DateTimeFormat('id-ID', opsiHari).format(date);
     const d = String(date.getDate()).padStart(2, '0');
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const y = date.getFullYear();
+    
     return `${hari}, (${d}/${m}/${y})`;
 }
 
-// 3. FUNGSI UTAMA (LOAD & UPDATE)
-
+// 3. LOAD DATA (TAMPILAN DASHBOARD)
 async function loadData() {
     try {
         const response = await fetch(SCRIPT_URL);
         const d = await response.json();
         currentData = d; 
 
-        const fmt = (num) => new Intl.NumberFormat('id-ID').format(num);
+        const fmt = (num) => new Intl.NumberFormat('id-ID').format(num || 0);
 
-        // Update View di Dashboard
-        document.getElementById('view-tgl-1').innerText = d.tanggal;
-        document.getElementById('view-tgl-2').innerText = d.tanggal;
+        // Update Text di Dashboard
+		document.getElementById('view-tgl-1').innerText = formatTanggalNSA(d.tanggal);
+		document.getElementById('view-tgl-2').innerText = formatTanggalNSA(d.tanggal);
+        document.getElementById('view-tot-kasir').innerText = fmt(d.total_kasir);
+        document.getElementById('view-peng-kasir').innerText = fmt(d.pengeluaran_kasir);
+        document.getElementById('view-um').innerText = fmt(d.uang_makan);
         document.getElementById('view-kotor').innerText = fmt(d.kotor);
-        document.getElementById('view-kasir').innerText = fmt(d.kasir);
-        document.getElementById('view-sisa').innerText = fmt(d.sisa_akhir);
         document.getElementById('view-tab-a').innerText = fmt(d.tab_a);
         document.getElementById('view-tab-b').innerText = fmt(d.tab_b);
+        document.getElementById('view-met-pok').innerText = fmt(d.meterai_pokok);
+        document.getElementById('view-lab-met').innerText = fmt(d.laba_meterai);
+        document.getElementById('view-sisa-ak').innerText = fmt(d.sisa_akhir);
         document.getElementById('view-target').innerText = d.target;
+        document.getElementById('view-qris-har').innerText = fmt(d.qris_harian);
         
-        document.getElementById('view-jual-met').innerText = fmt(d.jual_meterai);
-        document.getElementById('view-laba-met').innerText = fmt(d.laba_meterai);
-        document.getElementById('view-sum-tab-a').innerText = fmt(d.sum_tab_a);
-        document.getElementById('view-sum-tab-b').innerText = fmt(d.sum_tab_b);
-        document.getElementById('view-sum-sisa').innerText = fmt(d.sum_sisa);
+        document.getElementById('view-buku-met').innerText = fmt(d.buku_meterai);
+        document.getElementById('view-buku-lab').innerText = fmt(d.buku_laba_meterai);
+        document.getElementById('view-buku-taba').innerText = fmt(d.buku_tab_a);
+        document.getElementById('view-buku-tabb').innerText = fmt(d.buku_tab_b);
+        document.getElementById('view-buku-sisa').innerText = fmt(d.buku_sisa_akhir);
+        document.getElementById('view-buku-qris').innerText = fmt(d.buku_qris);
         
-        console.log("Data NSA Berhasil Dimuat");
+        console.log("Data Berhasil Dimuat");
     } catch (e) {
-        console.error("Gagal sinkronisasi cloud.");
+        console.error("Gagal memuat data:", e);
     }
 }
 
+// 4. UPDATE DATA (UPLOAD)
 async function updateData() {
     const btn = document.getElementById('btn-save');
     const rawDate = document.getElementById('in-tgl-raw').value;
     const tanggalTeks = formatTanggalNSA(rawDate);
 
-    // Mengambil data dari form dan dibersihkan (parseAngka) sebelum dikirim
     const payload = {
         tanggal: tanggalTeks,
+        total_kasir: parseAngka(document.getElementById('in-tot-kasir').value),
+        pengeluaran_kasir: parseAngka(document.getElementById('in-peng-kasir').value),
+        uang_makan: parseAngka(document.getElementById('in-um').value),
         kotor: parseAngka(document.getElementById('in-kotor').value),
-        kasir: parseAngka(document.getElementById('in-kasir').value),
-        sisa_akhir: parseAngka(document.getElementById('in-sisa').value),
         tab_a: parseAngka(document.getElementById('in-tab-a').value),
         tab_b: parseAngka(document.getElementById('in-tab-b').value),
-        target: document.getElementById('in-target').value,
-        jual_meterai: parseAngka(document.getElementById('in-jual-met').value),
-        laba_meterai: parseAngka(document.getElementById('in-laba-met').value),
-        sum_tab_a: parseAngka(document.getElementById('in-sum-tab-a').value),
-        sum_tab_b: parseAngka(document.getElementById('in-sum-tab-b').value),
-        sum_sisa: parseAngka(document.getElementById('in-sum-sisa').value)
+        meterai_pokok: parseAngka(document.getElementById('in-met-pok').value),
+        laba_meterai: parseAngka(document.getElementById('in-lab-met').value),
+        sisa_akhir: parseAngka(document.getElementById('in-sisa-ak').value),
+        qris_harian: parseAngka(document.getElementById('in-qris-har').value),
+        buku_meterai: parseAngka(document.getElementById('in-buku-met').value),
+        buku_laba_meterai: parseAngka(document.getElementById('in-buku-lab').value),
+        buku_tab_a: parseAngka(document.getElementById('in-buku-taba').value),
+        buku_tab_b: parseAngka(document.getElementById('in-buku-tabb').value),
+        buku_sisa_akhir: parseAngka(document.getElementById('in-buku-sisa').value),
+        buku_qris: parseAngka(document.getElementById('in-buku-qris').value),
+        target: document.getElementById('in-target').value
     };
 
-    btn.innerText = "SINKRONISASI KE CLOUD...";
-    btn.classList.replace('bg-gray-900', 'bg-blue-600');
+    btn.innerText = "SEDANG MENGIRIM...";
     btn.disabled = true;
 
     try {
@@ -1771,41 +1809,44 @@ async function updateData() {
             method: 'POST',
             body: JSON.stringify(payload)
         });
-        alert("Data NSA Berhasil Diperbarui!");
+        alert("Data Berhasil Diperbarui!");
         location.reload();
     } catch (e) {
         alert("Gagal Terhubung!");
         btn.disabled = false;
-        btn.innerText = "UPLOAD KE CLOUD";
-        btn.classList.replace('bg-blue-600', 'bg-gray-900');
+        btn.innerText = "SINKRONISASI KE CLOUD";
     }
 }
 
-// 4. KONTROL MODAL
-
+// 5. KONTROL MODAL
 function openFormNSA() {
-    document.getElementById('devModal').classList.add('hidden');
     document.getElementById('modalFormNSA').classList.remove('hidden');
-
+    
+    // Set tanggal default ke hari ini
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('in-tgl-raw').value = today;
 
-    // Helper untuk load data lama ke form dengan format Rp
     const setVal = (id, val) => {
         const el = document.getElementById(id);
-        el.value = val ? 'Rp ' + new Intl.NumberFormat('id-ID').format(val) : '';
+        if(el) el.value = val ? 'Rp ' + new Intl.NumberFormat('id-ID').format(val) : '';
     };
 
+    setVal('in-tot-kasir', currentData.total_kasir);
+    setVal('in-peng-kasir', currentData.pengeluaran_kasir);
+    setVal('in-um', currentData.uang_makan);
     setVal('in-kotor', currentData.kotor);
-    setVal('in-kasir', currentData.kasir);
-    setVal('in-sisa', currentData.sisa_akhir);
     setVal('in-tab-a', currentData.tab_a);
     setVal('in-tab-b', currentData.tab_b);
-    setVal('in-jual-met', currentData.jual_meterai);
-    setVal('in-laba-met', currentData.laba_meterai);
-    setVal('in-sum-tab-a', currentData.sum_tab_a);
-    setVal('in-sum-tab-b', currentData.sum_tab_b);
-    setVal('in-sum-sisa', currentData.sum_sisa);
+    setVal('in-met-pok', currentData.meterai_pokok);
+    setVal('in-lab-met', currentData.laba_meterai);
+    setVal('in-sisa-ak', currentData.sisa_akhir);
+    setVal('in-qris-har', currentData.qris_harian);
+    setVal('in-buku-met', currentData.buku_meterai);
+    setVal('in-buku-lab', currentData.buku_laba_meterai);
+    setVal('in-buku-taba', currentData.buku_tab_a);
+    setVal('in-buku-tabb', currentData.buku_tab_b);
+    setVal('in-buku-sisa', currentData.buku_sisa_akhir);
+    setVal('in-buku-qris', currentData.buku_qris);
     
     document.getElementById('in-target').value = currentData.target || "TIDAK";
 }
@@ -1935,85 +1976,147 @@ function togglePassword() {
 <div id="modalFormNSA" class="fixed inset-0 z-[9999] flex items-center justify-center hidden p-4">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
     
-    <div class="relative bg-white w-full max-w-2xl rounded-[30px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div class="relative bg-white w-full max-w-4xl rounded-[30px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         
+        <!-- Header -->
         <div class="p-6 bg-gray-50 border-b flex justify-between items-center">
-            <h2 class="font-black text-xl tracking-tighter text-gray-800">SINKRONISASI DATA NSA</h2>
-            <button onclick="closeFormNSA()" class="text-gray-400 hover:text-black">
-                <i class="fa-solid fa-xmark fa-xl"></i>
+            <div class="flex flex-col">
+                <h2 class="font-black text-xl tracking-tighter text-gray-800 uppercase">Sinkronisasi Data NSA</h2>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Update Data Cloud Real-time</p>
+            </div>
+            <button onclick="closeFormNSA()" class="text-gray-400 hover:text-black transition-colors">
+                <i class="fa-solid fa-circle-xmark fa-2xl"></i>
             </button>
         </div>
 
-        <div class="p-6 overflow-y-auto space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Body Form -->
+        <div class="p-6 overflow-y-auto space-y-6 bg-white">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 
-                <div class="space-y-5">
-                    <p class="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-2 bg-amber-50 py-1 px-3 rounded-full w-fit">Bagian Laporan</p>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pilih Tanggal</label>
-                        <input type="date" id="in-tgl-raw" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors bg-transparent">
-                        <input type="hidden" id="in-tgl">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pendapatan Kotor</label>
-                        <input type="text" id="in-kotor" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pengeluaran Kasir</label>
-                        <input type="text" id="in-kasir" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Sisa Akhir</label>
-                        <input type="text" id="in-sisa" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (A)</label>
-                        <input type="text" id="in-tab-a" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (B)</label>
-                        <input type="text" id="in-tab-b" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Status Target Harian</label>
-                        <select id="in-target" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm bg-transparent transition-colors">
-                            <option value="TIDAK">TARGET: TIDAK TERPENUHI</option>
-                            <option value="YA">TARGET: TERPENUHI (YA)</option>
-                        </select>
+                <!-- Bagian Laporan -->
+                <div class="space-y-4">
+                    <p class="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-4 bg-amber-50 py-1.5 px-4 rounded-full w-fit">Bagian Laporan Harian</p>
+                    
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pilih Tanggal Laporan</label>
+                            <input type="date" id="in-tgl-raw" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm font-bold bg-transparent transition-colors">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Total Kasir</label>
+                                <input type="text" id="in-tot-kasir" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pengeluaran Kasir</label>
+                                <input type="text" id="in-peng-kasir" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Uang Makan</label>
+                                <input type="text" id="in-um" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pendapatan Kotor</label>
+                                <input type="text" id="in-kotor" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm font-bold text-amber-700 transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (A)</label>
+                                <input type="text" id="in-tab-a" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (B)</label>
+                                <input type="text" id="in-tab-b" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Meterai Pokok (Terjual)</label>
+                                <input type="text" id="in-met-pok" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Laba Meterai</label>
+                                <input type="text" id="in-lab-met" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Sisa Akhir</label>
+                            <input type="text" id="in-sisa-ak" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm font-black transition-colors">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Transaksi QRIS Harian</label>
+                            <input type="text" id="in-qris-har" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm transition-colors">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Pencapaian Target Harian</label>
+                            <select id="in-target" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-amber-500 text-sm bg-transparent font-bold transition-colors">
+                                <option value="TIDAK">TARGET: TIDAK TERPENUHI</option>
+                                <option value="YA">TARGET: TERPENUHI (YA)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <div class="space-y-5 border-l-0 md:border-l md:pl-8 border-gray-100">
-                    <p class="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] mb-2 bg-purple-50 py-1 px-3 rounded-full w-fit">Bagian Summary</p>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Penjualan Meterai</label>
-                        <input type="text" id="in-jual-met" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                <!-- Bagian Buku Rekap -->
+                <div class="space-y-4 border-l-0 md:border-l md:pl-10 border-gray-100">
+                    <p class="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] mb-4 bg-purple-50 py-1.5 px-4 rounded-full w-fit">Bagian Buku Rekap</p>
+                    
+                    <div class="grid grid-cols-1 gap-5">
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Buku Meterai</label>
+                            <input type="text" id="in-buku-met" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Buku Laba Meterai</label>
+                            <input type="text" id="in-buku-lab" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Buku Tabungan (A)</label>
+                            <input type="text" id="in-buku-taba" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Buku Tabungan (B)</label>
+                            <input type="text" id="in-buku-tabb" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Buku Sisa Akhir</label>
+                            <input type="text" id="in-buku-sisa" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Buku Pendapatan QRIS</label>
+                            <input type="text" id="in-buku-qris" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+                        </div>
                     </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Laba Meterai</label>
-                        <input type="text" id="in-laba-met" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (A) - Summary</label>
-                        <input type="text" id="in-sum-tab-a" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tabungan (B) - Summary</label>
-                        <input type="text" id="in-sum-tab-b" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Sisa Akhir Summary</label>
-                        <input type="text" id="in-sum-sisa" oninput="formatRupiah(this)" placeholder="Rp 0" class="w-full border-b-2 border-gray-100 p-2 outline-none focus:border-purple-500 text-sm transition-colors">
+
+                    <!-- Info Box -->
+                    <div class="mt-8 p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                        <p class="text-[9px] text-gray-400 leading-relaxed font-medium uppercase">
+                            <i class="fa-solid fa-circle-info mr-1"></i> Pastikan semua data buku rekap sesuai dengan fisik saldo untuk menghindari selisih pembukuan NSA.
+                        </p>
                     </div>
                 </div>
             </div>
-        </div> <div class="p-6 bg-gray-50 border-t flex gap-4">
-            <button id="btn-save" onclick="updateData()" class="flex-1 py-4 bg-gray-900 text-white rounded-2xl font-black shadow-lg active:scale-95 transition-all hover:bg-amber-600">
-                UPLOAD KE CLOUD
+        </div> 
+
+        <!-- Footer / Action -->
+        <div class="p-6 bg-gray-50 border-t flex gap-4">
+            <button id="btn-save" onclick="updateData()" class="flex-1 py-4 bg-gray-900 text-white rounded-[20px] font-black shadow-xl active:scale-95 transition-all hover:bg-amber-600 uppercase tracking-tighter">
+                <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Update ke Cloud
             </button>
         </div>
         
-    </div> </div> ```
+    </div> 
+</div>
 
 <!-- LOGIN OVERLAY -->
     <div id="login-overlay">
