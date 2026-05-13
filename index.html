@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>NSA - Nurjaya Smart Archive</title>
     <meta name="description" content="Website Official Arsip Operasional Nurjaya. Dibuat untuk mempermudah pemantauan Pembukuan Bulanan dan sebagai Arsip Riwayat Keuangan di Nurjaya Abadi Photocopy.">
+	<link rel="manifest" href="manifest.json">
+	<meta name="theme-color" content="#2563eb">
+	<meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
         :root {
@@ -134,7 +138,7 @@
         /* MAIN UI STYLES */
         .glass-element {
             background: var(--ios-glass);
-            backdrop-filter: blur(20px) saturate(180%);
+            backdrop-filter: blur(10px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid var(--ios-border);
             box-shadow: 0 8px 32px rgba(0,0,0,0.03);
@@ -180,6 +184,21 @@
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
+		
+		.main-content {
+    flex: 1;
+    overflow-y: auto;
+    
+    /* 1. Mengaktifkan scrolling halus di perangkat iOS */
+    -webkit-overflow-scrolling: touch;
+    
+    /* 2. Memaksa Browser menggunakan akselerasi GPU */
+    transform: translateZ(0);
+    will-change: scroll-position;
+    
+    /* 3. Menghilangkan lag saat rendering */
+    backface-visibility: hidden;
+}
 
         .viewer-container {
             width: 100%;
@@ -359,6 +378,7 @@
 		<!-- MODAL PHOTO PREVIEW: FOTO KARYAWAN -->
 		<body class="flex flex-col md:flex-row">
 
+
 		<div id="imageModal" class="fixed inset-0 z-[10000] hidden flex items-center justify-center p-4 backdrop-blur-0 bg-black/0 transition-all duration-500 ease-out">
 		<!-- Tombol Close -->
 		<div class="absolute top-8 right-8 z-[10001] text-white/50 opacity-0 transition-opacity duration-500" id="closeBtn">
@@ -470,32 +490,82 @@
 
 
         <!-- KONTEN: NURJAYA HOME -->
-		<div id="dashboard" class="tab-content">
-		
-		<!-- LATAR BELAKANG KONTEN GRAFIK -->
-		<div style="max-width: 1000px; margin: 20px auto; padding: 0px;">
+<div id="dashboard" class="tab-content">
+
+  <!-- CSS KHUSUS UNTUK RESPONSIF (Taruh di atas atau dalam tag <style>) -->
+<style>
+    /* Desktop Default */
+    .n-container-harian { height: 250px; }
+    /* Menembak ID grafik bulanan sesuai kode kamu */
+    #container-canvas { height: 180px; } 
+
+    /* Mobile (Layar di bawah 600px) */
+    @media (max-width: 600px) {
+        /* Tinggi harian (Mei) di HP */
+        .n-container-harian { height: 200px !important; } 
         
-        <div id="wadah-grafik" style="background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 8px; position: relative; width: 100%">
+        /* Tinggi bulanan (Jan-Apr) di HP - Menyesuaikan ID kamu */
+        #container-canvas { height: 130px !important; } 
         
-        <!-- SESI GRAFIK: BAGIAN ATAS BERANDA -->
-        <div id="sesi-grafik" style="padding: 5px; border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: 5px auto;" class="searchable-content" data-search="grafik bagan statistik pendapatan 2026">
-            <h2 style="text-align: center; font-family: sans-serif; font-size: 1rem;"><strong>STATISTIK PENDAPATAN</strong> <br> Januari - April 2026</h2>
-            
-            <div style="position: relative; height: 25vh; width: 100%;">
-                <canvas id="grafikPendapatan"></canvas>	
-				
-				
-			<!-- WADAH GRAFIK -->
-			<div id="wadah-grafik" style="max-width: 800px; margin: auto; padding: 20px;">
-			<div id="container-canvas" style="height: 200px; position: relative;">
+        /* Jarak antar kotak grafik */
+        .n-box-grafik { margin-bottom: 10px !important; }
+        
+        /* Mengurangi padding wadah bulanan agar lebih tipis di HP */
+        #wadah-grafik { padding: 5px !important; }
+    }
+</style>
+
+<!-- CONTAINER UTAMA -->
+<div style="max-width: 900px; margin: 10px auto; padding: 0 10px; font-family: sans-serif;">
+
+    <!-- 1. KOTAK GRAFIK HARIAN (MEI 2026) -->
+    <div class="n-box-grafik" style="background: #ffffff; border: 1px solid #e1e4e8; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px;">
+        <div style="padding: 12px 15px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-size: 0.85rem; margin: 0; color: #2c3e50;"><strong>PROGRES HARIAN :<br> Pendapatan Kotor Mei 2026</strong></h2>
+            <small style="color: #95a5a6; font-size: 0.65rem;">Geser &rarr;</small>
+        </div>
+
+        <div class="n-container-harian" style="display: flex; flex-wrap: nowrap; overflow: hidden;">
+            <!-- Tabel Kiri -->
+            <div style="width: 120px; flex-shrink: 0; overflow-y: auto; border-right: 1px solid #f0f0f0; padding: 5px; background: #fafafa;">
+                <table style="width: 100%; font-size: 0.7rem; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: #fafafa; border-bottom: 2px solid #3498db; z-index: 10;">
+                        <tr>
+                            <th style="text-align: left; padding: 4px;">Tgl</th>
+                            <th style="text-align: right; padding: 4px;">Rp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-ringkasan">
+                        <!-- Data otomatis masuk -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Grafik Kanan -->
+            <div style="flex-grow: 1; overflow-x: auto; padding: 10px; background: #fff;">
+                <div style="width: 1000px; height: 100%;">
+                    <canvas id="chartMei"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. KOTAK GRAFIK BULANAN (JAN - APR 2026) -->
+    <div id="sesi-grafik" style="background: #ffffff; border: 1px solid #e1e4e8; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 15px;" class="searchable-content">
+        <h2 style="text-align: center; font-size: 0.85rem; color: #2c3e50; margin-top: 0; margin-bottom: 10px;">
+            <strong>STATISTIK PENDAPATAN</strong><br>
+            <span style="font-weight: normal; color: #7f8c8d; font-size: 0.75rem;">Januari - April 2026</span>
+        </h2>
+        
+		<div id="wadah-grafik" style="max-width: 800px; margin: auto; padding: 20px;">
+			<div id="container-canvas" style="height: 150px; position: relative;">
             <canvas id="grafikPendapatan"></canvas>
 			</div>
 			</div>
-            </div>
-			</div>   
-			</div>
-			</div>
-			</div>
+    </div>
+
+    <!-- PENTING: DUPLIKASI ID grafikPendapatan DAN DIV BERLEBIH DI SINI SUDAH DIHAPUS 
+         AGAR TIDAK ADA JARAK KOSONG DI BAWAH GRAFIK -->
+</div>
 			
 		
 		
@@ -1389,59 +1459,96 @@ document.addEventListener('keydown', function(e) {
 
 
 <script>
-// 1. Munculkan Modal Password
+// Pakai var agar lebih fleksibel di browser lama
+var gateAction = ""; 
+
+// 1. Trigger untuk Update Cloud
 function openGate() {
-    document.getElementById('gateModal').classList.remove('hidden');
-    document.getElementById('gatePass').value = ''; // Reset input
-    document.getElementById('gatePass').focus();
+    gateAction = "cloud";
+    tampilkanModalSandi();
 }
 
-// 2. Tutup Modal Password
-function closeGate() {
-    document.getElementById('gateModal').classList.add('hidden');
+// 2. Trigger untuk Grafik Harian
+function openGateHarian() {
+    gateAction = "harian";
+    
+    // Tutup menu developer dulu jika ada
+    var devModal = document.getElementById('devModal');
+    if (devModal) devModal.classList.add('hidden');
+    
+    tampilkanModalSandi();
 }
 
-// 3. Lihat/Sembunyikan Password
-function toggleGatePass() {
-    const input = document.getElementById('gatePass');
-    const icon = document.getElementById('gateEyeIcon');
-    if (input.type === 'password') {
-        input.type = 'text';
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-    } else {
-        input.type = 'password';
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
+function tampilkanModalSandi() {
+    var modal = document.getElementById('gateModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex'; // Pastikan muncul
+        document.getElementById('errorChip').classList.add('hidden');
+        document.getElementById('gatePass').value = ''; 
+        setTimeout(function() { document.getElementById('gatePass').focus(); }, 300);
     }
 }
 
-// 4. Verifikasi Password
+function closeGate() {
+    var modal = document.getElementById('gateModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+    // JANGAN reset gateAction di sini agar tidak hilang sebelum dicek verifyGate
+}
+
 function verifyGate() {
-    const inputArea = document.querySelector('#gateModal .relative.bg-white'); // Target kotak putih untuk getar
-    const chip = document.getElementById('errorChip');
-    const pass = document.getElementById('gatePass').value;
-    const correctPass = "Nazakana.123";
+    var pass = document.getElementById('gatePass').value;
+    var chip = document.getElementById('errorChip');
+    var correctPass = "Nazakana.123";
 
     if (pass === correctPass) {
-        // Jika Benar
-        chip.classList.add('hidden');
-        closeGate(); 
-        openFormNSA(); 
+        // Simpan target ke variabel lokal sebelum gate ditutup
+        var targetLokal = gateAction;
+
+        // Tutup modal password
+        closeGate();
+
+        // Jeda 200ms supaya transisi modal tidak tabrakan
+        setTimeout(function() {
+            if (targetLokal === "harian") {
+                var mHarian = document.getElementById('modalUpdate');
+                if (mHarian) {
+                    mHarian.classList.remove('hidden');
+                    mHarian.style.setProperty('display', 'flex', 'important');
+                }
+            } else {
+                // Jalankan fungsi Cloud NSA
+                if (typeof openFormNSA === "function") {
+                    openFormNSA();
+                } else {
+                    var mCloud = document.getElementById('modalFormNSA');
+                    if (mCloud) {
+                        mCloud.classList.remove('hidden');
+                        mCloud.style.setProperty('display', 'flex', 'important');
+                    }
+                }
+            }
+            // Baru reset setelah semua terbuka
+            gateAction = "";
+        }, 200);
+
     } else {
-        // Jika Salah
-        // 1. Tampilkan Chip
-        chip.classList.remove('hidden');
-        
-        // 2. Efek Getar pada Modal
-        inputArea.classList.add('animate-shake');
-        
-        // 3. Reset Input
+        if (chip) chip.classList.remove('hidden');
         document.getElementById('gatePass').value = '';
         document.getElementById('gatePass').focus();
+    }
+}
 
-        // 4. Bersihkan class animasi setelah selesai (agar bisa dipicu lagi)
-        setTimeout(() => {
-            inputArea.classList.remove('animate-shake');
-        }, 500);
+// Fungsi tutup modal harian (Tombol Batal)
+function tutupModal() {
+    var mHarian = document.getElementById('modalUpdate');
+    if (mHarian) {
+        mHarian.classList.add('hidden');
+        mHarian.style.removeProperty('display');
+        mHarian.style.display = 'none';
     }
 }
 </script>
@@ -1511,49 +1618,57 @@ function verifyGate() {
 		</div>
 
 		<!-- TOMBOL DEVELOPER -->
-		<!-- Modal Wrapper -->
-		<div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
-    
-    <div id="modalOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-md overlay-animate-in" onclick="closeDevModalFunction()"></div>
+<div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
+    <div id="modalOverlay" class="absolute inset-0 bg-black/50 backdrop-blur-[4px] overlay-animate-in" onclick="closeDevModalFunction()"></div>
 
-    <div class="relative bg-white/90 backdrop-blur-xl w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in">
+    <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in transform-gpu">
         
-        <div class="bg-amber-200/50 p-6 text-center border-b border-gray-100">
-            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+        <div class="bg-amber-50 p-6 text-center border-b border-gray-100">
+            <div class="w-16 h-16 bg-white text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                 <i class="fas fa-screwdriver-wrench fa-2xl"></i>
             </div>
-            <h2 class="text-xl font-bold text-gray-800">Opsi Developer</h2>
-            <p class="text-sm text-gray-500 mt-1">Update Data & Maintenance</p>
+            <h2 class="text-xl font-bold text-gray-800 tracking-tighter">Opsi Developer</h2>
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Maintenance System</p>
         </div>
 
-        <div class="p-6 space-y-4">
-            
+        <div class="p-6 space-y-3">
+            <!-- 1. GITHUB -->
             <a href="https://github.com/nazakana/" target="_blank" 
-               class="flex items-center gap-4 w-full p-4 bg-gray-900 hover:bg-black text-white rounded-full transition-all active:scale-95 shadow-md">
-                <div class="w-8 flex justify-center">
-                    <i class="fab fa-github fa-lg"></i>
-                </div>
-                <span class="font-semibold">View on GitHub</span>
-                <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
+               class="flex items-center gap-4 w-full p-4 bg-gray-900 hover:bg-black text-white rounded-2xl transition-all active:scale-95">
+                <div class="w-8 flex justify-center"><i class="fab fa-github fa-lg"></i></div>
+                <span class="font-bold text-sm">View on GitHub</span>
+                <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
             </a>
 
-           <button onclick="openGate()" 
-        class="flex items-center gap-4 w-full p-4 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-all active:scale-95 shadow-md">
-    <div class="w-8 flex justify-center"><i class="fas fa-database fa-lg"></i></div>
-    <span class="font-semibold">Update Data Cloud</span>
-    <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
+            <!-- 2. TOMBOL BARU: INPUT DATA GRAFIK HARIAN -->
+            <!-- Ubah onclick pada tombol ini -->
+<button onclick="openGateHarian()" 
+    class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all active:scale-95">
+    <div class="w-8 flex justify-center"><i class="fas fa-chart-line fa-lg"></i></div>
+    <span class="font-bold text-sm">Input Data Grafik Harian</span>
+    <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
 </button>
 
-            <a href="https://wa.me/6283130578886" target="_blank" 
-               class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition-all active:scale-95 shadow-md">
-                <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
-                <span class="font-semibold">Kontak Developer</span>
-                <i class="fas fa-chevron-right ml-auto opacity-50 mr-2"></i>
-            </a>
+            <!-- 3. UPDATE DATA CLOUD -->
+            <button onclick="openGate()" 
+                class="flex items-center gap-4 w-full p-4 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl transition-all active:scale-95">
+                <div class="w-8 flex justify-center"><i class="fas fa-database fa-lg"></i></div>
+                <span class="font-bold text-sm">Update Data Cloud</span>
+                <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
+            </button>
 
-        </div> <div class="px-6 pb-6 text-center">
-            <button id="closeDevModal" class="w-full py-3 text-blue-600 hover:text-blue-800 font-bold text-lg transition-colors">
-                Selesai
+            <!-- 4. KONTAK -->
+            <a href="https://wa.me/6283130578886" target="_blank" 
+               class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl transition-all active:scale-95">
+                <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
+                <span class="font-bold text-sm">Kontak Developer</span>
+                <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
+            </a>
+        </div>
+
+        <div class="px-6 pb-6">
+            <button id="closeDevModal" class="w-full py-3 bg-gray-50 text-gray-400 hover:text-gray-600 rounded-xl font-bold text-sm transition-colors border border-gray-100">
+                Tutup Menu
             </button>
         </div>
     </div>
@@ -2144,6 +2259,305 @@ function togglePassword() {
         </div>
     </div>
 
+
+<!-- 2. SKRIP PEMROSES DATA (Taruh di paling bawah sebelum </body>) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+<script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Pakai Web App URL milikmu, bukan CSV
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVrDMR1XgJ4-tTX6HEV9ZqasbslsO-3Kg7ap0-N4glOllopCpaCqvOYW6JTA65j0ujyQ/exec";
+
+function muatDataNSA() {
+    fetch(WEB_APP_URL)
+        .then(response => response.json())
+        .then(data => {
+            const labelTanggal = data.map(item => item.Tanggal);
+            const dataPendapatan = data.map(item => item.Pendapatan);
+            
+            // --- BAGIAN BARU: MENGISI TABEL RINGKASAN ---
+            const tabelBody = document.getElementById('tabel-ringkasan');
+            tabelBody.innerHTML = ""; // Bersihkan dulu
+            
+            data.forEach(item => {
+                let baris = `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 5px; color: #7f8c8d;">${item.Tanggal}</td>
+                        <td style="padding: 5px; text-align: right; font-weight: bold; color: #2c3e50;">
+                            ${Number(item.Pendapatan).toLocaleString('id-ID')}
+                        </td>
+                    </tr>`;
+                tabelBody.innerHTML += baris;
+            });
+            // --------------------------------------------
+
+            buatGrafikHarian(labelTanggal, dataPendapatan);
+        })
+        .catch(err => console.error("Gagal ambil data:", err));
+}
+
+function buatGrafikHarian(labels, dataValues) {
+    const ctx = document.getElementById('chartMei').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Pendapatan',
+                data: dataValues,
+                borderWidth: 3,
+                fill: false, // Untuk garis multi-warna, fill sebaiknya dimatikan agar tidak aneh
+                tension: 0.4,
+                pointRadius: 4,
+                // --- LOGIKA WARNA DINAMIS DIMULAI DI SINI ---
+                segment: {
+                    borderColor: ctx => {
+                        const val1 = ctx.p0.parsed.y; // Titik sebelumnya
+                        const val2 = ctx.p1.parsed.y; // Titik sekarang
+                        
+                        if (val2 > val1) {
+                            return '#2ecc71'; // Hijau jika naik
+                        } else if (val2 < val1 && val2 < (val1 * 0.5)) {
+                            return '#e74c3c'; // Merah jika turun drastis (>50%)
+                        } else if (val2 < val1) {
+                            return '#f1c40f'; // Kuning jika turun biasa
+                        }
+                        return '#3498db'; // Biru jika stabil
+                    }
+                }
+                // --------------------------------------------
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true },
+                x: { grid: { display: false } }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}
+
+window.onload = muatDataNSA;
+</script>
+
+<script>
+function bukaModalInputHarian() {
+    // 1. Tutup dulu modal developer
+    if (typeof closeDevModalFunction === "function") {
+        closeDevModalFunction(); 
+    } else {
+        document.getElementById('devModal').classList.add('hidden');
+    }
+
+    // 2. Buka modal input data yang kita buat tadi
+    // Pastikan ID modal form kamu adalah 'modalUpdate'
+    setTimeout(() => {
+        document.getElementById('modalUpdate').style.display = 'block';
+    }, 300); // Beri jeda sedikit agar transisi halus
+}
+</script>
+
+<!-- MODAL FORM INPUT DATA HARIAN (NSA STYLE) -->
+<div id="modalUpdate" class="fixed inset-0 z-[60] flex items-center justify-center hidden p-4">
+    <!-- Overlay dengan blur -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="tutupModal()"></div>
+
+    <!-- Konten Modal -->
+    <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden transform-gpu transition-all">
+        
+        <!-- Header Modal -->
+        <div class="bg-blue-50 p-6 text-center border-b border-gray-100">
+            <div class="w-16 h-16 bg-white text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <i class="fas fa-chart-line fa-2xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800 tracking-tighter">Update Data Harian</h2>
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Mei 2026 • Cloud Sync</p>
+        </div>
+
+        <!-- Form Body -->
+        <!-- Form Body (Revisi) -->
+<form id="formUpdatePendapatan" class="p-6 space-y-4">
+    <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">Pilih Tanggal</label>
+        <!-- Menggunakan type="date" agar muncul popup kalender -->
+        <input type="date" id="inputTanggalFull" required 
+            class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none font-bold text-gray-700">
+        <p class="text-[9px] text-gray-400 mt-1 ml-1">*Hanya angka tanggal yang akan disimpan ke sistem.</p>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">Nominal Pendapatan</label>
+        <!-- Input teks agar bisa diformat otomatis dengan titik -->
+        <input type="text" id="inputNominalDisplay" required 
+            class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none font-bold text-gray-700"
+            placeholder="Rp 0">
+        <!-- Hidden input untuk menyimpan angka murni yang akan dikirim ke database -->
+        <input type="hidden" id="inputNominalRaw" name="pendapatan">
+    </div>
+
+    <div class="pt-2 space-y-3">
+        <button type="submit" id="btnSimpan" 
+            class="flex items-center justify-center gap-3 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-200">
+            <span class="font-bold text-sm">Simpan ke Cloud</span>
+            <i class="fas fa-paper-plane text-xs opacity-50"></i>
+        </button>
+        <button type="button" onclick="tutupModal()" 
+            class="w-full py-3 text-gray-400 hover:text-gray-600 font-bold text-sm transition-colors">
+            Batalkan
+        </button>
+    </div>
+</form>
+    </div>
+</div>
+
+<script>
+// Fungsi untuk membuka modal form (dipanggil dari tombol Developer tadi)
+function bukaModalInputHarian() {
+    // Tutup modal developer dulu (asumsi ID-nya devModal)
+    const devModal = document.getElementById('devModal');
+    if (devModal) devModal.classList.add('hidden');
+
+    // Tampilkan modal form
+    const modal = document.getElementById('modalUpdate');
+    modal.classList.remove('hidden');
+}
+
+// Fungsi untuk menutup modal form
+function tutupModal() {
+    const mHarian = document.getElementById('modalUpdate');
+    if (mHarian) {
+        mHarian.classList.add('hidden');
+        mHarian.style.removeProperty('display');
+    }
+}
+}
+
+// Handle pengiriman data via Form
+document.getElementById('formUpdatePendapatan').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('btnSimpan');
+    const tgl = document.getElementById('inputTanggal').value;
+    const nominal = document.getElementById('inputNominal').value;
+    
+    // Animasi tombol loading
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span class="text-sm">Sinkronisasi...</span>`;
+    btn.disabled = true;
+
+    // Kirim ke Web App URL milikmu
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            tanggal: tgl,
+            pendapatan: nominal
+        })
+    })
+    .then(() => {
+        // Notifikasi sukses sederhana
+        alert("Data Tanggal " + tgl + " Berhasil Diperbarui!");
+        
+        // Reset dan tutup
+        document.getElementById('formUpdatePendapatan').reset();
+        tutupModal();
+        
+        // Kembalikan tombol
+        btn.innerHTML = `<span class="font-bold text-sm">Simpan ke Cloud</span><i class="fas fa-paper-plane text-xs opacity-50 ml-2"></i>`;
+        btn.disabled = false;
+        
+        // Refresh grafik otomatis setelah 2 detik
+        setTimeout(muatDataNSA, 1500); 
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Terjadi kesalahan sistem.");
+        btn.disabled = false;
+    });
+});
+</script>
+
+
+<script>
+// --- 1. LOGIKA AUTO FORMAT RUPIAH ---
+const inputDisplay = document.getElementById('inputNominalDisplay');
+const inputRaw = document.getElementById('inputNominalRaw');
+
+inputDisplay.addEventListener('input', function(e) {
+    // Ambil angka saja
+    let numberString = this.value.replace(/[^,\d]/g, '').toString();
+    let split = numberString.split(',');
+    let sisa = split[0].length % 3;
+    let rupiah = split[0].substr(0, sisa);
+    let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+    }
+
+    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    
+    // Tampilkan format Rp ke user
+    this.value = rupiah ? 'Rp ' + rupiah : '';
+    
+    // Simpan angka murni ke hidden input untuk dikirim ke spreadsheet
+    inputRaw.value = numberString;
+});
+
+// --- 2. LOGIKA KIRIM DATA (HANYA TANGGAL) ---
+document.getElementById('formUpdatePendapatan').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('btnSimpan');
+    const fullDate = document.getElementById('inputTanggalFull').value; // Format: YYYY-MM-DD
+    const nominal = document.getElementById('inputNominalRaw').value; // Angka murni
+    
+    // Ambil angka tanggal saja (DD)
+    const tanggalSaja = new Date(fullDate).getDate();
+
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span class="text-sm">Sinkronisasi...</span>`;
+    btn.disabled = true;
+
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            tanggal: tanggalSaja, // Kirim angka 1-31 saja
+            pendapatan: nominal
+        })
+    })
+    .then(() => {
+        alert("Berhasil! Data Tanggal " + tanggalSaja + " terupdate.");
+        document.getElementById('formUpdatePendapatan').reset();
+        tutupModal();
+        btn.innerHTML = `<span class="font-bold text-sm">Simpan ke Cloud</span><i class="fas fa-paper-plane text-xs opacity-50 ml-2"></i>`;
+        btn.disabled = false;
+        setTimeout(muatDataNSA, 1500);
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Gagal mengirim data.");
+        btn.disabled = false;
+    });
+});
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+</script>
 
 </body>
 </html>
