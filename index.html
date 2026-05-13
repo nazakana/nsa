@@ -372,6 +372,28 @@
     }
 </style>
 
+<style>
+/* Efek List Barang muncul pelan-pelan */
+.item-katalog {
+    animation: slideUp 0.3s ease-out forwards;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar halus untuk area list */
+#listKatalog::-webkit-scrollbar {
+    width: 4px;
+}
+#listKatalog::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+</style>
 
 </head>
 
@@ -1583,29 +1605,56 @@ function tutupModal() {
 		<!-- SESI TOMBOL AKSI -->
 
 
-		<!-- TOMBOL SEARCH -->
-		<div class="fixed top-6 left-1/2 -translate-x-1/2 md:left-auto md:right-6 md:translate-x-0 w-[92%] md:w-auto z-[9998] flex items-center justify-center md:justify-end gap-3 transition-all duration-500">
+		<!-- PEMBUNGKUS UTAMA (Fixed & Responsive) -->
+<div class="fixed top-6 left-0 right-0 px-[4%] md:left-auto md:right-6 md:px-0 z-[9998] flex items-start justify-end gap-2 md:gap-3 transition-all duration-500">
     
-		<div onclick="openNSASearch()" 
-         class="w-full max-w-[300px] md:w-[350px] bg-white/60 backdrop-blur-md border border-white/40 px-5 py-2.5 md:py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:bg-white/80 transition-all duration-300 group">
-        <i class="fas fa-search text-blue-600 group-hover:scale-110 transition-transform text-sm md:text-base"></i>
-        <span class="text-gray-900 font-medium text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Cari laporan atau staf...</span>
-		</div>
+    <!-- SISI KIRI: TOMBOL SEARCH -->
+    <div onclick="openNSASearch()" 
+         class="flex-1 min-w-0 max-w-[350px] bg-white/60 backdrop-blur-md border border-white/40 px-4 py-2.5 md:py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:bg-white/80 transition-all duration-300 group">
+        <i class="fas fa-search text-blue-600 group-hover:scale-110 transition-transform text-sm md:text-base flex-shrink-0"></i>
+        <span class="text-gray-900 font-medium text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Cari laporan atau data karyawan</span>
+    </div>
 
-		<!-- TOMBOL REFRESH -->
-		<button onclick="location.reload()" 
-        class="w-10 h-10 md:w-12 md:h-12 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-all flex items-center justify-center focus:outline-none group">
-		<i class="fas fa-arrows-rotate text-xs md:text-base group-hover:rotate-180 transition-transform duration-500"></i>
-		</button>
+    <!-- SISI KANAN: KTOMBOL NOTIF, REFRESH, DEVELOPER -->
+    <div class="flex flex-col gap-2 md:gap-3 flex-shrink-0">
+        
+        <!-- BARIS ATAS: 3 TOMBOL KECIL -->
+        <div class="flex gap-2 md:gap-3">
+            <button id="btnNotifAksi" onclick="aktifkanPengingat()" 
+                    class="w-10 h-10 md:w-12 md:h-12 bg-white text-blue-600 rounded-full shadow-lg flex items-center justify-center focus:outline-none flex-shrink-0">
+                <i class="fas fa-bell text-xs md:text-base"></i>
+            </button>
 
-        <button id="openDevModal" 
-                class="w-10 h-10 md:w-12 md:h-12 bg-green-500 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all flex items-center justify-center focus:outline-none group">
-            <i class="fas fa-cog text-xs md:text-base group-hover:rotate-90 transition-transform duration-300"></i>
-        </button>
-		</div>
-		</div>
+            <button onclick="location.reload()" 
+                    class="w-10 h-10 md:w-12 md:h-12 bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center focus:outline-none flex-shrink-0">
+                <i class="fas fa-arrows-rotate text-xs md:text-base"></i>
+            </button>
 
-		<div id="boxSearchNSA" style="display:none;" class="fixed inset-0 z-[10000] bg-white/40 backdrop-blur-[30px] flex-col items-center p-6 pt-24">
+            <button id="openDevModal" 
+                    class="w-10 h-10 md:w-12 md:h-12 bg-green-500 text-white rounded-full shadow-lg flex items-center justify-center focus:outline-none flex-shrink-0">
+                <i class="fas fa-cog text-xs md:text-base"></i>
+            </button>
+        </div>
+
+        <!-- TOMBOL KATALOG -->
+        <button type="button" 
+        id="btnBukaKatalog"
+        onclick="bukaModalKatalog()" 
+        class="w-full bg-orange-500 text-white py-2 md:py-2.5 rounded-full shadow-lg hover:bg-orange-600 transition-all flex items-center justify-center gap-2 focus:outline-none active:scale-95 group border border-orange-400/30">
+    
+    <i id="iconKatalog" class="fas fa-book-open text-[10px] md:text-xs"></i>
+    
+    <span id="textKatalog" class="font-bold text-[10px] md:text-xs tracking-wider uppercase">KATALOG BARANG</span>
+</button>
+    </div>
+
+</div>
+		
+		
+
+
+<!-- MODAL SEARCHBOX -->
+<div id="boxSearchNSA" style="display:none;" class="fixed inset-0 z-[10000] bg-white/40 backdrop-blur-[30px] flex-col items-center p-6 pt-24">
 		<div style="width:100%; max-width:600px;">
         <div class="relative">
             <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-indigo-600 text-l"></i>
@@ -1616,23 +1665,89 @@ function tutupModal() {
         <button onclick="closeNSASearch()" class="mt-6 w-full py-3 text-gray-400 font-bold hover:text-indigo-600 transition-colors uppercase tracking-widest text-[12px]">Klik untuk membatalkan pencarian</button>
 		</div>
 		</div>
+		
+	<!-- MODAL PENAMPIL KATALOG -->	
+<div id="modalKatalogNSA" style="display:none;" class="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="tutupModalKatalog()"></div>
 
-		<!-- TOMBOL DEVELOPER -->
+    <div class="relative bg-white w-full max-w-lg rounded-[30px] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+        
+        <div class="bg-orange-500 p-5 text-white">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold tracking-tight">Katalog Barang</h2>
+                    <p id="statusDataKatalog" class="text-[10px] opacity-80 uppercase tracking-widest font-semibold">Menghubungkan...</p>
+                </div>
+                <div class="bg-white/20 px-3 py-1 rounded-full">
+                    <span id="jumlahItemKatalog" class="text-xs font-bold">0</span>
+                </div>
+            </div>
+        </div>
+
+     <!-- Bagian Searchbox (Ikon Kiri + Tombol Cari Kapsul/Rounded) -->
+<div class="p-4 bg-orange-50 border-b border-orange-100">
+    <div class="relative flex items-center">
+        <!-- Ikon Kaca Pembesar (Pajangan) -->
+        <i class="fas fa-search absolute left-4 text-orange-300 text-sm pointer-events-none"></i>
+        
+        <!-- Input -->
+        <input type="text" id="inputCariKatalog" 
+               oninput="filterKatalog()" 
+               onkeyup="if(event.key === 'Enter') filterKatalog()"
+               placeholder="Cari nama barang..." 
+               class="w-full pl-11 pr-24 py-3 rounded-2xl border-none shadow-sm focus:ring-2 focus:ring-orange-500 outline-none text-sm">
+        
+        <!-- Tombol 'CARI' Rounded Full (Kapsul) -->
+        <button onclick="filterKatalog()" 
+                class="absolute right-1.5 bg-orange-500 text-white text-[10px] font-black px-5 py-2 rounded-full shadow-md active:scale-90 transition-all hover:bg-orange-600 uppercase tracking-widest border-2 border-white/10">
+            Cari
+        </button>
+    </div>
+</div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50" id="kontenDaftarKatalog">
+            <div class="flex flex-col items-center justify-center py-20 opacity-20">
+                <i class="fas fa-circle-notch fa-spin text-3xl mb-2"></i>
+                <p class="text-xs font-bold">LOADING DATA</p>
+            </div>
+        </div>
+
+        <div class="p-4 bg-white border-t border-slate-100 flex gap-3">
+            <button onclick="ambilDataCloud()" class="flex-1 py-3 bg-orange-100 text-orange-600 rounded-2xl font-bold text-xs active:scale-95 transition-all">
+                <i class="fas fa-sync-alt mr-1"></i> Refresh
+            </button>
+            <button onclick="tutupModalKatalog()" class="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-bold text-xs active:scale-95">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!-- MODAL MENU DEVELOPER -->
 <div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
     <div id="modalOverlay" class="absolute inset-0 bg-black/50 backdrop-blur-[4px] overlay-animate-in" onclick="closeDevModalFunction()"></div>
 
     <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in transform-gpu">
         
-        <div class="bg-amber-50 p-6 text-center border-b border-gray-100">
-            <div class="w-16 h-16 bg-white text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
-                <i class="fas fa-screwdriver-wrench fa-2xl"></i>
-            </div>
-            <h2 class="text-xl font-bold text-gray-800 tracking-tighter">Opsi Developer</h2>
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Maintenance System</p>
-        </div>
-
+       <!-- HEADER MODAL (VERSION: COMPACT) -->
+<div class="bg-amber-50 p-4 text-center border-b border-gray-100">
+    <!-- Icon Box diperkecil dari w-16 h-16 ke w-12 h-12 -->
+    <div class="w-12 h-12 bg-white text-amber-600 rounded-xl flex items-center justify-center mx-auto mb-2 shadow-sm">
+        <i class="fas fa-screwdriver-wrench fa-lg"></i>
+    </div>
+    
+    <!-- Judul & Subtitle -->
+    <h2 class="text-lg font-bold text-gray-800 tracking-tighter leading-tight">Opsi Developer</h2>
+    <p class="text-[9px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-0.5">Update Data & Maintenance</p>
+</div>
         <div class="p-6 space-y-3">
-            <!-- 1. GITHUB -->
+            <!-- 1. TOMBOL GITHUB -->
             <a href="https://github.com/nazakana/" target="_blank" 
                class="flex items-center gap-4 w-full p-4 bg-gray-900 hover:bg-black text-white rounded-2xl transition-all active:scale-95">
                 <div class="w-8 flex justify-center"><i class="fab fa-github fa-lg"></i></div>
@@ -1640,8 +1755,7 @@ function tutupModal() {
                 <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
             </a>
 
-            <!-- 2. TOMBOL BARU: INPUT DATA GRAFIK HARIAN -->
-            <!-- Ubah onclick pada tombol ini -->
+            <!-- 2. TOMBOL INPUT DATA GRAFIK HARIAN -->
 <button onclick="openGateHarian()" 
     class="flex items-center gap-4 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all active:scale-95">
     <div class="w-8 flex justify-center"><i class="fas fa-chart-line fa-lg"></i></div>
@@ -1649,15 +1763,28 @@ function tutupModal() {
     <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
 </button>
 
-            <!-- 3. UPDATE DATA CLOUD -->
+            <!-- 3. UPDATE SUMMARY HARIAN -->
             <button onclick="openGate()" 
                 class="flex items-center gap-4 w-full p-4 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl transition-all active:scale-95">
                 <div class="w-8 flex justify-center"><i class="fas fa-database fa-lg"></i></div>
-                <span class="font-bold text-sm">Update Data Cloud</span>
+                <span class="font-bold text-sm">Update Data Summary</span>
                 <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
             </button>
 
-            <!-- 4. KONTAK -->
+
+			<!-- 4. UPDATE KATALOG BARANG -->
+<button onclick="openGateKatalog()" 
+        class="flex items-center gap-4 w-full p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl transition-all active:scale-95">
+    <div class="w-8 flex justify-center">
+        <i class="fas fa-boxes-stacked fa-lg"></i>
+    </div>
+    <div class="flex flex-col items-start">
+        <span class="font-bold text-sm">Update Katalog Barang</span>
+    </div>
+    <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
+</button>
+			
+            <!-- 5. KONTAK DEVELOPER -->
             <a href="https://wa.me/6283130578886" target="_blank" 
                class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl transition-all active:scale-95">
                 <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
@@ -1673,6 +1800,81 @@ function tutupModal() {
         </div>
     </div>
 </div>
+
+
+<!-- MODAL EDITOR KATALOG (ID: modalEditorKatalog) -->
+<div id="modalEditorKatalog" style="display:none;" class="fixed inset-0 z-[10001] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="tutupEditorKatalog()"></div>
+
+    <div class="relative bg-white w-full max-w-md rounded-[30px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        
+        <div class="bg-indigo-600 p-5 text-white">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold">Form Pembaruan Katalog</h2>
+                    <p class="text-[10px] opacity-70 uppercase tracking-widest font-bold">Ubah harga atau tambah barang baru</p>
+                </div>
+                <i class="fas fa-edit opacity-50"></i>
+            </div>
+        </div>
+
+        <div class="p-4 bg-indigo-50 border-b border-indigo-100">
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[10px] font-bold text-indigo-400 ml-1 uppercase">Nama Barang</label>
+                    <input type="text" id="inputNamaEditor" placeholder="Contoh: PENSIL 2B" 
+                           class="w-full p-3 rounded-xl border-none shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none text-sm uppercase">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-indigo-400 ml-1 uppercase">Harga Jual (Rp)</label>
+                    <input type="number" id="inputHargaEditor" placeholder="Contoh: 5000" 
+                           class="w-full p-3 rounded-xl border-none shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+                </div>
+                <button id="btnSimpanItem" onclick="simpanKeDaftarLokal()" 
+                        class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg active:scale-95 transition-all">
+                    <i class="fas fa-plus-circle mr-2"></i> Tambah ke Daftar
+                </button>
+            </div>
+        </div>
+
+        <!-- SEARCH BOX KHUSUS EDITOR (Indigo Version) -->
+<div class="px-4 py-3 bg-indigo-100/30 border-b border-indigo-100">
+    <div class="relative flex items-center">
+        <!-- Ikon Kaca Pembesar (Pajangan Kiri) -->
+        <i class="fas fa-search absolute left-4 text-indigo-300 text-[10px] pointer-events-none"></i>
+        
+        <!-- Input: pr-20 agar teks tidak menabrak chip Cari -->
+        <input type="text" id="inputCariEditor" 
+               oninput="filterEditor()" 
+               onkeyup="if(event.key === 'Enter') filterEditor()"
+               placeholder="Cari barang di list bawah..." 
+               class="w-full pl-10 pr-20 py-2.5 rounded-2xl border-none shadow-inner focus:ring-2 focus:ring-indigo-400 outline-none text-[11px] uppercase">
+        
+        <!-- Tombol 'CARI' Rounded Full (Indigo Chip) -->
+        <button onclick="filterEditor()" 
+                class="absolute right-1.5 bg-indigo-600 text-white text-[9px] font-black px-4 py-1.5 rounded-full shadow-md active:scale-90 transition-all hover:bg-indigo-700 uppercase tracking-widest">
+            Cari
+        </button>
+    </div>
+</div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-2 bg-slate-50" id="listEditorReview">
+            </div>
+
+        <div class="p-4 bg-white border-t border-slate-100 space-y-2">
+            <button onclick="prosesUploadKeCloud()" id="btnCloudUpload"
+                    class="w-full py-3 bg-emerald-500 text-white rounded-xl font-black text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+                <i class="fas fa-cloud-upload-alt"></i> UPDATE DATA KE CLOUD
+            </button>
+            <button onclick="tutupEditorKatalog()" 
+                    class="w-full py-3 bg-slate-100 text-slate-400 rounded-xl font-bold text-xs active:scale-95">
+                Batal / Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
+
 
 
 <!-- TOMBOL DARK/LIGHT MODE -->
@@ -2087,7 +2289,7 @@ function togglePassword() {
 </div>
 
 
-<!-- MODAL FORM NSA SINKRONISASI -->
+<!-- MODAL UPDATE DATA SUMMARY -->
 <div id="modalFormNSA" class="fixed inset-0 z-[9999] flex items-center justify-center hidden p-4">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
     
@@ -2096,8 +2298,8 @@ function togglePassword() {
         <!-- Header -->
         <div class="p-6 bg-gray-50 border-b flex justify-between items-center">
             <div class="flex flex-col">
-                <h2 class="font-black text-xl tracking-tighter text-gray-800 uppercase">Sinkronisasi Data NSA</h2>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Update Data Cloud Real-time</p>
+                <h2 class="font-black text-xl tracking-tighter text-gray-800 uppercase">SUMMARY HARIAN</h2>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Update data summary yang ditampilkan di Nurjaya Home</p>
             </div>
             <button onclick="closeFormNSA()" class="text-gray-400 hover:text-black transition-colors">
                 <i class="fa-solid fa-circle-xmark fa-2xl"></i>
@@ -2224,11 +2426,19 @@ function togglePassword() {
         </div> 
 
         <!-- Footer / Action -->
-        <div class="p-6 bg-gray-50 border-t flex gap-4">
-            <button id="btn-save" onclick="updateData()" class="flex-1 py-4 bg-gray-900 text-white rounded-[20px] font-black shadow-xl active:scale-95 transition-all hover:bg-amber-600 uppercase tracking-tighter">
-                <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Update ke Cloud
-            </button>
-        </div>
+<div class="p-6 bg-gray-50 border-t flex gap-4">
+    <button id="btn-save" onclick="updateData()" 
+            class="flex-1 py-4 bg-gray-900 text-white rounded-[20px] font-black shadow-xl active:scale-95 transition-all hover:bg-amber-600 uppercase tracking-tighter flex items-center justify-center gap-2">
+        
+        <!-- Ikon Statis (Default) -->
+        <i id="icon-static" class="fa-solid fa-cloud-arrow-up"></i>
+        
+        <!-- Ikon Loading (Tersembunyi, akan berputar saat aktif) -->
+        <i id="icon-loading" class="fa-solid fa-spinner fa-spin hidden"></i>
+        
+        <span id="text-btn">UPDATE DATA</span>
+    </button>
+</div>
         
     </div> 
 </div>
@@ -2379,8 +2589,8 @@ function bukaModalInputHarian() {
             <div class="w-16 h-16 bg-white text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                 <i class="fas fa-chart-line fa-2xl"></i>
             </div>
-            <h2 class="text-xl font-bold text-gray-800 tracking-tighter">Update Data Harian</h2>
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Mei 2026 • Cloud Sync</p>
+            <h2 class="text-xl font-bold text-gray-800 tracking-tighter">Input Pendapatan Harian</h2>
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Mei 2026 • Sinkronasi Cloud</p>
         </div>
 
         <!-- Form Body -->
@@ -2407,7 +2617,7 @@ function bukaModalInputHarian() {
     <div class="pt-2 space-y-3">
         <button type="submit" id="btnSimpan" 
             class="flex items-center justify-center gap-3 w-full p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-200">
-            <span class="font-bold text-sm">Simpan ke Cloud</span>
+            <span class="font-bold text-sm">Upload Data</span>
             <i class="fas fa-paper-plane text-xs opacity-50"></i>
         </button>
         <button type="button" onclick="tutupModal()" 
@@ -2554,10 +2764,276 @@ document.getElementById('formUpdatePendapatan').addEventListener('submit', funct
 </script>
 
 <script>
+// 1. Fungsi Utama Aktifkan Notifikasi
+function aktifkanPengingat() {
+    if (!("Notification" in window)) {
+        alert("Browser ini tidak mendukung notifikasi.");
+        return;
+    }
+
+    Notification.requestPermission().then(status => {
+        if (status === "granted") {
+            alert("Sistem Pengingat NSA Aktif!");
+            document.getElementById('btnNotifAksi').classList.add('hidden');
+            mulaiJadwalOtomatis();
+        } else {
+            alert("Izin ditolak. Jadwal tidak bisa berjalan.");
+        }
+    });
+}
+
+// 2. Mesin Pengecek Waktu (Jalankan setiap 1 menit)
+function mulaiJadwalOtomatis() {
+    setInterval(() => {
+        const sekarang = new Date();
+        const waktu = sekarang.getHours().toString().padStart(2, '0') + ":" + 
+                      sekarang.getMinutes().toString().padStart(2, '0');
+
+        if (waktu === "12:00") {
+            kirimNotif("Semangat Hari Ini!", "Jangan lupa untuk menulis transaksi penjualan ya...");
+        } else if (waktu === "16:00") {
+            kirimNotif("Waktunya Cek Kasir", "Hari sudah petang, saatnya mengecek pembukuan agar efisien...");
+        } else if (waktu === "19:30") {
+            kirimNotif("30 Menit Lagi Tutup", "Siap untuk penutupan kasir malam ini?");
+        } else if (waktu === "20:10") {
+            kirimNotif("Laporan Terbit!", "Alhamdulillah, silakan buka NSA untuk detail lengkap hari ini.");
+        }
+    }, 60000);
+}
+
+// 3. Fungsi Eksekusi Notifikasi
+function kirimNotif(judul, pesan) {
+    if (Notification.permission === "granted") {
+        navigator.serviceWorker.ready.then(registration => {
+            registration.showNotification(judul, {
+                body: pesan,
+                icon: "icon-192.png",
+                // Pola: Getar 500ms, Diam 100ms, Getar 500ms
+                vibrate: [500, 100, 500], 
+                badge: "icon-192.png"
+            });
+        });
+    }
+}
+
+// 4. Cek Status saat Halaman Baru Dibuka
+window.addEventListener('load', () => {
+    if (Notification.permission === "granted") {
+        const btn = document.getElementById('btnNotifAksi');
+        if (btn) btn.classList.add('hidden');
+        mulaiJadwalOtomatis();
+    }
+});
+</script>
+
+
+<script>
+// 1. KONFIGURASI
+const URL_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbzZTIveT2eZSA8eI-evypBEwSoz0iBOuRGHkis9-HH8axIwHBS_5OLNimAeM39JK_Pw/exec";
+let listBarangKatalog = [];
+let indexEditSekarang = null;
+
+// 2. LOGIKA KATALOG (USER SIDE)
+function bukaModalKatalog() {
+    document.getElementById('modalKatalogNSA').style.display = 'flex';
+    const cache = localStorage.getItem('nsa_katalog_cache');
+    if (cache) {
+        listBarangKatalog = JSON.parse(cache);
+        tampilkanDaftar(listBarangKatalog);
+    }
+    ambilDataCloud();
+}
+
+function tutupModalKatalog() {
+    document.getElementById('modalKatalogNSA').style.display = 'none';
+    document.getElementById('inputCariKatalog').value = '';
+}
+
+async function ambilDataCloud() {
+    const statusLabel = document.getElementById('statusDataKatalog');
+    try {
+        const response = await fetch(URL_APP_SCRIPT);
+        const data = await response.json();
+        listBarangKatalog = data;
+        localStorage.setItem('nsa_katalog_cache', JSON.stringify(data));
+        tampilkanDaftar(listBarangKatalog);
+        if(statusLabel) statusLabel.innerText = "Data Cloud Terkini";
+    } catch (error) {
+        if(statusLabel) statusLabel.innerText = "Gagal Sinkronisasi";
+    }
+}
+
+function filterKatalog() {
+    const keyword = document.getElementById('inputCariKatalog').value.toLowerCase();
+    const hasilFilter = listBarangKatalog.filter(item => (item.nama_barang || "").toLowerCase().includes(keyword));
+    tampilkanDaftar(hasilFilter);
+}
+
+function tampilkanDaftar(data) {
+    const container = document.getElementById('kontenDaftarKatalog');
+    if(!container) return;
+
+    // 1. CATAT: Simpan posisi scroll saat ini sebelum data dihapus
+    const posisiScrollTerakhir = container.scrollTop;
+
+    // 2. BERSIHKAN & UPDATE: Kosongkan list dan update jumlah barang
+    container.innerHTML = '';
+    document.getElementById('jumlahItemKatalog').innerText = data.length;
+
+    // 3. RENDER: Bangun ulang isi list
+    data.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center mb-3";
+        const harga = "Rp " + (parseInt(item.harga_jual) || 0).toLocaleString('id-ID');
+        const idAsli = item.nomor || (index + 1);
+
+        card.innerHTML = `
+            <div class="flex flex-col text-left">
+                <span class="text-slate-800 font-bold text-sm leading-tight">${item.nama_barang}</span>
+                <span class="text-[9px] text-slate-400 mt-1 uppercase">ID: ${idAsli}</span>
+            </div>
+            <div class="text-right flex-shrink-0">
+                <span class="text-orange-600 font-black text-sm">${harga}</span>
+            </div>`;
+        container.appendChild(card);
+    });
+
+    // 4. KEMBALIKAN: Pasang lagi posisi scroll ke posisi semula
+    // Kita gunakan requestAnimationFrame agar browser sempat menggambar dulu sebelum scroll dipindah
+    requestAnimationFrame(() => {
+        container.scrollTop = posisiScrollTerakhir;
+    });
+}
+
+// 3. LOGIKA EDITOR (ADMIN SIDE)
+function openGateKatalog() {
+    document.getElementById('modalEditorKatalog').style.display = 'flex';
+    if (listBarangKatalog.length === 0) {
+        const cache = localStorage.getItem('nsa_katalog_cache');
+        if (cache) listBarangKatalog = JSON.parse(cache);
+    }
+    renderListEditor(listBarangKatalog);
+}
+
+function tutupEditorKatalog() {
+    document.getElementById('modalEditorKatalog').style.display = 'none';
+    document.getElementById('inputCariEditor').value = ''; 
+    resetFormEditor();
+}
+
+// Fungsi Render untuk Editor (Mendukung Filter)
+function renderListEditor(dataArray) {
+    const container = document.getElementById('listEditorReview');
+    if(!container) return;
+    container.innerHTML = '';
+
+    dataArray.forEach((item) => {
+        // Cari index asli di master list agar tidak salah edit/hapus saat difilter
+        const indexAsli = listBarangKatalog.findIndex(orig => orig === item);
+        
+        const div = document.createElement('div');
+        div.className = "flex items-center justify-between p-3 bg-white rounded-xl shadow-sm border border-slate-100 mb-2";
+        const harga = "Rp " + (parseInt(item.harga_jual) || 0).toLocaleString('id-ID');
+
+        div.innerHTML = `
+            <div class="flex flex-col text-left">
+                <span class="text-[11px] font-bold text-slate-700 uppercase">${item.nama_barang}</span>
+                <span class="text-[10px] text-indigo-600 font-black">${harga}</span>
+            </div>
+            <div class="flex gap-1">
+                <button onclick="editItemKeForm(${indexAsli})" class="w-8 h-8 flex items-center justify-center text-indigo-500 bg-indigo-50 rounded-lg"><i class="fas fa-edit text-xs"></i></button>
+                <button onclick="hapusItemLokal(${indexAsli})" class="w-8 h-8 flex items-center justify-center text-red-400 bg-red-50 rounded-lg"><i class="fas fa-trash text-xs"></i></button>
+            </div>`;
+        container.appendChild(div);
+    });
+}
+
+function filterEditor() {
+    const keyword = document.getElementById('inputCariEditor').value.toLowerCase();
+    const hasilFilter = listBarangKatalog.filter(item => (item.nama_barang || "").toLowerCase().includes(keyword));
+    renderListEditor(hasilFilter);
+}
+
+function simpanKeDaftarLokal() {
+    const nama = document.getElementById('inputNamaEditor').value.trim();
+    const harga = document.getElementById('inputHargaEditor').value.trim();
+    if (!nama || !harga) return alert("Isi Nama & Harga!");
+
+    const itemObj = {
+        nomor: indexEditSekarang !== null ? listBarangKatalog[indexEditSekarang].nomor : listBarangKatalog.length + 1,
+        nama_barang: nama.toUpperCase(),
+        harga_jual: parseInt(harga)
+    };
+
+    if (indexEditSekarang !== null) {
+        listBarangKatalog[indexEditSekarang] = itemObj;
+    } else {
+        listBarangKatalog.unshift(itemObj);
+    }
+
+    renderListEditor(listBarangKatalog);
+    resetFormEditor();
+    localStorage.setItem('nsa_katalog_cache', JSON.stringify(listBarangKatalog));
+}
+
+function editItemKeForm(index) {
+    indexEditSekarang = index;
+    const item = listBarangKatalog[index];
+    document.getElementById('inputNamaEditor').value = item.nama_barang;
+    document.getElementById('inputHargaEditor').value = item.harga_jual;
+    document.getElementById('btnSimpanItem').innerHTML = '<i class="fas fa-check-circle mr-2"></i> Simpan Perubahan';
+    document.getElementById('btnSimpanItem').className = "w-full py-3 bg-orange-500 text-white rounded-xl font-bold text-sm shadow-lg active:scale-95 transition-all";
+    document.getElementById('inputNamaEditor').focus();
+}
+
+function hapusItemLokal(index) {
+    if(confirm("Hapus item?")) {
+        listBarangKatalog.splice(index, 1);
+        renderListEditor(listBarangKatalog);
+        localStorage.setItem('nsa_katalog_cache', JSON.stringify(listBarangKatalog));
+    }
+}
+
+function resetFormEditor() {
+    document.getElementById('inputNamaEditor').value = '';
+    document.getElementById('inputHargaEditor').value = '';
+    document.getElementById('btnSimpanItem').innerHTML = '<i class="fas fa-plus-circle mr-2"></i> Tambah ke Daftar';
+    document.getElementById('btnSimpanItem').className = "w-full py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg active:scale-95 transition-all";
+    indexEditSekarang = null;
+}
+
+async function prosesUploadKeCloud() {
+    const btn = document.getElementById('btnCloudUpload');
+    if (!confirm("Timpa data Cloud?")) return;
+    try {
+        btn.disabled = true;
+        btn.innerHTML = 'MENGIRIM...';
+        const res = await fetch(URL_APP_SCRIPT, { method: "POST", body: JSON.stringify(listBarangKatalog) });
+        if (res.ok) {
+            alert("✅ UPDATE BERHASIL!");
+            tampilkanDaftar(listBarangKatalog);
+        }
+    } catch (e) {
+        alert("❌ GAGAL!");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-cloud-upload-alt mr-2"></i> UPDATE DATA KE CLOUD';
+    }
+}
+</script>
+
+
+
+
+
+<script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
 </script>
+
+
+
 
 </body>
 </html>
