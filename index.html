@@ -1795,13 +1795,18 @@ function tutupModal() {
     <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
 </button>
 			
-            <!-- 5. KONTAK DEVELOPER -->
-            <a href="https://wa.me/6283130578886" target="_blank" 
-               class="flex items-center gap-4 w-full p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl transition-all active:scale-95">
-                <div class="w-8 flex justify-center"><i class="fab fa-whatsapp fa-xl"></i></div>
-                <span class="font-bold text-sm">Kontak Developer</span>
-                <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
-            </a>
+            <!-- 5. SIARKAN NOTIFIKASI -->
+<button onclick="openModalNotif()" 
+    class="flex items-center gap-4 w-full p-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl transition-all active:scale-95">
+    <div class="w-8 flex justify-center">
+        <i class="fas fa-bullhorn fa-lg"></i>
+    </div>
+    <div class="flex flex-col items-start">
+        <span class="font-bold text-sm">Siarkan Notifikasi</span>
+    </div>
+    <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
+</button>
+            
         </div>
 
         <div class="px-6 pb-6">
@@ -2537,6 +2542,47 @@ function bukaModalInputHarian() {
     </div>
 </div>
 
+
+<!-- MODAL SIARAN NOTIFIKASI -->
+<div id="modalNotif" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-[100] p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl transform transition-all">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <h3 class="font-bold text-lg text-gray-800">Siaran Baru</h3>
+                <button onclick="closeModalNotif()" class="ml-auto text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase ml-1">Judul Notifikasi</label>
+                    <input type="text" id="notif_title" placeholder="Contoh: Info Toko" 
+                        class="w-full p-4 bg-gray-100 rounded-2xl border-none focus:ring-2 focus:ring-emerald-500 text-sm mt-1">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase ml-1">Pesan</label>
+                    <textarea id="notif_message" rows="3" placeholder="Tulis pesan siaran di sini..." 
+                        class="w-full p-4 bg-gray-100 rounded-2xl border-none focus:ring-2 focus:ring-emerald-500 text-sm mt-1"></textarea>
+                </div>
+            </div>
+
+            <button onclick="siarkanNotifikasiLangsung()" 
+                class="w-full mt-6 p-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-200">
+                Siarkan Notifikasi
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 <script>
 // Fungsi untuk membuka modal form (dipanggil dari tombol Developer tadi)
 function bukaModalInputHarian() {
@@ -2971,6 +3017,108 @@ async function prosesUploadKeCloud() {
     }
 }
 </script>
+
+
+
+<!-- SKRIP PUSH NOTIFICATION -->
+<script>
+function siarkanNotifikasiLangsung() {
+    // Ambil nilai dari input modal
+    const judul = document.getElementById('notif_title').value;
+    const pesan = document.getElementById('notif_message').value;
+    
+    // URL Web App Apps Script milikmu
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
+
+    if (!judul || !pesan) {
+        alert("Judul dan pesan wajib diisi!");
+        return;
+    }
+
+    // Tampilkan indikator proses (opsional)
+    console.log("Mengirim siaran ke NSA...");
+
+    fetch(webAppUrl, {
+        method: "POST",
+        mode: "no-cors", 
+        body: JSON.stringify({
+            method: "DIRECT_PUSH",
+            title: judul,
+            message: pesan
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(() => {
+        // Karena mode no-cors, kita anggap sukses jika request terkirim
+        alert("Perintah siaran telah dikirim ke server NSA!");
+        
+        // Bersihkan form
+        document.getElementById('notif_title').value = "";
+        document.getElementById('notif_message').value = "";
+    })
+    .catch(err => {
+        console.error("Gagal:", err);
+        alert("Terjadi kesalahan koneksi.");
+    });
+}
+</script>
+
+<!-- SKRIP MODAL PUSH NOTIFIKASI -->
+<script>
+// Fungsi untuk Kontrol Modal
+function openModalNotif() {
+    document.getElementById('modalNotif').classList.remove('hidden');
+}
+
+function closeModalNotif() {
+    document.getElementById('modalNotif').classList.add('hidden');
+}
+
+// Fungsi Kirim ke Apps Script
+function siarkanNotifikasiLangsung() {
+    const judul = document.getElementById('notif_title').value;
+    const pesan = document.getElementById('notif_message').value;
+    const btn = event.target; // Ambil elemen tombol
+    
+    if (!judul || !pesan) {
+        alert("Judul dan pesan tidak boleh kosong ya!");
+        return;
+    }
+
+    const originalText = btn.innerText;
+    btn.innerText = "Sedang Mengirim...";
+    btn.disabled = true;
+    btn.classList.add('opacity-50');
+
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
+
+    fetch(webAppUrl, {
+        method: "POST",
+        mode: "no-cors", 
+        body: JSON.stringify({
+            method: "DIRECT_PUSH",
+            title: judul,
+            message: pesan
+        })
+    })
+    .then(() => {
+        alert("🚀 Notifikasi NSA Berhasil Disiarkan!");
+        closeModalNotif();
+        // Reset input
+        document.getElementById('notif_title').value = "";
+        document.getElementById('notif_message').value = "";
+    })
+    .catch(err => alert("Gagal koneksi: " + err))
+    .finally(() => {
+        btn.innerText = originalText;
+        btn.disabled = false;
+        btn.classList.remove('opacity-50');
+    });
+}
+</script>
+
 
 
 <script>
