@@ -396,6 +396,16 @@
 }
 </style>
 
+<style>
+    body {
+      /* Mencegah pull-to-refresh tapi tetap mempertahankan efek pantul (bounce) */
+      overscroll-behavior-y: contain;
+      
+      /* Memberikan sensasi scroll yang halus dan membal di perangkat mobile */
+      -webkit-overflow-scrolling: touch;
+    }
+  </style>
+
 </head>
 
 		<!-- MODAL PHOTO PREVIEW: FOTO KARYAWAN -->
