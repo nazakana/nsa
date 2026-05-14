@@ -2742,33 +2742,44 @@ window.addEventListener('load', function() {
             }
 
             Notification.requestPermission().then((permission) => {
-                if (permission === 'granted') {
-                    alert("Izin diterima! Menghubungkan ke Firebase...");
+    if (permission === 'granted') {
+        alert("Izin diterima! Menghubungkan ke Firebase...");
 
-                    // Pastikan Service Worker siap
-                    navigator.serviceWorker.ready.then((registration) => {
-                        messaging.getToken({
-                            serviceWorkerRegistration: registration,
-                            vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4'
-                        })
-                        .then((currentToken) => {
-                            if (currentToken) {
-                                console.log('Token didapat:', currentToken);
-                                alert("Sistem Pengingat NSA Aktif!");
-                                setTombolAktif();
-                            } else {
-                                alert("Token kosong. Periksa sw.js.");
-                            }
-                        })
-                        .catch((err) => {
-                            console.error('Error getToken:', err);
-                            alert("Gagal sinkronisasi: " + err.message);
-                        });
-                    });
+        // Pastikan Service Worker siap
+        navigator.serviceWorker.ready.then((registration) => {
+            messaging.getToken({
+                serviceWorkerRegistration: registration,
+                vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4'
+            })
+            .then((currentToken) => {
+                if (currentToken) {
+                    console.log('Token didapat:', currentToken);
+
+                    // --- BAGIAN BARU: PENDAFTARAN TOPIK OTOMATIS ---
+                    const urlScript = "https://script.google.com/macros/s/AKfycbwlXeKVqyTVQZxWlQ5M2VzSbENaql0IRqbTeHAxlBrXt6BstTNn7PlKegkwwKJp0BUD/exec";
+                    
+                    fetch(`${urlScript}?token=${currentToken}`, { 
+                        mode: 'no-cors' 
+                    })
+                    .then(() => console.log("Laporan token ke Apps Script berhasil."))
+                    .catch(err => console.error("Gagal daftar topik:", err));
+                    // ----------------------------------------------
+
+                    alert("Sistem Pengingat NSA Aktif!");
+                    setTombolAktif();
                 } else {
-                    alert("Izin notifikasi ditolak.");
+                    alert("Token kosong. Periksa sw.js.");
                 }
+            })
+            .catch((err) => {
+                console.error('Error getToken:', err);
+                alert("Gagal sinkronisasi: " + err.message);
             });
+        });
+    } else {
+        alert("Izin notifikasi ditolak.");
+    }
+});
         };
     }
 
