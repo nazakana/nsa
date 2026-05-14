@@ -2811,39 +2811,46 @@ document.getElementById('formUpdatePendapatan').addEventListener('submit', funct
   window.onload = function() {
     const btn = document.getElementById('btnNotifAksi');
     
+    // --- Logika Klik Tombol ---
     if (btn) {
       btn.onclick = function() {
         console.log("Klik terdeteksi!");
-        
-        // Cara terbaru: Panggil Notification browser langsung, bukan lewat messaging
         Notification.requestPermission().then((permission) => {
           if (permission === 'granted') {
-            console.log('Izin diberikan, mengambil token...');
+            alert("Izin diterima! Sedang menghubungkan ke Firebase..."); 
             
-            // Ambil token Firebase
             messaging.getToken({ 
-              vapidKey: 'PASTE_KODE_VAPID_DISINI_JIKA_ADA' 
+              vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4' 
             })
             .then((currentToken) => {
-              if (currentToken) {
-                console.log('Token didapat:', currentToken);
-                alert("Sistem Pengingat NSA Aktif!");
-                setTombolAktif();
-              } else {
-                console.log('Token tidak tersedia. Cek konfigurasi.');
-                setTombolAktif(); // Tetap hijaukan saja karena izin sudah OK
-              }
+               if (currentToken) {
+                 console.log('Token didapat:', currentToken);
+                 alert("Sistem Pengingat NSA Aktif!");
+                 setTombolAktif();
+               }
             })
             .catch((err) => {
-              console.log('Gagal ambil token:', err);
-              setTombolAktif();
+               console.log('Gagal ambil token:', err);
             });
-
-          } else {
-            alert("Izin notifikasi ditolak.");
           }
         });
       };
+    }
+
+    // --- Letakkan Registrasi Service Worker di Sini ---
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(function(registration) {
+          console.log('Service Worker berhasil didaftarkan di scope:', registration.scope);
+          
+          // Jika sudah pernah izinkan sebelumnya, langsung hijaukan tombol
+          if (Notification.permission === "granted") {
+            setTombolAktif();
+          }
+        })
+        .catch(function(err) {
+          console.error('Service Worker gagal daftar:', err);
+        });
     }
   };
 </script>
