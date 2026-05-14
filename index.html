@@ -2735,19 +2735,7 @@ document.getElementById('formUpdatePendapatan').addEventListener('submit', funct
   firebase.initializeApp(firebaseConfig);
   const messaging = firebase.messaging();
 
-  // 2. Fungsi UI (Tetap pakai gaya kamu)
-  function setTombolAktif() {
-    const btn = document.getElementById('btnNotifAksi');
-    const icon = btn ? btn.querySelector('i') : null;
-    if (btn && icon) {
-      btn.classList.replace('bg-white', 'bg-emerald-500');
-      btn.classList.replace('text-blue-600', 'text-white');
-      icon.className = "fas fa-check text-xs md:text-base";
-      btn.style.cursor = "default";
-      btn.classList.add('shadow-emerald-200');
-      console.log("UI Tombol berhasil diubah ke Hijau.");
-    }
-  }
+  
 
 // 3. Pasang Logika saat Halaman Siap
 window.addEventListener('load', function() {
@@ -3203,8 +3191,87 @@ function buatGrafikHarian(labels, dataValues) {
 window.onload = muatDataNSA;
 </script>
 
+<!-- POPUP REMINDER IZIN NOTIFIKASI (MODAL TENGAH) -->
+<div id="popupReminder" class="fixed inset-0 z-[200] flex items-center justify-center px-6 hidden">
+    <!-- Backdrop Blurry -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    
+    <!-- Box Konten -->
+    <div class="relative bg-white w-full max-w-sm p-8 rounded-[32px] shadow-2xl text-center transform transition-all animate-pop-in">
+        <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12">
+            <i class="fas fa-bell-slash fa-2xl"></i>
+        </div>
+        
+        <h2 class="text-xl font-extrabold text-gray-900 mb-2">Notifikasi Tidak Aktif!</h2>
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+            Fitur <span class="font-bold text-gray-800">Realtime NSA</span> memerlukan izin notifikasi. Silakan klik <strong>tombol lonceng</strong> di samping searchbox atas untuk mengaktifkan.
+        </p>
 
+        <!-- Tombol Mengerti/Tutup (Opsional, bisa dihapus jika ingin benar-benar memaksa) -->
+        <button onclick="document.getElementById('popupReminder').classList.add('hidden')" 
+            class="w-full py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold rounded-2xl transition-all active:scale-95">
+            Nanti Saja
+        </button>
+        
+        <p class="text-[10px] text-gray-400 mt-4 uppercase tracking-widest font-bold">IZINKAN UNTUK MENDAPAT INFORMASI PENTING</p>
+    </div>
+</div>
+
+<style>
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-pop-in {
+  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+</style>
 			
+<script>
+// GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
+function cekStatusNotif() {
+    if (!("Notification" in window)) return; // Browser jadul tidak support
+
+    if (Notification.permission !== "granted") {
+        const modal = document.getElementById('popupReminder');
+        if (modal) {
+            modal.classList.remove('hidden'); // Munculkan modal pengadang
+        }
+    } else {
+        // Jika sudah granted, otomatis ubah tombol lonceng jadi hijau (Emerald)
+        setTombolAktif();
+    }
+}
+
+// Panggil fungsi 1 detik setelah loading
+window.addEventListener('load', () => {
+    setTimeout(cekStatusNotif, 1000);
+});
+
+// Jalankan fungsi saat web dibuka
+window.addEventListener('load', cekIzinNotifikasi);
+
+// Tambahkan logika tambahan pada fungsi setTombolAktif yang sudah kamu punya
+// Modifikasi sedikit fungsi milikmu agar popup hilang saat tombol diklik
+function setTombolAktif() {
+    const btn = document.getElementById('btnNotifAksi');
+    const icon = btn ? btn.querySelector('i') : null;
+    const reminder = document.getElementById('popupReminder');
+
+    if (btn && icon) {
+        btn.classList.replace('bg-white', 'bg-emerald-500');
+        btn.classList.replace('text-blue-600', 'text-white');
+        icon.className = "fas fa-check text-xs md:text-base";
+        btn.style.cursor = "default";
+        btn.classList.add('shadow-emerald-200');
+        
+        // Hapus popup jika tombol sudah diaktifkan (hijau)
+        if (reminder) reminder.remove();
+        
+        console.log("UI Tombol berhasil diubah ke Hijau.");
+    }
+}
+</script>
 
 </body>
 </html>
