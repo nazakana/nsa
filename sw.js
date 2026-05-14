@@ -17,13 +17,13 @@ const messaging = firebase.messaging();
 
 // 4. Menangani Notifikasi saat Browser di Background
 messaging.onBackgroundMessage((payload) => {
+  // SIMPAN DI SINI:
+  console.log('Isi payload:', JSON.stringify(payload));
   console.log('[sw.js] Pesan background masuk:', payload);
 
-  // Perbaikan: Ambil data dari payload.notification ATAU payload.data
   const notificationTitle = payload.notification?.title || payload.data?.title || "Notifikasi NSA";
   const notificationOptions = {
     body: payload.notification?.body || payload.data?.body || "Ada pesan baru untukmu.",
-    // Perbaikan: Path ikon disesuaikan dengan file di repo kamu
     icon: 'icon-192.png', 
     badge: 'icon-192.png',
     vibrate: [200, 100, 200],
