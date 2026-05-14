@@ -2488,87 +2488,7 @@ function togglePassword() {
 <script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-// Pakai Web App URL milikmu, bukan CSV
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVrDMR1XgJ4-tTX6HEV9ZqasbslsO-3Kg7ap0-N4glOllopCpaCqvOYW6JTA65j0ujyQ/exec";
 
-function muatDataNSA() {
-    fetch(WEB_APP_URL)
-        .then(response => response.json())
-        .then(data => {
-            const labelTanggal = data.map(item => item.Tanggal);
-            const dataPendapatan = data.map(item => item.Pendapatan);
-            
-            // --- BAGIAN BARU: MENGISI TABEL RINGKASAN ---
-            const tabelBody = document.getElementById('tabel-ringkasan');
-            tabelBody.innerHTML = ""; // Bersihkan dulu
-            
-            data.forEach(item => {
-                let baris = `
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 5px; color: #7f8c8d;">${item.Tanggal}</td>
-                        <td style="padding: 5px; text-align: right; font-weight: bold; color: #2c3e50;">
-                            ${Number(item.Pendapatan).toLocaleString('id-ID')}
-                        </td>
-                    </tr>`;
-                tabelBody.innerHTML += baris;
-            });
-            // --------------------------------------------
-
-            buatGrafikHarian(labelTanggal, dataPendapatan);
-        })
-        .catch(err => console.error("Gagal ambil data:", err));
-}
-
-function buatGrafikHarian(labels, dataValues) {
-    const ctx = document.getElementById('chartMei').getContext('2d');
-    
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Pendapatan',
-                data: dataValues,
-                borderWidth: 3,
-                fill: false, // Untuk garis multi-warna, fill sebaiknya dimatikan agar tidak aneh
-                tension: 0.4,
-                pointRadius: 4,
-                // --- LOGIKA WARNA DINAMIS DIMULAI DI SINI ---
-                segment: {
-                    borderColor: ctx => {
-                        const val1 = ctx.p0.parsed.y; // Titik sebelumnya
-                        const val2 = ctx.p1.parsed.y; // Titik sekarang
-                        
-                        if (val2 > val1) {
-                            return '#2ecc71'; // Hijau jika naik
-                        } else if (val2 < val1 && val2 < (val1 * 0.5)) {
-                            return '#e74c3c'; // Merah jika turun drastis (>50%)
-                        } else if (val2 < val1) {
-                            return '#f1c40f'; // Kuning jika turun biasa
-                        }
-                        return '#3498db'; // Biru jika stabil
-                    }
-                }
-                // --------------------------------------------
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true },
-                x: { grid: { display: false } }
-            },
-            plugins: {
-                legend: { display: false }
-            }
-        }
-    });
-}
-
-window.onload = muatDataNSA;
-</script>
 
 <script>
 function bukaModalInputHarian() {
@@ -2806,53 +2726,64 @@ document.getElementById('formUpdatePendapatan').addEventListener('submit', funct
     }
   }
 
-  // 3. Pasang Logika saat Halaman Siap
-  // Pasang fungsi ke tombol saat window dimuat
-  window.onload = function() {
+// 3. Pasang Logika saat Halaman Siap
+window.addEventListener('load', function() {
     const btn = document.getElementById('btnNotifAksi');
-    
-    // --- Logika Klik Tombol ---
+    console.log("Status tombol:", btn ? "Ditemukan" : "Tidak ditemukan");
+
     if (btn) {
-      btn.onclick = function() {
-        console.log("Klik terdeteksi!");
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            alert("Izin diterima! Sedang menghubungkan ke Firebase..."); 
-            
-            messaging.getToken({ 
-              vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4' 
-            })
-            .then((currentToken) => {
-               if (currentToken) {
-                 console.log('Token didapat:', currentToken);
-                 alert("Sistem Pengingat NSA Aktif!");
-                 setTombolAktif();
-               }
-            })
-            .catch((err) => {
-               console.log('Gagal ambil token:', err);
+        btn.onclick = function(e) {
+            e.preventDefault();
+            console.log("Klik terdeteksi!");
+
+            if (!("Notification" in window)) {
+                alert("Browser tidak mendukung notifikasi.");
+                return;
+            }
+
+            Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                    alert("Izin diterima! Menghubungkan ke Firebase...");
+
+                    // Pastikan Service Worker siap
+                    navigator.serviceWorker.ready.then((registration) => {
+                        messaging.getToken({
+                            serviceWorkerRegistration: registration,
+                            vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4'
+                        })
+                        .then((currentToken) => {
+                            if (currentToken) {
+                                console.log('Token didapat:', currentToken);
+                                alert("Sistem Pengingat NSA Aktif!");
+                                setTombolAktif();
+                            } else {
+                                alert("Token kosong. Periksa sw.js.");
+                            }
+                        })
+                        .catch((err) => {
+                            console.error('Error getToken:', err);
+                            alert("Gagal sinkronisasi: " + err.message);
+                        });
+                    });
+                } else {
+                    alert("Izin notifikasi ditolak.");
+                }
             });
-          }
-        });
-      };
+        };
     }
 
-    // --- Letakkan Registrasi Service Worker di Sini ---
+    // Registrasi Service Worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then(function(registration) {
-          console.log('Service Worker berhasil didaftarkan di scope:', registration.scope);
-          
-          // Jika sudah pernah izinkan sebelumnya, langsung hijaukan tombol
-          if (Notification.permission === "granted") {
-            setTombolAktif();
-          }
-        })
-        .catch(function(err) {
-          console.error('Service Worker gagal daftar:', err);
-        });
+        navigator.serviceWorker.register('sw.js')
+            .then((reg) => {
+                console.log('SW terdaftar:', reg.scope);
+                if (Notification.permission === "granted") setTombolAktif();
+            })
+            .catch((err) => console.error('SW Error:', err));
     }
-  };
+});
+
+
 </script>
 
 
@@ -3053,6 +2984,88 @@ async function prosesUploadKeCloud() {
 }
 </script>
 
+
+<script>
+// Pakai Web App URL milikmu, bukan CSV
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVrDMR1XgJ4-tTX6HEV9ZqasbslsO-3Kg7ap0-N4glOllopCpaCqvOYW6JTA65j0ujyQ/exec";
+
+function muatDataNSA() {
+    fetch(WEB_APP_URL)
+        .then(response => response.json())
+        .then(data => {
+            const labelTanggal = data.map(item => item.Tanggal);
+            const dataPendapatan = data.map(item => item.Pendapatan);
+            
+            // --- BAGIAN BARU: MENGISI TABEL RINGKASAN ---
+            const tabelBody = document.getElementById('tabel-ringkasan');
+            tabelBody.innerHTML = ""; // Bersihkan dulu
+            
+            data.forEach(item => {
+                let baris = `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 5px; color: #7f8c8d;">${item.Tanggal}</td>
+                        <td style="padding: 5px; text-align: right; font-weight: bold; color: #2c3e50;">
+                            ${Number(item.Pendapatan).toLocaleString('id-ID')}
+                        </td>
+                    </tr>`;
+                tabelBody.innerHTML += baris;
+            });
+            // --------------------------------------------
+
+            buatGrafikHarian(labelTanggal, dataPendapatan);
+        })
+        .catch(err => console.error("Gagal ambil data:", err));
+}
+
+function buatGrafikHarian(labels, dataValues) {
+    const ctx = document.getElementById('chartMei').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Pendapatan',
+                data: dataValues,
+                borderWidth: 3,
+                fill: false, // Untuk garis multi-warna, fill sebaiknya dimatikan agar tidak aneh
+                tension: 0.4,
+                pointRadius: 4,
+                // --- LOGIKA WARNA DINAMIS DIMULAI DI SINI ---
+                segment: {
+                    borderColor: ctx => {
+                        const val1 = ctx.p0.parsed.y; // Titik sebelumnya
+                        const val2 = ctx.p1.parsed.y; // Titik sekarang
+                        
+                        if (val2 > val1) {
+                            return '#2ecc71'; // Hijau jika naik
+                        } else if (val2 < val1 && val2 < (val1 * 0.5)) {
+                            return '#e74c3c'; // Merah jika turun drastis (>50%)
+                        } else if (val2 < val1) {
+                            return '#f1c40f'; // Kuning jika turun biasa
+                        }
+                        return '#3498db'; // Biru jika stabil
+                    }
+                }
+                // --------------------------------------------
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true },
+                x: { grid: { display: false } }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}
+
+window.onload = muatDataNSA;
+</script>
 
 
 			
