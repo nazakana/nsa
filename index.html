@@ -8,6 +8,7 @@
 	<link rel="manifest" href="manifest.json">
 	<meta name="theme-color" content="#2563eb">
 	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -2806,49 +2807,45 @@ document.getElementById('formUpdatePendapatan').addEventListener('submit', funct
   }
 
   // 3. Pasang Logika saat Halaman Siap
-  window.addEventListener('DOMContentLoaded', () => {
-    const btnNotif = document.getElementById('btnNotifAksi');
+  // Pasang fungsi ke tombol saat window dimuat
+  window.onload = function() {
+    const btn = document.getElementById('btnNotifAksi');
+    
+    if (btn) {
+      btn.onclick = function() {
+        console.log("Klik terdeteksi!");
+        
+        // Cara terbaru: Panggil Notification browser langsung, bukan lewat messaging
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            console.log('Izin diberikan, mengambil token...');
+            
+            // Ambil token Firebase
+            messaging.getToken({ 
+              vapidKey: 'PASTE_KODE_VAPID_DISINI_JIKA_ADA' 
+            })
+            .then((currentToken) => {
+              if (currentToken) {
+                console.log('Token didapat:', currentToken);
+                alert("Sistem Pengingat NSA Aktif!");
+                setTombolAktif();
+              } else {
+                console.log('Token tidak tersedia. Cek konfigurasi.');
+                setTombolAktif(); // Tetap hijaukan saja karena izin sudah OK
+              }
+            })
+            .catch((err) => {
+              console.log('Gagal ambil token:', err);
+              setTombolAktif();
+            });
 
-    if (btnNotif) {
-      // Pasang fungsi klik secara manual lewat script
-      btnNotif.addEventListener('click', function() {
-        console.log("Tombol Lonceng diklik!");
-
-        if (!("Notification" in window)) {
-          alert("Browser ini tidak mendukung notifikasi.");
-          return;
-        }
-
-        // Minta Izin
-        messaging.requestPermission()
-          .then(() => {
-            return messaging.getToken();
-          })
-          .then((token) => {
-            console.log("Token didapat:", token);
-            alert("Sistem Pengingat NSA Aktif!");
-            setTombolAktif();
-          })
-          .catch((err) => {
-            console.error("Gagal aktivasi:", err);
-            // Jika user klik 'Allow' tapi token gagal, tetap hijaukan tombol
-            if (Notification.permission === "granted") setTombolAktif();
-          });
-      });
-    }
-
-    // 4. Registrasi Service Worker (sw.js satu folder)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then((reg) => {
-          console.log("SW Aktif di scope:", reg.scope);
-          // Jika status sudah granted dari kunjungan sebelumnya, langsung hijaukan
-          if (Notification.permission === "granted") {
-            setTombolAktif();
+          } else {
+            alert("Izin notifikasi ditolak.");
           }
         });
+      };
     }
-  });
+  };
 </script>
 
 
