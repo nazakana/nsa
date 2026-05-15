@@ -1593,6 +1593,27 @@ function tutupModal() {
         mHarian.style.display = 'none';
     }
 }
+
+function toggleGatePass() {
+    var passInput = document.getElementById('gatePass');
+    var eyeIcon = document.getElementById('gateEyeIcon');
+
+    if (passInput && eyeIcon) {
+        if (passInput.type === "password") {
+            // Ubah jadi teks biasa agar terlihat
+            passInput.type = "text";
+            // Ganti ikon jadi mata dicoret
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            // Kembalikan ke mode password (titik-titik)
+            passInput.type = "password";
+            // Ganti ikon balik ke mata biasa
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    }
+}
 </script>
 
 
