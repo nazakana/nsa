@@ -17,18 +17,25 @@ const messaging = firebase.messaging();
 
 // 4. Menangani Notifikasi saat Browser di Background
 messaging.onBackgroundMessage((payload) => {
-  // SIMPAN DI SINI:
   console.log('Isi payload:', JSON.stringify(payload));
   console.log('[sw.js] Pesan background masuk:', payload);
 
-  const notificationTitle = payload.notification?.title || payload.data?.title || "Notifikasi NSA";
+  // JIKA payload dikirim via Apps Script menggunakan objek 'notification' bawaan Firebase,
+  // hentikan fungsi ini agar browser tidak memicu notifikasi manual kedua (mencegah duplikat).
+  if (payload.notification) {
+    console.log('[sw.js] Ditangani otomatis oleh Firebase SDK, skip manual showNotification.');
+    return;
+  }
+
+  // Logika di bawah ini HANYA akan berjalan jika di masa depan kamu mengirimkan payload tipe 'data' murni
+  const notificationTitle = payload.data?.title || "Notifikasi NSA";
   const notificationOptions = {
-    body: payload.notification?.body || payload.data?.body || "Ada pesan baru untukmu.",
+    body: payload.data?.body || "Ada pesan baru untukmu.",
     icon: 'icon-192.png', 
     badge: 'icon-192.png',
     vibrate: [200, 100, 200],
     data: {
-      url: "https://nazakana.github.io/nsa/"
+      url: payload.data?.url || "https://nazakana.github.io/nsa/"
     }
   };
 
@@ -38,7 +45,11 @@ messaging.onBackgroundMessage((payload) => {
 // 5. Efek klik pada notifikasi
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
+  
+  // Ambil URL tujuan, jika tidak ada fallback ke halaman utama NSA
+  const targetUrl = event.notification.data?.url || "https://nazakana.github.io/nsa/";
+  
   event.waitUntil(
-    clients.openWindow(event.notification.data.url)
+    clients.openWindow(targetUrl)
   );
 });
