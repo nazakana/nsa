@@ -2,8 +2,15 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Datang di Nurjaya Smart Archive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NSA - Nurjaya Smart Archive</title>
+	
+    <meta name="description" content="Website Official Arsip Operasional Nurjaya. Dibuat untuk mempermudah pemantauan Pembukuan Bulanan dan sebagai Arsip Riwayat Keuangan di Nurjaya Abadi Photocopy.">
+	<link rel="manifest" href="manifest.json">
+	<meta name="theme-color" content="#2DCC70">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -299,5 +306,96 @@
         }
     </script>
 
+
+    <script>
+    <!-- 1. Panggil library Firebase (Versi Compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
+
+<script>
+  // 1. Konfigurasi
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAVlFcF5gs5ik0ESDg1Ka0Mxuy8Hh6uw8",
+    authDomain: "nurjaya-smart-archive.firebaseapp.com",
+    projectId: "nurjaya-smart-archive",
+    storageBucket: "nurjaya-smart-archive.firebasestorage.app",
+    messagingSenderId: "930477308354",
+    appId: "1:930477308354:web:b69a818a7ff73eb88f3e5b"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  
+
+// 3. Pasang Logika saat Halaman Siap
+window.addEventListener('load', function() {
+    const btn = document.getElementById('btnNotifAksi');
+    console.log("Status tombol:", btn ? "Ditemukan" : "Tidak ditemukan");
+
+    if (btn) {
+        btn.onclick = function(e) {
+            e.preventDefault();
+            console.log("Klik terdeteksi!");
+
+            if (!("Notification" in window)) {
+                alert("Browser tidak mendukung notifikasi.");
+                return;
+            }
+
+            Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+        alert("Izin diterima! Menghubungkan ke Firebase...");
+
+        // Pastikan Service Worker siap
+        navigator.serviceWorker.ready.then((registration) => {
+            messaging.getToken({
+                serviceWorkerRegistration: registration,
+                vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4'
+            })
+            .then((currentToken) => {
+                if (currentToken) {
+                    console.log('Token didapat:', currentToken);
+
+                    // --- BAGIAN BARU: PENDAFTARAN TOPIK OTOMATIS ---
+                    const urlScript = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
+                    
+                    fetch(`${urlScript}?token=${currentToken}`, { 
+                        mode: 'no-cors' 
+                    })
+                    .then(() => console.log("Laporan token ke Apps Script berhasil."))
+                    .catch(err => console.error("Gagal daftar topik:", err));
+                    // ----------------------------------------------
+
+                    alert("Sistem Pengingat NSA Aktif!");
+                    setTombolAktif();
+                } else {
+                    alert("Token kosong. Periksa sw.js.");
+                }
+            })
+            .catch((err) => {
+                console.error('Error getToken:', err);
+                alert("Gagal sinkronisasi: " + err.message);
+            });
+        });
+    } else {
+        alert("Izin notifikasi ditolak.");
+    }
+});
+        };
+    }
+
+    // Registrasi Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then((reg) => {
+                console.log('SW terdaftar:', reg.scope);
+                if (Notification.permission === "granted") setTombolAktif();
+            })
+            .catch((err) => console.error('SW Error:', err));
+    }
+});
+</script>
+    
 </body>
 </html>
