@@ -56,7 +56,243 @@
             scrollbar-width: none;
         }
     </style>
+	
+	
+<script>
+// Fungsi Membuka Searchbox
+window.openApotekSearch = function() {
+    var box = document.getElementById('boxSearchApotek');
+    var input = document.getElementById('inputSearchApotek');
+    if (box) {
+        box.style.setProperty('display', 'flex', 'important');
+        if (input) {
+            input.value = ''; // Bersihkan ketikan lama saat baru dibuka
+            setTimeout(function() { input.focus(); }, 100);
+        }
+        document.body.style.setProperty('overflow', 'hidden', 'important');
+    }
+};
+
+// Fungsi Menutup Searchbox
+window.closeApotekSearch = function() {
+    var box = document.getElementById('boxSearchApotek');
+    var input = document.getElementById('inputSearchApotek');
+    var resultDiv = document.getElementById('resultSearchApotek');
+    
+    if (box) box.style.setProperty('display', 'none', 'important');
+    document.body.style.setProperty('overflow', 'auto', 'important');
+    
+    if (input) input.value = '';
+    if (resultDiv) resultDiv.innerHTML = '';
+};
+
+// Fungsi Utama Jalankan Pencarian Data Mandiri
+window.jalankanPencarianApotek = function(nilaiInput) {
+    // Tembak langsung teks uji coba ke Console F12 untuk memastikan pemicunya bekerja
+    console.log("Sistem mendeteksi ketikan Teteh:", nilaiInput);
+
+    var resultDiv = document.getElementById('resultSearchApotek');
+    if (!resultDiv) return;
+    
+    resultDiv.innerHTML = ''; // Reset wadah hasil
+    
+    var key = nilaiInput.toLowerCase().trim();
+    if (key === "") return;
+
+    var totalMatch = 0;
+
+    // MASTER DATA KUNCI
+    var masterBulan = [
+        { name: "Januari 2026", key: "januari jan 2026 pdf", idDrive: "1yJgdfcGOV4qQgI4BTaxvQ75l5va7egat" },
+        { name: "Februari 2026", key: "februari feb 2026 pdf", idDrive: "1Cw_8etPdwRorqpxfVcWmV2IE-JVF_5bY" },
+        { name: "Maret 2026", key: "maret mar 2026 pdf", idDrive: "19_b6jMPVXvZalpXonlE_KIVCi5cEydtU" },
+        { name: "April 2026", key: "april apr 2026 pdf", idDrive: "1Aj5LO_Bn2qnTmbz1z8ndcrOpLQDCdftr" },
+        { name: "Mei 2026", key: "mei mei 2026", isPopup: true, targetPopup: "popup-mei-final" }
+    ];
+
+    // Proses Pencocokan
+    masterBulan.forEach(function(bulan) {
+        if (bulan.key.indexOf(key) !== -1 || bulan.name.toLowerCase().indexOf(key) !== -1) {
+            var clone = document.createElement('button');
+            
+            if (bulan.isPopup) {
+                // Style dashed untuk Mei
+                clone.className = "month-btn glass-element px-5 py-3.5 rounded-[20px] text-xs font-bold flex items-center gap-3 bg-white border border-dashed border-gray-200 text-gray-400 shadow-md cursor-pointer";
+                clone.innerHTML = '<i class="fa-solid fa-file-pdf text-gray-300"></i> <span>' + bulan.name + '</span>';
+                clone.onclick = function() {
+                    if (typeof switchTab === 'function') switchTab('summary');
+                    var pop = document.getElementById(bulan.targetPopup);
+                    if (pop) pop.style.setProperty('display', 'flex', 'important');
+                    window.closeApotekSearch();
+                };
+            } else {
+                // Style pink indah untuk Jan - Apr
+                clone.className = "month-btn glass-element px-5 py-3.5 rounded-[20px] text-xs font-bold flex items-center gap-3 bg-white border border-pink-100 text-gray-700 shadow-md cursor-pointer";
+                clone.innerHTML = '<i class="fa-solid fa-file-pdf text-rose-500"></i> <span>' + bulan.name + '</span>';
+                clone.onclick = function() {
+                    if (typeof switchTab === 'function') switchTab('summary');
+                    if (typeof loadDriveApotek === 'function') {
+                        var btnAsli = document.querySelector(".month-btn") || this;
+                        loadDriveApotek(bulan.idDrive, btnAsli);
+                    }
+                    window.closeApotekSearch();
+                };
+            }
+            
+            resultDiv.appendChild(clone);
+            totalMatch++;
+        }
+    });
+
+    // Jika ketikan salah/tidak ada di daftar
+    if (totalMatch === 0) {
+        resultDiv.innerHTML = `
+            <div class="w-full text-center py-8 text-slate-700 font-extrabold text-xs uppercase tracking-wider">
+                Laporan Tidak Ditemukan
+            </div>
+        `;
+    }
+};
+
+// Tutup dengan ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape" || e.keyCode === 27) window.closeApotekSearch();
+});
+</script>
+	
+	
 </head>
+
+
+
+
+<script>
+// Fungsi Membuka Searchbox
+window.openApotekSearch = function() {
+    var box = document.getElementById('boxSearchApotek');
+    var input = document.getElementById('inputSearchApotek');
+    if (box) {
+        box.style.setProperty('display', 'flex', 'important');
+        if (input) {
+            setTimeout(function() { input.focus(); }, 50);
+        }
+        document.body.style.setProperty('overflow', 'hidden', 'important');
+    }
+};
+
+// Fungsi Menutup Searchbox
+window.closeApotekSearch = function() {
+    var box = document.getElementById('boxSearchApotek');
+    var input = document.getElementById('inputSearchApotek');
+    var resultDiv = document.getElementById('resultSearchApotek');
+    
+    if (box) box.style.setProperty('display', 'none', 'important');
+    document.body.style.setProperty('overflow', 'auto', 'important');
+    
+    if (input) input.value = '';
+    if (resultDiv) resultDiv.innerHTML = '';
+};
+
+// FUNGSI UTAMA: Dipicu langsung oleh atribut oninput di HTML
+window.jalankanPencarianApotek = function(nilaiInput) {
+    var resultDiv = document.getElementById('resultSearchApotek');
+    if (!resultDiv) return;
+    
+    resultDiv.innerHTML = ''; // Reset hasil lama
+    
+    var key = nilaiInput.toLowerCase().trim();
+    if (key === "") return;
+
+    // Scan tombol bulan (.drive-btn), sub menu (.sub-tab-btn), menu bawah (.nav-tab / .nav-link)
+    var sourceElements = document.querySelectorAll('.drive-btn, .sub-tab-btn, .nav-tab, .nav-link, .searchable-content');
+    var totalMatch = 0;
+
+    sourceElements.forEach(function(originalEl) {
+        try {
+            if (!originalEl) return;
+
+            var dataSearch = originalEl.getAttribute('data-search') || "";
+            var labelText = originalEl.innerText || originalEl.textContent || "";
+            var combined = (dataSearch + " " + labelText).toLowerCase();
+
+            // Jika kata kunci cocok
+            if (combined.indexOf(key) !== -1) {
+                var clone;
+
+                // KONDISI 1: Komponen Grafik/Statistik
+                if (originalEl.classList.contains('searchable-content')) {
+                    clone = document.createElement('button');
+                    clone.className = "px-5 py-3 rounded-2xl font-bold flex items-center gap-3 transition-all shadow-md bg-emerald-600 text-white hover:bg-emerald-700 text-xs md:text-sm";
+                    clone.innerHTML = '<i class="fas fa-chart-line"></i> <span>Lihat Statistik Pendapatan Apotek</span>';
+                    
+                    clone.onclick = function() {
+                        var btnRefresh = document.querySelector('button[onclick="location.reload()"]');
+                        if (btnRefresh) { btnRefresh.click(); } else { location.reload(); }
+                        window.closeApotekSearch();
+                    };
+                } 
+                // KONDISI 2: Tombol Menu / Bulan Laporan biasa
+                else {
+                    clone = originalEl.cloneNode(true);
+                    clone.style.setProperty('display', 'flex', 'important');
+                    clone.style.setProperty('width', 'auto', 'important');
+                    clone.style.setProperty('margin', '0', 'important');
+
+                    if (originalEl.classList.contains('nav-tab') || originalEl.classList.contains('nav-link')) {
+                        clone.className = "px-5 py-3 rounded-2xl font-bold flex items-center gap-3 transition-all shadow-md bg-white border border-gray-200 text-gray-800 text-xs md:text-sm";
+                        var ikonAsli = originalEl.querySelector('i');
+                        var classIkon = ikonAsli ? ikonAsli.className : 'fas fa-link';
+                        clone.innerHTML = '<i class="' + classIkon + '"></i> <span>' + labelText.trim() + '</span>';
+                    } else {
+                        clone.className = originalEl.className + " !m-0 !w-auto text-xs md:text-sm shadow-md";
+                    }
+
+                    clone.onclick = function() {
+                        var parentTab = originalEl.closest('.tab-content');
+                        if (parentTab) {
+                            var tabId = parentTab.id;
+                            if (typeof switchTab === 'function') switchTab(tabId.replace('tab-', ''));
+                        } else {
+                            var attrOnclick = originalEl.getAttribute('onclick') || "";
+                            if (attrOnclick.indexOf('switchTab') !== -1) {
+                                var match = attrOnclick.match(/'([^']+)'/);
+                                if (match && match[1] && typeof switchTab === 'function') {
+                                    switchTab(match[1]);
+                                }
+                            }
+                        }
+                        originalEl.click();
+                        window.closeApotekSearch();
+                    };
+                }
+
+                resultDiv.appendChild(clone);
+                totalMatch++;
+            }
+        } catch (err) {
+            // Abaikan eror elemen individual
+        }
+    });
+
+    // JIKA TOTAL MATCH KOSONG, PAKSA EMPTY STATE MUNCUL
+    if (totalMatch === 0) {
+        resultDiv.innerHTML = `
+            <div class="w-full flex flex-col items-center justify-center py-10 text-center" style="width: 100% !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;">
+                <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-3 shadow-inner">
+                    <i class="fas fa-search-minus text-base"></i>
+                </div>
+                <div class="text-slate-700 font-extrabold text-xs md:text-sm uppercase tracking-wider">Laporan Tidak Ditemukan</div>
+                <div class="text-gray-400 text-[10px] md:text-xs mt-1">Kata kunci salah atau belum ditiup ke sistem data-search</div>
+            </div>
+        `;
+    }
+};
+
+// Shortcut ESC untuk menutup searchbox
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape" || e.keyCode === 27) window.closeApotekSearch();
+});
+</script>
 <body class="bg-gray-50 font-sans text-gray-800 pb-24 min-h-screen">
 
     <!-- HERO BACKGROUND HEADER (Sesuai Struktur Contoh Anda) -->
@@ -77,11 +313,11 @@
     <div class="fixed top-6 left-0 right-0 px-[4%] md:left-auto md:right-6 md:px-0 z-[9998] flex items-start justify-end gap-2 md:gap-3 transition-all duration-500">
         
         <!-- SISI KIRI: TOMBOL SEARCH -->
-        <div onclick="void(0)" 
-             class="flex-1 min-w-0 max-w-[220px] md:max-w-[320px] bg-white/70 backdrop-blur-md border border-white/50 px-4 py-2.5 md:py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:bg-white/90 transition-all duration-300 group">
-            <i class="fas fa-search text-brand-500 group-hover:scale-110 transition-transform text-xs md:text-sm flex-shrink-0"></i>
-            <span class="text-gray-800 font-medium text-[11px] md:text-xs whitespace-nowrap overflow-hidden text-ellipsis">Cari laporan...</span>
-        </div>
+        <div onclick="openApotekSearch()" 
+     class="flex-1 min-w-0 max-w-[220px] md:max-w-[320px] bg-white/70 backdrop-blur-md border border-white/50 px-4 py-2.5 md:py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:bg-white/90 transition-all duration-300 group">
+    <i class="fas fa-search text-brand-500 group-hover:scale-110 transition-transform text-xs md:text-sm flex-shrink-0"></i>
+    <span class="text-gray-800 font-medium text-[11px] md:text-xs whitespace-nowrap overflow-hidden text-ellipsis">Cari laporan...</span>
+</div>
 
         <!-- SISI KANAN: TOMBOL NOTIF, SETTING, & SWITCH MODE -->
         <div class="flex flex-col gap-2 md:gap-3 flex-shrink-0">
@@ -102,8 +338,11 @@
                 
                <!-- Tombol switch ke mode fotokopi -->
 			  <!-- Tombol switch ke mode fotokopi (Menggunakan JavaScript onclick) -->
-<button onclick="window.location.href='index.html'" 
+<button type="button"
+        id="btn-switch-ke-fotokopi"
+        onclick="navigasiKeFotokopi()" 
         class="h-10 md:h-12 px-4 md:px-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center space-x-2 md:space-x-3 focus:outline-none flex-shrink-0 transition-all hover:brightness-110">
+    
     <i class="fas fa-print text-xs md:text-sm"></i>
     
     <div class="flex flex-col items-start gap-y-0 leading-none">
@@ -118,6 +357,9 @@
             </div>
         </div>
     </div>
+
+
+
 
 
    
@@ -210,8 +452,8 @@
                 <i class="fas fa-file-medical-alt text-xl"></i>
             </div>
             <div>
-                <h2 class="text-xl font-bold text-gray-900">Pencatatan Harian Apotek</h2>
-                <p class="text-xs text-gray-400">Input data operasional harian untuk sinkronisasi langsung ke Spreadsheet</p>
+                <h2 class="text-xl font-bold text-gray-900">Data Keuangan Harian</h2>
+                <p class="text-xs text-gray-400">Input data operasional harian untuk sinkronisasi langsung ke Data Cloud</p>
             </div>
         </div>
 
@@ -411,16 +653,31 @@
 
 </div>
 
-        <!-- ================= TAB 4: TENTANG APOTEK ================= -->
+
+		 <!-- ================= TAB 4: ASISTEN TUTUP BUKU ================= -->
+        <div id="tab-closing" class="tab-content space-y-6">
+            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center py-16">
+                <div class="w-20 h-20 bg-brand-50 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-info-circle text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Asisten Tutup Buku</h2>
+                <p class="text-gray-400 max-w-sm mx-auto mb-6">Berisi media bantu yang digunakan saat Penutupan Pembukuan Apotek Nurjaya pada akhir bulan. Laporan bisa dikerjakan sendiri oleh Asisten Apoteker tanpa bantuan PC/Komputer. Tersedia fitur detail keuangan akhir bulan dan fitur generate kesimpulan secara otomatis.</p>
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 text-brand-600 animate-pulse">
+                    <i class="fas fa-tools mr-2"></i> Fitur dalam proses pemrograman
+                </span>
+            </div>
+        </div>
+
+        <!-- ================= TAB 5: TENTANG APOTEK ================= -->
         <div id="tab-tentang" class="tab-content space-y-6">
             <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center py-16">
                 <div class="w-20 h-20 bg-brand-50 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-info-circle text-3xl"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Tentang Apotek</h2>
-                <p class="text-gray-400 max-w-sm mx-auto mb-6">Informasi legalitas, profil karyawan, struktur operasional, dan detail Apotek Nurjaya Abadi.</p>
+                <p class="text-gray-400 max-w-sm mx-auto mb-6">Informasi legalitas, profil karyawan, struktur operasional, dan detail Apotek Nurjaya.</p>
                 <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 text-brand-600 animate-pulse">
-                    <i class="fas fa-tools mr-2"></i> Segera Hadir
+                    <i class="fas fa-tools mr-2"></i> Fitur Segera Hadir
                 </span>
             </div>
         </div>
@@ -433,12 +690,13 @@
             
             <!-- Tab 1: Beranda -->
             <button onclick="switchTab('beranda')" id="btn-tab-beranda" 
-                    class="nav-tab flex flex-col items-center justify-center flex-1 py-1 text-brand-500 transition-all duration-300">
-                <div class="p-1 rounded-xl">
-                    <i class="fas fa-home text-lg"></i>
-                </div>
-                <span class="text-[10px] font-bold mt-0.5 tracking-tight">Beranda</span>
-            </button>
+			class="nav-tab flex flex-col items-center justify-center flex-1 py-1 text-brand-500 transition-all duration-300" 
+			data-search="beranda home utama dashboard">
+			<div class="p-1 rounded-xl">
+				<i class="fas fa-home text-lg"></i>
+			</div>
+			<span class="text-[10px] font-bold mt-0.5 tracking-tight">Beranda</span>
+			</button>
 
             <!-- Tab 2: Input Harian -->
             <button onclick="switchTab('input')" id="btn-tab-input" 
@@ -457,6 +715,15 @@
                 </div>
                 <span class="text-[10px] font-bold mt-0.5 tracking-tight">Arsip Summary</span>
             </button>
+			
+			<!-- Tab 4: Asisten Tutup Buku -->
+            <button onclick="switchTab('closing')" id="btn-tab-closing" 
+                    class="nav-tab flex flex-col items-center justify-center flex-1 py-1 text-gray-400 hover:text-brand-500 transition-all duration-300">
+                <div class="p-1 rounded-xl">
+                    <i class="fas fa-folder-closed text-lg"></i>
+                </div>
+                <span class="text-[10px] font-bold mt-0.5 tracking-tight">Tutup Buku</span>
+            </button>
 
             <!-- Tab 4: Tentang Apotek -->
             <button onclick="switchTab('tentang')" id="btn-tab-tentang" 
@@ -469,6 +736,13 @@
 
         </div>
     </div>
+	
+	
+	
+	
+	
+	
+	
 
     <!-- SCRIPT LOGIC -->
     <script>
@@ -485,6 +759,10 @@
             'summary': {
                 title: 'Arsip Summary',
                 subtitle: 'Laporan & Histori Arsip Apotek'
+            },
+			'closing': {
+                title: 'Asisten Tutup Buku',
+                subtitle: 'Media Input Data Penutupan Pembukuan'
             },
             'tentang': {
                 title: 'Tentang Apotek',
@@ -1087,6 +1365,149 @@ document.addEventListener('click', function(e) {
 </script>
 
 
+
+
+<script>
+    /**
+     * Fungsi Khusus untuk berpindah dari halaman Apotek menuju sistem Fotokopi Nurjaya
+     */
+    function navigasiKeFotokopi() {
+        // Catat di session storage bahwa mode aktif saat ini berubah menjadi 'fotokopi'
+        sessionStorage.setItem('nsa_active_mode', 'fotokopi');
+        
+        // Alihkan browser langsung ke file fotokopi-nurjaya.html dalam folder yang sama
+        window.location.href = 'fotokopi-nurjaya.html';
+    }
+</script>
+
+
+
+<!-- MODAL SEARCHBOX -->
+<div id="boxSearchApotek" 
+     class="fixed inset-0 z-[999999] p-4 bg-slate-900/40 backdrop-blur-xl items-start justify-center overflow-y-auto" 
+     style="display: none !important;">
+    
+    <div class="w-full max-w-2xl bg-white/95 border border-white/60 rounded-[32px] shadow-2xl mt-12 md:mt-20 overflow-hidden flex flex-col p-4 md:p-6 animate-fade-in">
+        
+        <div class="flex items-center gap-3 border-b border-gray-100 pb-4 w-full">
+            <i class="fas fa-search text-gray-400 text-base md:text-lg ml-2 flex-shrink-0"></i>
+            
+            <input type="text" 
+                   id="inputSearchApotek" 
+                   placeholder="Ketik kata kunci (misal: januari, maret)..." 
+                   class="w-full bg-transparent border-0 outline-none text-gray-800 placeholder-gray-400 font-medium text-sm md:text-base focus:ring-0 focus:outline-none p-0"
+                   style="box-shadow: none !important; border: none !important; -webkit-appearance: none;"
+                   oninput="(function(kolom){
+                       var key = kolom.value.toLowerCase().trim();
+                       var resultDiv = document.getElementById('resultSearchApotek');
+                       if (!resultDiv) return;
+                       
+                       resultDiv.innerHTML = '';
+                       if (key === '') return;
+                       
+                       var total = 0;
+                       
+                       // MASTER DATA PUSAT (Sinkronisasi Langsung dari Tab Summary)
+                       var dataBulan = [
+                           { n: 'Januari 2026', k: 'januari jan 2026 pdf', id: '1yJgdfcGOV4qQgI4BTaxvQ75l5va7egat' },
+                           { n: 'Februari 2026', k: 'februari feb 2026 pdf', id: '1Cw_8etPdwRorqpxfVcWmV2IE-JVF_5bY' },
+                           { n: 'Maret 2026', k: 'maret mar 2026 pdf', id: '19_b6jMPVXvZalpXonlE_KIVCi5cEydtU' },
+                           { n: 'April 2026', k: 'april apr 2026 pdf', id: '1Aj5LO_Bn2qnTmbz1z8ndcrOpLQDCdftr' },
+                           { n: 'Mei 2026', k: 'mei mei 2026 rekap', id: 'popup-mei-final', p: true }
+                       ];
+                       
+                       dataBulan.forEach(function(b) {
+                           if (b.k.indexOf(key) !== -1 || b.n.toLowerCase().indexOf(key) !== -1) {
+                               var btn = document.createElement('button');
+                               
+                               if (b.p) {
+                                   // Style khusus bulan Mei (Dashed Grey Border)
+                                   btn.className = 'month-btn glass-element px-5 py-3 rounded-[15px] text-xs font-bold flex items-center gap-3 bg-white border border-dashed border-gray-200 text-gray-400 shadow-sm transition-all duration-200';
+                                   btn.innerHTML = '<i class=&quot;fa-solid fa-file-pdf text-gray-300&quot;></i> <span>' + b.n + '</span>';
+                                   
+                                   btn.onclick = function() {
+                                       if (typeof switchTab === 'function') switchTab('summary');
+                                       var pop = document.getElementById(b.id);
+                                       if (pop) pop.style.setProperty('display', 'flex', 'important');
+                                       if (typeof window.closeApotekSearch === 'function') window.closeApotekSearch();
+                                   };
+                               } else {
+                                   // Style khusus bulan Januari - April (Glass Pink Border kesukaan Teteh)
+                                   btn.className = 'month-btn glass-element px-5 py-3 rounded-[15px] text-xs font-bold flex items-center gap-3 bg-white border border-pink-100 text-gray-700 shadow-md transition-all duration-200 hover:bg-pink-50/50';
+                                   btn.innerHTML = '<i class=&quot;fa-solid fa-file-pdf text-rose-500&quot;></i> <span>' + b.n + '</span>';
+                                   
+                                   btn.onclick = function() {
+                                       if (typeof switchTab === 'function') switchTab('summary');
+                                       if (typeof loadDriveApotek === 'function') {
+                                           // Gunakan selector fleksibel untuk mencari elemen master
+                                           var btnAsli = document.querySelector(&quot;.month-btn&quot;) || this;
+                                           loadDriveApotek(b.id, btnAsli);
+                                       }
+                                       if (typeof window.closeApotekSearch === 'function') window.closeApotekSearch();
+                                   };
+                               }
+                               
+                               resultDiv.appendChild(btn);
+                               total++;
+                           }
+                       });
+                       
+                       // SCAN CADANGAN UNTUK MENU NAVIGASI LAIN YANG AKTIF
+                       var elemenLain = document.querySelectorAll('.nav-tab, .nav-link, .sub-tab-btn');
+                       elemenLain.forEach(function(el) {
+                           if (!el) return;
+                           if (el.getAttribute('data-search') && el.className.indexOf('month-btn') !== -1) return;
+                           
+                           var ds = (el.getAttribute('data-search') || '').toLowerCase();
+                           var txt = (el.innerText || el.textContent || '').toLowerCase();
+                           
+                           if ((ds.indexOf(key) !== -1 || txt.indexOf(key) !== -1) && key !== '') {
+                               var btnLain = document.createElement('button');
+                               btnLain.className = 'px-5 py-3 rounded-2xl font-bold flex items-center gap-3 transition-all shadow-md bg-white border border-gray-200 text-gray-800 text-xs';
+                               
+                               var ikon = el.querySelector('i');
+                               var clsIkon = ikon ? ikon.className : 'fas fa-link';
+                               var labelTeks = el.innerText || el.textContent || '';
+                               
+                               btnLain.innerHTML = '<i class=&quot;' + clsIkon + '&quot;></i> <span>' + labelTeks.trim() + '</span>';
+                               
+                               btnLain.onclick = function() {
+                                   var parentTab = el.closest('.tab-content');
+                                   if (parentTab && typeof switchTab === 'function') {
+                                       switchTab(parentTab.id.replace('tab-', ''));
+                                   }
+                                   el.click();
+                                   if (typeof window.closeApotekSearch === 'function') window.closeApotekSearch();
+                               };
+                               resultDiv.appendChild(btnLain);
+                               total++;
+                           }
+                       });
+                       
+                       // TAMPILAN JIKA TIDAK ADA HASIL SAMA SEKALI
+                       if (total === 0) {
+                           resultDiv.innerHTML = '<div class=&quot;w-full text-center py-8 text-slate-400 font-bold text-xs uppercase tracking-wider&quot;>Laporan Tidak Ditemukan</div>';
+                       }
+                   })(this)">
+            
+            <button onclick="window.closeApotekSearch()" 
+                    type="button"
+                    class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-all flex-shrink-0">
+                <i class="fas fa-xmark text-sm"></i>
+            </button>
+        </div>
+
+        <div id="resultSearchApotek" 
+             class="mt-4 flex flex-row flex-wrap gap-2.5 md:gap-3 max-h-[55vh] overflow-y-auto py-2 w-full justify-start items-center content-start pr-1"
+             style="scrollbar-width: thin; display: flex !important;">
+             </div>
+
+    </div>
+</div>
+
+
+
+ 
 
 
 	
