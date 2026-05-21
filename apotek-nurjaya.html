@@ -341,7 +341,7 @@ document.addEventListener('keydown', function(e) {
 <button type="button"
         id="btn-switch-ke-fotokopi"
         onclick="navigasiKeFotokopi()" 
-        class="h-10 md:h-12 px-4 md:px-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center space-x-2 md:space-x-3 focus:outline-none flex-shrink-0 transition-all hover:brightness-110">
+        class="h-10 md:h-12 px-4 md:px-5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-full shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-2 md:space-x-3 focus:outline-none flex-shrink-0 transition-all hover:brightness-110 active:scale-95">
     
     <i class="fas fa-print text-xs md:text-sm"></i>
     
@@ -372,35 +372,35 @@ document.addEventListener('keydown', function(e) {
 <div id="tab-beranda" class="tab-content active space-y-6">
     
     <!-- CARD PROGRES HARIAN (Grafik Pendapatan Kotor Bulan Ini - Khusus Apotek) -->
-<div class="card-progress-apotek bg-white rounded-3xl p-3 md:p-5 shadow-sm border border-rose-50/60 w-100 overflow-hidden">
+<div class="card-progress-apotek bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-100 overflow-hidden">
     
-    <div class="flex justify-between items-center mb-2 md:mb-4">
+    <div class="flex justify-between items-center mb-3 md:mb-5">
         <div>
-            <h3 class="text-[10px] font-bold text-rose-400 uppercase tracking-wider leading-none">Progres Harian :</h3>
-            <h4 class="text-sm md:text-lg font-bold text-gray-900 flex items-center gap-1.5 mt-0.5">
-                <i class="fa-solid fa-chart-line text-rose-500 text-xs md:text-base"></i>
-                <span>Pendapatan Harian: Mei 2026</span>
+            <h3 class="text-[10px] font-extrabold text-pink-500 uppercase tracking-widest leading-none">Progres Harian :</h3>
+            <h4 class="text-sm md:text-lg font-black text-gray-900 flex items-center gap-2 mt-1">
+                <i class="fa-solid fa-chart-line text-pink-500 text-xs md:text-base"></i>
+                <span class="tracking-tight">Pendapatan Harian: Mei 2026</span>
             </h4>
         </div>
-        <span class="text-[10px] text-rose-500 font-medium flex items-center gap-1 bg-rose-50/50 px-2 py-0.5 rounded-full dynamic-scroll-hint animate-pulse">
+        <span class="text-[10px] text-pink-600 font-bold flex items-center gap-1.5 bg-pink-50/70 px-3 py-1 rounded-full dynamic-scroll-hint animate-pulse border border-pink-100/30">
             Geser <i class="fas fa-arrow-right text-[8px]"></i>
         </span>
     </div>
 
-    <div class="flex flex-nowrap w-full border border-rose-100/50 rounded-xl overflow-hidden shadow-inner bg-white">
+    <div class="flex flex-nowrap w-full border border-pink-100/60 rounded-2xl overflow-hidden shadow-xs bg-white">
         
-        <div class="w-[110px] flex-shrink-0 bg-gradient-to-b from-rose-50/30 to-transparent p-1.5 border-r border-rose-100/40 h-[200px] overflow-y-auto scrollbar-none">
+        <div class="w-[145px] flex-shrink-0 bg-gradient-to-b from-pink-50/20 to-transparent p-2 border-r border-pink-100/40 h-[200px] overflow-y-auto scrollbar-none">
             <table class="w-full text-[10px] border-collapse text-left">
-                <thead class="sticky top-0 bg-white border-b border-rose-400 z-10 text-rose-600 font-bold">
+                <thead class="sticky top-0 bg-white border-b-2 border-pink-500 z-10 font-bold">
                     <tr>
-                        <th class="pb-1 text-rose-600/80 font-extrabold pl-1">Tgl</th>
-                        <th class="pb-1 text-right text-rose-600/80 font-extrabold pr-1">Rp (Kotor)</th>
+                        <th class="pb-1.5 text-pink-600 font-black pl-1 uppercase tracking-wider">Tgl</th>
+                        <th class="pb-1.5 text-right text-pink-600 font-black pr-1 whitespace-nowrap uppercase tracking-wider">Rp (Kotor)</th>
                     </tr>
                 </thead>
-                <tbody id="tabel-ringkasan-kotor-apotek" class="text-gray-700 divide-y divide-rose-50/50 font-medium">
+                <tbody id="tabel-ringkasan-kotor-apotek" class="text-gray-700 divide-y divide-pink-100/30 font-semibold">
                     <tr id="loading-row-apotek">
-                        <td colspan="2" class="text-center py-6 text-gray-400 italic text-[9px]">
-                            <i class="fa-solid fa-spinner fa-spin text-rose-400 mb-0.5 block text-[10px]"></i>
+                        <td colspan="2" class="text-center py-10 text-gray-400 italic text-[9px]">
+                            <i class="fa-solid fa-spinner fa-spin text-pink-500 mb-1 block text-[12px]"></i>
                             Memuat...
                         </td>
                     </tr>
@@ -408,8 +408,8 @@ document.addEventListener('keydown', function(e) {
             </table>
         </div>
         
-        <div class="flex-grow flex-shrink overflow-x-auto p-2 bg-white scrollbar-none">
-            <div class="w-[900px] min-w-[900px] h-[134px] relative">
+        <div class="flex-grow flex-shrink overflow-x-auto p-3 bg-white scrollbar-none flex items-center">
+            <div class="w-[900px] min-w-[900px] h-[140px] relative">
                 <canvas id="chartApotekKotorBulanIni"></canvas>
             </div>
         </div>
@@ -419,23 +419,27 @@ document.addEventListener('keydown', function(e) {
 
 
            <!-- CARD REKAPITULASI BULANAN (Grafik Batang Omset Bulanan - Khusus Apotek - Compact Version) -->
-<div class="flex justify-between items-center mb-2 md:mb-4">
+<div class="card-rekap-bulanan-apotek bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-100 overflow-hidden">
+    
+    <div class="flex justify-between items-center mb-3 md:mb-5">
         <div>
-            <h3 class="text-[10px] font-bold text-rose-400 uppercase tracking-wider leading-none">Performa Bisnis :</h3>
-            <h4 class="text-sm md:text-lg font-bold text-gray-900 flex items-center gap-1.5 mt-0.5">
-                <i class="fa-solid fa-chart-bar text-rose-500 text-xs md:text-base"></i>
-                <span>Omset Bulanan Apotek (2026)</span>
+            <h3 class="text-[10px] font-extrabold text-pink-500 uppercase tracking-widest leading-none">Performa Bisnis :</h3>
+            <h4 class="text-sm md:text-lg font-black text-gray-900 flex items-center gap-2 mt-1">
+                <i class="fa-solid fa-chart-bar text-pink-500 text-xs md:text-base"></i>
+                <span class="tracking-tight">Omset Bulanan Apotek (2026)</span>
             </h4>
         </div>
     </div>
 
-    <div class="p-2 bg-gradient-to-b from-rose-50/10 to-transparent border border-rose-100/40 rounded-xl">
+    <div class="p-3 bg-gradient-to-b from-pink-50/20 to-transparent border border-pink-100/50 rounded-2xl shadow-xs bg-white">
         <div id="container-canvas-bulanan-apotek" class="w-full h-[200px] relative">
-            <div class="flex items-center justify-center h-full text-gray-400 italic text-[11px] py-6">
-                <i class="fa-solid fa-spinner fa-spin text-rose-400 mr-1.5"></i> Mempersiapkan grafik bulanan...
+            <div class="flex items-center justify-center h-full text-gray-400 font-semibold text-[11px] py-6">
+                <i class="fa-solid fa-spinner fa-spin text-pink-500 mr-2 text-sm"></i> Mempersiapkan grafik bulanan...
             </div>
         </div>
     </div>
+    
+</div>
 </div>
 		</div>
 		
@@ -444,11 +448,10 @@ document.addEventListener('keydown', function(e) {
       <!-- ================= TAB 2: INPUT HARIAN ================= -->
 <!-- ================= TAB 2: INPUT HARIAN ================= -->
 <div id="tab-input" class="tab-content space-y-6">
-    <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
+    <div class="bg-white rounded-[32px] p-6 md:p-8 shadow-sm border border-pink-100/50">
         
-        <!-- Header Form -->
-        <div class="flex items-center space-x-4 mb-6 pb-4 border-b border-gray-50">
-            <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+        <div class="flex items-center space-x-4 mb-6 pb-4 border-b border-pink-50">
+            <div class="w-12 h-12 bg-pink-50 text-pink-500 rounded-2xl flex items-center justify-center flex-shrink-0">
                 <i class="fas fa-file-medical-alt text-xl"></i>
             </div>
             <div>
@@ -456,28 +459,58 @@ document.addEventListener('keydown', function(e) {
                 <p class="text-xs text-gray-400">Input data operasional harian untuk sinkronisasi langsung ke Data Cloud</p>
             </div>
         </div>
+		
+		
+		<div id="info-tanggal-terakhir" class="hidden items-center space-x-3 p-4 bg-amber-50 border border-amber-200/60 text-amber-800 rounded-2xl text-xs font-semibold mb-5 transition-all">
+    <div class="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center flex-shrink-0 animate-pulse">
+        <i class="fas fa-circle-info text-sm"></i>
+    </div>
+    <div>
+        <p>Catatan Sinkronisasi Cloud:</p>
+        <p class="text-gray-500 font-normal mt-0.5">Data terakhir di Google Sheet terisi sampai <span id="label-tgl-terakhir" class="font-bold text-amber-700">Memuat data...</span></p>
+    </div>
+</div>
 
-        <!-- Form Mulai -->
         <form id="form-input-apotek" onsubmit="event.preventDefault();" class="space-y-5">
             
-            <!-- 1. Input Tanggal (Pop-up Kalender Bawaan) -->
-            <div>
-                <label for="input-tgl" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                    Tanggal Operasional
-                </label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 pointer-events-none">
-                        <i class="fas fa-calendar-alt"></i>
-                    </span>
-                    <input type="date" id="input-tgl" required
-                        class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-red-500 focus:bg-white transition-all text-gray-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label for="input-bulan-target" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                        Pilih Bulan Operasional
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 pointer-events-none">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </span>
+                        <select id="input-bulan-target" onchange="cekKetersediaanBulan(this)" required
+                            class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-700 appearance-none font-semibold">
+                            <option value="" disabled selected>-- Pilih Bulan Buku --</option>
+                            <option value="Mei2026">Mei 2026 (Tab Aktif)</option>
+                            <option value="Juni2026">Juni 2026</option>
+                            <option value="Juli2026">Juli 2026</option>
+                            <option value="Agustus2026">Agustus 2026</option>
+                        </select>
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none text-xs">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="input-tgl" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                        Tanggal Operasional
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 pointer-events-none">
+                            <i class="fas fa-calendar-alt"></i>
+                        </span>
+                        <input type="date" id="input-tgl" required
+                            class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-700">
+                    </div>
                 </div>
             </div>
 
-            <!-- Grid Dua Kolom untuk Data Keuangan -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                
-                <!-- 2. Input Pendapatan Kotor -->
                 <div>
                     <label for="input-kotor" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                         Pendapatan Kotor
@@ -486,14 +519,12 @@ document.addEventListener('keydown', function(e) {
                         <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-emerald-600 pointer-events-none">
                             Rp
                         </span>
-                        <!-- Menggunakan type="text" + inputmode="numeric" agar di HP otomatis memunculkan keyboard angka -->
                         <input type="text" id="input-kotor" placeholder="0" required inputmode="numeric"
                             oninput="formatRupiahElemen(this)"
                             class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white transition-all text-emerald-700">
                     </div>
                 </div>
 
-                <!-- 3. Input Pembayaran Faktur -->
                 <div>
                     <label for="input-faktur" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                         Pembayaran Faktur
@@ -508,7 +539,6 @@ document.addEventListener('keydown', function(e) {
                     </div>
                 </div>
 
-                <!-- 4. Input Pengeluaran -->
                 <div>
                     <label for="input-pengeluaran" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                         Pengeluaran
@@ -523,40 +553,130 @@ document.addEventListener('keydown', function(e) {
                     </div>
                 </div>
 
-                <!-- 5. Input Pendapatan Bersih -->
                 <div>
-                    <label for="input-bersih" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                        Pendapatan Bersih
-                    </label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-blue-600 pointer-events-none">
-                            Rp
-                        </span>
-                        <input type="text" id="input-bersih" placeholder="0" required inputmode="numeric"
-                            oninput="formatRupiahElemen(this)"
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-blue-700">
-                    </div>
-                </div>
-
+    <label for="input-bersih" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+        Pendapatan Bersih (Otomatis)
+    </label>
+    <div class="relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-blue-600 pointer-events-none">
+            Rp
+        </span>
+        <input type="text" id="input-bersih" placeholder="0" required inputmode="numeric" readonly
+            class="w-full pl-12 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none text-blue-700 cursor-not-allowed">
+    </div>
+</div>
             </div>
 
-            <!-- Tombol Transaksi -->
             <div class="pt-2 flex space-x-3">
                 <button type="reset" 
                     class="w-1/3 py-3 bg-gray-100 text-gray-500 rounded-2xl text-sm font-bold tracking-wide hover:bg-gray-200 transition-all active:scale-95">
                     Reset
                 </button>
                 <button type="submit" id="btn-simpan-apotek"
-                    class="w-2/3 py-3 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-2xl text-sm font-bold tracking-wide shadow-md shadow-red-100 hover:brightness-110 transition-all active:scale-95 flex items-center justify-center space-x-2">
+                    class="w-2/3 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-2xl text-sm font-bold tracking-wide shadow-md shadow-pink-100 hover:brightness-110 transition-all active:scale-95 flex items-center justify-center space-x-2">
                     <i class="fas fa-save"></i>
                     <span>UPLOAD DATA KE CLOUD</span>
                 </button>
             </div>
-
         </form>
+    </div>
 
+<div id="modal-alert-apotek" class="fixed inset-0 z-[9999] hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-all duration-300">
+    <div id="alert-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border border-pink-100 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
+        
+        <div class="mx-auto w-16 h-16 bg-pink-50 rounded-full flex items-center justify-center text-pink-500 animate-pulse">
+            <div class="w-12 h-12 bg-pink-100/80 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-triangle-exclamation text-xl animate-bounce"></i>
+            </div>
+        </div>
+
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-gray-900">Database Belum Siap</h3>
+            <p class="text-xs text-gray-500 leading-relaxed px-2">Bulan lainnya belum tersedia di Database Cloud Apotek saat ini. Silakan pilih tab aktif terlebih dahulu.</p>
+        </div>
+
+        <button type="button" onclick="tutupAlertKustom()"
+            class="w-full py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md shadow-pink-100 hover:brightness-105 active:scale-95 transition-all">
+            Mengerti, Kembali
+        </button>
     </div>
 </div>
+
+           
+
+            <div class="relative flex py-2 items-center">
+                <div class="flex-grow border-t border-gray-100"></div>
+                <span class="flex-shrink mx-4 text-[9px] text-gray-300 font-bold uppercase tracking-widest">Validasi Data</span>
+                <div class="flex-grow border-t border-gray-100"></div>
+            </div>
+
+            <div>
+                <button type="button" onclick="bukaModalSpreadsheet()"
+                    class="w-full py-3.5 bg-pink-50 hover:bg-pink-100/80 text-pink-600 rounded-2xl text-xs font-black tracking-widest uppercase transition-all active:scale-98 flex items-center justify-center gap-2 border border-pink-200/40 shadow-xs shadow-pink-500/5">
+                    <i class="fa-solid fa-table"></i> Cek manual data bulanan
+                </button>
+            </div>
+
+       
+    </div>
+
+
+<div id="modalSheetApotek" style="display:none;" class="fixed inset-0 z-[10005] flex items-center justify-center p-3 md:p-6">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="tutupModalSpreadsheet()"></div>
+
+    <div class="relative bg-white w-full max-w-5xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col h-[85vh] border border-pink-100/30">
+        
+        <div class="bg-pink-600 p-4 text-white flex justify-between items-center shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm md:text-base font-bold tracking-tight">Database Real-time Apotek</h2>
+                    <p class="text-[10px] opacity-75 uppercase tracking-wider font-semibold">Mode Peninjauan Tabel HTML Online</p>
+                </div>
+            </div>
+            <button onclick="tutupModalSpreadsheet()" class="w-8 h-8 bg-white/10 hover:bg-white/20 active:scale-90 transition-all rounded-full flex items-center justify-center">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 bg-slate-50 relative overflow-auto p-4 md:p-6">
+            <div class="inline-block min-w-full align-middle bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200 text-left text-xs md:text-sm">
+                    <thead class="bg-gray-50 text-gray-500 uppercase tracking-wider font-bold text-[10px] md:text-xs">
+                        <tr>
+                            <th class="px-4 py-3.5 border-b border-gray-100 text-center">Tanggal</th>
+                            <th class="px-4 py-3.5 border-b border-gray-100 text-right text-emerald-600">Pendapatan Kotor</th>
+                            <th class="px-4 py-3.5 border-b border-gray-100 text-right text-amber-600">Pembayaran Faktur</th>
+                            <th class="px-4 py-3.5 border-b border-gray-100 text-right text-red-600">Pengeluaran</th>
+                            <th class="px-4 py-3.5 border-b border-gray-100 text-right text-blue-600">Pendapatan Bersih</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-tabel-apotek" class="divide-y divide-gray-100 text-gray-700 font-medium">
+                        </tbody>
+                </table>
+                
+                <div id="loading-tabel-apotek" class="p-8 flex flex-col items-center justify-center space-y-2 text-gray-400">
+                    <i class="fas fa-spinner animate-spin text-2xl text-pink-500"></i>
+                    <span class="text-xs font-semibold">Menarik basis data dari cloud...</span>
+                </div>
+                <div id="kosong-tabel-apotek" class="hidden p-8 flex flex-col items-center justify-center space-y-2 text-gray-400">
+                    <i class="fa-regular fa-folder-open text-2xl"></i>
+                    <span class="text-xs font-semibold">Tidak ada rekaman data pada bulan ini.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 bg-gray-50 border-t border-gray-100 flex justify-end">
+            <button onclick="tutupModalSpreadsheet()" class="px-6 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs active:scale-95 transition-all">
+                Selesai Tinjau
+            </button>
+        </div>
+    </div>
+</div>
+
+
 
 
 
@@ -894,58 +1014,152 @@ document.addEventListener('keydown', function(e) {
 	
 	
 <script>
-// Elemen Form & Tombol
+// Elemen Form & Tombol Utama
 const formApotek = document.getElementById('form-input-apotek');
 const btnSimpan = document.getElementById('btn-simpan-apotek');
+const selectBulan = document.getElementById('input-bulan-target');
+
+// Elemen Input untuk Perhitungan Otomatis
+const inputKotor = document.getElementById('input-kotor');
+const inputPengeluaran = document.getElementById('input-pengeluaran');
+const inputBersih = document.getElementById('input-bersih');
+
+// Elemen Baru untuk Info Sinkronisasi Tanggal
+const bannerInfoTanggal = document.getElementById('info-tanggal-terakhir');
+const labelTglTerakhir = document.getElementById('label-tgl-terakhir');
+
+// Elemen Modal Alert Kustom
+const modalAlert = document.getElementById('modal-alert-apotek');
+const alertBox = document.getElementById('alert-box-content');
 
 // URL Web App Akses Spreadsheet
 const urlWebAppApotek = "https://script.google.com/macros/s/AKfycbxbV9cqDZg5J5pRnWFPUNCV8rk6mkNoim739KTELNi1SJhsbVW8jxAq2vsLYlSR0dDFXA/exec";
 
 /**
- * Fungsi untuk memformat input teks menjadi berformat ribuan (titik) secara real-time
+ * Pemicu otomatis setiap kali Dropdown Bulan diubah
+ */
+function cekKetersediaanBulan(elemen) {
+    if (elemen.value !== "Mei2026" && elemen.value !== "") {
+        modalAlert.classList.remove('hidden');
+        modalAlert.classList.add('flex');
+        
+        setTimeout(() => {
+            alertBox.classList.remove('scale-95', 'opacity-0');
+            alertBox.classList.add('scale-100', 'opacity-100');
+        }, 10);
+
+        elemen.value = "Mei2026";
+    }
+    
+    // Tarik data baris terbaru untuk bulan yang dipilih
+    perbaruiInfoTanggalTerakhir(elemen.value);
+}
+
+/**
+ * Fungsi Menutup Modal Alert Kustom dengan Animasi Redup Kembali
+ */
+function tutupAlertKustom() {
+    alertBox.classList.remove('scale-100', 'opacity-100');
+    alertBox.classList.add('scale-95', 'opacity-0');
+    
+    setTimeout(() => {
+        modalAlert.classList.remove('flex');
+        modalAlert.classList.add('hidden');
+    }, 300);
+}
+
+/**
+ * Format input teks menjadi berformat ribuan (titik) secara real-time
  */
 function formatRupiahElemen(elemen) {
-    // Hapus semua karakter selain angka
     let nilaiBersih = elemen.value.replace(/\D/g, '');
-    
-    // Format menjadi ribuan menggunakan titik
     if (nilaiBersih) {
         elemen.value = nilaiBersih.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     } else {
         elemen.value = '';
     }
+    hitungPendapatanBersih();
+}
+
+function hilangkanTitik(nilaiString) {
+    return nilaiString.replace(/\./g, '') || "0";
+}
+
+function hitungPendapatanBersih() {
+    const kotor = parseInt(hilangkanTitik(inputKotor.value)) || 0;
+    const pengeluaran = parseInt(hilangkanTitik(inputPengeluaran.value)) || 0;
+    const bersih = kotor - pengeluaran;
+    
+    if (bersih >= 0) {
+        inputBersih.value = bersih.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    } else {
+        const nilaiPositif = Math.abs(bersih).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        inputBersih.value = "-" + nilaiPositif;
+    }
 }
 
 /**
- * Fungsi untuk membersihkan string format titik menjadi angka murni sebelum dikirim
+ * ─── FUNGSI TAMBAHAN: AMBIL TANGGAL & BARIS TERAKHIR DARI SPREADSHEET ───
  */
-function hilangkanTitik(nilaiString) {
-    return nilaiString.replace(/\./g, '') || "0";
+function perbaruiInfoTanggalTerakhir(bulan) {
+    if (!bulan) {
+        bannerInfoTanggal.classList.remove('flex');
+        bannerInfoTanggal.classList.add('hidden');
+        return;
+    }
+
+    // Tampilkan banner dengan status loading awal
+    bannerInfoTanggal.classList.remove('hidden');
+    bannerInfoTanggal.classList.add('flex');
+    labelTglTerakhir.innerText = "Memeriksa basis data cloud...";
+
+    // Fetch data menggunakan fungsi doGet Apps Script
+    fetch(`${urlWebAppApotek}?bulan=${bulan}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                // Objek terakhir di dalam array adalah baris paling bawah di spreadsheet
+                const dataTerakhir = data[data.length - 1];
+                const barisTerakhirDiSheet = data.length + 1; // Ditambah 1 karena data dimulai dari baris ke-2 (Baris 1 = Header)
+                
+                labelTglTerakhir.innerHTML = `Tanggal ${dataTerakhir.tanggal} (Baris ke-${barisTerakhirDiSheet} di Google Sheet)`;
+            } else {
+                labelTglTerakhir.innerText = "Belum ada data terisi (Sheet Kosong / Hanya Header)";
+            }
+        })
+        .catch(error => {
+            console.error("Gagal memuat tanggal terakhir:", error);
+            labelTglTerakhir.innerText = "Gagal memuat data sinkronisasi.";
+        });
 }
 
 // Logika saat Form dikirim (Submit)
 formApotek.addEventListener('submit', function(event) {
     event.preventDefault();
     
-    // Ubah teks tombol menjadi status loading
+    const bulanTerpilih = selectBulan.value;
+    if (!bulanTerpilih) {
+        alert("Silakan tentukan Pilihan Bulan Operasional terlebih dahulu!");
+        selectBulan.focus();
+        return;
+    }
+    
     const textAwalTombol = btnSimpan.innerHTML;
     btnSimpan.disabled = true;
     btnSimpan.innerHTML = '<i class="fas fa-spinner animate-spin"></i> <span>Mengirim...</span>';
 
-    // Ekstrak hanya angka harinya saja dari input kalender (type="date")
     const komponenTanggal = new Date(document.getElementById('input-tgl').value);
     const angkaTanggalSaja = komponenTanggal.getDate();
 
-    // 1. Ambil data, bersihkan karakter titik agar menjadi angka bulat kembali sebelum dikirim
     const dataForm = {
+        bulan: bulanTerpilih,
         tanggal: angkaTanggalSaja,
-        pendapatankotor: hilangkanTitik(document.getElementById('input-kotor').value),
+        pendapatankotor: hilangkanTitik(inputKotor.value),
         pembayaranfaktur: hilangkanTitik(document.getElementById('input-faktur').value),
-        pengeluaran: hilangkanTitik(document.getElementById('input-pengeluaran').value),
-        pendapatanbersih: hilangkanTitik(document.getElementById('input-bersih').value)
+        pengeluaran: hilangkanTitik(inputPengeluaran.value),
+        pendapatanbersih: hilangkanTitik(inputBersih.value)
     };
 
-    // 2. Kirim data ke Google Apps Script menggunakan Fetch API
     fetch(urlWebAppApotek, {
         method: 'POST',
         mode: 'no-cors',
@@ -955,15 +1169,21 @@ formApotek.addEventListener('submit', function(event) {
         body: JSON.stringify(dataForm)
     })
     .then(() => {
-        alert('Data Apotek berhasil dikirim ke Spreadsheet!');
-        formApotek.reset(); // Kosongkan kembali form isian setelah sukses
+        alert(`Data Apotek sukses disimpan ke Cloud Spreadsheet Tab [${bulanTerpilih}]!`);
+        formApotek.reset(); 
+        
+        // Perbarui kembali banner info setelah sukses upload biar angkanya langsung maju
+        perbaruiInfoTanggalTerakhir(bulanTerpilih);
+        
+        if (typeof muatDataGrafikApotek === "function") {
+            muatDataGrafikApotek();
+        }
     })
     .catch(error => {
         console.error('Error:', error);
         alert('Gagal mengirim data, silakan cek koneksi internet Anda.');
     })
     .finally(() => {
-        // Kembalikan tombol ke keadaan semula
         btnSimpan.disabled = false;
         btnSimpan.innerHTML = textAwalTombol;
     });
@@ -1018,7 +1238,7 @@ function loadDriveApotek(driveId, element) {
 	
 
 <script>
-// 1. Deklarasi URL Web App Google Apps Script Kamu
+// 1. Deklarasi URL Web App Google Apps Script Kamu (Sudah terhubung dengan versi terbaru deployment Mei2026)
 const API_URL_APOTEK = "https://script.google.com/macros/s/AKfycbxbV9cqDZg5J5pRnWFPUNCV8rk6mkNoim739KTELNi1SJhsbVW8jxAq2vsLYlSR0dDFXA/exec";
 
 // Variabel global untuk menyimpan instance grafik agar tidak duplikat saat reload data
@@ -1033,7 +1253,6 @@ document.addEventListener("DOMContentLoaded", function() {
  * Fungsi Utama Ambil Data dari doGet Apps Script
  */
 function muatDataGrafikApotek() {
-    // Tampilkan log di console untuk memantau proses
     console.log("Memulai penarikan data dari:", API_URL_APOTEK);
 
     fetch(API_URL_APOTEK, {
@@ -1071,6 +1290,7 @@ function muatDataGrafikApotek() {
 
 /**
  * Fungsi Pengisian Tabel Ringkasan Mini di Sisi Kiri
+ * FIX: Menambahkan class 'whitespace-nowrap' agar nominal rupiah baru yang panjang tidak patah baris
  */
 function isiTabelKotorApotek(data) {
     const tbody = document.getElementById("tabel-ringkasan-kotor-apotek");
@@ -1087,10 +1307,10 @@ function isiTabelKotorApotek(data) {
     // Suntikkan baris data satu per satu
     data.forEach(item => {
         const row = document.createElement("tr");
-        row.className = "hover:bg-rose-50/30 transition-colors duration-150";
+        row.className = "hover:bg-pink-50/40 transition-colors duration-150";
         row.innerHTML = `
-            <td class="py-1.5 pl-1 text-gray-600 font-bold">Tgl ${item.tanggal}</td>
-            <td class="py-1.5 pr-1 text-right font-semibold text-gray-900">${formatRupiahApotek(item.pendapatan)}</td>
+            <td class="py-1.5 pl-1 text-gray-600 font-bold whitespace-nowrap">Tgl ${item.tanggal}</td>
+            <td class="py-1.5 pr-1 text-right font-semibold text-gray-900 whitespace-nowrap">${formatRupiahApotek(item.pendapatan)}</td>
         `;
         tbody.appendChild(row);
     });
@@ -1098,37 +1318,36 @@ function isiTabelKotorApotek(data) {
 
 /**
  * Fungsi Pembuatan Grafik Batang Line/Bar Chart.js di Sisi Kanan
+ * FIX: Mengubah tema warna ke Pink Apotek & Mengunci format ribuan lokal Indonesia
  */
 function buatGrafikKotorApotek(data) {
     const ctx = document.getElementById("chartApotekKotorBulanIni");
     if (!ctx) return;
 
-    // Pecah data JSON menjadi array terpisah untuk label tanggal dan nilai pendapatan
     const labelsTanggal = data.map(item => `Tgl ${item.tanggal}`);
     const dataPendapatan = data.map(item => item.pendapatan);
 
-    // Hancurkan instance lama jika ada, mencegah grafik tumpang tindih saat datanya berubah
     if (chartApotekInstance) {
         chartApotekInstance.destroy();
     }
 
-    // Inisialisasi Chart.js versi Khas Apotek
+    // Inisialisasi Chart.js versi Khas Apotek (Pink Theme)
     chartApotekInstance = new Chart(ctx, {
-        type: 'line', // Menggunakan grafik garis agar tren fluktuasi harian terlihat jelas
+        type: 'line', 
         data: {
             labels: labelsTanggal,
             datasets: [{
                 label: 'Pendapatan Kotor (Rp)',
                 data: dataPendapatan,
-                borderColor: '#f43f5e', // Warna Rose-500 Tailwind
-                backgroundColor: 'rgba(244, 63, 94, 0.06)', // Efek gradasi transparan di bawah garis
+                borderColor: '#ec4899', // REVISI: Pink-500 Tailwind murni
+                backgroundColor: 'rgba(236, 72, 153, 0.05)', // REVISI: Efek gradasi transparan pink bawah garis
                 borderWidth: 3,
                 pointBackgroundColor: '#ffffff',
-                pointBorderColor: '#e11d48', // Rose-600
+                pointBorderColor: '#db2777', // REVISI: Pink-600 Tailwind untuk border titik lintasan
                 pointBorderWidth: 2,
                 pointRadius: 4,
                 pointHoverRadius: 6,
-                tension: 0.3, // Efek kelengkungan garis (smooth)
+                tension: 0.3, 
                 fill: true
             }]
         },
@@ -1136,9 +1355,7 @@ function buatGrafikKotorApotek(data) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    display: false // Sembunyikan label kotak dataset atas karena judul sudah ada di header card
-                },
+                legend: { display: false },
                 tooltip: {
                     backgroundColor: '#1e293b',
                     titleFont: { size: 11, weight: 'bold' },
@@ -1154,26 +1371,20 @@ function buatGrafikKotorApotek(data) {
             },
             scales: {
                 x: {
-                    grid: {
-                        display: false // Hilangkan garis vertikal latar belakang agar minimalis
-                    },
+                    grid: { display: false },
                     ticks: {
                         color: '#94a3b8',
                         font: { size: 10, weight: 'bold' }
                     }
                 },
                 y: {
-                    grid: {
-                        color: '#f1f5f9'
-                    },
+                    grid: { color: '#f1f5f9' },
                     ticks: {
                         color: '#94a3b8',
                         font: { size: 10 },
+                        // REVISI: Menghapus pembagian K/M. Menampilkan format angka rupiah asli Indonesia (Contoh: 1.250.000)
                         callback: function(value) {
-                            // Sederhanakan angka ribuan di sumbu Y (misal 1.000.000 menjadi 1M)
-                            if (value >= 1000000) return (value / 1000000) + 'M';
-                            if (value >= 1000) return (value / 1000) + 'k';
-                            return value;
+                            return value.toLocaleString('id-ID');
                         }
                     }
                 }
@@ -1183,15 +1394,12 @@ function buatGrafikKotorApotek(data) {
 }
 
 /**
- * Helper Fungsi Format Angka ke Rupiah Ringkas untuk Tabel Mini
+ * Helper Fungsi Format Angka ke Rupiah Utuh Ber-Titik
  */
 function formatRupiahApotek(angka) {
-    if (angka >= 1000000) {
-        return (angka / 1000000).toFixed(1) + "M"; // Contoh: 1.500.000 -> 1.5M
-    } else if (angka >= 1000) {
-        return (angka / 1000).toFixed(0) + "k"; // Contoh: 450.000 -> 450k
-    }
-    return angka.toString();
+    if (angka === undefined || angka === null) return "Rp 0";
+    // Mengubah angka mentah dari sheet ke format mata uang murni IDR (Contoh: Rp 981.000)
+    return "Rp " + parseInt(angka, 10).toLocaleString("id-ID");
 }
 </script>
 
@@ -1506,8 +1714,101 @@ document.addEventListener('click', function(e) {
 </div>
 
 
+<script>
+function bukaModalSpreadsheet() {
+    const modal = document.getElementById('modalSheetApotek');
+    if(modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Kunci scroll layar belakang
+    }
+}
 
+function tutupModalSpreadsheet() {
+    const modal = document.getElementById('modalSheetApotek');
+    if(modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = ''; // Aktifkan kembali scroll latar belakang
+    }
+}
+</script>
  
+
+<script>
+/**
+ * Pembantu Format Angka ke format Rupiah standar tampilan tabel
+ */
+function formatRupiahTeks(angka) {
+    return "Rp " + Number(angka).toLocaleString('id-ID');
+}
+
+/**
+ * Fungsi Membuka Modal & Mengambil Data via doGet Real-time
+ */
+function bukaModalSpreadsheet() {
+    const modal = document.getElementById('modalSheetApotek');
+    const tbody = document.getElementById('body-tabel-apotek');
+    const loading = document.getElementById('loading-tabel-apotek');
+    const kosong = document.getElementById('kosong-tabel-apotek');
+    
+    // Ambil bulan aktif dari dropdown input utama halaman kamu, fallback ke Mei2026 jika belum pilih
+    const bulanAktif = document.getElementById('input-bulan-target').value || "Mei2026";
+
+    // Bersihkan isi tabel lama & tampilkan status loading
+    tbody.innerHTML = "";
+    loading.classList.remove('hidden');
+    loading.classList.add('flex');
+    kosong.classList.add('hidden');
+
+    // Tampilkan container utama modal ke layar
+    modal.style.display = "flex";
+
+    // Lakukan pemanggilan data ke fungsi doGet Google Apps Script
+    fetch(`${urlWebAppApotek}?bulan=${bulanAktif}`)
+        .then(response => response.json())
+        .then(data => {
+            // Sembunyikan status loading setelah respon tiba
+            loading.classList.remove('flex');
+            loading.classList.add('hidden');
+
+            if (data && data.length > 0) {
+                // Iterasi dan cetak tiap baris data ke dalam susunan tabel HTML
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = "hover:bg-slate-50/80 transition-colors";
+                    
+                    // Deteksi warna khusus jika nilai pendapatan bersih minus (Rugi)
+                    const kelasWarnaBersih = item.pendapatanbersih < 0 ? "text-red-600 font-bold" : "text-blue-700 font-bold";
+
+                    row.innerHTML = `
+                        <td class="px-4 py-3 text-center font-bold text-gray-500 bg-gray-50/40">Tgl ${item.tanggal}</td>
+                        <td class="px-4 py-3 text-right text-emerald-700 font-semibold">${formatRupiahTeks(item.pendapatankotor)}</td>
+                        <td class="px-4 py-3 text-right text-amber-700">${formatRupiahTeks(item.pembayaranfaktur)}</td>
+                        <td class="px-4 py-3 text-right text-red-700">${formatRupiahTeks(item.pengeluaran)}</td>
+                        <td class="px-4 py-3 text-right ${kelasWarnaBersih}">${formatRupiahTeks(item.pendapatanbersih)}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                // Tampilkan pesan kosong jika tidak mengembalikan array data
+                kosong.classList.remove('hidden');
+            }
+        })
+        .catch(error => {
+            console.error("Gagal memuat database tabel:", error);
+            loading.classList.remove('flex');
+            loading.classList.add('hidden');
+            tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center font-bold text-red-500"><i class="fas fa-triangle-exclamation mr-1"></i> Gagal memuat data dari cloud. Periksa koneksi internet.</td></tr>`;
+        });
+}
+
+/**
+ * Fungsi Menutup Jendela Modal Spreadsheet
+ */
+function tutupModalSpreadsheet() {
+    const modal = document.getElementById('modalSheetApotek');
+    modal.style.display = "none";
+}
+</script>
 
 
 	
