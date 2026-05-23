@@ -467,6 +467,7 @@
 
 </div>
 
+<!-- 1. Logika Navigasi Menu Utama -->
 <script>
     function pilihUnitNSA(mode, targetUrl) {
         sessionStorage.setItem('nsa_active_mode', mode);
@@ -474,15 +475,83 @@
     }
 </script>
 
+<!-- 2. Panggil Library Firebase (Versi Compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
 
-
+<!-- 3. Otomatisasi Fitur Notifikasi Firebase Tanpa Tombol -->
 <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker terdaftar!', reg))
-        .catch(err => console.error('Gagal daftar Service Worker:', err));
-    });
+  // Konfigurasi Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAVlFcF5gs5ik0ESDg1Ka0Mxuy8Hh6uw8",
+    authDomain: "nurjaya-smart-archive.firebaseapp.com",
+    projectId: "nurjaya-smart-archive",
+    storageBucket: "nurjaya-smart-archive.firebasestorage.app",
+    messagingSenderId: "930477308354",
+    appId: "1:930477308354:web:b69a818a7ff73eb88f3e5b"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  // Jalankan otomatis begitu halaman selesai dimuat sepenuhnya
+  window.addEventListener('load', function() {
+    
+    // 1. Registrasi Service Worker Terlebih Dahulu
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then((reg) => {
+                console.log('SW terdaftar:', reg.scope);
+                
+                // Cek ketersediaan fitur Notifikasi di browser
+                if (!("Notification" in window)) {
+                    console.warn("Browser ini tidak mendukung fitur Web Notification.");
+                    return;
+                }
+
+                // Jalankan proses inisiasi token otomatis
+                prosesIzinDanToken(reg);
+            })
+            .catch((err) => console.error('SW Error:', err));
+    }
+  });
+
+  // Fungsi Inti Otomatisasi Notifikasi
+  function prosesIzinDanToken(registration) {
+      // Minta izin otomatis ke pengguna (Pop-up bawaan browser akan muncul di awal)
+      Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+              console.log("Izin notifikasi Portal NSA aktif. Menghubungkan ke Firebase...");
+
+              // Ambil Token FCM menggunakan Service Worker yang sudah siap
+              messaging.getToken({
+                  serviceWorkerRegistration: registration,
+                  vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4'
+              })
+              .then((currentToken) => {
+                  if (currentToken) {
+                      console.log('FCM Token Berhasil Didapat:', currentToken);
+
+                      // Jalankan sinkronisasi background ke Google Apps Script Web App
+                      const urlScript = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
+                      
+                      fetch(`${urlScript}?token=${currentToken}`, { 
+                          mode: 'no-cors' 
+                      })
+                      .then(() => console.log("Sinkronisasi otomatis token ke Apps Script sukses."))
+                      .catch(err => console.error("Gagal sinkronisasi ke Apps Script:", err));
+
+                  } else {
+                      console.warn("Token kosong. Periksa file sw.js Anda.");
+                  }
+              })
+              .catch((err) => {
+                  console.error('Error saat eksekusi getToken:', err);
+              });
+          } else {
+              console.warn("Pengguna menolak izin notifikasi.");
+          }
+      });
   }
 </script>
 
