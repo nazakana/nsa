@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APOTEK NURJAYA ARCHIVE</title>
+	<meta name="description" content="Arsip Pembukuan dan Riwayat Keuangan Apotek  Nurjaya.">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+    <!-- Resource Eksternal Terpusat -->
+	<link rel="manifest" href="manifest.json">
+	<link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -159,8 +165,55 @@ document.addEventListener('keydown', function(e) {
     if (e.key === "Escape" || e.keyCode === 27) window.closeApotekSearch();
 });
 </script>
-	
-	
+
+
+            <style>
+@keyframes popBounce {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.05); /* Sedikit melebihkan ukuran untuk efek membal */
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1); /* Kembali ke ukuran asli presisi */
+    }
+}
+
+.animate-popup-bounce {
+    /* Menjalankan animasi selama 0.4 detik dengan kurva bezier membal */
+    animation: popBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+</style>
+
+<style>
+/* ================= CSS ANIMASI BOUNCY (MEMBAL) ================= */
+@keyframes bouncyIn {
+    0% { opacity: 0; transform: scale(0.7) translateY(40px); }
+    50% { opacity: 1; transform: scale(1.04) translateY(-8px); }
+    75% { transform: scale(0.98) translateY(3px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes bouncyOut {
+    0% { opacity: 1; transform: scale(1) translateY(0); }
+    30% { transform: scale(1.02) translateY(-4px); }
+    100% { opacity: 0; transform: scale(0.85) translateY(30px); }
+}
+
+/* Class pembantu untuk dipicu via JavaScript */
+.modal-bouncy-in {
+    animation: bouncyIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.modal-bouncy-out {
+    animation: bouncyOut 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+</style>
+
+
 </head>
 
 
@@ -312,51 +365,46 @@ document.addEventListener('keydown', function(e) {
     <!-- SESI TOMBOL AKSI ATAS (DIADAPTASI DARI TEMPLATE DENGAN AKSEN PINK) -->
     <div class="fixed top-6 left-0 right-0 px-[4%] md:left-auto md:right-6 md:px-0 z-[9998] flex items-start justify-end gap-2 md:gap-3 transition-all duration-500">
         
-        <!-- SISI KIRI: TOMBOL SEARCH -->
-        <div onclick="openApotekSearch()" 
-     class="flex-1 min-w-0 max-w-[220px] md:max-w-[320px] bg-white/70 backdrop-blur-md border border-white/50 px-4 py-2.5 md:py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:bg-white/90 transition-all duration-300 group">
-    <i class="fas fa-search text-brand-500 group-hover:scale-110 transition-transform text-xs md:text-sm flex-shrink-0"></i>
-    <span class="text-gray-800 font-medium text-[11px] md:text-xs whitespace-nowrap overflow-hidden text-ellipsis">Cari laporan...</span>
-</div>
-
-        <!-- SISI KANAN: TOMBOL NOTIF, SETTING, & SWITCH MODE -->
-        <div class="flex flex-col gap-2 md:gap-3 flex-shrink-0">
-            
-            <!-- BARIS ATAS: 3 TOMBOL KECIL/MED -->
-            <div class="flex gap-2 md:gap-3">
-                <!-- Notifikasi -->
-                <button id="btnNotifAksi" onclick="void(0)"
-                        class="w-10 h-10 md:w-12 md:h-12 bg-white text-brand-500 rounded-full shadow-lg flex items-center justify-center hover:bg-brand-50 transition-all focus:outline-none flex-shrink-0">
-                    <i class="fas fa-bell text-sm md:text-base"></i>
-                </button>
-
-                <!-- Developer/Settings -->
-                <button id="openDevModal" onclick="void(0)"
-                        class="w-10 h-10 md:w-12 md:h-12 bg-brand-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-brand-600 transition-all focus:outline-none flex-shrink-0">
-                    <i class="fas fa-cog text-sm md:text-base"></i>
-                </button>
-                
-               <!-- Tombol switch ke mode fotokopi -->
-			  <!-- Tombol switch ke mode fotokopi (Menggunakan JavaScript onclick) -->
-<button type="button"
-        id="btn-switch-ke-fotokopi"
-        onclick="navigasiKeFotokopi()" 
-        class="h-10 md:h-12 px-4 md:px-5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-full shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-2 md:space-x-3 focus:outline-none flex-shrink-0 transition-all hover:brightness-110 active:scale-95">
-    
-    <i class="fas fa-print text-xs md:text-sm"></i>
-    
-    <div class="flex flex-col items-start gap-y-0 leading-none">
-        <span class="text-[8px] md:text-[9px] font-bold uppercase tracking-tight opacity-90">
-            Beralih Ke
-        </span>
-        <span class="text-[8px] md:text-[9px] font-bold uppercase tracking-tight">
-            Mode Fotokopi
-        </span>
+    <div onclick="openApotekSearch()" 
+         class="flex-1 min-w-0 max-w-[350px] bg-white/60 backdrop-blur-md border border-white/40 px-4 py-2.5 md:py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:bg-white/80 transition-all duration-300 group">
+        <i class="fas fa-search text-pink-600 group-hover:scale-110 transition-transform text-sm md:text-base flex-shrink-0"></i>
+        <span class="text-gray-900 font-medium text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Cari laporan...</span>
     </div>
-</button>
-            </div>
+
+    <div class="flex flex-col gap-2 md:gap-3 flex-shrink-0">
+        
+        <div class="flex gap-2 md:gap-3 items-center">
+            
+            <button id="btnNotifAksi" onclick="void(0)"
+                    class="w-10 h-10 md:w-12 md:h-12 bg-white text-pink-600 rounded-full shadow-lg flex items-center justify-center focus:outline-none flex-shrink-0 hover:bg-pink-50 transition-all active:scale-95">
+                <i class="fas fa-bell text-xs md:text-base"></i>
+            </button>
+
+            <button id="btnOpenDevApotek" onclick="bukaModalDevApotek()"
+                    class="w-10 h-10 md:w-12 md:h-12 bg-pink-500 text-white rounded-full shadow-lg flex items-center justify-center focus:outline-none flex-shrink-0 hover:bg-pink-600 transition-all active:scale-95">
+                <i class="fas fa-cog text-xs md:text-base"></i>
+            </button>
+            
+            <button type="button"
+                    id="btn-switch-ke-fotokopi"
+                    onclick="navigasiKeFotokopi()" 
+                    class="h-10 md:h-12 px-5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-full shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-3 focus:outline-none flex-shrink-0 transition-all hover:brightness-110 active:scale-95">
+                
+                <i class="fas fa-print text-xs md:text-sm"></i>
+                
+                <div class="flex flex-col items-start gap-y-0.5 leading-none text-left">
+                    <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight opacity-95">
+                        Beralih Ke
+                    </span>
+                    <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight">
+                        Mode Fotokopi
+                    </span>
+                </div>
+            </button>
+
         </div>
     </div>
+</div>
 
 
 
@@ -445,7 +493,7 @@ document.addEventListener('keydown', function(e) {
 		
 		
 
-      <!-- ================= TAB 2: INPUT HARIAN ================= -->
+     
 <!-- ================= TAB 2: INPUT HARIAN ================= -->
 <div id="tab-input" class="tab-content space-y-6">
     <div class="bg-white rounded-[32px] p-6 md:p-8 shadow-sm border border-pink-100/50">
@@ -459,168 +507,172 @@ document.addEventListener('keydown', function(e) {
                 <p class="text-xs text-gray-400">Input data operasional harian untuk sinkronisasi langsung ke Data Cloud</p>
             </div>
         </div>
-		
-		
-		<div id="info-tanggal-terakhir" class="hidden items-center space-x-3 p-4 bg-amber-50 border border-amber-200/60 text-amber-800 rounded-2xl text-xs font-semibold mb-5 transition-all">
-    <div class="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center flex-shrink-0 animate-pulse">
-        <i class="fas fa-circle-info text-sm"></i>
-    </div>
-    <div>
-        <p>Catatan Sinkronisasi Cloud:</p>
-        <p class="text-gray-500 font-normal mt-0.5">Data terakhir di Google Sheet terisi sampai <span id="label-tgl-terakhir" class="font-bold text-amber-700">Memuat data...</span></p>
-    </div>
-</div>
+        
+        <div id="info-tanggal-terakhir" class="hidden items-center space-x-3 p-4 bg-amber-50 border border-amber-200/60 text-amber-800 rounded-2xl text-xs font-semibold mb-5 transition-all">
+            <div class="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center flex-shrink-0 animate-pulse">
+                <i class="fas fa-circle-info text-sm"></i>
+            </div>
+            <div>
+                <p>Catatan Sinkronisasi Cloud:</p>
+                <p class="text-gray-500 font-normal mt-0.5">Data terakhir di Google Sheet terisi sampai <span id="label-tgl-terakhir" class="font-bold text-amber-700">Memuat data...</span></p>
+            </div>
+        </div>
 
         <form id="form-input-apotek" onsubmit="event.preventDefault();" class="space-y-5">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                    <label for="input-bulan-target" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                        Pilih Bulan Operasional
-                    </label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 pointer-events-none">
-                            <i class="fa-solid fa-folder-open"></i>
-                        </span>
-                        <select id="input-bulan-target" onchange="cekKetersediaanBulan(this)" required
-                            class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-700 appearance-none font-semibold">
-                            <option value="" disabled selected>-- Pilih Bulan Buku --</option>
-                            <option value="Mei2026">Mei 2026 (Tab Aktif)</option>
-                            <option value="Juni2026">Juni 2026</option>
-                            <option value="Juli2026">Juli 2026</option>
-                            <option value="Agustus2026">Agustus 2026</option>
-                        </select>
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none text-xs">
-                            <i class="fas fa-chevron-down"></i>
-                        </span>
-                    </div>
+            <div class="bg-pink-50/30 p-4 rounded-2xl border border-pink-100/50">
+                <label for="input-bulan-target" class="block text-xs font-bold text-pink-600 uppercase tracking-wider mb-2">
+                    Pilih Bulan Operasional <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-pink-400 pointer-events-none">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </span>
+                    <select id="input-bulan-target" onchange="handlePilihanBulan(this)" required
+                        class="w-full pl-11 pr-4 py-3 bg-white border border-pink-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 transition-all text-gray-700 appearance-none font-semibold shadow-sm">
+                        <option value="" disabled selected>-- Pilih Bulan Buku Dahulu --</option>
+                        <option value="Mei2026">Mei 2026</option>
+                        <option value="Juni2026">Juni 2026</option>
+                        <option value="Juli2026">Juli 2026</option>
+                        <option value="Agustus2026">Agustus 2026</option>
+						<option value="September2026">September 2026</option>
+						<option value="Oktober2026">Oktober 2026</option>
+						<option value="November2026">November 2026</option>
+						<option value="Desember2026">Desember 2026</option>
+                    </select>
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-pink-400 pointer-events-none text-xs">
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
                 </div>
-
-                <div>
-                    <label for="input-tgl" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                        Tanggal Operasional
-                    </label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 pointer-events-none">
-                            <i class="fas fa-calendar-alt"></i>
-                        </span>
-                        <input type="date" id="input-tgl" required
-                            class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-700">
-                    </div>
-                </div>
+                <p id="alert-pilih-bulan" class="text-[11px] text-pink-500 font-bold mt-2 flex items-center gap-1 transition-all duration-300">
+                    <i class="fa-solid fa-circle-exclamation animate-pulse"></i> Wajib memilih bulan operasional agar form input di bawah terbuka!
+                </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                    <label for="input-kotor" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                        Pendapatan Kotor
-                    </label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-emerald-600 pointer-events-none">
-                            Rp
-                        </span>
-                        <input type="text" id="input-kotor" placeholder="0" required inputmode="numeric"
-                            oninput="formatRupiahElemen(this)"
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white transition-all text-emerald-700">
+            <div id="wrapper-input-data" class="space-y-5 opacity-40 blur-[1px] pointer-events-none transition-all duration-500">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label for="input-tgl" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Tanggal Operasional
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 pointer-events-none">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                            <input type="date" id="input-tgl" disabled required
+                                class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-700 disabled:cursor-not-allowed">
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <label for="input-faktur" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                        Pembayaran Faktur
-                    </label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-amber-600 pointer-events-none">
-                            Rp
-                        </span>
-                        <input type="text" id="input-faktur" placeholder="0" required inputmode="numeric"
-                            oninput="formatRupiahElemen(this)"
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-amber-500 focus:bg-white transition-all text-amber-700">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label for="input-kotor" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Pendapatan Kotor
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-emerald-600 pointer-events-none">
+                                Rp
+                            </span>
+                            <input type="text" id="input-kotor" placeholder="0" disabled required inputmode="numeric"
+                                oninput="formatRupiahElemen(this)"
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white transition-all text-emerald-700 disabled:cursor-not-allowed">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="input-faktur" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Pembayaran Faktur
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-amber-600 pointer-events-none">
+                                Rp
+                            </span>
+                            <input type="text" id="input-faktur" placeholder="0" disabled required inputmode="numeric"
+                                oninput="formatRupiahElemen(this)"
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-amber-500 focus:bg-white transition-all text-amber-700 disabled:cursor-not-allowed">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="input-pengeluaran" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Pengeluaran
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-red-600 pointer-events-none">
+                                Rp
+                            </span>
+                            <input type="text" id="input-pengeluaran" placeholder="0" disabled required inputmode="numeric"
+                                oninput="formatRupiahElemen(this)"
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-red-500 focus:bg-white transition-all text-red-700 disabled:cursor-not-allowed">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="input-bersih" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Pendapatan Bersih (Otomatis)
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-blue-600 pointer-events-none">
+                                Rp
+                            </span>
+                            <input type="text" id="input-bersih" placeholder="0" required inputmode="numeric" readonly
+                                class="w-full pl-12 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none text-blue-700 cursor-not-allowed">
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <label for="input-pengeluaran" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                        Pengeluaran
-                    </label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-red-600 pointer-events-none">
-                            Rp
-                        </span>
-                        <input type="text" id="input-pengeluaran" placeholder="0" required inputmode="numeric"
-                            oninput="formatRupiahElemen(this)"
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-red-500 focus:bg-white transition-all text-red-700">
-                    </div>
+                <div class="pt-2 flex space-x-3">
+                    <button type="reset" onclick="lockFormKembali()"
+                        class="w-1/3 py-3 bg-gray-100 text-gray-500 rounded-2xl text-sm font-bold tracking-wide hover:bg-gray-200 transition-all active:scale-95">
+                        Reset
+                    </button>
+                    <button type="submit" id="btn-simpan-apotek"
+                        class="w-2/3 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-2xl text-sm font-bold tracking-wide shadow-md shadow-pink-100 hover:brightness-110 transition-all active:scale-95 flex items-center justify-center space-x-2">
+                        <i class="fas fa-save"></i>
+                        <span>UPLOAD DATA KE CLOUD</span>
+                    </button>
                 </div>
-
-                <div>
-    <label for="input-bersih" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-        Pendapatan Bersih (Otomatis)
-    </label>
-    <div class="relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-blue-600 pointer-events-none">
-            Rp
-        </span>
-        <input type="text" id="input-bersih" placeholder="0" required inputmode="numeric" readonly
-            class="w-full pl-12 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none text-blue-700 cursor-not-allowed">
+                
+            </div> </form>
     </div>
-</div>
-            </div>
 
-            <div class="pt-2 flex space-x-3">
-                <button type="reset" 
-                    class="w-1/3 py-3 bg-gray-100 text-gray-500 rounded-2xl text-sm font-bold tracking-wide hover:bg-gray-200 transition-all active:scale-95">
-                    Reset
-                </button>
-                <button type="submit" id="btn-simpan-apotek"
-                    class="w-2/3 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-2xl text-sm font-bold tracking-wide shadow-md shadow-pink-100 hover:brightness-110 transition-all active:scale-95 flex items-center justify-center space-x-2">
-                    <i class="fas fa-save"></i>
-                    <span>UPLOAD DATA KE CLOUD</span>
-                </button>
+
+<!-- ================= MODAL ALERT INPUT HARIAN ================= -->
+    <div id="modal-alert-apotek" class="fixed inset-0 z-[99999] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+        <div id="alert-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-pink-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
+            <div class="mx-auto w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-2xl animate-bounce">
+                <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-        </form>
+            <div class="space-y-1">
+                <h3 class="text-lg font-black text-gray-900 uppercase tracking-wide leading-tight">Database Bulan<br> Belum Tersedia</h3>
+                <p class="text-xs font-bold text-gray-500 leading-relaxed px-2">Bulan yang Anda pilih belum dikonfigurasi / belum tersedia di sistem NSA CLOUD Apotek Nurjaya.<br> Silakan pilih periode yang valid.</p>
+            </div>
+            <button type="button" onclick="tutupAlertKustom()"
+                class="w-full py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all">
+                SAYA MENGERTI
+            </button>
+        </div>
     </div>
 
-<div id="modal-alert-apotek" class="fixed inset-0 z-[9999] hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-all duration-300">
-    <div id="alert-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border border-pink-100 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
-        
-        <div class="mx-auto w-16 h-16 bg-pink-50 rounded-full flex items-center justify-center text-pink-500 animate-pulse">
-            <div class="w-12 h-12 bg-pink-100/80 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-triangle-exclamation text-xl animate-bounce"></i>
-            </div>
-        </div>
-
-        <div class="space-y-1">
-            <h3 class="text-base font-bold text-gray-900">Database Belum Siap</h3>
-            <p class="text-xs text-gray-500 leading-relaxed px-2">Bulan lainnya belum tersedia di Database Cloud Apotek saat ini. Silakan pilih tab aktif terlebih dahulu.</p>
-        </div>
-
-        <button type="button" onclick="tutupAlertKustom()"
-            class="w-full py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md shadow-pink-100 hover:brightness-105 active:scale-95 transition-all">
-            Mengerti, Kembali
+    <div class="relative flex py-2 items-center">
+        <div class="flex-grow border-t border-gray-100"></div>
+        <span class="flex-shrink mx-4 text-[9px] text-gray-300 font-bold uppercase tracking-widest">Validasi Data</span>
+        <div class="flex-grow border-t border-gray-100"></div>
+    </div>
+	
+	
+<!-- ================= TOMBOL CEK MANUAL DATA BULAN INI ================= -->
+    <div>
+        <button type="button" onclick="bukaModalSpreadsheet()"
+            class="w-full py-3.5 bg-pink-50 hover:bg-pink-100/80 text-pink-600 rounded-2xl text-xs font-black tracking-widest uppercase transition-all active:scale-98 flex items-center justify-center gap-2 border border-pink-200/40 shadow-xs shadow-pink-500/5">
+            <i class="fa-solid fa-table"></i> Cek manual data bulanan
         </button>
     </div>
 </div>
 
-           
-
-            <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-gray-100"></div>
-                <span class="flex-shrink mx-4 text-[9px] text-gray-300 font-bold uppercase tracking-widest">Validasi Data</span>
-                <div class="flex-grow border-t border-gray-100"></div>
-            </div>
-
-            <div>
-                <button type="button" onclick="bukaModalSpreadsheet()"
-                    class="w-full py-3.5 bg-pink-50 hover:bg-pink-100/80 text-pink-600 rounded-2xl text-xs font-black tracking-widest uppercase transition-all active:scale-98 flex items-center justify-center gap-2 border border-pink-200/40 shadow-xs shadow-pink-500/5">
-                    <i class="fa-solid fa-table"></i> Cek manual data bulanan
-                </button>
-            </div>
-
-       
-    </div>
-
-
+<!-- ================= MODAL SHEET PENGECEKAN MANUAL BULAN ================= -->
 <div id="modalSheetApotek" style="display:none;" class="fixed inset-0 z-[10005] flex items-center justify-center p-3 md:p-6">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="tutupModalSpreadsheet()"></div>
 
@@ -632,8 +684,8 @@ document.addEventListener('keydown', function(e) {
                     <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
                 </div>
                 <div>
-                    <h2 class="text-sm md:text-base font-bold tracking-tight">Database Real-time Apotek</h2>
-                    <p class="text-[10px] opacity-75 uppercase tracking-wider font-semibold">Mode Peninjauan Tabel HTML Online</p>
+                    <h2 class="text-sm md:text-base font-bold tracking-tight">Database Pencatatan Operasional Harian</h2>
+                    <p class="text-[10px] opacity-75 uppercase tracking-wider font-semibold">Mode Peninjauan Manual</p>
                 </div>
             </div>
             <button onclick="tutupModalSpreadsheet()" class="w-8 h-8 bg-white/10 hover:bg-white/20 active:scale-90 transition-all rounded-full flex items-center justify-center">
@@ -641,27 +693,62 @@ document.addEventListener('keydown', function(e) {
             </button>
         </div>
 
-        <div class="flex-1 bg-slate-50 relative overflow-auto p-4 md:p-6">
-            <div class="inline-block min-w-full align-middle bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
-                <table class="min-w-full divide-y divide-gray-200 text-left text-xs md:text-sm">
-                    <thead class="bg-gray-50 text-gray-500 uppercase tracking-wider font-bold text-[10px] md:text-xs">
-                        <tr>
-                            <th class="px-4 py-3.5 border-b border-gray-100 text-center">Tanggal</th>
-                            <th class="px-4 py-3.5 border-b border-gray-100 text-right text-emerald-600">Pendapatan Kotor</th>
-                            <th class="px-4 py-3.5 border-b border-gray-100 text-right text-amber-600">Pembayaran Faktur</th>
-                            <th class="px-4 py-3.5 border-b border-gray-100 text-right text-red-600">Pengeluaran</th>
-                            <th class="px-4 py-3.5 border-b border-gray-100 text-right text-blue-600">Pendapatan Bersih</th>
-                        </tr>
-                    </thead>
-                    <tbody id="body-tabel-apotek" class="divide-y divide-gray-100 text-gray-700 font-medium">
-                        </tbody>
-                </table>
+        <div class="bg-pink-50/50 p-4 border-b border-pink-150/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span class="text-xs font-bold text-pink-700 uppercase tracking-wider">
+                <i class="fa-solid fa-filter mr-1"></i> Pilih Periode Basis Data di NSA Cloud:
+            </span>
+            <div class="relative w-full sm:w-64">
+                <select id="modal-filter-bulan-manual" onchange="muatDataTinjauanModal(this.value)"
+                    class="w-full pl-4 pr-10 py-2 bg-white border border-pink-200 rounded-xl text-xs focus:outline-none focus:border-pink-500 font-bold text-gray-700 appearance-none shadow-xs">
+                    <option value="" disabled selected>-- Pilih Bulan Buku --</option>
+                    <option value="Januari2026">Januari 2026</option>
+                    <option value="Februari2026">Februari 2026</option>
+                    <option value="Maret2026">Maret 2026</option>
+                    <option value="April2026">April 2026</option>
+                    <option value="Mei2026">Mei 2026</option>
+                    <option value="Juni2026">Juni 2026</option>
+                    <option value="Juli2026">Juli 2026</option>
+                    <option value="Agustus2026">Agustus 2026</option>
+                    <option value="September2026">September 2026</option>
+                    <option value="Oktober2026">Oktober 2026</option>
+                    <option value="November2026">November 2026</option>
+                    <option value="Desember2026">Desember 2026</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-pink-500 pointer-events-none text-[10px]">
+                    <i class="fas fa-chevron-down"></i>
+                </span>
+            </div>
+        </div>
+
+     <div class="flex-1 bg-slate-50 relative overflow-x-auto p-2 md:p-6">
+    <div class="w-full bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
+        
+        <table class="w-full table-fixed divide-y divide-gray-200 text-left text-[11px] md:text-sm">
+            <thead class="bg-gray-50 text-gray-500 normal-case tracking-wider font-bold text-[10px] md:text-xs">
+                <tr>
+                    <th class="w-[18%] px-2 py-3.5 border-b border-gray-100 text-center">Tanggal</th>
+                    <th class="w-[21%] px-2 py-3.5 border-b border-gray-100 text-right text-emerald-600">Kotor (Rp)</th>
+                    <th class="w-[21%] px-2 py-3.5 border-b border-gray-100 text-right text-amber-600">Faktur (Rp)</th>
+                    <th class="w-[20%] px-2 py-3.5 border-b border-gray-100 text-right text-red-600">Pengeluaran</th>
+                    <th class="w-[20%] px-2 py-3.5 border-b border-gray-100 text-right text-blue-600">Bersih (Rp)</th>
+                </tr>
+            </thead>
+            <tbody id="body-tabel-apotek-manual" class="divide-y divide-gray-100 text-gray-700 font-medium break-words">
+                <tr>
+                    <td colspan="5" class="p-12 text-center text-gray-400 font-medium bg-white">
+                        <i class="fa-solid fa-arrow-up animate-bounce mr-1 text-pink-500"></i> 
+                        Silakan tentukan opsi bulan di atas terlebih dahulu untuk memuat data.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
                 
-                <div id="loading-tabel-apotek" class="p-8 flex flex-col items-center justify-center space-y-2 text-gray-400">
+                <div id="loading-tabel-apotek-manual" class="hidden p-8 flex flex-col items-center justify-center space-y-2 text-gray-400 bg-white">
                     <i class="fas fa-spinner animate-spin text-2xl text-pink-500"></i>
                     <span class="text-xs font-semibold">Menarik basis data dari cloud...</span>
                 </div>
-                <div id="kosong-tabel-apotek" class="hidden p-8 flex flex-col items-center justify-center space-y-2 text-gray-400">
+                
+                <div id="kosong-tabel-apotek-manual" class="hidden p-8 flex flex-col items-center justify-center space-y-2 text-gray-400 bg-white">
                     <i class="fa-regular fa-folder-open text-2xl"></i>
                     <span class="text-xs font-semibold">Tidak ada rekaman data pada bulan ini.</span>
                 </div>
@@ -691,116 +778,642 @@ document.addEventListener('keydown', function(e) {
        <!-- ================= TAB 3: ARSIP SUMMARY APOTEK ================= -->
 <div id="tab-summary" class="tab-content space-y-6">
     
-    <!-- Row Tombol Pilihan Bulan -->
-    <div class="flex flex-wrap gap-3 md:gap-5 mb-6">
-        
-        <!-- 1. Januari 2026 -->
-        <button data-search="januari 2026" onclick="loadDriveApotek('1yJgdfcGOV4qQgI4BTaxvQ75l5va7egat', this)" 
-            class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 border border-pink-100 hover:bg-pink-50/50 text-gray-700">
-            <i class="fa-solid fa-file-pdf text-rose-500 text-base md:text-lg"></i>
-            <span>Januari 2026</span>
-        </button>
-
-        <!-- 2. Februari 2026 -->
-        <button data-search="februari 2026" onclick="loadDriveApotek('1Cw_8etPdwRorqpxfVcWmV2IE-JVF_5bY', this)" 
-            class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 border border-pink-100 hover:bg-pink-50/50 text-gray-700">
-            <i class="fa-solid fa-file-pdf text-rose-500 text-base md:text-lg"></i>
-            <span>Februari 2026</span>
-        </button>
-
-        <!-- 3. Maret 2026 -->
-        <button data-search="maret 2026" onclick="loadDriveApotek('19_b6jMPVXvZalpXonlE_KIVCi5cEydtU', this)" 
-            class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 border border-pink-100 hover:bg-pink-50/50 text-gray-700">
-            <i class="fa-solid fa-file-pdf text-rose-500 text-base md:text-lg"></i>
-            <span>Maret 2026</span>
-        </button>
-
-        <!-- 4. April 2026 -->
-        <button data-search="april 2026" onclick="loadDriveApotek('1Aj5LO_Bn2qnTmbz1z8ndcrOpLQDCdftr', this)" 
-            class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 border border-pink-100 hover:bg-pink-50/50 text-gray-700">
-            <i class="fa-solid fa-file-pdf text-rose-500 text-base md:text-lg"></i>
-            <span>April 2026</span>
-        </button>
-
-        <!-- 5. Container Tombol Mei 2026 (Popup Belum Diterbitkan) -->
-        <div class="relative inline-block">
-            <button data-search="mei 2026" onclick="event.stopPropagation(); document.getElementById('popup-mei-final').style.display = 'flex'" 
-                class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200 hover:bg-white/10 relative z-10 active:scale-95 border border-dashed border-gray-200">
-                <i class="fa-solid fa-file-pdf text-gray-300"></i>
-                <span class="text-gray-400 font-medium">Mei 2026</span>
-            </button>
-
-            <!-- Popup Khusus Mei -->
-            <div id="popup-mei-final" 
-                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; padding: 1rem;"
-                onclick="this.style.display = 'none'">
-                
-                <div style="position: absolute; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"></div>
-
-                <div class="animate-ios" 
-                    style="position: relative; background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 2.5rem 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(244, 63, 94, 0.15);"
-                    onclick="event.stopPropagation()">
-                    
-                    <div style="width: 65px; height: 65px; background: #fff1f2; color: #f43f5e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-                        <i class="fa-solid fa-clock fa-2xl"></i>
-                    </div>
-                    
-                    <h3 style="font-size: 1.25rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem; font-family: sans-serif;">Data Belum Tersedia</h3>
-                    <p style="font-size: 0.85rem; color: #64748b; line-height: 1.6; margin-bottom: 1.8rem; font-family: sans-serif;">
-                        Data summary rekapitulasi Apotek untuk bulan <b>Mei 2026</b> baru akan diterbitkan setelah penutupan pembukuan akhir bulan selesai.
-                    </p>
-
-                    <button onclick="document.getElementById('popup-mei-final').style.display = 'none'" 
-                        style="width: 100%; background: linear-gradient(135deg, #f43f5e, #e11d48); color: white; padding: 1rem; border-radius: 20px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 10px 20px -5px rgba(225, 29, 72, 0.4); font-family: sans-serif;">
-                        Saya Mengerti
-                    </button>
-                </div>
-            </div>
+    <div class="bg-gradient-to-r from-pink-500/5 via-pink-500/[0.02] to-transparent p-5 rounded-3xl border border-pink-100/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1">
+            <h4 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+                <i class="fa-solid fa-cloud-sun text-pink-500"></i>
+                Pengecekan Arsip Summary Apotek
+            </h4>
+            <p class="text-xs text-gray-500 leading-relaxed max-w-xl">
+                Silakan pilih bulan laporan pada menu dropdown berikut untuk memuat Arsip Summary Apotek Nurjaya.
+            </p>
         </div>
 
+        <div class="flex items-center gap-2.5 self-start md:self-center w-full md:w-auto">
+            
+            <div class="relative inline-block w-full md:w-56">
+                <select id="dropdown-bulan-apotek" onchange="aksiPilihBulanDropdown(this.value)"
+                    class="w-full px-4 py-3 bg-white text-gray-700 text-xs font-bold rounded-2xl border border-pink-200 shadow-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-500/40 pr-10 transition-all">
+                    <option value="" disabled selected>⏳ Menghubungkan ke Cloud...</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-pink-500">
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+            </div>
+
+            <button type="button" onclick="muatUlangDaftarArsipDrive()" title="Sinkronisasi Ulang"
+                class="p-3 bg-white hover:bg-pink-50 text-pink-600 border border-pink-200 active:scale-[0.95] rounded-2xl shadow-sm transition-all flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-rotate text-xs"></i>
+            </button>
+        </div>
     </div>
     
-    <!-- Area Bingkai PDF Viewer Container Khusus Apotek -->
-    <div id="viewer-container-summary-apotek" class="viewer-container border-2 border-dashed border-pink-100 rounded-3xl bg-pink-50/20" style="height: 600px;">
-        <div class="flex flex-col items-center justify-center h-full p-10 text-center">
-            <div class="w-20 h-20 bg-pink-50 text-pink-400 rounded-full flex items-center justify-center mb-6 border border-pink-100">
-                <i class="fa-solid fa-boxes-stacked text-3xl opacity-70"></i>
+    <div id="viewer-container-summary-apotek" class="viewer-container border-2 border-dashed border-pink-100 rounded-3xl bg-pink-50/10 flex flex-col items-center justify-center transition-all duration-300" style="height: 650px;">
+        <div id="placeholder-viewer-drive" class="flex flex-col items-center justify-center h-full p-10 text-center">
+            <div class="w-20 h-20 bg-pink-50 text-pink-400 rounded-full flex items-center justify-center mb-5 border border-pink-100 ring-4 ring-pink-50/50">
+                <i class="fa-solid fa-folder-open text-3xl opacity-80"></i>
             </div>
-            <p class="font-black text-lg md:text-xl text-gray-700 mb-1">Arsip Summary Bulanan Apotek</p>
-            <p class="text-xs text-gray-400 max-w-xs">Silakan pilih salah satu bulan di atas untuk membuka dokumen laporan PDF</p>
+            <p class="font-black text-lg text-gray-700 mb-1">Arsip Summary</p>
+            <p class="text-xs text-gray-400 max-w-xs leading-relaxed">Silakan pilih salah satu bulan pada menu dropdown di atas untuk menampilkan Laporan Penutupan Pembukuan.</p>
         </div>
     </div>
 
 </div>
 
+<div id="popup-drive-belum-tersedia" 
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; padding: 1rem;">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="tutupPopupBelumTersedia()"></div>
+    <div class="bg-white w-full max-w-[360px] rounded-[32px] p-8 text-center shadow-2xl relative border border-gray-100 animate-popup-bounce">
+        <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mb-5 mx-auto ring-4 ring-rose-100/50">
+            <i class="fa-solid fa-clock fa-2xl"></i>
+        </div>
+        <h3 class="text-lg font-black text-gray-800 mb-2">Data Belum Tersedia</h3>
+        <p class="text-xs text-gray-500 leading-relaxed mb-6">
+            Data summary bulan <b id="teks-target-bulan-kosong" class="text-pink-600">Mei 2026</b> belum diarsipkan ke NSA CLOUD. Laporan baru diterbitkan setelah proses tutup buku bulan terpilih selesai dilakukan.
+        </p>
+        <button onclick="tutupPopupBelumTersedia()" 
+            class="w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white py-3.5 px-4 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-500/20 active:scale-[0.98] transition-all">
+            Saya Mengerti
+        </button>
+    </div>
+</div>
+
 
 		 <!-- ================= TAB 4: ASISTEN TUTUP BUKU ================= -->
-        <div id="tab-closing" class="tab-content space-y-6">
-            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center py-16">
-                <div class="w-20 h-20 bg-brand-50 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-info-circle text-3xl"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Asisten Tutup Buku</h2>
-                <p class="text-gray-400 max-w-sm mx-auto mb-6">Berisi media bantu yang digunakan saat Penutupan Pembukuan Apotek Nurjaya pada akhir bulan. Laporan bisa dikerjakan sendiri oleh Asisten Apoteker tanpa bantuan PC/Komputer. Tersedia fitur detail keuangan akhir bulan dan fitur generate kesimpulan secara otomatis.</p>
-                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 text-brand-600 animate-pulse">
-                    <i class="fas fa-tools mr-2"></i> Fitur dalam proses pemrograman
+       <div id="tab-closing" class="tab-content space-y-5">
+    
+    <div class="group bg-white rounded-[2rem] p-5 sm:p-6 shadow-sm border border-pink-100/50 hover:border-pink-200 transition-all duration-500">
+    <div class="flex items-center space-x-4 sm:space-x-6">
+        
+        <div class="relative flex-shrink-0">
+            <div class="absolute inset-0 bg-pink-400 blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+            
+            <div class="relative w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-2xl flex items-center justify-center shadow-md shadow-pink-200/50 transform group-hover:scale-105 group-hover:rotate-3 transition-all duration-500">
+                <i class="fas fa-calculator text-xl sm:text-2xl"></i>
+            </div>
+        </div>
+        
+        <div class="flex-1">
+            <p class="text-[11px] sm:text-xs md:text-sm font-medium text-gray-500 leading-relaxed md:leading-loose tracking-wide">
+                Media bantu <span class="text-pink-600 font-bold">Tutup Buku Apotek Nurjaya</span> Didukung dengan opsi pemuatan <span class="italic">Kesimpulan Otomatis</span> ataupun <span class="italic">Manual</span>.
+            </p>
+        </div>
+        
+    </div>
+</div>
+
+    <div class="bg-white rounded-[32px] p-6 shadow-sm border border-pink-100/50 space-y-5">
+        
+        <div class="bg-pink-50/30 p-4 rounded-2xl border border-pink-100/40">
+            <label for="closing-bulan-target" class="block text-xs font-bold text-pink-600 uppercase tracking-wider mb-2">
+                Pilih Bulan Buku Evaluasi <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-pink-500 pointer-events-none">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </span>
+                <select id="closing-bulan-target" onchange="validasiTutupBukuBulan(this)" required
+                    class="w-full pl-11 pr-4 py-3 bg-white border border-pink-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 transition-all text-gray-700 appearance-none font-bold shadow-xs">
+                    <option value="" disabled selected>-- Pilih Periode Buku Akhir Bulan --</option>
+                    <option value="Januari2026">Januari 2026</option>
+					<option value="Februari2026">Februari 2026</option>
+					<option value="Maret2026">Maret 2026</option>
+					<option value="April2026">April 2026</option>
+					<option value="Mei2026">Mei 2026</option>
+                    <option value="Juni2026">Juni 2026</option>
+                    <option value="Juli2026">Juli 2026</option>
+                    <option value="Agustus2026">Agustus 2026</option>
+					<option value="September2026">September 2026</option>
+					<option value="Oktober2026">Oktober 2026</option>
+					<option value="November2026">November 2026</option>
+					<option value="Desember2026">Desember 2026</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-pink-500 pointer-events-none text-xs">
+                    <i class="fas fa-chevron-down"></i>
                 </span>
             </div>
         </div>
+		
+		<div id="loading-verifikasi-cloud" class="hidden bg-white/80 border border-pink-100 rounded-[32px] p-8 text-center flex-col items-center justify-center space-y-3 backdrop-blur-xs transition-all duration-300">
+    <div class="relative w-14 h-14 flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full border-4 border-pink-100 animate-ping opacity-75"></div>
+        <div class="relative w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-full flex items-center justify-center shadow-md">
+            <i class="fas fa-circle-notch animate-spin text-lg"></i>
+        </div>
+    </div>
+    <div class="space-y-1">
+        <h4 class="text-xs font-black text-gray-800 uppercase tracking-wider">MENGHUBUNGKAN KE<br> NSA CLOUD...</h4>
+        <p class="text-[10px] font-bold text-gray-400">Memverifikasi kelengkapan data Apotek bulan ini...</p>
+    </div>
+</div>
+	
+        <div id="wrapper-closing-content" class="space-y-5 opacity-40 blur-[1px] pointer-events-none transition-all duration-500">
+            
+            <div class="bg-gray-50/70 p-4 rounded-2xl border border-gray-100">
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-3 flex items-center gap-1.5">
+                    <i class="fa-solid fa-cloud-arrow-down text-xs"></i> Uraian Rekapitulasi Data Dari Cloud
+                </span>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Pendapatan Kotor</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-emerald-600">Rp</span>
+                            <input type="text" id="closing-kotor" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-emerald-700 shadow-2xs cursor-not-allowed">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Pembayaran Faktur</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-amber-600">Rp</span>
+                            <input type="text" id="closing-faktur" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-amber-700 shadow-2xs cursor-not-allowed">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Pengeluaran</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-red-600">Rp</span>
+                            <input type="text" id="closing-pengeluaran" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-red-700 shadow-2xs cursor-not-allowed">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Pendapatan Bersih</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-blue-600">Rp</span>
+                            <input type="text" id="closing-bersih" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-blue-700 shadow-2xs cursor-not-allowed">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-pink-50/10 p-4 rounded-2xl border border-pink-100/30">
+                <label for="input-kotor-sebelumnya" class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">
+                    Total Pendapatan Kotor Bulan Sebelumnya <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-black text-sm text-gray-400 pointer-events-none">
+                        Rp
+                    </span>
+                    <input type="text" id="input-kotor-sebelumnya" placeholder="Masukkan total kotor bulan lalu" required inputmode="numeric"
+                        oninput="formatRupiahElemen(this);"
+                        class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-bold focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-700">
+                </div>
+            </div>
+			
+			
+
+            <div class="space-y-3">
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider text-center">
+                    Metode Pembuatan Kesimpulan Laporan
+                </label>
+                <div class="grid grid-cols-2 gap-3 p-1.5 bg-gray-100 rounded-2xl">
+                    <button type="button" id="btn-opsi-otomatis" onclick="setOpsiKesimpulan('otomatis')"
+                        class="py-2.5 text-xs font-black rounded-xl transition-all shadow-xs bg-white text-pink-600 border border-pink-100">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Generate Otomatis
+                    </button>
+                    <button type="button" id="btn-opsi-manual" onclick="setOpsiKesimpulan('manual')"
+                        class="py-2.5 text-xs font-bold rounded-xl transition-all text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-keyboard mr-1.5"></i> Kesimpulan Manual
+                    </button>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex justify-between items-center px-1">
+                    <label for="textarea-kesimpulan" class="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        Narasi Kesimpulan
+                    </label>
+                    <span id="badge-metode" class="text-[9px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md border border-emerald-200">
+                        Sistem Otomatis
+                    </span>
+                </div>
+                
+				
+     
+    <div id="wrapper-btn-generate" class="block">
+        <button type="button" id="btn-trigger-generate" onclick="triggerGenerateNarasi()"
+            class="w-full py-3 bg-gradient-to-r from-pink-500 to-pink-600 hover:brightness-105 active:scale-[0.99] text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Kesimpulan Otomatis
+        </button>
+    </div>
+				
+                <div class="relative">
+                    <textarea id="textarea-kesimpulan" rows="10" readonly
+                        class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl text-xs font-medium text-gray-700 leading-relaxed focus:outline-none focus:bg-white focus:border-pink-500 transition-all shadow-inner resize-none"
+                        placeholder="Uraian narasi kesimpulan akan muncul di sini setelah data diproses..."></textarea>
+                    
+                    <div id="loading-narasi" class="hidden absolute inset-0 bg-white/80 rounded-2xl flex items-center justify-center space-x-2 backdrop-blur-xs">
+                        <i class="fas fa-spinner animate-spin text-pink-500 text-lg"></i>
+                        <span class="text-xs font-bold text-gray-500">Menyusun ringkasan pembukuan...</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+		</div>
+		
+		<!-- ================= TOMBOL BUAT LAPORAN ================= -->
+		<div class="mt-6 pt-4 border-t border-dashed border-pink-100 flex justify-end">
+        <button type="button" onclick="bukaModalCetakA4()"
+            class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-pink-600 to-pink-700 hover:brightness-105 active:scale-[0.98] text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md shadow-pink-100 transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-file-invoice text-sm"></i> Buat Laporan
+        </button>
+    </div>
+
+</div> <div id="modal-preview-laporan" class="fixed inset-0 z-[999999] hidden grid place-items-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-all duration-300 overflow-y-auto">
+    
+	
+	<!-- ================= BOX PREVIEW LAPORAN PDF ================= -->
+    <div id="box-preview-laporan" class="bg-slate-100 rounded-[2rem] sm:rounded-[2.5rem] w-full max-w-5xl p-3 sm:p-6 shadow-2xl border border-white/40 transform scale-95 opacity-0 transition-all duration-300 space-y-4 my-4 sm:my-8 mx-auto">
+    
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-3 border-b border-gray-200 pb-4">
+        <div class="text-center sm:text-left">
+            <h3 class="text-xs sm:text-sm font-black text-gray-900 uppercase tracking-wider">Laporan Berhasil Dibuat</h3>
+            <p class="text-[10px] sm:text-[11px] font-semibold text-gray-500">Periksa kembali data laporan sebelum diupload ke NSA CLOUD!</p>
+        </div>
+        
+        <div class="flex flex-wrap items-center justify-center gap-2 w-full sm:w-auto">
+			<button type="button" onclick="prosesEksporKeDrive()"
+                class="flex-1 sm:flex-none px-3 py-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white text-[11px] font-bold uppercase rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.001 2.002c-.347 0-.692.086-.999.256l-7.001 4c-.615.352-.998 1.011-.998 1.716v8.056c0 .705.383 1.365.998 1.716l7.001 4c.613.35.138.256.999.256s.386-.094.999-.256l7.001-4c.615-.352.998-1.011.998-1.716V8.274c0-.705-.383-1.365-.998-1.716l-7.001-4c-.307-.17-.652-.256-.999-.256zm0 2.298l5.5 3.143-2.5 1.428-5.5-3.142 2.5-1.429zm-6.5 4.858l4.5 2.571v5.143l-4.5-2.572V9.158zm8.5 2.571l4.5-2.571v5.142l-4.5 2.572v-5.143z"/></svg>
+                Kirim ke NSA CLOUD
+            </button>
+			
+            <button type="button" onclick="unduhLaporanPDF()"
+                class="flex-1 sm:flex-none px-3 py-2 bg-slate-800 hover:bg-slate-900 active:scale-[0.98] text-white text-[11px] font-bold uppercase rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Unduh PDF
+            </button>
+        
+            
+            
+            <button type="button" onclick="tutupModalCetakA4()"
+                class="w-full sm:w-auto px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-[11px] font-bold rounded-xl transition-all text-center">
+                Keluar
+            </button>
+        </div>
+    </div>
+
+    <div class="w-full bg-gray-200/50 rounded-2xl sm:rounded-3xl border border-gray-300/40 inner-shadow p-2 sm:p-4 overflow-hidden flex justify-center items-start">
+        
+        <div class="wrapper-skala-a4 w-full flex justify-center">
+            
+            <div id="lembar-cetak-a4" class="w-[794px] h-auto bg-white p-[30px] sm:p-[40px] text-gray-800 font-sans relative flex flex-col justify-between shadow-sm shrink-0">
+                
+                <div>
+                    <div class="text-center border-b-2 border-gray-800 pb-4 mb-6">
+                        <h1 class="text-lg sm:text-xl font-black tracking-wide text-gray-900 uppercase">Penutupan Pembukuan</h1>
+                        <h2 class="text-base sm:text-lg font-extrabold tracking-wider text-pink-600 uppercase mt-0.5">Apotek Nurjaya</h2>
+                        <p class="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">
+                            Periode Laporan: <span id="pdf-nama-bulan" class="text-gray-800">--</span>
+                        </p>
+                    </div>
+
+                    <div class="space-y-2 overflow-x-auto">
+                        <table class="w-full text-left border-collapse border border-gray-300 text-[11px]">
+                            <thead>
+                                <tr class="bg-slate-800 text-white font-bold uppercase tracking-wider text-center">
+                                    <th class="border border-gray-300 px-2 py-2 w-[10%]">Tgl</th>
+                                    <th class="border border-gray-300 px-2 py-2 bg-emerald-700 w-[22.5%]">Pendapatan Kotor</th>
+                                    <th class="border border-gray-300 px-2 py-2 bg-amber-700 w-[22.5%]">Bayar Faktur</th>
+                                    <th class="border border-gray-300 px-2 py-2 bg-red-700 w-[22.5%]">Pengeluaran</th>
+                                    <th class="border border-gray-300 px-2 py-2 bg-blue-700 w-[22.5%]">Pendapatan Bersih</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-pdf-tabel-cloud"></tbody>
+                            <tfoot>
+                                <tr class="font-black uppercase bg-gray-100 text-gray-900 text-right">
+                                    <td class="border border-gray-300 px-2 py-2 text-center">Total</td>
+                                    <td id="total-pdf-kotor" class="border border-gray-300 px-2 py-2 text-gray-900 bg-emerald-50/40">Rp 0</td>
+                                    <td id="total-pdf-faktur" class="border border-gray-300 px-2 py-2 text-gray-900 bg-amber-50/40">Rp 0</td>
+                                    <td id="total-pdf-pengeluaran" class="border border-gray-300 px-2 py-2 text-gray-900 bg-red-50/40">Rp 0</td>
+                                    <td id="total-pdf-bersih" class="border border-gray-300 px-2 py-2 text-gray-900 bg-blue-50/40">Rp 0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="mt-6 sm:mt-8 space-y-2">
+                        <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider block">
+                            * Analisis & Kesimpulan
+                        </span>
+                        <div id="pdf-narasi-kesimpulan" class="p-4 sm:p-5 bg-gray-50 border border-gray-200 rounded-xl text-[11px] text-gray-700 leading-relaxed text-justify whitespace-pre-wrap font-medium"></div>
+                    </div>
+                </div>
+
+                <div class="mt-10 sm:mt-12 pt-4 border-t border-gray-200 flex justify-between items-center text-[8px] sm:text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                    <span>Generated by NURJAYA SMART ARCHIVE</span>
+                    <span id="pdf-timestamp-cetak">--</span>
+                </div>
+
+            </div> </div>
+    </div>
+
+</div>
+
+<style>
+    /* Di desktop: Tampilkan ukuran asli normal */
+    .wrapper-skala-a4 {
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    /* Di layar HP (Maksimal lebar 768px seperti Tablet/HP): Kita paksa zoom out agar FIT murni */
+    @media (max-width: 768px) {
+        .wrapper-skala-a4 {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Trik kunci: menggunakan css zoom agar dokumen mengecil presisi mengikuti lebar layar */
+            zoom: 0.45; 
+            -moz-transform: scale(0.45);
+            -moz-transform-origin: top center;
+        }
+    }
+    @media (max-width: 480px) {
+        .wrapper-skala-a4 {
+            zoom: 0.40; /* Khusus HP berlayar kecil biar benar-benar pas masuk layar */
+            -moz-transform: scale(0.40);
+        }
+    }
+</style>
+	
+	
+</div>
+</div>
+
+<div id="modal-closing-invalid" class="fixed inset-0 z-[999999] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+    <div id="box-closing-invalid" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-amber-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
+        
+        <div class="mx-auto w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-2xl animate-bounce">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        
+        <div class="space-y-1.5">
+            <h3 class="text-lg font-black text-gray-900 uppercase tracking-wide leading-tight">Tutup Buku Gagal</h3>
+            <p class="text-xs font-bold text-amber-700 bg-amber-50 py-1 px-2 rounded-lg inline-block">Data Bulanan Belum Tuntas!</p>
+            <p class="text-xs font-semibold text-gray-500 leading-relaxed px-1 mt-1">
+                Proses tutup buku Apotek Nurjaya belum bisa dilakukan karena rekaman data harian di NSA CLOUD belum terisi penuh hingga tanggal akhir bulan ini. Silakan tuntaskan input harian terlebih dahulu.
+            </p>
+        </div>
+        
+        <button type="button" onclick="tutupModalClosingInvalid()"
+            class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all">
+            Mengerti
+        </button>
+    </div>
+</div>
 
         <!-- ================= TAB 5: TENTANG APOTEK ================= -->
-        <div id="tab-tentang" class="tab-content space-y-6">
-            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center py-16">
-                <div class="w-20 h-20 bg-brand-50 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-info-circle text-3xl"></i>
+        <div id="tab-tentang" class="tab-content hidden fade-in space-y-8">
+    
+    <div class="container mx-auto px-1 md:px-4">
+        <div class="bg-white rounded-[40px] shadow-sm border border-pink-50 overflow-hidden">
+            <div class="p-8 md:p-14">
+                <div class="flex flex-col lg:flex-row gap-10 items-center">
+                    <div class="relative shrink-0">
+                        <img src="https://lh3.googleusercontent.com/d/1ba0QrHW9IQ84MzzbFvZZAUObT4WMHOXl" 
+                             class="w-44 h-44 md:w-60 md:h-60 object-cover rounded-full shadow-2xl border-[10px] border-pink-50">
+                        <div class="absolute -bottom-2 -right-2 bg-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+                            <i class="fa-solid fa-briefcase-medical text-xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center lg:text-left">
+                        <h3 class="text-3xl md:text-5xl font-black text-gray-800 leading-tight tracking-tighter">
+                            apt. Siti Nurjanah, S.Farm.
+                        </h3>
+                        <div class="mt-4 flex flex-wrap justify-center lg:justify-start gap-2">
+                            <span class="bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest border border-pink-200">
+                                Apoteker Penanggung Jawab
+                            </span>
+                            <span class="bg-slate-100 text-slate-700 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest border border-slate-200">
+                                Pemilik Apotek Nurjaya
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10">
+                            <a href="https://wa.me/6282126162025" target="_blank" onclick="playClickSound()" 
+                               class="px-6 py-4 bg-pink-600 hover:bg-pink-700 text-white rounded-full flex items-center justify-center gap-3 transition-all hover:scale-105 shadow-md active:scale-95">
+                                <i class="fa-brands fa-whatsapp text-2xl"></i> 
+                                <span class="font-bold text-sm">Konsultasi Apoteker</span>
+                            </a>
+                            <a href="https://wa.me/6281318688449" target="_blank" onclick="playClickSound()" 
+                               class="px-6 py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-full flex items-center justify-center gap-3 transition-all hover:scale-105 shadow-md active:scale-95">
+                                <i class="fa-brands fa-whatsapp text-2xl"></i> 
+                                <span class="font-bold text-sm">Hubungi Admin</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Tentang Apotek</h2>
-                <p class="text-gray-400 max-w-sm mx-auto mb-6">Informasi legalitas, profil karyawan, struktur operasional, dan detail Apotek Nurjaya.</p>
-                <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 text-brand-600 animate-pulse">
-                    <i class="fas fa-tools mr-2"></i> Fitur Segera Hadir
-                </span>
             </div>
         </div>
+    
+
+    <div class="container mx-auto px-1 md:px-4 my-6 md:my-10">
+    <div class="flex flex-col items-center mb-16 w-full text-center">
+        
+        <div class="bg-white p-6 rounded-[35px] shadow-sm border border-pink-50 mb-6 flex justify-center items-center">
+            <img src="https://drive.google.com/thumbnail?id=1__gsrUWvCPLv15i6Oa7apTz9IBsJjKit&sz=w500" 
+                 class="w-48 md:w-64 h-auto object-contain" 
+                 alt="Logo Apotek Nurjaya">
+        </div>
+        
+        <div class="bg-pink-600 px-8 py-2.5 rounded-full shadow-lg border border-pink-500 mb-6 inline-block">
+            <span class="text-white font-black text-xs md:text-sm uppercase tracking-[0.2em] block pl-[0.2em]">
+                Logo Apotek Nurjaya
+            </span>
+        </div>
+        
+        <div class="h-1.5 w-24 bg-pink-200 rounded-full"></div>
+        
+    </div>
+</div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+            <div class="bg-white p-8 rounded-[35px] border border-gray-100 shadow-sm">
+                <h4 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-3 uppercase tracking-tight">
+                    <span class="w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center border border-pink-100">
+                        <i class="fa-solid fa-clinic-medical"></i>
+                    </span>
+                    Tentang Apotek
+                </h4>
+                <div class="text-gray-600 text-sm md:text-base leading-relaxed space-y-4 text-justify font-medium">
+                    <p>
+                        <span class="text-pink-600 font-black">Apotek Nurjaya</span> adalah institusi pelayanan kefarmasian yang berfokus pada penyediaan obat-obatan berkualitas dan layanan kesehatan primer bagi masyarakat Tasikmalaya. 
+                    </p>
+                    <p>
+                        Apotek ini didirikan dan dikelola secara profesional oleh <span class="font-bold text-gray-800">apt. Siti Nurjanah, S.Farm.</span> Dengan integritas tinggi, kami menjamin seluruh ketersediaan produk farmasi memiliki izin resmi dan tersimpan sesuai standar prosedur kesehatan.
+                    </p>
+                    <p>
+                        Melalui sistem digital <span class="bg-pink-50 text-pink-600 px-2 py-0.5 rounded font-bold italic">NSA (Nurjaya Smart Archive)</span>, kami memastikan pengelolaan stok dan data operasional berjalan transparan untuk pelayanan yang lebih responsif.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-[35px] border border-gray-100 shadow-sm">
+                <h4 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-3 uppercase tracking-tight">
+                    <span class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center border border-emerald-100">
+                        <i class="fa-solid fa-hand-holding-medical"></i>
+                    </span>
+                    Layanan Unggulan
+                </h4>
+                <div class="grid grid-cols-1 gap-3">
+                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                        <i class="fa-solid fa-pills text-pink-500 w-5"></i>
+                        <span class="text-sm font-bold text-gray-700">Penebusan Resep Dokter & Obat Lengkap</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                        <i class="fa-solid fa-stethoscope text-pink-500 w-5"></i>
+                        <span class="text-sm font-bold text-gray-700">Cek Tekanan Darah (Tensi)</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                        <i class="fa-solid fa-droplet text-pink-500 w-5"></i>
+                        <span class="text-sm font-bold text-gray-700">Cek Gula Darah, Kolesterol & Asam Urat</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                        <i class="fa-solid fa-comments text-pink-500 w-5"></i>
+                        <span class="text-sm font-bold text-gray-700">Konsultasi Kesehatan & Edukasi Obat</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                        <i class="fa-solid fa-flask text-pink-500 w-5"></i>
+                        <span class="text-sm font-bold text-gray-700">Penyediaan Alat Kesehatan & Vitamin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+<!-- ================= MODAL ASISTEN APOTEKER ================= -->
+  <div class="container mx-auto px-1 md:px-4 my-6 md:my-10">
+    <div class="bg-white p-6 md:p-12 rounded-[40px] border border-pink-100 shadow-sm">
+        <h4 class="text-xl font-black text-gray-800 mb-8 flex items-center justify-center md:justify-start gap-3 uppercase tracking-tight">
+            <span class="w-10 h-10 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center border border-pink-200">
+                <i class="fa-solid fa-user-nurse"></i>
+            </span>
+            Tim Asisten Apoteker
+        </h4>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="bg-gradient-to-br from-white to-pink-50 p-6 rounded-[35px] border border-pink-200 flex flex-row items-center gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden min-h-[140px]">
+                <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500', 'Eka Ainun Nisa')">
+                    <img src="https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500" 
+                         class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                    <div class="absolute bottom-0 right-0 bg-pink-600 w-6 h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[9px]">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0 flex flex-col items-center text-center justify-center pr-10">
+                    <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Eka Ainun Nisa</h5>
+                    <span class="inline-block text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 py-1 rounded-full mt-2 shadow-xs">
+                        Asisten Apoteker
+                    </span>
+                </div>
+                <a href="https://wa.me/6285523823280" target="_blank" onclick="playClickSound()" 
+                   class="absolute bottom-4 right-4 w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 group">
+                    <i class="fa-brands fa-whatsapp text-xl group-hover:rotate-12 transition-transform"></i>
+                    <span class="sr-only">WhatsApp</span>
+                </a>
+            </div>
+
+            <div class="bg-gradient-to-br from-white to-pink-50 p-6 rounded-[35px] border border-pink-200 flex flex-row items-center gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden min-h-[140px]">
+                <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500', 'Fadilla Nailul Wafa')">
+                    <img src="https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500" 
+                         class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                    <div class="absolute bottom-0 right-0 bg-pink-600 w-6 h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[9px]">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0 flex flex-col items-center text-center justify-center pr-10">
+                    <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Fadilla Nailul Wafa</h5>
+                    <span class="inline-block text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 py-1 rounded-full mt-2 shadow-xs">
+                        Asisten Apoteker
+                    </span>
+                </div>
+                <a href="https://wa.me/6282120737797" target="_blank" onclick="playClickSound()" 
+                   class="absolute bottom-4 right-4 w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 group">
+                    <i class="fa-brands fa-whatsapp text-xl group-hover:rotate-12 transition-transform"></i>
+                    <span class="sr-only">WhatsApp</span>
+                </a>
+            </div>
+
+            <div class="bg-gradient-to-br from-white to-pink-50 p-6 rounded-[35px] border border-pink-200 flex flex-row items-center gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden min-h-[140px]">
+                <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500', 'Dea Nove Asyari')">
+                    <img src="https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500" 
+                         class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                    <div class="absolute bottom-0 right-0 bg-pink-600 w-6 h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[9px]">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0 flex flex-col items-center text-center justify-center pr-10">
+                    <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Dea Nove Asyari</h5>
+                    <span class="inline-block text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 py-1 rounded-full mt-2 shadow-xs">
+                        Asisten Apoteker
+                    </span>
+                </div>
+                <a href="https://wa.me/6285220786175" target="_blank" onclick="playClickSound()" 
+                   class="absolute bottom-4 right-4 w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 group">
+                    <i class="fa-brands fa-whatsapp text-xl group-hover:rotate-12 transition-transform"></i>
+                    <span class="sr-only">WhatsApp</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+	
+</div>
+
+
+
+
+
+    <div class="container mx-auto px-1 md:px-4 pb-12">
+    <div class="bg-slate-900 rounded-[40px] p-8 md:p-12 text-white overflow-hidden relative shadow-2xl">
+        
+        <div class="absolute top-0 right-0 p-10 opacity-10">
+            <i class="fa-solid fa-map-marked-alt text-[150px]"></i>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center text-center">
+            <span class="bg-pink-600 px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-pink-500">
+                Lokasi Operasional
+            </span>
+            
+            <p class="text-lg md:text-xl font-bold max-w-2xl leading-relaxed mb-10">
+                Jl. Bantar No. 145 RT 02 RW 007 Kel. Argasari Kec. Cihideung Kota Tasikmalaya, Jawa Barat.
+            </p>
+
+            <div class="w-full rounded-[30px] overflow-hidden border-4 border-white/10 shadow-lg mb-10 aspect-video md:aspect-[21/9]">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.2572377438414!2d108.2048648!3d-7.324977400000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f57ea88e53b09%3A0x6a2046b96dc01422!2sApotek%20Nurjaya!5e0!3m2!1sid!2sid!4v1779521742886!5m2!1sid!2sid" 
+                    class="w-full h-full border-0" 
+                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+
+            <a href="https://maps.app.goo.gl/iTu1NQ7ceQ3Tx1Dy6" 
+               target="_blank"
+               class="bg-white text-slate-900 px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs hover:bg-pink-600 hover:text-white transition-all shadow-xl active:scale-95">
+                Petunjuk Arah Google Maps
+            </a>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
 
     </main>
 
@@ -1040,30 +1653,37 @@ const urlWebAppApotek = "https://script.google.com/macros/s/AKfycbxbV9cqDZg5J5pR
  */
 function cekKetersediaanBulan(elemen) {
     if (elemen.value !== "Mei2026" && elemen.value !== "") {
+        // Perbaikan: Gunakan 'grid' sesuai dengan class HTML terbarunya
         modalAlert.classList.remove('hidden');
-        modalAlert.classList.add('flex');
+        modalAlert.classList.add('grid');
         
         setTimeout(() => {
             alertBox.classList.remove('scale-95', 'opacity-0');
             alertBox.classList.add('scale-100', 'opacity-100');
         }, 10);
 
-        elemen.value = "Mei2026";
+        // Paksa kembalikan nilai dropdown ke kosong agar alur validasi kunci form terjaga
+        elemen.value = "";
+    } else {
+        // Tarik data baris terbaru jika yang dipilih adalah bulan yang valid (Mei 2026)
+        perbaruiInfoTanggalTerakhir(elemen.value);
     }
-    
-    // Tarik data baris terbaru untuk bulan yang dipilih
-    perbaruiInfoTanggalTerakhir(elemen.value);
 }
 
 /**
- * Fungsi Menutup Modal Alert Kustom dengan Animasi Redup Kembali
+ * Fungsi Menutup Modal Alert Kustom dengan Animasi Redup & Mengunci Form Kembali
  */
 function tutupAlertKustom() {
+    // 1. Jalankan animasi mengecil dan memudar pada box putih
     alertBox.classList.remove('scale-100', 'opacity-100');
     alertBox.classList.add('scale-95', 'opacity-0');
     
+    // 2. Jalankan fungsi penguncian form kembali ke mode blur/greyed out
+    lockFormKembali();
+    
+    // 3. Sembunyikan kontainer hitam setelah animasi memudar selesai (300ms)
     setTimeout(() => {
-        modalAlert.classList.remove('flex');
+        modalAlert.classList.remove('grid'); // Diperbaiki dari 'flex' menjadi 'grid'
         modalAlert.classList.add('hidden');
     }, 300);
 }
@@ -1188,52 +1808,168 @@ formApotek.addEventListener('submit', function(event) {
         btnSimpan.innerHTML = textAwalTombol;
     });
 });
+function handlePilihanBulan(selectElement) {
+    const nilaiBulan = selectElement.value;
+    const wrapper = document.getElementById('wrapper-input-data');
+    const alertTeks = document.getElementById('alert-pilih-bulan');
+    const seluruhInput = wrapper.querySelectorAll('input, button');
+
+    if (nilaiBulan) {
+        // 1. Jalankan pengecekan ketersediaan database cloud
+        cekKetersediaanBulan(selectElement); 
+        
+        // 2. Jika bulan yang dipilih valid (Mei 2026), buka gembok form harian
+        if (selectElement.value === "Mei2026") {
+            wrapper.classList.remove('opacity-40', 'blur-[1px]', 'pointer-events-none');
+            alertTeks.classList.add('hidden');
+            
+            seluruhInput.forEach(el => {
+                if(el.id !== 'input-bersih') { 
+                    el.removeAttribute('disabled');
+                }
+            });
+        }
+    }
+}
+
+/**
+ * Fungsi pembantu jika kasir menekan tombol "Reset" atau "Kembali" dari modal eror
+ */
+function lockFormKembali() {
+    const wrapper = document.getElementById('wrapper-input-data');
+    const alertTeks = document.getElementById('alert-pilih-bulan');
+    const seluruhInput = wrapper.querySelectorAll('input, button');
+    
+    document.getElementById('input-bulan-target').value = ""; // Reset dropdown ke default awal
+    wrapper.classList.add('opacity-40', 'blur-[1px]', 'pointer-events-none');
+    alertTeks.classList.remove('hidden');
+    
+    seluruhInput.forEach(el => {
+        el.setAttribute('disabled', 'true');
+    });
+
+    // Hilangkan banner info sinkronisasi karena status form direset kosong
+    if (bannerInfoTanggal) {
+        bannerInfoTanggal.classList.remove('flex');
+        bannerInfoTanggal.classList.add('hidden');
+    }
+}
+
+
 </script>
 	
 	
 	<script>
-	// PASTIKAN FUNGSI INI BERDIRI MANDIRI (DI LUAR FUNCTION LAIN)
-function loadDriveApotek(driveId, element) {
-    try {
-        // 1. Ambil elemen container penampil PDF
-        const container = document.getElementById('viewer-container-summary-apotek');
-        if (!container) {
-            console.error("Error: Elemen 'viewer-container-summary-apotek' tidak ditemukan di HTML!");
-            return;
-        }
+	// Global database penyimpan link dari Google Drive
+let listArsipDriveApotek = {}; 
 
-        // 2. Reset visual tombol-tombol bulan khusus di dalam tab-summary
-        const activeButtons = document.querySelectorAll('#tab-summary .month-btn');
-        activeButtons.forEach(btn => {
-            // Kembalikan ke warna teks abu-abu semula dan hapus latar pink aktif
-            btn.classList.remove('bg-pink-100', 'text-pink-700', 'border-pink-300');
-            btn.classList.add('text-gray-700');
+// Daftar master nama bulan 2026
+const masterBulan2026 = [
+    "Januari 2026", "Februari 2026", "Maret 2026", "April 2026", 
+    "Mei 2026", "Juni 2026", "Juli 2026", "Agustus 2026", 
+    "September 2026", "Oktober 2026", "November 2026", "Desember 2026"
+];
+
+/**
+ * AMBIL DATA UTAMA: Ambil daftar file di Drive via doGet
+ */
+function muatUlangDaftarArsipDrive() {
+    const dropdown = document.getElementById('dropdown-bulan-apotek');
+    dropdown.innerHTML = '<option value="" disabled selected>⏳ Sinkronisasi Cloud...</option>';
+
+    const urlAppsScriptMas = "https://script.google.com/macros/s/AKfycbyK-vMV9b3R5s85FzsuCTdEQDAgsCsNJGXUq3kVpEdzKttDXc6UqPj_Hm45mvAbuxZR6Q/exec";
+
+    fetch(urlAppsScriptMas)
+        .then(response => response.json())
+        .then(hasil => {
+            listArsipDriveApotek = {}; 
+            
+            if (hasil.success && hasil.data) {
+                hasil.data.forEach(file => {
+                    const namaBersih = file.nama.replace(/\.[^/.]+$/, ""); // Potong ekstensi .pdf
+                    listArsipDriveApotek[namaBersih] = file.url;
+                });
+            }
+            // Susun ulang opsi pilihan di dalam elemen dropdown
+            renderOpsiDropdownBulan();
+        })
+        .catch(err => {
+            console.error("Gagal sinkronisasi Drive:", err);
+            renderOpsiDropdownBulan(); // Tetap render list walaupun gagal/offline
         });
+}
 
-        // 3. Beri style aktif ke tombol yang baru saja diklik
-        if (element) {
-            element.classList.remove('text-gray-700');
-            element.classList.add('bg-pink-100', 'text-pink-700', 'border-pink-300');
-        }
+/**
+ * RE-RENDER DROPDOWN OPTIONS: Menyusun list pilihan bulan
+ */
+function renderOpsiDropdownBulan() {
+    const dropdown = document.getElementById('dropdown-bulan-apotek');
+    
+    // Kembalikan ke format default pilihan kosong awal
+    dropdown.innerHTML = '<option value="" disabled selected>📂 Pilih Bulan Laporan</option>';
 
-        // 4. Setel tinggi kontainer secara tegas dan paksa muat ulang Iframe Drive
-        container.style.height = "600px";
-        container.innerHTML = `
-            <iframe src="https://drive.google.com/file/d/${driveId}/preview" 
-                    width="100%" 
-                    height="100%" 
-                    style="border: none; border-radius: 20px; width: 100%; height: 100%; min-height: 550px;" 
-                    allow="autoplay"
-                    loading="lazy">
-            </iframe>
-        `;
+    masterBulan2026.forEach(bulan => {
+        const linkFileDrive = listArsipDriveApotek[bulan];
+        const isTersedia = !!linkFileDrive;
+
+        const opsi = document.createElement('option');
+        opsi.value = bulan;
         
-        console.log(`Berhasil memicu muat file Drive ID: ${driveId}`);
+        // Beri tanda visual teks (Contoh: "Januari 2026 ✔" jika ada file di cloud)
+        opsi.textContent = isTersedia ? `📂 ${bulan}  ` : `❌ ${bulan} (Belum Ada)`;
+        
+        dropdown.appendChild(opsi);
+    });
+}
 
-    } catch (error) {
-        console.error("Terjadi kegagalan fungsi loadDriveApotek:", error);
+/**
+ * EVENT CONTROLLER DROPDOWN: Mengecek pilihan user
+ */
+function aksiPilihBulanDropdown(bulanTerpilih) {
+    if (!bulanTerpilih) return;
+
+    const linkFileDrive = listArsipDriveApotek[bulanTerpilih];
+
+    if (linkFileDrive) {
+        // Jika file ada, langsung tembak ke Iframe Preview
+        bukaIframePreviewDrive(linkFileDrive);
+    } else {
+        // Jika tidak ada, pancing popup warning pink apotek keluar
+        bukaPopupBelumTersedia(bulanTerpilih);
+        
+        // Kembalikan posisi tulisan dropdown ke placeholder awal
+        document.getElementById('dropdown-bulan-apotek').value = "";
     }
 }
+
+/**
+ * PREVIEW ENGINE: Memasang file PDF ke dalam container iframe
+ */
+function bukaIframePreviewDrive(urlPreview) {
+    const container = document.getElementById('viewer-container-summary-apotek');
+    
+    container.className = "viewer-container border border-gray-200 rounded-3xl bg-white overflow-hidden transition-all duration-300";
+    container.innerHTML = `
+        <iframe src="${urlPreview}" class="w-full h-full border-none" allow="autoplay"></iframe>
+    `;
+}
+
+/**
+ * CONTROLLER MODAL: Mengatur popup info data kosong
+ */
+function bukaPopupBelumTersedia(namaBulan) {
+    document.getElementById('teks-target-bulan-kosong').innerText = namaBulan;
+    document.getElementById('popup-drive-belum-tersedia').style.display = 'flex';
+}
+
+function tutupPopupBelumTersedia() {
+    document.getElementById('popup-drive-belum-tersedia').style.display = 'none';
+}
+
+// Inisialisasi otomatis saat pertama kali web dibuka
+document.addEventListener("DOMContentLoaded", function() {
+    muatUlangDaftarArsipDrive();
+});
 	</script>
 	
 
@@ -1319,12 +2055,14 @@ function isiTabelKotorApotek(data) {
 /**
  * Fungsi Pembuatan Grafik Batang Line/Bar Chart.js di Sisi Kanan
  * FIX: Mengubah tema warna ke Pink Apotek & Mengunci format ribuan lokal Indonesia
+ * REVISI: Mengubah label tanggal menjadi angka murni (1, 2, 3) agar tidak miring di mobile
  */
 function buatGrafikKotorApotek(data) {
     const ctx = document.getElementById("chartApotekKotorBulanIni");
     if (!ctx) return;
 
-    const labelsTanggal = data.map(item => `Tgl ${item.tanggal}`);
+    // REVISI: Langsung mengambil item.tanggal tanpa prefix teks "Tgl "
+    const labelsTanggal = data.map(item => item.tanggal);
     const dataPendapatan = data.map(item => item.pendapatan);
 
     if (chartApotekInstance) {
@@ -1339,11 +2077,11 @@ function buatGrafikKotorApotek(data) {
             datasets: [{
                 label: 'Pendapatan Kotor (Rp)',
                 data: dataPendapatan,
-                borderColor: '#ec4899', // REVISI: Pink-500 Tailwind murni
-                backgroundColor: 'rgba(236, 72, 153, 0.05)', // REVISI: Efek gradasi transparan pink bawah garis
+                borderColor: '#ec4899', // Pink-500 Tailwind murni
+                backgroundColor: 'rgba(236, 72, 153, 0.05)', // Efek gradasi transparan pink bawah garis
                 borderWidth: 3,
                 pointBackgroundColor: '#ffffff',
-                pointBorderColor: '#db2777', // REVISI: Pink-600 Tailwind untuk border titik lintasan
+                pointBorderColor: '#db2777', // Pink-600 Tailwind untuk border titik lintasan
                 pointBorderWidth: 2,
                 pointRadius: 4,
                 pointHoverRadius: 6,
@@ -1363,6 +2101,10 @@ function buatGrafikKotorApotek(data) {
                     padding: 10,
                     borderRadius: 12,
                     callbacks: {
+                        // REVISI OPTIONAL: Menambahkan keterangan "Tanggal" di dalam pop-up tooltip saat di-hover
+                        title: function(context) {
+                            return `Tanggal: ${context[0].label}`;
+                        },
                         label: function(context) {
                             return ` Omset: Rp ${context.raw.toLocaleString('id-ID')}`;
                         }
@@ -1374,7 +2116,9 @@ function buatGrafikKotorApotek(data) {
                     grid: { display: false },
                     ticks: {
                         color: '#94a3b8',
-                        font: { size: 10, weight: 'bold' }
+                        font: { size: 10, weight: 'bold' },
+                        maxRotation: 0, // KUNCI: Memaksa browser melarang rotasi miring pada teks x-axis
+                        minRotation: 0  // KUNCI: Memaksa teks x-axis selalu tegak lurus horizontal
                     }
                 },
                 y: {
@@ -1382,7 +2126,6 @@ function buatGrafikKotorApotek(data) {
                     ticks: {
                         color: '#94a3b8',
                         font: { size: 10 },
-                        // REVISI: Menghapus pembagian K/M. Menampilkan format angka rupiah asli Indonesia (Contoh: 1.250.000)
                         callback: function(value) {
                             return value.toLocaleString('id-ID');
                         }
@@ -1715,102 +2458,1178 @@ document.addEventListener('click', function(e) {
 
 
 <script>
+/**
+ * FUNGSI HELPER INTERNAL: Mengubah angka murni menjadi format Rupiah (Rp xx.xxx)
+ * Mencegah error "formatRupiahTeks is not defined" dari script luar
+ */
+function formatRupiahLokal(angka) {
+    if (angka === undefined || null || isNaN(angka)) return "0";
+    // Menghilangkan string "Rp " agar murni angka bertitik saja (Contoh: 1.500.000)
+    return parseFloat(angka).toLocaleString("id-ID");
+}
+
+/**
+ * 1. FUNGSI MEMBUKA MODAL (Murni Paksa Reset ID Baru)
+ */
 function bukaModalSpreadsheet() {
     const modal = document.getElementById('modalSheetApotek');
-    if(modal) {
+    const tbody = document.getElementById('body-tabel-apotek-manual');
+    const dropdownModal = document.getElementById('modal-filter-bulan-manual');
+    const loading = document.getElementById('loading-tabel-apotek-manual');
+    const kosong = document.getElementById('kosong-tabel-apotek-manual');
+
+    if (modal) {
+        // Paksa dropdown internal modal kembali kosong ke baris pertama
+        if (dropdownModal) {
+            dropdownModal.selectedIndex = 0;
+            dropdownModal.value = "";
+        }
+        
+        // Sembunyikan loading spinner dan teks kosong
+        if (loading) { loading.classList.remove('flex'); loading.classList.add('hidden'); }
+        if (kosong) { kosong.classList.add('hidden'); }
+        
+        // Bersihkan isi tabel secara mutlak ke petunjuk awal
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="p-12 text-center text-gray-400 font-medium bg-white">
+                        <i class="fa-solid fa-arrow-up animate-bounce mr-1 text-pink-500"></i> 
+                        Silakan tentukan opsi bulan di atas terlebih dahulu untuk memuat data.
+                    </td>
+                </tr>`;
+        }
+
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Kunci scroll layar belakang
+        document.body.style.overflow = 'hidden'; // Kunci scroll layar utama
     }
 }
 
+/**
+ * 2. FUNGSI MENUTUP JENDELA MODAL
+ */
 function tutupModalSpreadsheet() {
     const modal = document.getElementById('modalSheetApotek');
-    if(modal) {
+    if (modal) {
         modal.style.display = 'none';
-        document.body.style.overflow = ''; // Aktifkan kembali scroll latar belakang
+        document.body.style.overflow = ''; // Aktifkan scroll kembali
     }
 }
-</script>
- 
-
-<script>
-/**
- * Pembantu Format Angka ke format Rupiah standar tampilan tabel
- */
-function formatRupiahTeks(angka) {
-    return "Rp " + Number(angka).toLocaleString('id-ID');
-}
 
 /**
- * Fungsi Membuka Modal & Mengambil Data via doGet Real-time
+ * 3. FUNGSI UTAMA: Langsung dieksekusi oleh onchange="muatDataTinjauanModal(this.value)"
  */
-function bukaModalSpreadsheet() {
-    const modal = document.getElementById('modalSheetApotek');
-    const tbody = document.getElementById('body-tabel-apotek');
-    const loading = document.getElementById('loading-tabel-apotek');
-    const kosong = document.getElementById('kosong-tabel-apotek');
-    
-    // Ambil bulan aktif dari dropdown input utama halaman kamu, fallback ke Mei2026 jika belum pilih
-    const bulanAktif = document.getElementById('input-bulan-target').value || "Mei2026";
+function muatDataTinjauanModal(bulanTerpilih) {
+    const tbody = document.getElementById('body-tabel-apotek-manual');
+    const loading = document.getElementById('loading-tabel-apotek-manual');
+    const kosong = document.getElementById('kosong-tabel-apotek-manual');
+    const dropdownModal = document.getElementById('modal-filter-bulan-manual');
 
-    // Bersihkan isi tabel lama & tampilkan status loading
-    tbody.innerHTML = "";
-    loading.classList.remove('hidden');
-    loading.classList.add('flex');
-    kosong.classList.add('hidden');
+    // PENCEGAT UTAMA: Jika dropdown kosong atau belum milih, JANGAN JALANKAN FETCH APA PUN!
+    if (!dropdownModal || dropdownModal.value === "" || dropdownModal.value === null) {
+        return;
+    }
 
-    // Tampilkan container utama modal ke layar
-    modal.style.display = "flex";
+    // Eksekusi pembersihan kontainer & nyalakan loading spinner manual
+    if (tbody) tbody.innerHTML = "";
+    if (kosong) kosong.classList.add('hidden');
+    if (loading) {
+        loading.classList.remove('hidden');
+        loading.classList.add('flex');
+    }
 
-    // Lakukan pemanggilan data ke fungsi doGet Google Apps Script
-    fetch(`${urlWebAppApotek}?bulan=${bulanAktif}`)
+    // Ambil data resmi dari cloud Apps Script
+    fetch(`${urlWebAppApotek}?bulan=${bulanTerpilih}`)
         .then(response => response.json())
         .then(data => {
-            // Sembunyikan status loading setelah respon tiba
-            loading.classList.remove('flex');
-            loading.classList.add('hidden');
+            // Sembunyikan loading spinner manual setelah data tiba
+            if (loading) { loading.classList.remove('flex'); loading.classList.add('hidden'); }
+
+            // Proteksi jika user buru-buru mengubah pilihan dropdown ke bulan lain sebelum fetch selesai
+            if (!dropdownModal || dropdownModal.value !== bulanTerpilih) return;
 
             if (data && data.length > 0) {
-                // Iterasi dan cetak tiap baris data ke dalam susunan tabel HTML
+                if (tbody) tbody.innerHTML = ""; // Bersihkan teks panduan awal
+                
                 data.forEach(item => {
                     const row = document.createElement('tr');
                     row.className = "hover:bg-slate-50/80 transition-colors";
                     
-                    // Deteksi warna khusus jika nilai pendapatan bersih minus (Rugi)
                     const kelasWarnaBersih = item.pendapatanbersih < 0 ? "text-red-600 font-bold" : "text-blue-700 font-bold";
 
+                    // Menggunakan formatRupiahLokal internal yang aman
                     row.innerHTML = `
                         <td class="px-4 py-3 text-center font-bold text-gray-500 bg-gray-50/40">Tgl ${item.tanggal}</td>
-                        <td class="px-4 py-3 text-right text-emerald-700 font-semibold">${formatRupiahTeks(item.pendapatankotor)}</td>
-                        <td class="px-4 py-3 text-right text-amber-700">${formatRupiahTeks(item.pembayaranfaktur)}</td>
-                        <td class="px-4 py-3 text-right text-red-700">${formatRupiahTeks(item.pengeluaran)}</td>
-                        <td class="px-4 py-3 text-right ${kelasWarnaBersih}">${formatRupiahTeks(item.pendapatanbersih)}</td>
+                        <td class="px-4 py-3 text-right text-emerald-700 font-semibold">${formatRupiahLokal(item.pendapatankotor)}</td>
+                        <td class="px-4 py-3 text-right text-amber-700">${formatRupiahLokal(item.pembayaranfaktur)}</td>
+                        <td class="px-4 py-3 text-right text-red-700">${formatRupiahLokal(item.pengeluaran)}</td>
+                        <td class="px-4 py-3 text-right ${kelasWarnaBersih}">${formatRupiahLokal(item.pendapatanbersih)}</td>
                     `;
-                    tbody.appendChild(row);
+                    if (tbody) tbody.appendChild(row);
                 });
             } else {
-                // Tampilkan pesan kosong jika tidak mengembalikan array data
-                kosong.classList.remove('hidden');
+                if (kosong) kosong.classList.remove('hidden');
             }
         })
         .catch(error => {
             console.error("Gagal memuat database tabel:", error);
-            loading.classList.remove('flex');
-            loading.classList.add('hidden');
-            tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center font-bold text-red-500"><i class="fas fa-triangle-exclamation mr-1"></i> Gagal memuat data dari cloud. Periksa koneksi internet.</td></tr>`;
+            if (loading) { loading.classList.remove('flex'); loading.classList.add('hidden'); }
+            if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center font-bold text-red-500"><i class="fas fa-triangle-exclamation mr-1"></i> Gagal memuat data dari cloud.</td></tr>`;
         });
 }
 
-/**
- * Fungsi Menutup Jendela Modal Spreadsheet
- */
-function tutupModalSpreadsheet() {
-    const modal = document.getElementById('modalSheetApotek');
-    modal.style.display = "none";
+// Fungsi pembantu alias agar jika ada baris kode lama manggil nama ini tetap aman berjalan
+function gantiBulanTinjauanManual(val) {
+    muatDataTinjauanModal(val);
 }
 </script>
 
 
-	
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+// ==================== URL AKSES WEB APP SPREADSHEET (NAMA BARU JAMINAN AMAN) ====================
+const urlKhususTutupBuku = "https://script.google.com/macros/s/AKfycbxbV9cqDZg5J5pRnWFPUNCV8rk6mkNoim739KTELNi1SJhsbVW8jxAq2vsLYlSR0dDFXA/exec";
+
+// ==================== GLOBAL VARIABEL & STATE ASISTEN TUTUP BUKU ====================
+let globalDataClosing = null;       
+let globalNamaBulanTeks = "";       
+let metodeKesimpulanAktif = "otomatis"; 
+
+// Kamus bantu pengecekan hari terakhir di tahun 2026
+const mapHariTerakhir2026 = {
+    "Januari2026": 31, "Februari2026": 28, "Maret2026": 31, "April2026": 30,
+    "Mei2026": 31,     "Juni2026": 30,     "Juli2026": 31, "Agustus2026": 31,
+    "September2026": 30, "Oktober2026": 31, "November2026": 30, "Desember2026": 31
+};
+
+const mapNamaBulanIndo = {
+    "Mei2026": "Mei 2026", 
+    "Juni2026": "Juni 2026", 
+    "Juli2026": "Juli 2026", 
+    "Agustus2026": "Agustus 2026"
+};
+
+/**
+ * 1. FUNGSI UTAMA: Ambil Data Cloud + Animasi Pengecekan Interaktif
+ */
+function validasiTutupBukuBulan(selectElement) {
+    const keyBulan = selectElement.value;
+    const inputLalu = document.getElementById('input-kotor-sebelumnya');
+    const txtArea = document.getElementById('textarea-kesimpulan');
+    const loadingRingkasan = document.getElementById('loading-narasi');
+    
+    // Elemen Loading Overlay Baru
+    const loadingVerifikasi = document.getElementById('loading-verifikasi-cloud');
+    const wrapperContent = document.getElementById('wrapper-closing-content');
+    
+    if (!keyBulan) return;
+
+    console.log("Memulai penarikan data untuk tab bulan: " + keyBulan);
+
+    globalNamaBulanTeks = mapNamaBulanIndo[keyBulan] || keyBulan;
+    if (inputLalu) inputLalu.value = "";
+    if (txtArea) txtArea.value = "";
+    
+    // Sembunyikan form rekap, tampilkan animasi loading verifikasi cloud
+    if (wrapperContent) wrapperContent.classList.add('hidden');
+    if (loadingVerifikasi) {
+        loadingVerifikasi.classList.remove('hidden');
+        loadingVerifikasi.classList.add('flex');
+    }
+
+    const urlTarget = `${urlKhususTutupBuku}?bulan=${encodeURIComponent(keyBulan)}`;
+
+    fetch(urlTarget)
+        .then(response => {
+            if (!response.ok) throw new Error("Respon server Google Apps Script tidak OK.");
+            return response.json();
+        })
+        .then(data => {
+            // Berikan jeda waktu (800ms) agar transisi animasi mulus dan memanjakan mata
+            setTimeout(() => {
+                // Sembunyikan loading verifikasi
+                if (loadingVerifikasi) {
+                    loadingVerifikasi.classList.remove('flex');
+                    loadingVerifikasi.classList.add('hidden');
+                }
+
+                if (data && data.length > 0 && !data.status) {
+                    const tanggalTerakhirDiCloud = parseInt(data[data.length - 1].tanggal) || 0;
+                    const batasHariMaksimum = mapHariTerakhir2026[keyBulan] || 31;
+
+                    console.log(`Tanggal terakhir di cloud: ${tanggalTerakhirDiCloud}, Batas target: ${batasHariMaksimum}`);
+
+                    // Jalankan aturan ketat penutupan akhir bulan
+                    if (tanggalTerakhirDiCloud >= batasHariMaksimum) { 
+                        if (wrapperContent) wrapperContent.classList.remove('hidden');
+                        globalDataClosing = data; 
+                        bukaWrapperClosing();     
+                        kalkulasiDanIsiFormClosing(data); 
+                    } 
+                    else {
+                        // Gagal: Tampilkan kembali wrapper ter-blur, lalu tembak modal error
+                        if (wrapperContent) wrapperContent.classList.remove('hidden');
+                        lockWrapperClosing();      
+                        bukaModalClosingInvalid(); 
+                    }
+                } else {
+                    if (wrapperContent) wrapperContent.classList.remove('hidden');
+                    lockWrapperClosing();
+                    bukaModalClosingInvalid();
+                }
+            }, 800); // 800 milidetik jeda animasi halus
+        })
+        .catch(error => {
+            if (loadingVerifikasi) {
+                loadingVerifikasi.classList.remove('flex');
+                loadingVerifikasi.classList.add('hidden');
+            }
+            if (wrapperContent) wrapperContent.classList.remove('hidden');
+            console.error("Gagal memproses penutupan buku:", error);
+            alert("Sistem gagal terhubung ke Cloud Google Sheet.");
+            lockWrapperClosing();
+        });
+}
+
+/**
+ * 2. FUNGSI KALKULASI: Akumulasi Otomatis Nominal Rupiah dari Spreadsheet
+ */
+function kalkulasiDanIsiFormClosing(arrayData) {
+    if (!arrayData || arrayData.length === 0) return;
+
+    const totalKotor = arrayData.reduce((sum, item) => sum + (item.pendapatankotor || 0), 0);
+    const totalFaktur = arrayData.reduce((sum, item) => sum + (item.pembayaranfaktur || 0), 0);
+    const totalPengeluaran = arrayData.reduce((sum, item) => sum + (item.pengeluaran || 0), 0);
+    const totalBersih = arrayData.reduce((sum, item) => sum + (item.pendapatanbersih || 0), 0);
+
+    const elemKotor = document.getElementById('closing-kotor');
+    const elemFaktur = document.getElementById('closing-faktur');
+    const elemPengeluaran = document.getElementById('closing-pengeluaran');
+    const elemBersih = document.getElementById('closing-bersih');
+
+    if (elemKotor) elemKotor.value = formatAngkaKeRupiahString(totalKotor);
+    if (elemFaktur) elemFaktur.value = formatAngkaKeRupiahString(totalFaktur);
+    if (elemPengeluaran) elemPengeluaran.value = formatAngkaKeRupiahString(totalPengeluaran);
+    if (elemBersih) elemBersih.value = formatAngkaKeRupiahString(totalBersih);
+
+   // ─── PREPARASI INJEKSI DATA KE TABEL MODAL A4 ───
+    
+    // PERBAIKAN DI SINI: Bersihkan teks dan sisipkan spasi otomatis jika huruf & angka berdempetan
+    let bulanTahunBersih = globalNamaBulanTeks.trim();
+    bulanTahunBersih = bulanTahunBersih.replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
+    
+    document.getElementById('pdf-nama-bulan').innerText = bulanTahunBersih;
+    
+    document.getElementById('total-pdf-kotor').innerText = "Rp " + formatAngkaKeRupiahString(totalKotor);
+    document.getElementById('total-pdf-faktur').innerText = "Rp " + formatAngkaKeRupiahString(totalFaktur);
+    document.getElementById('total-pdf-pengeluaran').innerText = "Rp " + formatAngkaKeRupiahString(totalPengeluaran);
+    document.getElementById('total-pdf-bersih').innerText = "Rp " + formatAngkaKeRupiahString(totalBersih);
+
+    const tbody = document.getElementById('tbody-pdf-tabel-cloud');
+if (tbody) {
+    tbody.innerHTML = "";
+    arrayData.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        // Selang-seling baris putih dan abu-abu tipis agar tetap mudah dibaca horisontal
+        tr.className = index % 2 === 0 ? "bg-white text-gray-900" : "bg-gray-50/80 text-gray-900";
+        
+        // KUNCI REVISI: Menggunakan class text-gray-900 (Hitam Jelas) untuk semua angka nominal
+        tr.innerHTML = `
+            <td class="border border-gray-200 px-2 py-1.5 text-center font-bold text-gray-900">${item.tanggal || (index + 1)}</td>
+            <td class="border border-gray-200 px-2 py-1.5 text-right text-gray-900 bg-emerald-50/10 font-medium">Rp ${formatAngkaKeRupiahString(item.pendapatankotor || 0)}</td>
+            <td class="border border-gray-200 px-2 py-1.5 text-right text-gray-900 bg-amber-50/10 font-medium">Rp ${formatAngkaKeRupiahString(item.pembayaranfaktur || 0)}</td>
+            <td class="border border-gray-200 px-2 py-1.5 text-right text-gray-900 bg-red-50/10 font-medium">Rp ${formatAngkaKeRupiahString(item.pengeluaran || 0)}</td>
+            <td class="border border-gray-200 px-2 py-1.5 text-right text-gray-900 bg-blue-50/10 font-black">Rp ${formatAngkaKeRupiahString(item.pendapatanbersih || 0)}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+    setOpsiKesimpulan('otomatis');
+}
+
+/**
+ * 3. FUNGSI EVALUASI: Rumus Persentase Naik/Turun & Penyusunan Narasi Kesimpulan
+ */
+function hitungPersentaseEvaluasi() {
+    if (!globalDataClosing) return;
+
+    const inputLaluElem = document.getElementById('input-kotor-sebelumnya');
+    const txtArea = document.getElementById('textarea-kesimpulan');
+    if (!inputLaluElem || !txtArea) return;
+
+    const inputLaluRaw = inputLaluElem.value || "";
+    const kotorBulanLalu = parseInt(inputLaluRaw.toString().replace(/\./g, '')) || 0;
+    
+    if (kotorBulanLalu <= 0) {
+        if (metodeKesimpulanAktif === "otomatis") {
+            txtArea.value = "Silakan isi 'Total Pendapatan Kotor Bulan Sebelumnya' terlebih dahulu untuk menyusun analisis narasi evaluasi.";
+        }
+        return;
+    }
+
+    if (metodeKesimpulanAktif === "manual") return; 
+
+    const kotorBulanIni = globalDataClosing.reduce((sum, item) => sum + (item.pendapatankotor || 0), 0);
+    const totalPengeluaran = globalDataClosing.reduce((sum, item) => sum + (item.pengeluaran || 0), 0);
+    const totalFaktur = globalDataClosing.reduce((sum, item) => sum + (item.pembayaranfaktur || 0), 0);
+
+    const selisih = kotorBulanIni - kotorBulanLalu;
+let statusTren = "PENURUNAN";
+let persentase = 0;
+
+if (selisih >= 0) {
+    statusTren = "KENAIKAN";
+    persentase = kotorBulanLalu > 0 ? (selisih / kotorBulanLalu) * 100 : 0;
+} else {
+    statusTren = "PENURUNAN";
+    persentase = kotorBulanLalu > 0 ? (Math.abs(selisih) / kotorBulanLalu) * 100 : 0;
+}
+
+const selectElement = document.getElementById('closing-bulan-target');
+let namaBulanLaluTeks = "Bulan Sebelumnya";
+if (selectElement) {
+    const indeksPilihan = selectElement.selectedIndex;
+    if (indeksPilihan > 1) {
+        namaBulanLaluTeks = selectElement.options[indeksPilihan - 1].text;
+    }
+}
+
+// ─── BLOK VARIABEL KONDISIONAL DINAMIS ───
+let kalimatAnalisis = "";
+let kalimatPenutupStrategis = "";
+
+if (statusTren === "KENAIKAN") {
+    kalimatAnalisis = `Pencapaian positif ini dipengaruhi oleh peningkatan volume kunjungan konsumen serta stabilitas permintaan obat dan layanan kesehatan di Apotek kita sepanjang bulan berjalan.`;
+    kalimatPenutupStrategis = `Melihat tren yang sedang baik ini, mari kita jadikan momentum untuk terus mempertahankan kualitas pelayanan. Alhamdulillah, semoga pencapaian ini menjadi pemacu semangat bagi seluruh tim.`;
+} else {
+    kalimatAnalisis = `Penyesuaian ini terjadi karena adanya fluktuasi kebutuhan obat di masyarakat serta pergeseran transaksi harian jika dibandingkan dengan periode bulan sebelumnya.`;
+    kalimatPenutupStrategis = `Menghadapi tantangan karena tren turun ini, mari kita jadikan bahan evaluasi berharga untuk tetap menjaga kekompakan, mengoptimalkan peluang transaksi, dan meningkatkan kinerja di bulan berikutnya dengan lebih maksimal.`;
+}
+
+// ─── GABUNGAN TEMPLATE NARASI AKHIR ───
+
+// PERBAIKAN: Buat versi bersih yang otomatis menyisipkan spasi jika huruf & angka berdempetan
+const bulanIniBersih = globalNamaBulanTeks.trim().replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
+const bulanLaluBersih = namaBulanLaluTeks.trim().replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
+
+const templateNarasi = `Rangkuman pembukuan pembukuan Apotek Nurjaya pada bulan ${bulanIniBersih} mencatat pendapatan kotor sebesar Rp ${formatAngkaKeRupiahString(kotorBulanIni)}. Hasil ini menunjukkan adanya ${statusTren.toLowerCase()} sebesar ${persentase.toFixed(1)}% dari pencapaian bulan ${bulanLaluBersih} yang berada di angka Rp ${formatAngkaKeRupiahString(kotorBulanLalu)}.
+
+${kalimatAnalisis}
+
+Di sisi operasional, total pengeluaran yang dikeluarkan bulan ini tercatat sebesar Rp ${formatAngkaKeRupiahString(totalPengeluaran)}, dengan alokasi penyelesaian pembayaran faktur obat mencapai Rp ${formatAngkaKeRupiahString(totalFaktur)}. Pengendalian stok obat tetap kita jaga pada batas aman demi memastikan kebutuhan pasien selalu terpenuhi dengan baik.
+
+${kalimatPenutupStrategis}
+
+Semoga laporan evaluasi ini membantu kita dalam merumuskan strategi keuangan yang lebih tepat sasaran guna mencapai target yang lebih baik ke depan. Semoga usaha kita senantiasa membawa kemajuan dan keberkahan bagi semua. Aamiin.`;
+
+txtArea.value = templateNarasi;
+}
+
+/**
+ * 4. FUNGSI SAKELAR METODE: Mengatur Tombol Switcher
+ */
+function setOpsiKesimpulan(mode) {
+    metodeKesimpulanAktif = mode;
+    const btnOtomatis = document.getElementById('btn-opsi-otomatis');
+    const btnManual = document.getElementById('btn-opsi-manual');
+    const badgeMetode = document.getElementById('badge-metode');
+    const txtArea = document.getElementById('textarea-kesimpulan');
+    
+    // Ambil elemen pembungkus tombol 'Generate' baru yang dipasang di HTML
+    const wrapperBtnGenerate = document.getElementById('wrapper-btn-generate'); 
+
+    if (!btnOtomatis || !btnManual || !txtArea) return;
+
+    if (mode === 'otomatis') {
+        btnOtomatis.className = "py-2.5 text-xs font-black rounded-xl transition-all shadow-xs bg-white text-pink-600 border border-pink-100";
+        btnManual.className = "py-2.5 text-xs font-bold rounded-xl transition-all text-gray-400 hover:text-gray-600";
+        
+        if (badgeMetode) {
+            badgeMetode.innerText = "Sistem Otomatis";
+            badgeMetode.className = "text-[9px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md border border-emerald-200";
+        }
+        
+        // 1. TAMPILKAN TOMBOL GENERATE karena sedang di mode otomatis
+        if (wrapperBtnGenerate) wrapperBtnGenerate.classList.remove('hidden'); 
+        
+        txtArea.setAttribute('readonly', 'true');
+        txtArea.classList.add('bg-gray-50', 'cursor-not-allowed');
+        
+        // 2. JINAKKAN DI SINI: Kode lama langsung memanggil hitungPersentaseEvaluasi();
+        // Sekarang kita ganti dengan teks panduan, agar user mengklik tombol terlebih dahulu.
+        txtArea.value = "Silakan klik tombol 'Generate Kesimpulan Otomatis' di atas untuk menyusun analisis pembukuan.";
+
+    } else {
+        btnManual.className = "py-2.5 text-xs font-black rounded-xl transition-all shadow-xs bg-white text-pink-600 border border-pink-100";
+        btnOtomatis.className = "py-2.5 text-xs font-bold rounded-xl transition-all text-gray-400 hover:text-gray-600";
+        
+        if (badgeMetode) {
+            badgeMetode.innerText = "Ketik Manual";
+            badgeMetode.className = "text-[9px] font-black uppercase tracking-widest bg-amber-50 text-amber-600 px-2 py-0.5 rounded-md border border-amber-200";
+        }
+        
+        // 3. SEMBUNYIKAN TOMBOL GENERATE karena user ingin mengetik sendiri (manual)
+        if (wrapperBtnGenerate) wrapperBtnGenerate.classList.add('hidden'); 
+        
+        txtArea.removeAttribute('readonly');
+        txtArea.classList.remove('bg-gray-50', 'cursor-not-allowed');
+        
+        // Bersihkan area teks jika isinya masih berupa template otomatis atau teks panduan
+        if (txtArea.value.includes("Apotek Nurjaya mencatat pendapatan") || txtArea.value.includes("Silakan klik tombol")) {
+            txtArea.value = "";
+        }
+        txtArea.focus();
+    }
+}
+
+function bukaWrapperClosing() {
+    const w = document.getElementById('wrapper-closing-content');
+    if (w) w.classList.remove('opacity-40', 'blur-[1px]', 'pointer-events-none');
+}
+
+function lockWrapperClosing() {
+    const w = document.getElementById('wrapper-closing-content');
+    if (w) w.classList.add('opacity-40', 'blur-[1px]', 'pointer-events-none');
+}
+
+function formatAngkaKeRupiahString(angka) {
+    if (angka === 0 || isNaN(angka)) return "0";
+    if (angka < 0) {
+        return "-" + Math.abs(angka).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function bukaModalClosingInvalid() {
+    const modal = document.getElementById('modal-closing-invalid');
+    const box = document.getElementById('box-closing-invalid');
+    if (modal && box) {
+        modal.classList.remove('hidden');
+        modal.classList.add('grid');
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+    }
+}
+
+function tutupModalClosingInvalid() {
+    const modal = document.getElementById('modal-closing-invalid');
+    if (modal) {
+        modal.classList.remove('grid');
+        modal.classList.add('hidden');
+    }
+    const drop = document.getElementById('closing-bulan-target');
+    if (drop) drop.value = ""; 
+    lockWrapperClosing();
+}
+/**
+ * FUNGSI TRIGGER BARU: Menjalankan penyusunan teks melalui tombol dengan efek loading
+ */
+function triggerGenerateNarasi() {
+    const inputLaluElem = document.getElementById('input-kotor-sebelumnya');
+    const loadingRingkasan = document.getElementById('loading-narasi');
+    const txtArea = document.getElementById('textarea-kesimpulan');
+
+    if (!globalDataClosing) {
+        alert("Data cloud belum dimuat secara sempurna.");
+        return;
+    }
+
+    if (!inputLaluElem || !inputLaluElem.value) {
+        alert("Mohon isi nominal Pendapatan Kotor Bulan Sebelumnya terlebih dahulu.");
+        inputLaluElem.focus();
+        return;
+    }
+
+    // Tampilkan animasi loading narasi yang sudah kamu siapkan di HTML
+    if (loadingRingkasan) loadingRingkasan.classList.remove('hidden');
+    if (txtArea) txtArea.value = "";
+
+    // Berikan jeda estetik 600ms seolah-olah sistem sedang berfikir keras menyusun teks
+    setTimeout(() => {
+        if (loadingRingkasan) loadingRingkasan.classList.add('hidden');
+        
+        // Panggil fungsi utama penyusun template narasi milikmu
+        hitungPersentaseEvaluasi();
+    }, 600);
+}
+
+/**
+ * FUNGSI CONTROL: Membuka Modal Popup Laporan A4 & Sinkronisasi Narasi Akhir
+ */
+function bukaModalCetakA4() {
+    if (!globalDataClosing) {
+        alert("Silakan pilih bulan target dan pastikan data cloud termuat terlebih dahulu.");
+        return;
+    }
+
+    const modal = document.getElementById('modal-preview-laporan');
+    const box = document.getElementById('box-preview-laporan');
+    const teksSumberNarasiWeb = document.getElementById('textarea-kesimpulan').value;
+    const targetNarasiKertasPDF = document.getElementById('pdf-narasi-kesimpulan');
+    const timestampCetak = document.getElementById('pdf-timestamp-cetak');
+
+    // 1. Cek apakah pengguna sudah mengisi/men-generate narasi kesimpulan
+    if (!teksSumberNarasiWeb || teksSumberNarasiWeb.includes("Silakan klik tombol")) {
+        alert("Mohon lakukan 'Generate Kesimpulan Otomatis' atau ketik Manual terlebih dahulu sebelum membuka laporan.");
+        return;
+    }
+
+    // 2. Salin teks kesimpulan paling update dari web ke kertas A4 popup
+    if (targetNarasiKertasPDF) {
+        targetNarasiKertasPDF.innerText = teksSumberNarasiWeb;
+    }
+
+    // 3. Pasang penanda waktu cetak dokumen
+    if (timestampCetak) {
+        const sekarang = new Date();
+        const opsiHari = { day: 'numeric', month: 'long', year: 'numeric' };
+        const tglIndo = sekarang.toLocaleDateString('id-ID', opsiHari);
+        timestampCetak.innerText = `Dicetak Pada: ${tglIndo} Pukul ${sekarang.getHours().toString().padStart(2, '0')}:${sekarang.getMinutes().toString().padStart(2, '0')} WIB`;
+    }
+
+    // 4. Jalankan animasi transisi kemunculan Modal Popup
+    if (modal && box) {
+        modal.classList.remove('hidden');
+        modal.classList.add('grid');
+        // Trigger reflow/jeda mikro agar efek CSS transition transisi bekerja halus
+        setTimeout(() => {
+            box.classList.remove('scale-95', 'opacity-0');
+            box.classList.add('scale-100', 'opacity-100');
+        }, 50);
+    }
+}
+
+/**
+ * FUNGSI CONTROL: Menutup Modal Popup Laporan A4
+ */
+function tutupModalCetakA4() {
+    const modal = document.getElementById('modal-preview-laporan');
+    const box = document.getElementById('box-preview-laporan');
+
+    if (modal && box) {
+        box.classList.remove('scale-100', 'opacity-100');
+        box.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.remove('grid');
+            modal.classList.add('hidden');
+        }, 300); // Sinkron dengan durasi transition Tailwind (duration-300)
+    }
+}
+
+/**
+ * FUNGSI EKSPOR: Mengonversi Dokumen Menjadi 1 Halaman Utuh (GARANSI ANTI BLANK PAGE 2)
+ */
+function unduhLaporanPDF() {
+    const elemenSumber = document.getElementById('lembar-cetak-a4');
+    if (!elemenSumber) return;
+
+    // 1. Hitung tinggi asli elemen saat ini
+    const tinggiAsliPixel = elemenSumber.scrollHeight;
+
+    // 2. Tambahkan toleransi +10px pada tinggi kertas PDF untuk mencegah pixel overflow 
+    //    yang memicu lahirnya halaman kedua kosong (blank page 2).
+    const tinggiKertasAman = tinggiAsliPixel + 10;
+
+    // 3. Set konfigurasi super ketat khusus single-page
+    const opsiSettingPDF = {
+        margin:       0, 
+        filename:     `Laporan_Tutup_Buku_Apotek_Nurjaya_${globalNamaBulanTeks.replace(/\s+/g, '_')}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { 
+            scale: 2, 
+            useCORS: true, 
+            logging: false,
+            scrollY: 0,
+            windowHeight: tinggiAsliPixel // Mengunci tinggi jendela canvas sesuai tinggi elemen
+        }, 
+        // Menggunakan tinggi aman yang sudah diberi ruang napas
+        jsPDF:        { unit: 'px', format: [794, tinggiKertasAman], orientation: 'portrait' },
+        
+        // FORCE MODE: Matikan sistem pencarian potongan halaman bawaan library
+        pagebreak:    { mode: [] } 
+    };
+
+    // 4. Eksekusi download berkas
+    html2pdf().set(opsiSettingPDF).from(elemenSumber).save().then(() => {
+        console.log("File PDF All-Fit 1 Halaman Berhasil Diunduh. Page 2 diblokir.");
+    });
+}
+/**
+ * FUNGSI UTAMA: Mengonversi Dokumen Jadi PDF All-Fit & Kirim ke Apps Script Google Drive
+ */
+function prosesEksporKeDrive() {
+    const elemenSumber = document.getElementById('lembar-cetak-a4');
+    if (!elemenSumber) return alert("Elemen lembar cetak laporan tidak ditemukan!");
+
+    // 1. Ambil nama bulan dan bersihkan spasi
+    let namaBulanTahun = globalNamaBulanTeks.trim();
+    namaBulanTahun = namaBulanTahun.replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
+    const namaFileSesuaiRequest = `${namaBulanTahun}.pdf`;
+
+    // 2. TAMPILKAN MODAL CUSTOM (Khas Pink Loading)
+    const modal = document.getElementById('modal-proses-drive');
+    const boksLoading = document.getElementById('drive-loading-icon');
+    const boksSukses = document.getElementById('drive-success-icon');
+    const teksSukses = document.getElementById('drive-success-text');
+
+    boksLoading.classList.remove('hidden'); // Munculkan loading pink
+    boksSukses.classList.add('hidden');     // Sembunyikan ikon sukses dulu
+    modal.classList.remove('hidden');       // Buka tirai modal utama
+
+    // Kalkulasi tinggi fleksibel (Long Page)
+    const tinggiAsliPixel = elemenSumber.scrollHeight;
+    const tinggiKertasAman = tinggiAsliPixel + 10;
+
+    const opsiSettingPDF = {
+        margin:       0,
+        filename:     namaFileSesuaiRequest,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0, windowHeight: tinggiAsliPixel },
+        jsPDF:        { unit: 'px', format: [794, tinggiKertasAman], orientation: 'portrait' },
+        pagebreak:    { mode: [] } 
+    };
+
+    // 3. Proses html2pdf
+    html2pdf().set(opsiSettingPDF).from(elemenSumber).outputPdf('blob').then((pdfBlob) => {
+        const pembacaFile = new FileReader();
+        pembacaFile.readAsDataURL(pdfBlob);
+        
+        pembacaFile.onloadend = function() {
+            const dataBase64Mentah = pembacaFile.result.split(',')[1];
+            const urlAppsScriptMas = "https://script.google.com/macros/s/AKfycbyK-vMV9b3R5s85FzsuCTdEQDAgsCsNJGXUq3kVpEdzKttDXc6UqPj_Hm45mvAbuxZR6Q/exec"; 
+
+            const parameterForm = new URLSearchParams();
+            parameterForm.append("filename", namaFileSesuaiRequest);
+            parameterForm.append("base64", dataBase64Mentah);
+
+            // 4. Kirim ke Google Drive
+            fetch(urlAppsScriptMas, {
+                method: "POST",
+                body: parameterForm.toString(),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(respon => respon.json())
+            .then(hasil => {
+                if (hasil.success) {
+                    // 5. UBAH MODAL MENJADI STATUS SUKSES (Centang Hijau)
+                    boksLoading.classList.add('hidden'); // Matikan loading pink
+                    boksSukses.classList.remove('hidden'); // Hidupkan sukses hijau
+                    teksSukses.innerText = `Berkas Laporan "${namaFileSesuaiRequest}" telah tersimpan di NSA CLOUD. Kini anda dapat mengeceknya di Tab Arsip Summary.`;
+
+                    if (typeof muatUlangDaftarArsipDrive === "function") {
+                        muatUlangDaftarArsipDrive();
+                    }
+                } else {
+                    modal.classList.add('hidden'); // Sembunyikan modal jika error
+                    alert("Gagal menyimpan ke Drive: " + hasil.error);
+                }
+            })
+            .catch(error => {
+                modal.classList.add('hidden'); // Sembunyikan modal jika error jaringan
+                alert("Terjadi gangguan koneksi: " + error);
+            });
+        };
+    });
+}
+
+/**
+ * FUNGSI TAMBAHAN: Untuk Menutup Modal Saat Klik Tombol Selesai
+ */
+function tutupModalDriveCustom() {
+    document.getElementById('modal-proses-drive').classList.add('hidden');
+}
+</script>
+
+
+
+<!-- MODAL PROSES EKSPOR KE DRIVE -->
+<div id="modal-proses-drive" style="z-index: 999999 !important;" class="fixed inset-0 hidden flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-gray-100 flex flex-col items-center text-center animate-fade-in">
+        
+        <div id="drive-loading-icon" class="flex flex-col items-center">
+            <div class="w-14 h-14 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin mb-4"></div>
+            <h3 class="text-base font-bold text-slate-800 mb-1">Mengarsipkan Laporan</h3>
+            <p class="text-xs text-slate-500 max-w-[250px]">Sedang mengonversi dan mengirim laporan ke NSA CLOUD</p>
+        </div>
+
+        <div id="drive-success-icon" class="hidden flex flex-col items-center">
+            <div class="w-14 h-14 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-4 ring-4 ring-emerald-100 animate-bounce">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-800 mb-1">Pengarsipan Berhasil!</h3>
+            <p id="drive-success-text" class="text-xs text-slate-500 max-w-[250px] mb-5">Berkas laporan telah disimpan ke NSA CLOUD, anda dapat mengecek laporan di Tab Arsip Summary.</p>
+            
+            <button type="button" onclick="tutupModalDriveCustom()" 
+                class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-900 active:scale-[0.98] text-white text-xs font-bold uppercase rounded-xl shadow-md transition-all">
+                Selesai
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div id="modalPreviewFotoKaryawan" style="display: none;" class="fixed inset-0 z-[10010] flex items-center justify-center p-4 animate-fade-in">
+    
+    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-md" onclick="tutupPreviewKaryawan()"></div>
+    
+    <div class="relative bg-white rounded-3xl p-3 shadow-2xl max-w-sm w-full border border-pink-100 overflow-hidden transform transition-all flex flex-col items-center">
+        <div class="w-full flex justify-between items-center px-2 py-1 mb-2 border-b border-gray-100">
+            <span id="txt-nama-preview-karyawan" class="text-xs font-black text-gray-700 tracking-tight">Preview Profil</span>
+            <button onclick="tutupPreviewKaryawan()" class="w-7 h-7 bg-slate-100 hover:bg-pink-100 text-slate-500 hover:text-pink-600 rounded-full flex items-center justify-center transition-all">
+                <i class="fas fa-times text-xs"></i>
+            </button>
+        </div>
+        <img id="img-target-preview-karyawan" src="" class="w-full aspect-square object-cover rounded-2xl shadow-inner bg-slate-50">
+    </div>
+</div>
+
+<script>
+    function bukaPreviewKaryawan(srcGambar, namaKaryawan) {
+        if(typeof playClickSound === "function") playClickSound();
+        document.getElementById('img-target-preview-karyawan').src = srcGambar;
+        document.getElementById('txt-nama-preview-karyawan').innerText = "Profil: " + namaKaryawan;
+        document.getElementById('modalPreviewFotoKaryawan').style.display = 'flex';
+    }
+
+    function tutupPreviewKaryawan() {
+        document.getElementById('modalPreviewFotoKaryawan').style.display = 'none';
+        document.getElementById('img-target-preview-karyawan').src = '';
+    }
+</script>
+
+
+<!-- MODAL DEVELOPER APOTEK -->
+<div id="modalDevApotek" class="fixed inset-0 z-[10020] flex items-center justify-center hidden p-4 transform-gpu">
+    
+    <div id="overlayDevApotek" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px] transition-opacity duration-300 opacity-0" onclick="tutupModalDevApotek()"></div>
+
+    <div id="boxKontenDevApotek" class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden transform flex flex-col border border-pink-50 shadow-pink-100/10">
+        
+        <div class="bg-pink-50/70 p-4 text-center border-b border-pink-100/50">
+            <div class="w-12 h-12 bg-white text-pink-600 rounded-xl flex items-center justify-center mx-auto mb-2 shadow-sm border border-pink-100/80">
+                <i class="fas fa-screwdriver-wrench fa-lg"></i>
+            </div>
+            <h2 class="text-md font-black text-gray-800 tracking-tight leading-tight uppercase">Opsi Developer</h2>
+            <p class="text-[9px] text-pink-700 font-black uppercase tracking-[0.2em] mt-1">Maintenance & Pengaturan Sistem</p>
+        </div>
+
+        <div class="p-6 space-y-3 flex-1">
+            <button onclick="openModalNotifApotek()" 
+                class="flex items-center gap-4 w-full p-4 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-pink-600/10 group">
+                <div class="w-8 flex justify-center">
+                    <i class="fas fa-bullhorn fa-lg group-hover:rotate-12 transition-transform duration-300"></i>
+                </div>
+                <span class="font-black text-sm tracking-tight">Siarkan Notifikasi</span>
+                <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
+            </button>
+
+            <a href="https://github.com/nazakana/" target="_blank" onclick="if(typeof playClickSound === 'function') playClickSound();"
+               class="flex items-center gap-4 w-full p-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl transition-all active:scale-95 shadow-sm">
+                <div class="w-8 flex justify-center"><i class="fab fa-github fa-lg"></i></div>
+                <span class="font-black text-sm tracking-tight">View on GitHub</span>
+                <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
+            </a>
+
+            <button onclick="bukaTentangAplikasiApotek()" 
+                class="flex items-center gap-4 w-full p-4 bg-white hover:bg-pink-50 text-pink-700 border border-pink-200 rounded-2xl transition-all active:scale-95 shadow-xs">
+                <div class="w-8 flex justify-center"><i class="fas fa-circle-info fa-lg"></i></div>
+                <span class="font-black text-sm tracking-tight">Tentang Aplikasi</span>
+                <i class="fas fa-arrow-right ml-auto opacity-40 text-xs"></i>
+            </button>
+        </div>
+
+        <div class="px-6 pb-6">
+            <button onclick="tutupModalDevApotek()" 
+                class="w-full py-3.5 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-2xl font-black text-sm transition-all active:scale-98 border border-slate-200/60 tracking-wide uppercase">
+                TUTUP MENU
+            </button>
+        </div>
+         
+    </div>
+</div>
+
+
+<script>
+/**
+ * ========================================================
+ * SISTEM MANAJEMEN MODAL DEVELOPER APOTEK NURJAYA
+ * ========================================================
+ */
+
+// Membuka modal dengan pembagian animasi terpisah
+function bukaModalDevApotek() {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    const modal = document.getElementById('modalDevApotek');
+    const overlay = document.getElementById('overlayDevApotek');
+    const boxKonten = document.getElementById('boxKontenDevApotek');
+    
+    if (modal && boxKonten && overlay) {
+        // 1. Munculkan container utama dahulu
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // 2. Animasi background hitam blur memudar masuk secara smooth (tanpa membal)
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0');
+            overlay.classList.add('opacity-100');
+        }, 10);
+        
+        // 3. Picu animasi membal pegas khusus pada kotak putihnya saja
+        boxKonten.classList.remove('modal-bouncy-out');
+        boxKonten.classList.add('modal-bouncy-in');
+    }
+}
+
+// Menutup modal dengan mengembalikan efek transisi sebelum disembunyikan
+function tutupModalDevApotek() {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    const modal = document.getElementById('modalDevApotek');
+    const overlay = document.getElementById('overlayDevApotek');
+    const boxKonten = document.getElementById('boxKontenDevApotek');
+    
+    if (modal && boxKonten && overlay) {
+        // 1. Redupkan background hitam kembali ke transparan
+        overlay.classList.remove('opacity-100');
+        overlay.classList.add('opacity-0');
+        
+        // 2. Mainkan animasi membal mengecil keluar pada kotak konten putih
+        boxKonten.classList.remove('modal-bouncy-in');
+        boxKonten.classList.add('modal-bouncy-out');
+        
+        // 3. Sembunyikan elemen setelah durasi animasi membal selesai (350ms)
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }, 350);
+    }
+}
+
+// Fungsi Trigger untuk Menyiarkan Pesan/Notifikasi Khusus Apotek
+function openModalNotifApotek() {
+    tutupModalDevApotek(); // Tutup modal dev dulu agar tidak tumpang tindih
+    if (typeof openModalNotif === "function") {
+        openModalNotif();
+    } else {
+        alert("Fungsi penyiaran notifikasi sistem sedang dipersiapkan!");
+    }
+}
+
+// Fungsi Trigger untuk Menampilkan Profil / Informasi Mengenai Aplikasi
+function bukaTentangAplikasiApotek() {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    // Ganti teks alert ini atau hubungkan ke fungsi modal informasi kamu jika ada
+    alert("Apotek Nurjaya Smart System v1.0.0\nDikembangkan secara eksklusif untuk pengelolaan data operasional apotek.");
+}
+</script>
+
+<div id="modalTentangAplikasi" class="fixed inset-0 z-[10030] flex items-center justify-center hidden p-4 animate-fade-in">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px]" onclick="tutupTentangAplikasiApotek()"></div>
+
+    <div class="relative bg-white w-full max-w-sm rounded-[35px] shadow-2xl overflow-hidden transform transition-all flex flex-col border border-pink-100 animate-scale-in">
+        
+        <div class="bg-gradient-to-b from-pink-50 to-white p-6 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-pink-100/40 rounded-full blur-xl"></div>
+            <div class="absolute -bottom-6 -left-6 w-20 h-20 bg-blue-50/50 rounded-full blur-lg"></div>
+
+            <div class="w-16 h-16 bg-gradient-to-tr from-pink-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md shadow-pink-500/20 relative z-10">
+                <i class="fas fa-box-archive text-2xl animate-pulse-subtle"></i>
+            </div>
+            
+            <h3 class="text-xl font-black text-gray-800 tracking-tight">Nurjaya Smart Archive</h3>
+            <p class="text-[10px] text-pink-600 font-black uppercase tracking-[0.2em] mt-0.5">Sistem Tata Kelola Digital v5.0.26</p>
+        </div>
+
+        <div class="px-6 pb-2 text-center flex-1">
+            <p class="text-xs text-gray-600 leading-relaxed font-medium">
+                <strong class="text-gray-800 font-bold">NSA (Nurjaya Smart Archive)</strong> adalah platform manajemen internal terintegrasi yang berfungsi sebagai sistem pengarsipan digital, pengelola data operasional harian, serta media bantu kalkulasi data keuangan. 
+            </p>
+            
+            <div class="my-4 p-2.5 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center gap-2">
+                <span class="text-[9px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 px-2 py-1 rounded-lg border border-blue-200">
+                    <i class="fas fa-print mr-1"></i> Photocopy
+                </span>
+                <span class="text-slate-300 text-xs font-light">|</span>
+                <span class="text-[9px] font-black uppercase tracking-wider bg-pink-100 text-pink-700 px-2 py-1 rounded-lg border border-pink-200">
+                    <i class="fas fa-heart-pulse mr-1"></i> Apotek
+                </span>
+            </div>
+
+            <p class="text-[11px] text-gray-500 leading-relaxed">
+                Dilengkapi dengan dual-mode ekosistem untuk menyelaraskan efisiensi kinerja operasional pada <span class="font-bold text-gray-700">Nurjaya Abadi Photocopy</span> dan <span class="font-bold text-gray-700">Apotek Nurjaya</span> secara aman dan responsif.
+            </p>
+        </div>
+
+        <div class="p-6 mt-2 border-t border-gray-50 bg-slate-50/50 text-center">
+            <button onclick="tutupTentangAplikasiApotek()" 
+                class="w-full py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl font-black text-xs tracking-widest uppercase transition-all active:scale-95 shadow-md shadow-pink-600/10 mb-4">
+                Selesai
+            </button>
+            
+            <div class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                &copy; 2026 <span class="text-gray-700 font-bold">Nurjaya</span>. All Rights Reserved.
+            </div>
+        </div>
+         
+    </div>
+</div>
+
+<script>
+// Fungsi untuk membuka Modal Custom "Tentang Aplikasi"
+function bukaTentangAplikasiApotek() {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    // Tutup modal kontrol dev terlebih dahulu agar tidak menumpuk kaku
+    tutupModalDevApotek(); 
+
+    const modalTentang = document.getElementById('modalTentangAplikasi');
+    if (modalTentang) {
+        modalTentang.classList.remove('hidden');
+        modalTentang.classList.add('flex');
+    }
+}
+
+// Fungsi untuk menutup Modal Custom "Tentang Aplikasi"
+function tutupTentangAplikasiApotek() {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    const modalTentang = document.getElementById('modalTentangAplikasi');
+    if (modalTentang) {
+        modalTentang.classList.remove('flex');
+        modalTentang.classList.add('hidden');
+    }
+}
+</script>
+
+
+<!-- MODAL SIARKAN NOTIFIKASI APOTEK -->
+<div id="modalNotifApotek" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-[10040] p-4 animate-fade-in">
+    <div class="bg-white w-full max-w-md rounded-[35px] overflow-hidden shadow-2xl transform transition-all border border-pink-50">
+        <div class="p-6">
+            
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-3 bg-pink-100 text-pink-600 rounded-xl border border-pink-200">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="flex flex-col">
+                    <h3 class="font-black text-md text-gray-800 uppercase tracking-tight">Siaran Baru Apotek</h3>
+                    <p class="text-[9px] text-pink-600 font-bold tracking-wider uppercase">Push Notification System</p>
+                </div>
+                <button onclick="closeModalNotifApotek()" class="ml-auto w-8 h-8 bg-slate-50 hover:bg-pink-50 text-slate-400 hover:text-pink-600 rounded-full flex items-center justify-center transition-all">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Judul Notifikasi</label>
+                    <input type="text" id="notif_title_apotek" placeholder="Contoh: Info Apotek Nurjaya" 
+                        class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white text-sm font-semibold mt-1 text-gray-800 transition-all">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Isi Pesan Siaran</label>
+                    <textarea id="notif_message_apotek" rows="3" placeholder="Tulis pesan siaran maklumat di sini..." 
+                        class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white text-sm font-semibold mt-1 text-gray-800 transition-all"></textarea>
+                </div>
+            </div>
+
+            <button id="btnKirimNotifApotek" onclick="siarkanNotifikasiLangsungApotek(event)" 
+                class="w-full mt-6 p-4 bg-pink-600 hover:bg-pink-700 text-white font-black text-sm uppercase tracking-wider rounded-2xl transition-all active:scale-95 shadow-md shadow-pink-600/10">
+                Siarkan Notifikasi
+            </button>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+/**
+ * ========================================================
+ * LOGIKA SISTEM SIARAN PUSH NOTIFICATION - APOTEK NURJAYA
+ * ========================================================
+ */
+
+// Fungsi untuk membuka Modal Input Notifikasi Apotek
+function openModalNotifApotek() {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    // Memastikan modal developer sebelumnya tertutup dengan bersih
+    const modalDev = document.getElementById('modalDevApotek');
+    if (modalDev) {
+        modalDev.classList.remove('flex');
+        modalDev.classList.add('hidden');
+    }
+
+    const modalNotif = document.getElementById('modalNotifApotek');
+    if (modalNotif) {
+        modalNotif.classList.remove('hidden');
+        modalNotif.classList.add('flex');
+    }
+}
+
+// Fungsi untuk menutup Modal Input Notifikasi Apotek
+function closeModalNotifApotek() {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    const modalNotif = document.getElementById('modalNotifApotek');
+    if (modalNotif) {
+        modalNotif.classList.remove('flex');
+        modalNotif.classList.add('hidden');
+    }
+}
+
+// Fungsi Eksekusi Penyiaran Data Langsung ke Server Google Apps Script
+function siarkanNotifikasiLangsungApotek(event) {
+    if (typeof playClickSound === "function") playClickSound();
+
+    const judul = document.getElementById('notif_title_apotek').value.trim();
+    const pesan = document.getElementById('notif_message_apotek').value.trim();
+    const btn = event.currentTarget || document.getElementById('btnKirimNotifApotek');
+    
+    if (!judul || !pesan) {
+        alert("Judul dan pesan tidak boleh kosong ya!");
+        return;
+    }
+
+    // Mengunci tombol agar user tidak melakukan klik ganda saat proses kirim sedang berjalan
+    const originalText = btn.innerText;
+    btn.innerText = "SEDANG MENGIRIM...";
+    btn.disabled = true;
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+    // URL Web App murni milikmu (Aman, Tidak Diubah sesuai Instruksi)
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
+
+    fetch(webAppUrl, {
+        method: "POST",
+        mode: "no-cors", 
+        body: JSON.stringify({
+            method: "DIRECT_PUSH",
+            title: judul,
+            message: pesan
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(() => {
+        alert("🚀 Notifikasi NSA Berhasil Disiarkan!");
+        closeModalNotifApotek();
+        
+        // Reset isi form input ke kondisi semula setelah sukses
+        document.getElementById('notif_title_apotek').value = "";
+        document.getElementById('notif_message_apotek').value = "";
+    })
+    .catch(err => {
+        console.error("Gagal mengirim:", err);
+        alert("Gagal koneksi server: " + err);
+    })
+    .finally(() => {
+        // Mengembalikan state tombol kirim ke semula
+        btn.innerText = originalText;
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    });
+}
+</script>
+
+
+<div id="modalPreviewKaryawan" class="fixed inset-0 z-[10050] flex items-center justify-center hidden p-4 transform-gpu">
+    
+    <div id="overlayPreviewKaryawan" class="absolute inset-0 bg-slate-950/80 backdrop-blur-[6px] transition-opacity duration-300 opacity-0" onclick="tutupPreviewKaryawan()"></div>
+
+    <div id="boxKontenPreview" class="relative bg-white w-full max-w-sm rounded-[35px] shadow-2xl overflow-hidden transform flex flex-col border border-pink-50 max-h-[90vh]">
+        
+        <button onclick="tutupPreviewKaryawan()" class="absolute top-4 right-4 z-50 w-9 h-9 bg-black/40 hover:bg-pink-600 backdrop-blur-md text-white rounded-full flex items-center justify-center transition-all shadow-md active:scale-90 group">
+            <i class="fas fa-times text-sm group-hover:rotate-90 transition-transform duration-300"></i>
+        </button>
+
+        <div class="relative w-full aspect-square bg-slate-100 overflow-hidden">
+            <img id="fotoPreviewTarget" src="" alt="Foto Karyawan" class="w-full h-full object-cover">
+        </div>
+
+        <div class="p-6 text-center bg-gradient-to-b from-white to-pink-50/30">
+            <h4 id="namaPreviewTarget" class="text-lg font-black text-gray-800 tracking-tight leading-tight">Nama Karyawan</h4>
+            <p class="text-[10px] text-pink-600 font-black uppercase tracking-[0.2em] mt-1.5 bg-pink-50 border border-pink-100 px-3 py-1 inline-block rounded-full">
+                Tim Asisten Apoteker
+            </p>
+        </div>
+         
+    </div>
+</div>
+
+<script>
+/**
+ * ========================================================
+ * LOGIKA PREVIEW FOTO KARYAWAN DENGAN EFEK BOUNCY TERPISAH
+ * ========================================================
+ */
+
+// Fungsi saat foto karyawan di dalam grid diklik
+function bukaPreviewKaryawan(urlFoto, namaKaryawan) {
+    if (typeof playClickSound === "function") playClickSound();
+
+    const modal = document.getElementById('modalPreviewKaryawan');
+    const overlay = document.getElementById('overlayPreviewKaryawan');
+    const boxKonten = document.getElementById('boxKontenPreview');
+    
+    const imgTarget = document.getElementById('fotoPreviewTarget');
+    const nameTarget = document.getElementById('namaPreviewTarget');
+
+    if (modal && boxKonten && overlay && imgTarget && nameTarget) {
+        // Set data foto dan nama sesuai data karyawan yang diklik
+        imgTarget.src = urlFoto;
+        nameTarget.innerText = namaKaryawan;
+
+        // 1. Hidupkan container utama
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // 2. Transisi background hitam blur memudar masuk (Tenang, Tidak Goyang)
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0');
+            overlay.classList.add('opacity-100');
+        }, 10);
+
+        // 3. Picu efek pegas membal khusus pada Box Foto dan Teks
+        boxKonten.classList.remove('modal-bouncy-out');
+        boxKonten.classList.add('modal-bouncy-in');
+    }
+}
+
+// Fungsi untuk menutup jendela preview foto
+function tutupPreviewKaryawan() {
+    if (typeof playClickSound === "function") playClickSound();
+
+    const modal = document.getElementById('modalPreviewKaryawan');
+    const overlay = document.getElementById('overlayPreviewKaryawan');
+    const boxKonten = document.getElementById('boxKontenPreview');
+
+    if (modal && boxKonten && overlay) {
+        // 1. Pudarkan background kembali transparan
+        overlay.classList.remove('opacity-100');
+        overlay.classList.add('opacity-0');
+
+        // 2. Mainkan animasi membal mengecil keluar pada box foto
+        boxKonten.classList.remove('modal-bouncy-in');
+        boxKonten.classList.add('modal-bouncy-out');
+
+        // 3. Matikan elemen setelah durasi animasi membal selesai (350ms)
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }, 350);
+    }
+}
+</script>
+
+
 </body>
 </html>
