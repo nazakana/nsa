@@ -3,15 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>NSA - Nurjaya Smart Archive</title>
-	
-	
+    <title>NURJAYA ABADI ARCHIVE</title>
 
-
-
-
-
-    <meta name="description" content="Website Official Arsip Operasional Nurjaya. Dibuat untuk mempermudah pemantauan Pembukuan Bulanan dan sebagai Arsip Riwayat Keuangan di Nurjaya Abadi Photocopy.">
+    <meta name="description" content="Arsip Pembukuan dan Riwayat Keuangan Nurjaya Abadi Photocopy.">
 	<link rel="manifest" href="manifest.json">
 	<meta name="theme-color" content="#2563eb">
 	<meta name="apple-mobile-web-app-capable" content="yes">
@@ -451,49 +445,49 @@ document.addEventListener('keydown', function(event) {
 
 		 <!-- BOTTOM NAV -->
   <aside style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background: #ffffff; border-top: 1px solid #e5e7eb; z-index: 50; box-shadow: 0 -5px 25px rgba(0,0,0,0.08); display: block;">
-    
-    <div class="w-full max-w-6xl mx-auto flex flex-row items-center justify-between px-2 pt-2.5 pb-5 md:pb-3.5" style="display: flex !important; flex-direction: row !important; width: 100% !important;">
-    
+   
+   <div class="w-full max-w-6xl mx-auto flex flex-row items-center justify-between px-2 pt-2.5 pb-5 md:pb-3.5" style="display: flex !important; flex-direction: row !important; width: 100% !important;">
+   
         <button onclick="showTab('dashboard')" id="btn-dashboard" 
             class="nav-link active flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; height: 52px !important;">
+            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
             <i class="fa-solid fa-house-user text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-tight block w-full truncate px-0.5">Home</span>
+            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Home</span>
         </button>
 
         <button onclick="showTab('dailyinput')" id="btn-dailyinput" 
             class="nav-link flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="daily input"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; height: 52px !important;">
+            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
             <i class="fa-solid fa-pen-to-square text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-tight block w-full truncate px-0.5">Input</span>
+            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Input</span>
         </button>
 
         <button onclick="showTab('archive')" id="btn-archive" 
             class="nav-link flex flex-col items-center justify-center text-center focus:outline-none transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="arsip laporan"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; height: 52px !important;">
+            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
             <i class="fa-solid fa-folder-open text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-tight block w-full truncate px-0.5">Arsip</span>
+            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Arsip</span>
         </button>
 
         <button onclick="showTab('presensi')" id="btn-presensi" 
             class="nav-link flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="presensi absensi jadwal kerja"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; height: 52px !important;">
+            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
             <i class="fa-solid fa-id-badge text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-tight block w-full truncate px-0.5">Presensi</span>
+            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Presensi</span>
         </button>
 
         <button onclick="showTab('calendar')" id="btn-calendar" 
             class="nav-link flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="jadwal staf kalender kerja"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; height: 52px !important;">
+            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
             <i class="fa-solid fa-clock text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-tight block w-full truncate px-0.5">Jadwal</span>
+            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Jadwal</span>
         </button>
 
         <button onclick="showTab('about')" id="btn-about" 
             class="nav-link flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="profil nurjaya tentang about"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; height: 52px !important;">
+            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
             <i class="fa-solid fa-info-circle text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-tight block w-full truncate px-0.5">Profil</span>
+            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Profil</span>
         </button>
 
     </div>
@@ -561,11 +555,11 @@ document.addEventListener('keydown', function(event) {
                 </table>
             </div>
 
-            <div class="flex-grow overflow-x-auto p-2 md:p-4 bg-white flex items-center">
-                <div class="w-[800px] md:w-[1000px] h-[135px] md:h-[190px] relative">
-                    <canvas id="statistik_bulan_ini"></canvas>
-                </div>
-            </div>
+            <div class="flex-grow overflow-x-auto p-2 md:p-4 bg-white flex items-center" style="-webkit-overflow-scrolling: touch;">
+    <div class="w-[1300px] h-[145px] md:h-[200px] relative">
+        <canvas id="statistik_bulan_ini"></canvas>
+    </div>
+</div>
         </div>
     </div>
 </div>
@@ -902,10 +896,11 @@ document.addEventListener('keydown', function(event) {
 		
 
         <!-- KONTEN TAB: DAILY INPUT -->
-       <div id="tab-dailyinput" class="tab-content p-4 md:p-8 hidden fade-in">
+<div id="tab-dailyinput" class="tab-content p-4 md:p-8 hidden fade-in">
     
     <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
         
+        <!-- Header Modal -->
         <div class="p-5 border-b border-green-100 bg-gradient-to-r from-white to-green-50/30 flex justify-between items-center flex-shrink-0">
             <div class="flex items-center gap-3">
                 <div class="w-2 h-8 bg-green-500 rounded-full"></div>
@@ -920,127 +915,178 @@ document.addEventListener('keydown', function(event) {
             </div>
         </div>
 
-        <form id="form-daily-fotokopi" class="p-6 md:p-8 space-y-6 text-gray-700">
-            
-            <div class="space-y-1.5 max-w-md">
-                <label class="block text-xs md:text-sm font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-calendar-day text-green-600"></i> Pilih Tanggal Operasional
-                </label>
-                <input type="date" id="input_tanggal" required
-                    class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-gray-800 transition-colors duration-200">
+        <!-- Banner Informasi Riwayat Data & Fitur Seleksi Bulan -->
+        <div class="px-6 md:px-8 pt-6 space-y-4">
+            <!-- Riwayat Entri Terakhir dari Cloud -->
+            <div id="banner_last_entry" class="w-full px-4 py-3 bg-blue-50 border-2 border-blue-200 rounded-[18px] text-xs md:text-sm text-blue-800 font-bold flex items-center gap-3 transition-all duration-300">
+                <i class="fa-solid fa-clock-rotate-left text-blue-600 text-base animate-pulse"></i>
+                <span>Menghubungkan ke cloud untuk membaca riwayat data terakhir...</span>
             </div>
 
-            <hr class="border-dashed border-green-100">
+            <!-- Dropdown Seleksi Bulan Operasional Kerja -->
+            <div class="p-4 bg-gray-50 border-2 border-gray-200 rounded-[22px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <div>
+                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-filter text-green-600"></i> Pilih Target Periode
+                    </label>
+                    <select id="select_bulan_operasional" required
+                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200 cursor-pointer">
+                        <option value="" disabled selected>-- Pilih Bulan Buku Kerja --</option>
+                       
+                        <option value="Mei2026">Mei 2026</option>
+                        <option value="Juni2026">Juni 2026</option>
+                        <option value="Juli2026">Juli 2026</option>
+                        <option value="Agustus2026">Agustus 2026</option>
+                        <option value="September2026">September 2026</option>
+                        <option value="Oktober2026">Oktober 2026</option>
+                        <option value="November2026">November 2026</option>
+                        <option value="Desember2026">Desember 2026</option>
+                    </select>
+                </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Status Validasi Cloud Indicator -->
+                <div>
+                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-cloud text-green-600"></i> Sinkronisasi Cloud
+                    </label>
+                    <div id="box_status_cloud" class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-300 rounded-[14px] font-black text-gray-500 tracking-wide flex items-center gap-2 transition-all duration-300">
+                        <i id="icon_status_cloud" class="fa-solid fa-circle-question"></i>
+                        <span id="label_status_cloud">Tentukan bulan kerja dahulu...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Utama (Dibungkus container penanda blur jika dikunci) -->
+        <div id="wrapper_form_kerja" class="transition-all duration-300 pointer-events-none opacity-40 blur-[1px]">
+            <form id="form-daily-fotokopi" class="p-6 md:p-8 space-y-6 text-gray-700">
                 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-cash-register text-green-600"></i> Pendapatan Kotor
+                <!-- Input Tanggal Utama -->
+                <div class="space-y-1.5 max-w-md">
+                    <label class="block text-xs md:text-sm font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-day text-green-600"></i> Pilih Tanggal Operasional
                     </label>
-                    <div class="relative">
-                        <input type="text" id="input_pendapatan_kotor" placeholder="0" required
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
-                    </div>
-                    <p id="hint_pendapatan_kotor" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
+                    <input type="date" id="input_tanggal" required
+                        class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-gray-800 transition-colors duration-200">
                 </div>
 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-qrcode text-green-600"></i> Pendapatan QRIS
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="input_pendapatan_qris" placeholder="0" required
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
-                    </div>
-                    <p id="hint_pendapatan_qris" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
-                </div>
+                <hr class="border-dashed border-green-100">
 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-stamp text-green-600"></i> Meterai Terjual (Fisik)
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="input_meterai_terjual" placeholder="0" required
-                            class="w-full pr-14 pl-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-gray-400 text-xs uppercase">PCS</span>
+                <!-- Grid Input Nilai Keuangan dan Barang -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-cash-register text-green-600"></i> Pendapatan Kotor
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input_pendapatan_kotor" placeholder="0" required
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                        </div>
+                        <p id="hint_pendapatan_kotor" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
                     </div>
-                    <p id="hint_meterai_terjual" class="text-[11px] text-green-600 font-bold px-1">0 PCS</p>
-                </div>
 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-stamp text-green-600"></i> Meterai Terjual (QRIS)
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="input_meterai_terjual_qris" placeholder="0" required
-                            class="w-full pr-14 pl-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-gray-400 text-xs uppercase">PCS</span>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-qrcode text-green-600"></i> Pendapatan QRIS
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input_pendapatan_qris" placeholder="0" required
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                        </div>
+                        <p id="hint_pendapatan_qris" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
                     </div>
-                    <p id="hint_meterai_terjual_qris" class="text-[11px] text-green-600 font-bold px-1">0 PCS</p>
-                </div>
 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-utensils text-green-600"></i> Uang Makan Karyawan
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="input_uang_makan" placeholder="0" required
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-stamp text-green-600"></i> Meterai Terjual (Fisik)
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input_meterai_terjual" placeholder="0" required
+                                class="w-full pr-14 pl-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-gray-400 text-xs uppercase">PCS</span>
+                        </div>
+                        <p id="hint_meterai_terjual" class="text-[11px] text-green-600 font-bold px-1">0 PCS</p>
                     </div>
-                    <p id="hint_uang_makan" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
-                </div>
 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-basket-shopping text-green-600"></i> Pengeluaran Kasir
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="input_pengeluaran_kasir" placeholder="0" required
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-stamp text-green-600"></i> Meterai Terjual (QRIS)
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input_meterai_terjual_qris" placeholder="0" required
+                                class="w-full pr-14 pl-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-gray-400 text-xs uppercase">PCS</span>
+                        </div>
+                        <p id="hint_meterai_terjual_qris" class="text-[11px] text-green-600 font-bold px-1">0 PCS</p>
                     </div>
-                    <p id="hint_pengeluaran_kasir" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
-                </div>
 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-vault text-green-600"></i> Tabungan Harian (A)
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="input_tabungan_a" placeholder="45.000" required
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-utensils text-green-600"></i> Uang Makan Karyawan
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input_uang_makan" placeholder="0" required
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                        </div>
+                        <p id="hint_uang_makan" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
                     </div>
-                    <p id="hint_tabungan_a" class="text-[11px] text-green-600 font-bold px-1">Rp 45.000</p>
-                </div>
 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-vault text-green-600"></i> Tabungan Harian (B)
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="input_tabungan_b" placeholder="255.000" required
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-basket-shopping text-green-600"></i> Pengeluaran Kasir
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input_pengeluaran_kasir" placeholder="0" required
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                        </div>
+                        <p id="hint_pengeluaran_kasir" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
                     </div>
-                    <p id="hint_tabungan_b" class="text-[11px] text-green-600 font-bold px-1">Rp 255.000</p>
-                </div>
 
-            </div>
-            
-            <div class="pt-4 border-t border-gray-100 flex justify-end">
-                <button type="submit" form="form-daily-fotokopi" 
-                    class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200">
-                    <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Simpan & Update Data Ke Spreadsheet
-                </button>
-            </div>
-        </form>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-vault text-green-600"></i> Tabungan Harian (A)
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input_tabungan_a" placeholder="45.000" required
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                        </div>
+                        <p id="hint_tabungan_a" class="text-[11px] text-green-600 font-bold px-1">Rp 45.000</p>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-vault text-green-600"></i> Tabungan Harian (B)
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input_tabungan_b" placeholder="255.000" required
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
+                        </div>
+                        <p id="hint_tabungan_b" class="text-[11px] text-green-600 font-bold px-1">Rp 255.000</p>
+                    </div>
+
+                </div>
+                
+                <!-- Sektor Tombol Pengiriman -->
+                <div class="pt-4 border-t border-gray-100 flex justify-end">
+                    <button type="submit" form="form-daily-fotokopi" 
+                        class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200">
+                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> KIRIM DATA KE NSA CLOUD
+                    </button>
+                </div>
+            </form>
+        </div>
 
     </div>
+</div>
+
+
 </div>
 
 
@@ -1162,7 +1208,7 @@ document.addEventListener('keydown', function(event) {
                             apt. Siti Nurjanah, S.Farm.
                         </h3>
                         <p class="text-mint-deep font-black text-sm md:text-xl mt-2 md:mt-4 uppercase tracking-wider">
-                            Owner Nurjaya Group
+                            Owner Nurjaya Abadi Photocopy
                         </p>
                         
                         <!-- Grid Tombol -->
@@ -1215,7 +1261,7 @@ document.addEventListener('keydown', function(event) {
                         Informasi Toko
                     </h4>
                     <div class="text-gray-600 text-sm md:text-base leading-relaxed font-medium space-y-4 text-justify">
-                        <p>Nurjaya Abadi Photocopy adalah penyedia layanan jasa fotokopi, print, dan pusat ATK yang tergabung dalam <span class="text-emerald-600 font-bold">NURJAYA GROUP</span> milik apt. Siti Nurjanah, S.Farm.</p>
+                        <p>Nurjaya Abadi Photocopy adalah penyedia layanan jasa fotokopi, print, dan pusat ATK yang didirikan dan dikelola oleh apt. Siti Nurjanah, S.Farm.</p>
                         <p>Kami mengutamakan kualitas layanan dan kelengkapan produk untuk memenuhi segala kebutuhan dokumentasi harian, baik bagi perorangan maupun instansi.</p>
                         
                         <p>Sistem NSA ini didesain khusus untuk mengelola seluruh data operasional dan arsip digital agar lebih terorganisir.</p>
@@ -1438,7 +1484,7 @@ document.addEventListener('keydown', function(event) {
                 'archive': ['Arsip Digital Laporan', 'Pusat Dokumentasi Keuangan'],
                 'presensi': ['Presensi Kehadiran', 'Monitor Staf Nurjaya Abadi'],
                 'calendar': ['Jadwal & Shift Kerja', 'Pengaturan Operasional Toko'],
-                'about': ['PROFIL NURJAYA', 'Informasi Kepemilikan & Manajemen']
+                'about': ['Profil Nurjaya Abadi', 'Informasi Kepemilikan & Manajemen']
             };
 
             document.getElementById('page-title').innerText = pageData[tabId][0];
@@ -2011,68 +2057,51 @@ function toggleGatePass() {
 
 
 
-<!-- MODAL MENU DEVELOPER -->
-<div id="devModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
-    <div id="modalOverlay" class="absolute inset-0 bg-black/50 backdrop-blur-[4px] overlay-animate-in" onclick="closeDevModalFunction()"></div>
+<!-- MODAL MENU DEVELOPER FOTOKOPI -->
+<div id="devModal" class="fixed inset-0 z-[10020] flex items-center justify-center hidden p-4 transform-gpu">
+    <div id="modalOverlay" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px] overlay-animate-in" onclick="closeDevModalFunction()"></div>
 
-    <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in transform-gpu">
+    <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in flex flex-col border border-green-50 shadow-green-100/10">
         
-        <div class="bg-green-50/70 p-4 text-center border-b border-gray-100/80">
-            <div class="w-12 h-12 bg-white text-green-600 rounded-xl flex items-center justify-center mx-auto mb-2 shadow-sm border border-green-100/50">
+        <div class="bg-green-50/70 p-4 text-center border-b border-green-100/50">
+            <div class="w-12 h-12 bg-white text-green-600 rounded-xl flex items-center justify-center mx-auto mb-2 shadow-sm border border-green-100/80">
                 <i class="fas fa-screwdriver-wrench fa-lg"></i>
             </div>
-            
-            <h2 class="text-lg font-bold text-gray-800 tracking-tighter leading-tight">Opsi Developer</h2>
-            <p class="text-[9px] text-green-700 font-bold uppercase tracking-[0.2em] mt-0.5">Update Data & Maintenance</p>
+            <h2 class="text-md font-black text-gray-800 tracking-tight leading-tight uppercase">Opsi Developer</h2>
+            <p class="text-[9px] text-green-700 font-black uppercase tracking-[0.2em] mt-1">Maintenance & Pengaturan Sistem</p>
         </div>
 
-        <div class="p-6 space-y-3">
-            
-            <button onclick="bukaModalRekap()" 
-                class="flex items-center gap-4 w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-green-600/10">
+        <div class="p-6 space-y-3 flex-1">
+            <button onclick="bukaModalRekap()" class="flex items-center gap-4 w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-green-600/10">
                 <div class="w-8 flex justify-center"><i class="fas fa-database fa-lg"></i></div>
-                <span class="font-bold text-sm">Update Buku Rekap</span>
+                <span class="font-black text-sm tracking-tight">Update Buku Rekap</span>
                 <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
             </button>
 
-            <button onclick="openGateKatalog()" 
-                class="flex items-center gap-4 w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-green-600/10">
-                <div class="w-8 flex justify-center">
-                    <i class="fas fa-boxes-stacked fa-lg"></i>
-                </div>
-                <div class="flex flex-col items-start">
-                    <span class="font-bold text-sm">Update Katalog Barang</span>
-                </div>
+            <button onclick="openGateKatalog()" class="flex items-center gap-4 w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-green-600/10">
+                <div class="w-8 flex justify-center"><i class="fas fa-boxes-stacked fa-lg"></i></div>
+                <span class="font-black text-sm tracking-tight">Update Katalog Barang</span>
                 <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
             </button>
             
-            <button onclick="openModalNotif()" 
-                class="flex items-center gap-4 w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-green-600/10">
-                <div class="w-8 flex justify-center">
-                    <i class="fas fa-bullhorn fa-lg"></i>
-                </div>
-                <div class="flex flex-col items-start">
-                    <span class="font-bold text-sm">Siarkan Notifikasi</span>
-                </div>
+            <button onclick="openModalNotif()" class="flex items-center gap-4 w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-green-600/10">
+                <div class="w-8 flex justify-center"><i class="fas fa-bullhorn fa-lg"></i></div>
+                <span class="font-black text-sm tracking-tight">Siarkan Notifikasi</span>
                 <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
             </button>
 
-            <a href="https://github.com/nazakana/" target="_blank" 
-               class="flex items-center gap-4 w-full p-4 bg-gray-900 hover:bg-black text-white rounded-2xl transition-all active:scale-95 shadow-sm">
-                <div class="w-8 flex justify-center"><i class="fab fa-github fa-lg"></i></div>
-                <span class="font-bold text-sm">View on GitHub</span>
-                <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
-            </a>
-            
+            <button onclick="bukaTentangAplikasi()" class="flex items-center gap-4 w-full p-4 bg-white hover:bg-green-50 text-green-700 border border-green-200 rounded-2xl transition-all active:scale-95 shadow-xs">
+                <div class="w-8 flex justify-center"><i class="fas fa-circle-info fa-lg"></i></div>
+                <span class="font-black text-sm tracking-tight">Tentang Aplikasi</span>
+                <i class="fas fa-arrow-right ml-auto opacity-40 text-xs"></i>
+            </button>
         </div>
 
         <div class="px-6 pb-6">
-            <button id="closeDevModal" onclick="closeDevModalFunction()" 
-                class="w-full py-3.5 bg-gray-50 hover:bg-gray-100 text-gray-500 rounded-2xl font-bold text-sm transition-all active:scale-98 border border-gray-100">
-                Tutup Menu
+            <button id="closeDevModal" onclick="closeDevModalFunction()" class="w-full py-3.5 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-2xl font-black text-sm transition-all active:scale-98 border border-slate-200/60 tracking-wide uppercase">
+                TUTUP MENU
             </button>
         </div>
-         
     </div>
 </div>
 
@@ -3161,15 +3190,11 @@ function muatStatistikBulanIni() {
 
         // --- PROSES PEMOTONGAN TANGGAL AGAR HANYA MUNCUL ANGKA ---
         const labelTanggal = dataMaster.map(item => {
-            // item.tanggal bentuknya: "dd/MM/yyyy" (misal: "03/05/2026") atau string Date panjang
-            // Kita pecah berdasarkan tanda miring (/), lalu ambil susunan paling depan (indeks 0)
             if (item.tanggal.includes("/")) {
                 const pecah = item.tanggal.split("/");
                 return Number(pecah[0]); // Menghasilkan angka saja (misal: 3)
             }
             
-            // Pengaman: Jika format dari Google Sheets tiba-tiba berubah jadi objek Date string panjang
-            // Kita ubah dulu ke objek Date JavaScript lalu ambil tanggalnya
             const tanggalObjek = new Date(item.tanggal);
             return isNaN(tanggalObjek.getTime()) ? item.tanggal : tanggalObjek.getDate();
         });
@@ -3181,7 +3206,6 @@ function muatStatistikBulanIni() {
         if (tabelBody) {
             tabelBody.innerHTML = ""; 
             dataMaster.forEach((item, indeks) => {
-                // Ambil angka tanggal murni (1, 2, 3...)
                 let angkaTanggal = labelTanggal[indeks]; 
                 
                 let baris = `
@@ -3195,7 +3219,7 @@ function muatStatistikBulanIni() {
             });
         }
         
-        // Gambar grafik harian dengan sumbu X yang sudah bersih berwujud angka 1 sampai 31
+        // Gambar grafik harian dengan sumbu X yang sudah dikunci konfigurasinya
         buatGrafikHarian(labelTanggal, dataPendapatan);
 
         // --- KUNCI UTAMA: HILANGKAN LAPISAN LOADING DENGAN HALUS ---
@@ -3216,7 +3240,12 @@ function buatGrafikHarian(labels, dataValues) {
     gradientHijau.addColorStop(0, 'rgba(46, 204, 113, 0.15)');
     gradientHijau.addColorStop(1, 'rgba(46, 204, 113, 0.0)');
 
-    new Chart(ctx, {
+    // PENGAMAN: Hapus instansiasi grafik lama jika ada untuk menghindari tumpang tindih saat halaman dimuat ulang
+    if (window.grafikHarianFotokopi) {
+        window.grafikHarianFotokopi.destroy();
+    }
+
+    window.grafikHarianFotokopi = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
@@ -3227,12 +3256,11 @@ function buatGrafikHarian(labels, dataValues) {
                 fill: true, 
                 backgroundColor: gradientHijau,
                 tension: 0.4, // Membuat lekukan garis melengkung lembut halus
-                pointRadius: 3,
-                pointHoverRadius: 6,
+                pointRadius: 4.5, // Sedikit diperbesar agar pas dengan jarak tanggal yang merenggang
+                pointHoverRadius: 7,
                 pointBackgroundColor: '#ffffff',
                 pointBorderColor: '#27ae60',
                 pointBorderWidth: 2,
-                // --- LOGIKA WARNA DINAMIS TEMA HIJAU TOKO ---
                 segment: {
                     borderColor: ctxSegment => {
                         if (!ctxSegment || !ctxSegment.p0 || !ctxSegment.p1 || 
@@ -3244,20 +3272,20 @@ function buatGrafikHarian(labels, dataValues) {
                         const val2 = ctxSegment.p1.parsed.y;
                         
                         if (val2 > val1) {
-                            return '#2ecc71'; // Hijau Cerah kalau omzet naik dibanding kemarin
+                            return '#2ecc71'; // Hijau Cerah kalau omzet naik
                         } else if (val2 < val1 && val2 < (val1 * 0.5)) {
-                            return '#e74c3c'; // Tetap Merah sebagai alarm toko kalau anjlok parah (>50%)
+                            return '#e74c3c'; // Merah alarm jika anjlok parah (>50%)
                         } else if (val2 < val1) {
-                            return '#f1c40f'; // Kuning hangat kalau turun tipis/biasa
+                            return '#f1c40f'; // Kuning hangat jika turun tipis
                         }
-                        return '#27ae60'; // Hijau Daun Tua kalau stabil
+                        return '#27ae60'; // Hijau tua jika stabil
                     }
                 }
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: false, // Wajib false agar canvas patuh pada ukuran div HTML kamu
             scales: {
                 y: { 
                     beginAtZero: true,
@@ -3265,16 +3293,31 @@ function buatGrafikHarian(labels, dataValues) {
                     ticks: {
                         color: '#a0aec0',
                         font: { size: 10, family: 'system-ui' },
+                        // ─── REVISI INDIKATOR SUMBU Y: UBAH DARI 'K' MENJADI RUPIAH BERSIH ───
                         callback: function(value) {
-                            return value >= 1000 ? (value / 1000) + 'k' : value;
+                            return value.toLocaleString('id-ID'); // Menghasilkan format angka Indonesia (Contoh: 150.000)
                         }
                     }
                 },
                 x: { 
-                    grid: { display: false },
+                    grid: { 
+                        display: true,
+                        color: '#f1f5f9' // Garis vertikal abu-abu lembut agar penunjukan tanggal ke titik omzet makin presisi
+                    },
                     ticks: {
-                        color: '#a0aec0',
-                        font: { size: 10, fontStyle: 'bold', family: 'system-ui' }
+                        color: '#64748b', // Warna teks dibuat sedikit lebih kontras (Slate 500) agar mudah dibaca
+                        
+                        // ─── UPGRADE UKURAN FONT & JARAK ───
+                        font: { 
+                            size: 12,          // Ukuran font tanggal diperbesar sesuai request sebelumnya
+                            weight: 'bold', 
+                            family: 'system-ui' 
+                        },
+                        padding: 8,            // Memberikan jarak vertikal antara teks angka dengan batas bawah grafik
+                        
+                        minRotation: 0,   // Paksa teks tetap tegak lurus horizontal (0 derajat)
+                        maxRotation: 0,   // Cegah teks miring-miring secara otomatis
+                        autoSkip: false   // MATIKAN FITUR SKIP! Paksa Chart.js menampilkan semua angka tanggal (1,2,3...31)
                     }
                 }
             },
@@ -3289,9 +3332,9 @@ function buatGrafikHarian(labels, dataValues) {
 function hilangkanLayerLoading() {
     const loadingLayer = document.getElementById('loading-layer-harian');
     if (loadingLayer) {
-        loadingLayer.style.opacity = '0'; // Efek memudar lambat (fade out)
+        loadingLayer.style.opacity = '0';
         setTimeout(() => {
-            loadingLayer.style.display = 'none'; // Benar-benar lenyap dari DOM
+            loadingLayer.style.display = 'none';
         }, 300);
     }
 }
@@ -3299,7 +3342,6 @@ function hilangkanLayerLoading() {
 function tampilkanStatusGagalLoading() {
     const loadingLayer = document.getElementById('loading-layer-harian');
     if (loadingLayer) {
-        // Ganti spinner menjadi teks peringatan merah jika server bermasalah
         loadingLayer.innerHTML = `
             <span style="font-family: system-ui, sans-serif; font-size: 0.75rem; color: #e74c3c; font-weight: bold; text-align: center; padding: 0 15px;">
                 &times; Gagal memuat data toko. Periksa koneksi internet atau refresh halaman!
@@ -3308,7 +3350,6 @@ function tampilkanStatusGagalLoading() {
     }
 }
 
-// SAKELAR OTOMATIS: Memanggil fungsi sinkronisasi utama saat halaman siap 100%
 window.onload = muatStatistikBulanIni;
 </script>
 
@@ -3453,7 +3494,6 @@ if (document.getElementById('hari-terbaru-tgl')) {
 
 
 
-
 <script>
 // Ganti dengan URL Apps Script kamu yang sudah live
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxS5Ly5fEBsZqIKCj1BAIQW5ns5AyQ87NgPN2hINvSsqGf3GOo7bwXAW3yfVIS1nxkKbQ/exec";
@@ -3475,6 +3515,112 @@ document.addEventListener("DOMContentLoaded", function () {
         "input_meterai_terjual_qris"
     ];
 
+    // Elemen Kontrol UI Baru
+    const bannerLastEntry = document.getElementById("banner_last_entry");
+    const selectBulanOperasional = document.getElementById("select_bulan_operasional");
+    const boxStatusCloud = document.getElementById("box_status_cloud");
+    const iconStatusCloud = document.getElementById("icon_status_cloud");
+    const labelStatusCloud = document.getElementById("label_status_cloud");
+    const wrapperFormKerja = document.getElementById("wrapper_form_kerja");
+    const inputTanggal = document.getElementById("input_tanggal");
+
+    // --- FUNGSI AMBIL DATA TERBARU (LAST ENTRY) SAAT MODAL DIBUKA ---
+    function muatDataTerakhirCloud() {
+        if (!bannerLastEntry) return;
+        
+        // Memanggil GAS dengan parameter cek_terakhir=true
+        fetch(`${WEB_APP_URL}?cek_terakhir=true`)
+            .then(response => response.json())
+            .then(res => {
+                if (res.status === "success" && res.tanggal_terakhir) {
+                    bannerLastEntry.className = "w-full px-4 py-3 bg-green-50 border-2 border-green-200 rounded-[18px] text-xs md:text-sm text-green-800 font-bold flex items-center gap-3 transition-all duration-300";
+                    bannerLastEntry.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 text-base"></i> <span>Data Operasional Terakhir yang Sukses Masuk Cloud: <strong class="underline font-black text-green-700">${res.tanggal_terakhir}</strong></span>`;
+                } else {
+                    bannerLastEntry.innerHTML = `<i class="fa-solid fa-circle-info text-blue-600"></i> <span>Belum ada riwayat baris data di sheet pembukuan utama.</span>`;
+                }
+            })
+            .catch(err => {
+                console.error("Gagal memuat status entri:", err);
+                bannerLastEntry.className = "w-full px-4 py-3 bg-yellow-50 border-2 border-yellow-200 rounded-[18px] text-xs md:text-sm text-yellow-800 font-bold flex items-center gap-3";
+                bannerLastEntry.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-yellow-600"></i> <span>Gagal membaca sinkronisasi data terakhir, namun form tetap siap digunakan.</span>`;
+            });
+    }
+
+    // Jalankan otomatis untuk memberi tahu kasir entri baris data terakhir
+    muatDataTerakhirCloud();
+
+
+    // --- REAL-TIME LIVE CHECK BULAN CLOUD SPREADSHEET ---
+    if (selectBulanOperasional) {
+        selectBulanOperasional.addEventListener("change", function() {
+            const bulanDipilih = this.value; // Contoh hasil: "Juni2026"
+            if (!bulanDipilih) return;
+
+            // Berikan animasi loading verifikasi cloud
+            labelStatusCloud.textContent = `Memeriksa data [${bulanDipilih}]...`;
+            boxStatusCloud.className = "w-full px-4 py-3 bg-yellow-50 border-2 border-yellow-200 rounded-[14px] font-black text-yellow-700 tracking-wide flex items-center gap-2";
+            iconStatusCloud.className = "fa-solid fa-spinner animate-spin text-yellow-600";
+
+            // Tembak GET Request khusus pengecekan eksistensi sheet bulan
+            fetch(`${WEB_APP_URL}?cek_bulan=${bulanDipilih}`)
+                .then(response => response.json())
+                .then(res => {
+                    if (res.status === "exists") {
+                        // JIKA TAB BULAN TERSEDIA
+                        labelStatusCloud.textContent = `Sheet Aktif & Siap`;
+                        boxStatusCloud.className = "w-full px-4 py-3 bg-green-50 border-2 border-green-200 rounded-[14px] font-black text-green-700 tracking-wide flex items-center gap-2";
+                        iconStatusCloud.className = "fa-solid fa-circle-check text-green-600";
+                        
+                        // Buka Kunci Form Input
+                        wrapperFormKerja.classList.remove("pointer-events-none", "opacity-40", "blur-[1px]");
+                        
+                        // Set nilai default pembatas tanggal input HTML agar sesuai tahun/bulan terpilih (Opsional)
+                        kunciBulanPadaInputTanggal(bulanDipilih);
+                    } else {
+                        // JIKA TAB BULAN BELUM TERSEDIA
+                        labelStatusCloud.textContent = `Sheet Belum Ada`;
+                        boxStatusCloud.className = "w-full px-4 py-3 bg-red-50 border-2 border-red-200 rounded-[14px] font-black text-red-700 tracking-wide flex items-center gap-2";
+                        iconStatusCloud.className = "fa-solid fa-circle-xmark text-red-600";
+                        
+                        // Kunci Mati Form
+                        wrapperFormKerja.classList.add("pointer-events-none", "opacity-40", "blur-[1px]");
+                        
+                        // Munculkan Custom UI Pop-Up Alert
+                        bukaAlertCloud(selectBulanOperasional.options[selectBulanOperasional.selectedIndex].text);
+                    }
+                })
+                .catch(err => {
+                    console.error("Gagal validasi cloud:", err);
+                    labelStatusCloud.textContent = `Koneksi Timeout`;
+                    boxStatusCloud.className = "w-full px-4 py-3 bg-gray-100 border-2 border-gray-300 rounded-[14px] font-black text-gray-600 tracking-wide flex items-center gap-2";
+                    iconStatusCloud.className = "fa-solid fa-wifi text-gray-400";
+                });
+        });
+    }
+
+    // Fungsi Pembantu Validasi Input Kalender HTML
+    function kunciBulanPadaInputTanggal(bulanTahunStr) {
+        if (!inputTanggal) return;
+        const namaBulanIndo = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        
+        // Bedah String Contoh "Juni2026"
+        let namaBulan = bulanTahunStr.replace(/[0-9]/g, "");
+        let tahun = bulanTahunStr.replace(/[^0-9]/g, "");
+        let indeksBulan = namaBulanIndo.indexOf(namaBulan);
+        
+        if (indeksBulan !== -1) {
+            let bulanDigit = String(indeksBulan + 1).padStart(2, '0');
+            // Inject tanggal minimal dan maksimal otomatis di HTML5 date picker
+            inputTanggal.min = `${tahun}-${bulanDigit}-01`;
+            inputTanggal.max = `${tahun}-${bulanDigit}-31`;
+            inputTanggal.value = `${tahun}-${bulanDigit}-01`; // Taruh di tanggal 1 defaultnya
+        }
+    }
+
+
     // --- FUNGSI FORMATTER ANGKA KE RUPIAH (TITIK PEMISAH) ---
     function formatKeRupiah(angkaStr) {
         let nomorSaja = angkaStr.replace(/[^0-9]/g, ""); // Hanya ambil angka
@@ -3483,7 +3629,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // --- LOGIKA EVENT LISTENER REAL-TIME UNTUK INPUT KASIR ---
-    // Loop input kategori Rupiah
     inputRupiahIds.forEach(id => {
         const inputEl = document.getElementById(id);
         const hintEl = document.getElementById("hint_" + id.replace("input_", ""));
@@ -3493,30 +3638,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 let posisiKursor = this.selectionStart;
                 let panjangAwal = this.value.length;
                 
-                // Format isi inputan saat diketik
                 let hasilFormat = formatKeRupiah(this.value);
                 this.value = hasilFormat;
 
-                // Update teks visual (Hint) di bawah kotak input
                 if (hintEl) {
                     hintEl.textContent = hasilFormat ? "Rp " + hasilFormat : "Rp 0";
                 }
 
-                // Kembalikan posisi kursor agar tidak melompat ke belakang saat diketik tengah-tengah
                 let selisihPanjang = this.value.length - panjangAwal;
-                this.setSelectionRange(posisihKursor + selisihPanjang, posisiKursor + selisihPanjang);
+                this.setSelectionRange(posisiKursor + selisihPanjang, posisiKursor + selisihPanjang);
             });
         }
     });
 
-    // Loop input kategori Pcs (Meterai)
     inputPcsIds.forEach(id => {
         const inputEl = document.getElementById(id);
         const hintEl = document.getElementById("hint_" + id.replace("input_", ""));
 
         if (inputEl) {
             inputEl.addEventListener("input", function () {
-                // Hanya izinkan angka murni
                 this.value = this.value.replace(/[^0-9]/g, "");
                 
                 if (hintEl) {
@@ -3527,77 +3667,114 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    // 3. LOGIKA SUBMIT DATA KE GOOGLE APPS SCRIPT (doPost)
-    // =========================================================================
-// PERBAIKAN LOGIKA SUBMIT - GUNAKAN URLSEARCHPARAMS AGAR TEMBUS NO-CORS
-// =========================================================================
-const formFotokopi = document.getElementById("form-daily-fotokopi");
+    // --- LOGIKA SUBMIT DATA KE GOOGLE APPS SCRIPT (POST) ---
+    const formFotokopi = document.getElementById("form-daily-fotokopi");
 
-if (formFotokopi) {
-    formFotokopi.addEventListener("submit", function (e) {
-        e.preventDefault();
+    if (formFotokopi) {
+        formFotokopi.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-        const btnSubmit = this.querySelector("button[type='submit']");
-        const teksAwalBtn = btnSubmit.innerHTML;
-        
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-2"></i> Mengirim Data...`;
-
-        // A. Konversi Tanggal (yyyy-mm-dd) -> (dd/MM/yyyy)
-        const tglRaw = document.getElementById("input_tanggal").value;
-        const parts = tglRaw.split("-");
-        const tglFormatAppsScript = `${parts[2]}/${parts[1]}/${parts[0]}`;
-
-        const dapatkanAngkaMurni = (id) => {
-            let val = document.getElementById(id).value;
-            return parseInt(val.replace(/[^0-9]/g, ""), 10) || 0;
-        };
-
-        // B. Pakai URLSearchParams agar terbaca sempurna oleh e.parameter di Apps Script
-        const dataKirim = new URLSearchParams();
-        dataKirim.append("tanggal", tglFormatAppsScript);
-        dataKirim.append("pendapatan_kotor", dapatkanAngkaMurni("input_pendapatan_kotor"));
-        dataKirim.append("meterai_terjual", dapatkanAngkaMurni("input_meterai_terjual"));
-        dataKirim.append("meterai_terjual_qris", dapatkanAngkaMurni("input_meterai_terjual_qris"));
-        dataKirim.append("pendapatan_qris", dapatkanAngkaMurni("input_pendapatan_qris"));
-        dataKirim.append("uang_makan", dapatkanAngkaMurni("input_uang_makan"));
-        dataKirim.append("pengeluaran_kasir", dapatkanAngkaMurni("input_pengeluaran_kasir"));
-        dataKirim.append("tabungan_a", dapatkanAngkaMurni("input_tabungan_a"));
-        dataKirim.append("tabungan_b", dapatkanAngkaMurni("input_tabungan_b"));
-
-        // C. Tembak menggunakan POST
-        fetch(WEB_APP_URL, {
-            method: "POST",
-            mode: "no-cors", // Tetap no-cors agar tidak diblokir browser
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded" // Tipe data form standar
-            },
-            body: dataKirim.toString()
-        })
-        .then(() => {
-            // Karena no-cors, ini akan selalu masuk ke sini jika status network 200 (OK)
-            alert(`Data tanggal ${tglFormatAppsScript} Berhasil Dikirim!\nSilakan cek beberapa saat lagi di Spreadsheet.`);
+            const btnSubmit = this.querySelector("button[type='submit']");
+            const teksAwalBtn = btnSubmit.innerHTML;
             
-            formFotokopi.reset();
-            document.querySelectorAll("[id^='hint_']").forEach(hint => {
-                if(hint.id.includes("meterai")) {
-                    hint.textContent = "0 PCS";
-                } else {
-                    hint.textContent = "Rp 0";
-                }
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-2"></i> Mengirim Data...`;
+
+            // Konversi Tanggal (yyyy-mm-dd) -> (dd/MM/yyyy)
+            const tglRaw = inputTanggal.value;
+            const parts = tglRaw.split("-");
+            const tglFormatAppsScript = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+            const dapatkanAngkaMurni = (id) => {
+                let val = document.getElementById(id).value;
+                return parseInt(val.replace(/[^0-9]/g, ""), 10) || 0;
+            };
+
+            const dataKirim = new URLSearchParams();
+            dataKirim.append("tanggal", tglFormatAppsScript);
+            dataKirim.append("bulan_target", selectBulanOperasional.value); // Menyertakan nama sheet target khusus
+            dataKirim.append("pendapatan_kotor", dapatkanAngkaMurni("input_pendapatan_kotor"));
+            dataKirim.append("meterai_terjual", dapatkanAngkaMurni("input_meterai_terjual"));
+            dataKirim.append("meterai_terjual_qris", dapatkanAngkaMurni("input_meterai_terjual_qris"));
+            dataKirim.append("pendapatan_qris", dapatkanAngkaMurni("input_pendapatan_qris"));
+            dataKirim.append("uang_makan", dapatkanAngkaMurni("input_uang_makan"));
+            dataKirim.append("pengeluaran_kasir", dapatkanAngkaMurni("input_pengeluaran_kasir"));
+            dataKirim.append("tabungan_a", dapatkanAngkaMurni("input_tabungan_a"));
+            dataKirim.append("tabungan_b", dapatkanAngkaMurni("input_tabungan_b"));
+
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: dataKirim.toString()
+            })
+            .then(() => {
+                alert(`Data tanggal ${tglFormatAppsScript} Berhasil Dikirim!\nSilakan cek beberapa saat lagi di Spreadsheet.`);
+                
+                formFotokopi.reset();
+                if (selectBulanOperasional) selectBulanOperasional.value = "";
+                if (wrapperFormKerja) wrapperFormKerja.classList.add("pointer-events-none", "opacity-40", "blur-[1px]");
+                
+                labelStatusCloud.textContent = "Tentukan bulan kerja dahulu...";
+                boxStatusCloud.className = "w-full px-4 py-3 bg-gray-100 border-2 border-gray-300 rounded-[14px] font-black text-gray-500 tracking-wide flex items-center gap-2";
+                iconStatusCloud.className = "fa-solid fa-circle-question";
+
+                document.querySelectorAll("[id^='hint_']").forEach(hint => {
+                    if(hint.id.includes("meterai")) {
+                        hint.textContent = "0 PCS";
+                    } else {
+                        hint.textContent = "Rp 0";
+                    }
+                });
+
+                // Segarkan info riwayat baris di atas setelah submit sukses
+                muatDataTerakhirCloud();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Gagal mengirim data! Periksa koneksi atau URL script.");
+            })
+            .finally(() => {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = teksAwalBtn;
             });
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("Gagal mengirim data! Periksa koneksi atau URL script.");
-        })
-        .finally(() => {
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = teksAwalBtn;
         });
-    });
-}
+    }
 });
+
+// --- FUNGSI GLOBAL UNTUK MENGENDALIKAN MODAL POP-UP CUSTOM ---
+function bukaAlertCloud(namaBulanTeks) {
+    const modal = document.getElementById("modal_alert_cloud");
+    const labelBulan = document.getElementById("alert_target_bulan");
+    if(labelBulan) labelBulan.textContent = namaBulanTeks;
+    
+    if(modal) {
+        modal.classList.remove("hidden");
+        setTimeout(() => {
+            modal.classList.remove("opacity-0");
+            modal.querySelector(".transform").classList.remove("scale-95");
+            modal.querySelector(".transform").classList.add("scale-100");
+        }, 10);
+    }
+}
+
+function tutupAlertCloud() {
+    const modal = document.getElementById("modal_alert_cloud");
+    const selectBulan = document.getElementById("select_bulan_operasional");
+    
+    if(selectBulan) selectBulan.value = ""; // Reset dropdown ke default kosong
+    
+    if(modal) {
+        modal.classList.add("opacity-0");
+        modal.querySelector(".transform").classList.remove("scale-100");
+        modal.querySelector(".transform").classList.add("scale-95");
+        setTimeout(() => {
+            modal.classList.add("hidden");
+        }, 300);
+    }
+}
 </script>
 
 
@@ -3952,6 +4129,126 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+
+
+
+<!-- MODAL ALERT LAPORAN DAILY -->
+<div id="modal_alert_cloud" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] grid place-items-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-md rounded-[28px] border-4 border-red-500 shadow-2xl p-6 transform scale-95 transition-all duration-300 text-center space-y-4">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl mx-auto animate-bounce">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h4 class="text-xl font-black text-gray-900 uppercase tracking-wide leading-relaxed">
+    Database Bulan<br>Belum Tersedia!
+</h4>
+            <p class="text-sm font-bold text-gray-600 leading-relaxed">
+                Maaf, anda memilih periode <span id="alert_target_bulan" class="text-red-600 font-black underline">November 2026</span> yang belum dikonfigurasi / belum tersedia di sistem NSA CLOUD.
+            </p>
+            <div class="bg-gray-50 border border-gray-200 p-3 rounded-[14px] text-xs font-bold text-gray-500 text-left">
+                <span class="text-red-500 font-black">Catatan:</span> Form input untuk bulan ini sengaja dikunci demi menghindari input data bulan tertentu yang belum waktunya.
+            </div>
+            <button type="button" onclick="tutupAlertCloud()"
+                class="w-full py-3 bg-gray-900 hover:bg-black text-white font-black text-xs rounded-[14px] uppercase tracking-wider transition-colors shadow-md">
+                Saya Mengerti
+            </button>
+        </div>
+    </div>
+	
+
+
+<div id="modalTentangAplikasi" class="fixed inset-0 z-[10030] flex items-center justify-center hidden p-4">
+    
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px] overlay-animate-in" onclick="tutupTentangAplikasi()"></div>
+
+    <div class="relative bg-white w-full max-w-sm rounded-[35px] shadow-2xl overflow-hidden modal-animate-in transform-gpu flex flex-col border border-green-100">
+        
+        <div class="bg-gradient-to-b from-green-50 to-white p-6 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-green-100/40 rounded-full blur-xl"></div>
+            <div class="absolute -bottom-6 -left-6 w-20 h-20 bg-blue-50/50 rounded-full blur-lg"></div>
+
+            <div class="w-16 h-16 bg-gradient-to-tr from-green-500 to-green-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md shadow-green-500/20 relative z-10">
+                <i class="fas fa-box-archive text-2xl animate-pulse-subtle"></i>
+            </div>
+            
+            <h3 class="text-xl font-black text-gray-800 tracking-tight">Nurjaya Smart Archive</h3>
+            <p class="text-[10px] text-green-600 font-black uppercase tracking-[0.2em] mt-0.5">Sistem Tata Kelola Digital v5.0.26</p>
+        </div>
+
+        <div class="px-6 pb-2 text-center flex-1">
+            <p class="text-xs text-gray-600 leading-relaxed font-medium">
+                <strong class="text-gray-800 font-bold">NSA (Nurjaya Smart Archive)</strong> adalah platform manajemen internal terintegrasi yang berfungsi sebagai sistem pengarsipan digital, pengelola data operasional harian, serta media bantu kalkulasi data keuangan. 
+            </p>
+            
+            <div class="my-4 p-2.5 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center gap-2">
+                <span class="text-[9px] font-black uppercase tracking-wider bg-green-100 text-green-700 px-2 py-1 rounded-lg border border-green-200">
+                    <i class="fas fa-print mr-1"></i> Photocopy
+                </span>
+                <span class="text-slate-300 text-xs font-light">|</span>
+                <span class="text-[9px] font-black uppercase tracking-wider bg-pink-100 text-pink-700 px-2 py-1 rounded-lg border border-pink-200">
+                    <i class="fas fa-heart-pulse mr-1"></i> Apotek
+                </span>
+            </div>
+
+            <p class="text-[11px] text-gray-500 leading-relaxed">
+                Dilengkapi dengan dual-mode ekosistem untuk menyelaraskan efisiensi kinerja operasional pada <span class="font-bold text-gray-700">Nurjaya Abadi Photocopy</span> dan <span class="font-bold text-gray-700">Apotek Nurjaya</span> secara aman dan responsif.
+            </p>
+        </div>
+
+        <div class="p-6 mt-2 border-t border-gray-50 bg-slate-50/50 text-center">
+            <button onclick="tutupTentangAplikasi()" 
+                class="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-black text-xs tracking-widest uppercase transition-all active:scale-95 shadow-md shadow-green-600/10 mb-4">
+                Selesai
+            </button>
+            
+            <div class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                &copy; 2026 <span class="text-gray-700 font-bold">Nurjaya</span>. All Rights Reserved.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Fungsi Membuka Modal Tentang Aplikasi (Dengan Efek Bouncy)
+function bukaTentangAplikasi() {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    const modal = document.getElementById('modalTentangAplikasi');
+    
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Memastikan animasi terpancing (Jika kamu menggunakan class animate-scale-in/fade-in)
+        // Jika ingin efek membal yang sama seperti sebelumnya, kita tambahkan class bouncy-nya:
+        const box = modal.querySelector('.relative.bg-white'); // Target box putihnya
+        if (box) {
+            box.classList.add('modal-bouncy-in');
+        }
+    }
+}
+
+// Fungsi Menutup Modal Tentang Aplikasi
+function tutupTentangAplikasi() {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    const modal = document.getElementById('modalTentangAplikasi');
+    const box = modal ? modal.querySelector('.relative.bg-white') : null;
+    
+    if (modal && box) {
+        // Animasi keluar
+        box.classList.remove('modal-bouncy-in');
+        box.classList.add('modal-bouncy-out');
+        
+        // Jeda untuk transisi animasi sebelum di-hidden
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            box.classList.remove('modal-bouncy-out'); // Reset class untuk buka berikutnya
+        }, 350);
+    }
+}
+</script>
+
 
 
 </body>
