@@ -2,302 +2,488 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Datang di Nurjaya Smart Archive</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PORTAL NSA</title>
+	<meta name="description" content="Portal untuk masuk ke sistem NSA Nurjaya Abadi Photocopy dan Apotek Nurjaya">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+    <!-- Resource Eksternal Terpusat -->
+	<link rel="manifest" href="manifest.json">
+	<link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+   <style>
+    /* ========================================================================= */
+    /* LOCK TOTAL 1 SCREEN (GLOBAL & MOBILE DEFAULT)                            */
+    /* ========================================================================= */
+    html, body {
+        height: 100%;
+        min-height: 100vh;
+        overflow: hidden; /* Mengunci scroll bar vertikal & horizontal secara total */
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        background: #2ecc71; 
+        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 35px; /* DIPERBESAR: Kiri-kanan kini 24px agar tidak mepet layar HP */
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* ========================================================================= */
+    /* LAYOUT UTAMA KONTEN (OPTIMAL DI MOBILE LALU DESKTOP)                      */
+    /* ========================================================================= */
+    .nsa-portal-wrapper {
+        width: 100%;
+        max-width: 1050px;
+        height: 100%; /* Memaksimalkan tinggi ruang HP yang tersedia */
+        max-height: 580px; /* Batas atas agar proporsi kotak tetap kokoh di HP panjang */
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 24px; /* DISESUAIKAN: 24px agar lekukan selaras dengan jarak tepi layar */
+        box-shadow: 0 35px 80px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column; 
+        overflow: hidden;
+        z-index: 10;
+        animation: portalMasuk 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Sisi Atas (Mobile) / Kiri (Desktop) */
+    .nsa-left-panel {
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+        padding: 24px 20px; 
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        justify-content: center;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        position: relative;
+        flex-shrink: 0; 
+    }
+
+    /* Sisi Bawah (Mobile) / Kanan (Desktop) */
+    .nsa-right-panel {
+        background: #ffffff;
+        padding: 24px 24px; 
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+        flex-grow: 1; 
+        overflow: hidden; 
+    }
+
+    .nsa-text-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* ========================================================================= */
+    /* LOGO FRAME DENGAN KILATAN SHINING                                         */
+    /* ========================================================================= */
+    .nsa-logo-frame {
+        width: 70px; 
+        height: 70px;
+        background: #ffffff;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nsa-logo-frame::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 30%;
+        height: 200%;
+        background: linear-gradient(
+            to right, 
+            rgba(255, 255, 255, 0) 0%, 
+            rgba(255, 255, 255, 0.6) 50%, 
+            rgba(255, 255, 255, 0) 100%
+        );
+        transform: rotate(30deg);
+        animation: logoShine 4s ease-in-out infinite;
+    }
+
+    .nsa-logo-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .nsa-main-title {
+        color: #ffffff;
+        font-size: 18px; 
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+    }
+    .nsa-main-subtitle {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-top: 2px;
+    }
+
+    .nsa-brand-tagline {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.5;
+        max-width: 340px;
+        margin-top: 15px;
+        display: none; 
+    }
+
+    /* ========================================================================= */
+    /* UNIT KERJA SELECTION                                                      */
+    /* ========================================================================= */
+    .panel-section-title {
+        font-size: 10px;
+        color: #94a3b8;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .menu-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; 
+    }
+
+    .btn-unit {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 14px 18px; 
+        border: none;
+        color: white;
+        border-radius: 18px;
+        cursor: pointer;
+        font-family: inherit;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-unit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-fotokopi {
+        background: linear-gradient(135deg, #19c54b 0%, #10b981 100%);
+        box-shadow: 0 8px 20px -6px rgba(25, 197, 75, 0.3);
+    }
+    .btn-apotek {
+        background: linear-gradient(135deg, #fb18a8 0%, #db2777 100%);
+        box-shadow: 0 8px 20px -6px rgba(251, 24, 168, 0.3);
+    }
+
+    .icon-wrapper {
+        width: 34px;
+        height: 34px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .style-icon { font-size: 14px; }
+
+    .btn-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+    .btn-text {
+        font-weight: 900;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .btn-desc {
+        font-size: 9px;
+        font-weight: 600;
+        opacity: 0.85;
+        margin-top: 1px;
+    }
+
+    .chevron-right {
+        margin-left: auto;
+        opacity: 0.6;
+        font-size: 11px;
+    }
+
+    .nsa-cloud-embed {
+        padding: 12px 14px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .embed-cloud-icon {
+        font-size: 18px;
+        color: #2ecc71;
+        animation: cloudFloating 3s ease-in-out infinite;
+        flex-shrink: 0;
+    }
+    .embed-cloud-title {
+        font-size: 9px;
+        font-weight: 900;
+        color: #1e293b;
+    }
+    .embed-cloud-text {
+        font-size: 8px;
+        font-weight: 600;
+        color: #64748b;
+        margin-top: 1px;
+    }
+
+    .panel-footer {
+        text-align: center;
+    }
+    .copyright-text {
+        color: #cbd5e1;
+        font-size: 8px;
+        font-weight: 700;
+    }
+
+    /* ========================================================================= */
+    /* BACKGROUND ANIMATION DECORATIONS                                         */
+    /* ========================================================================= */
+    .nsa-bg-decorations {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+    }
+    .decor-icon {
+        position: absolute;
+        color: rgba(255, 255, 255, 0.35) !important;
+    }
+    .icon-pos-1 { top: 8%; left: 6%; font-size: 3rem; animation: floatLoopA 7s infinite; }
+    .icon-pos-2 { top: 12%; right: 6%; font-size: 2.5rem; animation: floatLoopB 9s infinite; }
+    .icon-pos-3 { bottom: 30%; left: 4%; font-size: 2.2rem; animation: floatLoopB 8s infinite; }
+    .icon-pos-4 { top: 22%; right: 18%; font-size: 2.8rem; animation: floatLoopA 11s infinite; }
+    .icon-pos-5 { display: none; } 
+    .icon-pos-6 { display: none; }
+    .icon-pos-7 { bottom: 15%; right: 6%; font-size: 3rem; animation: floatLoopB 9s infinite; }
+    .icon-pos-8 { display: none; }
+
+    @keyframes floatLoopA {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(3deg); }
+    }
+    @keyframes floatLoopB {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(10px) rotate(-4deg); }
+    }
+    @keyframes portalMasuk { 
+        0% { opacity: 0; transform: translateY(20px) scale(0.98); } 
+        100% { opacity: 1; transform: translateY(0) scale(1); } 
+    }
+    @keyframes logoShine {
+        0% { left: -60%; }
+        15%, 100% { left: 130%; }
+    }
+    @keyframes cloudFloating {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+    }
+
+    /* ========================================================================= */
+    /* RESPONSIVE LAYOUT BREAKPOINT: DESKTOP MONITOR                             */
+    /* ========================================================================= */
+    @media (min-width: 769px) {
         body {
-            margin: 0;
-            padding: 16px;
-            width: 100%;
-            height: 100vh;
-            /* Latar belakang gradasi hijau khas Nurjaya */
-            background: linear-gradient(to bottom, #2ecc71 0%, #f4f4f4 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            overflow: hidden;
+            padding: 0; /* Dikembalikan ke nol untuk desktop agar presisi di tengah */
         }
         
-        /* Animasi Slide Up Halus saat Pintu Gerbang Terbuka */
-        @keyframes nsaModalSlideUp {
-            0% { opacity: 0; transform: translateY(40px) scale(0.96); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        .nsa-portal-wrapper {
+            flex-direction: row;
+            height: 85vh;        
+            max-height: 650px;   
+            width: 90%;
+            border-radius: 40px; /* Di layar besar pakai kelengkungan penuh asli */
         }
         
-        .nsa-container {
-            background: #ffffff;
-            width: 100%;
-            max-width: 380px;
-            border-radius: 35px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.03);
-            animation: nsaModalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .nsa-left-panel {
+            width: 45%;
+            height: 100%;        
+            padding: 45px;
+            border-bottom: none;
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
         }
         
-        .nsa-header {
-            padding: 45px 20px 25px 20px;
-            text-align: center;
+        .nsa-logo-frame {
+            width: 95px;
+            height: 95px;
+            margin-bottom: 24px;
+            border-radius: 26px;
         }
         
-        .nsa-logo-box {
-            width: 72px;
-            height: 72px;
-            background: #ffffff;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px auto;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
+        .nsa-main-title { font-size: 30px; }
+        .nsa-main-subtitle { font-size: 14px; margin-top: 6px; }
+        .nsa-brand-tagline { display: block; }
         
-        .nsa-logo-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .nsa-right-panel {
+            width: 55%;
+            height: 100%;        
+            padding: 50px 55px;
         }
-        
-        .nsa-title {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 800;
-            color: #111827;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-        }
-        
-        .nsa-subtitle {
-            margin: 8px 0 0 0;
-            font-size: 14px;
-            color: #9ca3af;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-        }
-        
-        .nsa-body {
-            padding: 10px 28px 45px 28px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .nsa-section-tag {
-            margin: 0 0 4px 0;
-            font-size: 10px;
-            color: #d1d5db;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            text-align: center;
-        }
-        
-        /* Base gaya tombol pilihan */
-        .btn-unit {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            width: 100%;
-            padding: 18px 26px;
-            border: none;
-            color: white;
-            border-radius: 100px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
-            text-decoration: none;
-        }
-        
-        /* Tombol Unit Fotokopi (Hijau) */
-        .btn-fotokopi {
-            background: #19c54b;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-        }
-        .btn-fotokopi:hover {
-            background: #1d4ed8;
-            transform: translateY(-1.5px);
-        }
-        
-        /* Tombol Unit Apotek (Hijau) */
-        .btn-apotek {
-            background: #fb18a8;
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
-        }
-        .btn-apotek:hover {
-            background: #15803d;
-            transform: translateY(-1.5px);
-        }
-        
-        .btn-text {
-            font-weight: 700;
-            font-size: 12px;
+
+        .panel-section-title {
             text-align: left;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-        
-        .icon-wrapper {
-            width: 24px;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .chevron-right {
-            margin-left: auto;
-            opacity: 0.5;
             font-size: 11px;
         }
+
+        .menu-grid { gap: 16px; }
+        .btn-unit { padding: 18px 24px; border-radius: 24px; gap: 18px; }
+        .icon-wrapper { width: 38px; height: 38px; border-radius: 14px; }
+        .style-icon { font-size: 16px; }
+        .btn-text { font-size: 13px; }
+        .btn-desc { font-size: 10px; margin-top: 3px; }
+        .chevron-right { font-size: 12px; }
         
-        .nsa-footer {
-            padding: 22px;
-            background: #fafafa;
-            text-align: center;
-            border-top: 1px solid #f3f4f6;
-        }
+        .nsa-cloud-embed { padding: 18px 20px; border-radius: 24px; gap: 14px; }
+        .embed-cloud-icon { font-size: 24px; }
+        .embed-cloud-title { font-size: 11px; }
+        .embed-cloud-text { font-size: 10px; }
         
-        .copyright {
-            color: #d1d5db;
-            font-size: 9px;
-            margin-top: 4px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
+        .copyright-text { text-align: left; font-size: 9px; }
+
+        .icon-pos-5 { display: block; bottom: 25%; left: 8%; font-size: 4rem; animation: floatLoopA 8s infinite; }
+        .icon-pos-6 { display: block; bottom: 10%; left: 22%; font-size: 3rem; animation: floatLoopB 7s infinite; }
+        .icon-pos-8 { display: block; bottom: 8%; right: 22%; font-size: 3.5rem; animation: floatLoopA 12s infinite; }
+    }
     </style>
 </head>
 <body>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<!-- Hamburan Dekorasi Background -->
+<div class="nsa-bg-decorations">
+    <i class="fas fa-cloud decor-icon icon-pos-1"></i>
+    <i class="fas fa-database decor-icon icon-pos-2"></i>
+    <i class="fas fa-folder-open decor-icon icon-pos-3"></i>
+    <i class="fas fa-network-wired decor-icon icon-pos-4"></i>
+    <i class="fas fa-file-invoice decor-icon icon-pos-5"></i>
+    <i class="fas fa-capsules decor-icon icon-pos-6"></i>
+    <i class="fas fa-prescription-bottle-alt decor-icon icon-pos-7"></i>
+    <i class="fas fa-copy decor-icon icon-pos-8"></i>
+</div>
 
-    <div class="nsa-bg-decorations">
-        <i class="fas fa-cloud decor-icon icon-pos-1"></i>
-        <i class="fas fa-database decor-icon icon-pos-2"></i>
-        <i class="fas fa-folder-open decor-icon icon-pos-3"></i>
-        <i class="fas fa-network-wired decor-icon icon-pos-4"></i>
-
-        <i class="fas fa-file-invoice decor-icon icon-pos-5"></i>
-        <i class="fas fa-capsules decor-icon icon-pos-6"></i>
-        <i class="fas fa-prescription-bottle-alt decor-icon icon-pos-7"></i>
-        <i class="fas fa-copy decor-icon icon-pos-8"></i>
+<!-- Container Split-Screen Utama -->
+<div class="nsa-portal-wrapper">
+    
+    <!-- PANEL ATAS/KIRI: LOGO & JUDUL -->
+    <div class="nsa-left-panel">
+        <div class="nsa-logo-frame">
+            <img src="https://lh3.googleusercontent.com/d/1YzO1wQlp14cnaME86W-WD-TaNLEsLi85" alt="NSA Logo">
+        </div>
+        <div class="nsa-text-group">
+            <h2 class="nsa-main-title">SELAMAT DATANG DI</h2>
+            <p class="nsa-main-subtitle">Nurjaya Smart Archive</p>
+            <p class="nsa-brand-tagline">Pusat gerbang arsip digital terintegrasi untuk efisiensi pelaporan finansial, data inventaris, dan tata kelola administrasi internal Nurjaya Group.</p>
+        </div>
     </div>
-
-    <div class="nsa-container animate-portal-in">
+    
+    <!-- PANEL BAWAH/KANAN: MENU SELEKSI & DATA INTEGRASI -->
+    <div class="nsa-right-panel">
+        <p class="panel-section-title">Silakan Pilih Unit Kerja</p>
         
-        <div class="nsa-header">
-            <div class="nsa-logo-box pulse-logo">
-                <img src="https://lh3.googleusercontent.com/d/1YzO1wQlp14cnaME86W-WD-TaNLEsLi85" alt="NSA Logo">
+        <div class="menu-grid">
+            <!-- Tombol Fotokopi -->
+            <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-fotokopi">
+                <div class="icon-wrapper">
+                    <i class="fas fa-print style-icon"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
+                    <span class="btn-desc">Kelola Data Operasional Harian & Arsip Digital</span>
+                </div>
+                <i class="fas fa-chevron-right chevron-right"></i>
+            </button>
+
+            <!-- Tombol Apotek -->
+            <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-apotek">
+                <div class="icon-wrapper">
+                    <i class="fas fa-flask style-icon"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-text">APOTEK NURJAYA</span>
+                    <span class="btn-desc">Kelola Data Operasional Harian & Tutup Buku</span>
+                </div>
+                <i class="fas fa-chevron-right chevron-right"></i>
+            </button>
+        </div>
+        
+        <!-- Ornamen Cloud Chip -->
+        <div class="nsa-cloud-embed">
+            <i class="fas fa-cloud embed-cloud-icon"></i>
+            <div class="embed-cloud-details">
+                <span class="embed-cloud-title">SISTEM NSA CLOUD</span>
+                <p class="embed-cloud-text">Arsip digital dan data operasional harian disinkronkan secara aman ke dalam pusat database terpadu cloud.</p>
             </div>
-            <h2 class="nsa-title animate-text-delay-1">SELAMAT DATANG DI</h2>
-            <p class="nsa-subtitle animate-text-delay-2">Nurjaya Smart Archive</p>
-        </div>
-
-        <div class="nsa-body">
-            <p class="nsa-section-tag animate-text-delay-2">PILIH UNIT KERJA</p>
-
-            <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-fotokopi group">
-                <div class="icon-wrapper"><i class="fas fa-print style-icon"></i></div>
-                <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
-                <i class="fas fa-chevron-right chevron-right"></i>
-            </button>
-
-            <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-apotek group">
-                <div class="icon-wrapper"><i class="fas fa-flask style-icon"></i></div>
-                <span class="btn-text">APOTEK NURJAYA</span>
-                <i class="fas fa-chevron-right chevron-right"></i>
-            </button>
-        </div>
-
-        <div class="nsa-footer">
-            <div class="copyright">© NURJAYA 2026</div>
         </div>
         
+        <!-- Footer Penutup -->
+        <div class="panel-footer">
+            <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
+        </div>
     </div>
 
-    <style>
-        /* ========================================================================= */
-        /* REVISI TOTAL: DEKORASI PUTIH KONTRASTIF & MATRIKS ANIMASI                 */
-        /* ========================================================================= */
-        .nsa-bg-decorations {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
+</div>
 
-        /* UBAH TOTAL KE PUTIH: Menggunakan warna putih solid dengan opasitas 0.4 */
-        /* Sangat kontras di background hijau, dan tetap terlihat elegan di area putih */
-        .decor-icon {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.4) !important; 
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.05)); /* Efek bayangan tipis agar timbul */
-            transition: all 0.5s ease;
-        }
+<script>
+    function pilihUnitNSA(mode, targetUrl) {
+        sessionStorage.setItem('nsa_active_mode', mode);
+        window.location.href = targetUrl;
+    }
+</script>
 
-        /* Penataan Posisi Grid Sesuai Hamparan Layer Screen Tablet Teteh */
-        .icon-pos-1 { top: 10%; left: 8%; font-size: 4.5rem; animation: floatLoopA 7s ease-in-out infinite; }
-        .icon-pos-2 { top: 22%; right: 10%; font-size: 3.5rem; animation: floatLoopB 9s ease-in-out infinite; }
-        .icon-pos-3 { top: 45%; left: 6%; font-size: 3rem; animation: floatLoopB 8s ease-in-out infinite; }
-        .icon-pos-4 { top: 14%; right: 28%; font-size: 3.8rem; animation: floatLoopA 11s ease-in-out infinite; }
 
-        /* Area Bawah (Sangat Terang Menembus Hamparan Hijau) */
-        .icon-pos-5 { bottom: 28%; left: 12%; font-size: 4rem; animation: floatLoopA 8s ease-in-out infinite; }
-        .icon-pos-6 { bottom: 14%; left: 26%; font-size: 3rem; animation: floatLoopB 7s ease-in-out infinite; }
-        .icon-pos-7 { bottom: 24%; right: 14%; font-size: 4.5rem; animation: floatLoopB 9s ease-in-out infinite; }
-        .icon-pos-8 { bottom: 12%; right: 28%; font-size: 3.5rem; animation: floatLoopA 12s ease-in-out infinite; }
 
-        /* Animasi Loop Berjalan (Floating Wave Effect) */
-        @keyframes floatLoopA {
-            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-            50% { transform: translateY(-20px) rotate(6deg) scale(1.03); }
-        }
-
-        @keyframes floatLoopB {
-            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-            50% { transform: translateY(20px) rotate(-10deg) scale(0.97); }
-        }
-
-        /* Kunci Z-Index Box Kontainer Utama agar Tetap Terdepan */
-        .nsa-container {
-            position: relative;
-            z-index: 10;
-        }
-
-        /* ========================================================================= */
-        /* STYLE ASLI TETEHA (TETAP DIAMANKAN)                                       */
-        /* ========================================================================= */
-        .animate-portal-in { animation: portalMasuk 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .pulse-logo { animation: logoPulse 3s ease-in-out infinite; transition: transform 0.3s ease; }
-        .pulse-logo:hover { transform: scale(1.05) rotate(3deg); }
-        .animate-text-delay-1 { opacity: 0; animation: teksMuncul 0.5s ease forwards 0.2s; }
-        .animate-text-delay-2 { opacity: 0; animation: teksMuncul 0.5s ease forwards 0.3s; }
-        .btn-unit { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important; position: relative; overflow: hidden; }
-        .btn-unit:hover, .btn-unit:active { transform: translateY(-2px); box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.15); }
-        .btn-unit:active { transform: translateY(1px) scale(0.98); }
-        .btn-unit:hover .style-icon, .btn-unit:active .style-icon { animation: ikonGoyang 0.5s ease-in-out; }
-        .style-icon { font-size: 16px; transition: transform 0.3s ease; }
-        .btn-unit:hover .chevron-right, .btn-unit:active .chevron-right { transform: translateX(4px); color: currentColor; }
-        .chevron-right { transition: transform 0.2s ease, color 0.2s ease; }
-
-        @keyframes portalMasuk { 0% { opacity: 0; transform: translateY(30px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes logoPulse { 0%, 100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.05); } 50% { transform: scale(1.03); box-shadow: 0 10px 20px rgba(0,0,0,0.08); } }
-        @keyframes teksMuncul { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes ikonGoyang { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-15deg) scale(1.1); } 75% { transform: rotate(15deg) scale(1.1); } }
-    </style>
-
-    <script>
-        function pilihUnitNSA(mode, targetUrl) {
-            sessionStorage.setItem('nsa_active_mode', mode);
-            window.location.href = targetUrl;
-        }
-    </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker terdaftar!', reg))
+        .catch(err => console.error('Gagal daftar Service Worker:', err));
+    });
+  }
+</script>
 
 </body>
 </html>
