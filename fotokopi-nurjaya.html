@@ -555,14 +555,16 @@ document.addEventListener('keydown', function(event) {
                 </table>
             </div>
 
-            <div class="flex-grow overflow-x-auto p-2 md:p-4 bg-white flex items-center" style="-webkit-overflow-scrolling: touch;">
-    <div class="w-[1300px] h-[145px] md:h-[200px] relative">
-        <canvas id="statistik_bulan_ini"></canvas>
-    </div>
-</div>
-        </div>
-    </div>
-</div>
+            <!-- Cukup ubah bagian ini di HTML Fotokopi Anda -->
+			<div class="flex-grow overflow-x-auto p-2 md:p-4 bg-white flex items-center" style="-webkit-overflow-scrolling: touch;">
+			<!-- Dikunci di angka 850px agar pas: tidak mepet, tidak kejauhan -->
+			<div class="w-[850px] min-w-[850px] h-[145px] md:h-[200px] relative">
+			<canvas id="statistik_bulan_ini"></canvas>
+			</div>
+			</div>
+			</div>
+			</div>
+			</div>
 
 
 <div class="w-full max-w-5xl mx-auto px-2 md:px-4 mb-6">
@@ -3172,8 +3174,26 @@ function siarkanNotifikasiLangsung() {
 const API_URL_FOTOKOPI = "https://script.google.com/macros/s/AKfycbxS5Ly5fEBsZqIKCj1BAIQW5ns5AyQ87NgPN2hINvSsqGf3GOo7bwXAW3yfVIS1nxkKbQ/exec";
 
 // Fungsi Utama: Memuat data spreadsheet dan mengisinya ke tabel & grafik
+// Fungsi Utama: Memuat data spreadsheet dan mengisinya ke tabel & grafik
 function muatStatistikBulanIni() {
-    fetch(API_URL_FOTOKOPI, {
+    // --- 1. OTOMATISASI DETEKSI BULAN & TAHUN TANPA SPASI ---
+    const daftarBulan = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    
+    const waktuSekarang = new Date();
+    const namaBulanSekarang = daftarBulan[waktuSekarang.getMonth()]; // Hasil: "Mei"
+    const tahunSekarang = waktuSekarang.getFullYear();              // Hasil: 2026
+    
+    // Diperketat: Digabung langsung tanpa spasi agar cocok dengan "Mei2026"
+    const namaSheetBulanIni = `${namaBulanSekarang}${tahunSekarang}`;
+    
+    // Menyisipkan parameter ?bulan=Mei2026 ke URL API
+    const urlOtomatis = `${API_URL_FOTOKOPI}?bulan=${encodeURIComponent(namaSheetBulanIni)}`;
+
+    // --- 2. JALANKAN FETCH DENGAN URL OTOMATIS ---
+    fetch(urlOtomatis, {
         method: "GET",
         mode: "cors",
         redirect: "follow"
@@ -3192,7 +3212,7 @@ function muatStatistikBulanIni() {
         const labelTanggal = dataMaster.map(item => {
             if (item.tanggal.includes("/")) {
                 const pecah = item.tanggal.split("/");
-                return Number(pecah[0]); // Menghasilkan angka saja (misal: 3)
+                return Number(pecah[0]); 
             }
             
             const tanggalObjek = new Date(item.tanggal);
@@ -3222,7 +3242,7 @@ function muatStatistikBulanIni() {
         // Gambar grafik harian dengan sumbu X yang sudah dikunci konfigurasinya
         buatGrafikHarian(labelTanggal, dataPendapatan);
 
-        // --- KUNCI UTAMA: HILANGKAN LAPISAN LOADING DENGAN HALUS ---
+        // --- HILANGKAN LAPISAN LOADING DENGAN HALUS ---
         hilangkanLayerLoading();
     })
     .catch(err => {
@@ -3233,14 +3253,17 @@ function muatStatistikBulanIni() {
 
 // Fungsi Pengolah Grafik Line dengan Logika Segmen Warna Dinamis yang Aman
 function buatGrafikHarian(labels, dataValues) {
-    const ctx = document.getElementById('statistik_bulan_ini').getContext('2d');
-    
-    // Membuat efek warna gradasi hijau modern di bawah garis grafik
-    const gradientHijau = ctx.createLinearGradient(0, 0, 0, 180);
-    gradientHijau.addColorStop(0, 'rgba(46, 204, 113, 0.15)');
-    gradientHijau.addColorStop(1, 'rgba(46, 204, 113, 0.0)');
+    const canvasElement = document.getElementById('statistik_bulan_ini');
+    if (!canvasElement) return;
 
-    // PENGAMAN: Hapus instansiasi grafik lama jika ada untuk menghindari tumpang tindih saat halaman dimuat ulang
+    const ctx = canvasElement.getContext('2d');
+    
+    // Gradasi hijau khas Nurjaya Abadi Photocopy
+    const gradientHijau = ctx.createLinearGradient(0, 0, 0, 160);
+    gradientHijau.addColorStop(0, 'rgba(34, 197, 94, 0.15)');
+    gradientHijau.addColorStop(1, 'rgba(34, 197, 94, 0.0)');
+
+    // PENGAMAN: Hapus instansiasi lama agar tidak tumpang tindih saat datanya berubah
     if (window.grafikHarianFotokopi) {
         window.grafikHarianFotokopi.destroy();
     }
@@ -3255,74 +3278,66 @@ function buatGrafikHarian(labels, dataValues) {
                 borderWidth: 3.5,
                 fill: true, 
                 backgroundColor: gradientHijau,
-                tension: 0.4, // Membuat lekukan garis melengkung lembut halus
-                pointRadius: 4.5, // Sedikit diperbesar agar pas dengan jarak tanggal yang merenggang
-                pointHoverRadius: 7,
+                tension: 0.3, 
+                pointRadius: 4, 
+                pointHoverRadius: 6,
                 pointBackgroundColor: '#ffffff',
-                pointBorderColor: '#27ae60',
+                pointBorderColor: '#22c55e', // Warna Green-500 Tailwind
                 pointBorderWidth: 2,
                 segment: {
                     borderColor: ctxSegment => {
                         if (!ctxSegment || !ctxSegment.p0 || !ctxSegment.p1 || 
                             ctxSegment.p0.parsed === undefined || ctxSegment.p1.parsed === undefined) {
-                            return '#2ecc71'; 
+                            return '#22c55e'; 
                         }
                         
                         const val1 = ctxSegment.p0.parsed.y;
                         const val2 = ctxSegment.p1.parsed.y;
                         
                         if (val2 > val1) {
-                            return '#2ecc71'; // Hijau Cerah kalau omzet naik
+                            return '#22c55e'; // Naik (Hijau)
                         } else if (val2 < val1 && val2 < (val1 * 0.5)) {
-                            return '#e74c3c'; // Merah alarm jika anjlok parah (>50%)
+                            return '#ef4444'; // Turun Parah >50% (Merah)
                         } else if (val2 < val1) {
-                            return '#f1c40f'; // Kuning hangat jika turun tipis
+                            return '#eab308'; // Turun Tipis (Kuning)
                         }
-                        return '#27ae60'; // Hijau tua jika stabil
+                        return '#22c55e'; 
                     }
                 }
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Wajib false agar canvas patuh pada ukuran div HTML kamu
+            maintainAspectRatio: false, // WAJIB FALSE agar Chart.js patuh pada tinggi h-[145px]/md:h-[200px] di HTML Anda
+            plugins: {
+                legend: { display: false }
+            },
             scales: {
                 y: { 
                     beginAtZero: true,
-                    grid: { color: '#f4fbf6' }, 
+                    grid: { color: '#f0fdf4' }, // Garis grid horizontal tipis hijau lembut
                     ticks: {
-                        color: '#a0aec0',
-                        font: { size: 10, family: 'system-ui' },
-                        // ─── REVISI INDIKATOR SUMBU Y: UBAH DARI 'K' MENJADI RUPIAH BERSIH ───
+                        color: '#94a3b8',
+                        font: { size: 10 },
                         callback: function(value) {
-                            return value.toLocaleString('id-ID'); // Menghasilkan format angka Indonesia (Contoh: 150.000)
+                            return value.toLocaleString('id-ID'); 
                         }
                     }
                 },
                 x: { 
-                    grid: { 
-                        display: true,
-                        color: '#f1f5f9' // Garis vertikal abu-abu lembut agar penunjukan tanggal ke titik omzet makin presisi
-                    },
+                    grid: { display: false }, // Menyamakan dengan versi Apotek (tanpa garis vertikal biar bersih)
                     ticks: {
-                        color: '#64748b', // Warna teks dibuat sedikit lebih kontras (Slate 500) agar mudah dibaca
-                        
-                        // ─── UPGRADE UKURAN FONT & JARAK ───
+                        color: '#64748b', 
                         font: { 
-                            size: 12,          // Ukuran font tanggal diperbesar sesuai request sebelumnya
+                            size: 11,          
                             weight: 'bold', 
                             family: 'system-ui' 
                         },
-                        padding: 8,            // Memberikan jarak vertikal antara teks angka dengan batas bawah grafik
-                        
-                        minRotation: 0,   // Paksa teks tetap tegak lurus horizontal (0 derajat)
-                        maxRotation: 0,   // Cegah teks miring-miring secara otomatis
-                        autoSkip: false   // MATIKAN FITUR SKIP! Paksa Chart.js menampilkan semua angka tanggal (1,2,3...31)
+                        maxRotation: 0,   // KUNCI UTAMA: Melarang teks tanggal miring-miring di HP
+                        minRotation: 0,   // KUNCI UTAMA: Memaksa teks tanggal tegak lurus horizontal
+                        autoSkip: false   // KUNCI UTAMA: Menampilkan seluruh tanggal 1-31 secara utuh tanpa ada yang disembunyikan
                     }
                 }
-            },
-            plugins: {
-                legend: { display: false }
             }
         }
     });
