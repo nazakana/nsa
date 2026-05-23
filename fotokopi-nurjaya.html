@@ -1126,30 +1126,7 @@ document.addEventListener('keydown', function(event) {
 					<span class="text-gray-500">Mei 2026</span>
 				</button>
 
-						<!-- Popup Khusus Mei -->
-						<div id="popup-mei-final" 
-    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; padding: 1rem;"
-    onclick="this.style.display = 'none'"> <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"></div>
-
-    <div class="animate-ios" 
-        style="position: relative; background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 2.5rem 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);"
-        onclick="event.stopPropagation()"> <div style="width: 65px; height: 65px; background: #f0fdf4; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-            <i class="fa-solid fa-clock fa-2xl"></i>
-        </div>
-            
-        <h3 style="font-size: 1.3rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">Data Belum Tersedia</h3>
-        <p style="font-size: 0.9rem; color: #4b5563; line-height: 1.6; margin-bottom: 1.8rem;">
-            Data untuk bulan <b>Mei 2026</b> baru akan muncul setelah rekapitulasi akhir bulan selesai diproses.
-        </p>
-
-        <button onclick="document.getElementById('popup-mei-final').style.display = 'none'" 
-            style="width: 100%; background: #16a34a; color: white; padding: 1.1rem; border-radius: 20px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s;"
-            onmouseover="this.style.background='#15803d'"
-            onmouseout="this.style.background='#16a34a'">
-            Saya Mengerti
-        </button>
-    </div>
-</div>
+						
 					
 					
 						</div>
@@ -2060,7 +2037,7 @@ function toggleGatePass() {
 
 
 <!-- MODAL MENU DEVELOPER FOTOKOPI -->
-<div id="devModal" class="fixed inset-0 z-[10020] flex items-center justify-center hidden p-4 transform-gpu">
+<div id="devModal" class="fixed inset-0 z-[50] flex items-center justify-center hidden p-4 transform-gpu">
     <div id="modalOverlay" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px] overlay-animate-in" onclick="closeDevModalFunction()"></div>
 
     <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in flex flex-col border border-green-50 shadow-green-100/10">
@@ -3683,79 +3660,88 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // --- LOGIKA SUBMIT DATA KE GOOGLE APPS SCRIPT (POST) ---
-    const formFotokopi = document.getElementById("form-daily-fotokopi");
+const formFotokopi = document.getElementById("form-daily-fotokopi");
 
-    if (formFotokopi) {
-        formFotokopi.addEventListener("submit", function (e) {
-            e.preventDefault();
+if (formFotokopi) {
+    formFotokopi.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-            const btnSubmit = this.querySelector("button[type='submit']");
-            const teksAwalBtn = btnSubmit.innerHTML;
+        const btnSubmit = this.querySelector("button[type='submit']");
+        const teksAwalBtn = btnSubmit.innerHTML;
+        
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-2"></i> Mengirim Data...`;
+
+        // Konversi Tanggal (yyyy-mm-dd) -> (dd/MM/yyyy)
+        const tglRaw = inputTanggal.value;
+        const parts = tglRaw.split("-");
+        const tglFormatAppsScript = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+        const dapatkanAngkaMurni = (id) => {
+            let val = document.getElementById(id).value;
+            return parseInt(val.replace(/[^0-9]/g, ""), 10) || 0;
+        };
+
+        const dataKirim = new URLSearchParams();
+        dataKirim.append("tanggal", tglFormatAppsScript);
+        dataKirim.append("bulan_target", selectBulanOperasional.value);
+        dataKirim.append("pendapatan_kotor", dapatkanAngkaMurni("input_pendapatan_kotor"));
+        dataKirim.append("meterai_terjual", dapatkanAngkaMurni("input_meterai_terjual"));
+        dataKirim.append("meterai_terjual_qris", dapatkanAngkaMurni("input_meterai_terjual_qris"));
+        dataKirim.append("pendapatan_qris", dapatkanAngkaMurni("input_pendapatan_qris"));
+        dataKirim.append("uang_makan", dapatkanAngkaMurni("input_uang_makan"));
+        dataKirim.append("pengeluaran_kasir", dapatkanAngkaMurni("input_pengeluaran_kasir"));
+        dataKirim.append("tabungan_a", dapatkanAngkaMurni("input_tabungan_a"));
+        dataKirim.append("tabungan_b", dapatkanAngkaMurni("input_tabungan_b"));
+
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: dataKirim.toString()
+        })
+        .then(() => {
+            // KLIK SUKSES: Memanggil alert kustom bertema hijau emerald
+            bukaAlertFotokopi(
+                "sukses",
+                "Data Berhasil<br>Diupload",
+                `Laporan tanggal <b>${tglFormatAppsScript}</b> sukses tersimpan ke NSA CLOUD.<br>Refresh grafik di Home untuk mengecek.`
+            );
             
-            btnSubmit.disabled = true;
-            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-2"></i> Mengirim Data...`;
+            formFotokopi.reset();
+            if (selectBulanOperasional) selectBulanOperasional.value = "";
+            if (wrapperFormKerja) wrapperFormKerja.classList.add("pointer-events-none", "opacity-40", "blur-[1px]");
+            
+            labelStatusCloud.textContent = "Tentukan bulan kerja dahulu...";
+            boxStatusCloud.className = "w-full px-4 py-3 bg-gray-100 border-2 border-gray-300 rounded-[14px] font-black text-gray-500 tracking-wide flex items-center gap-2";
+            iconStatusCloud.className = "fa-solid fa-circle-question";
 
-            // Konversi Tanggal (yyyy-mm-dd) -> (dd/MM/yyyy)
-            const tglRaw = inputTanggal.value;
-            const parts = tglRaw.split("-");
-            const tglFormatAppsScript = `${parts[2]}/${parts[1]}/${parts[0]}`;
-
-            const dapatkanAngkaMurni = (id) => {
-                let val = document.getElementById(id).value;
-                return parseInt(val.replace(/[^0-9]/g, ""), 10) || 0;
-            };
-
-            const dataKirim = new URLSearchParams();
-            dataKirim.append("tanggal", tglFormatAppsScript);
-            dataKirim.append("bulan_target", selectBulanOperasional.value); // Menyertakan nama sheet target khusus
-            dataKirim.append("pendapatan_kotor", dapatkanAngkaMurni("input_pendapatan_kotor"));
-            dataKirim.append("meterai_terjual", dapatkanAngkaMurni("input_meterai_terjual"));
-            dataKirim.append("meterai_terjual_qris", dapatkanAngkaMurni("input_meterai_terjual_qris"));
-            dataKirim.append("pendapatan_qris", dapatkanAngkaMurni("input_pendapatan_qris"));
-            dataKirim.append("uang_makan", dapatkanAngkaMurni("input_uang_makan"));
-            dataKirim.append("pengeluaran_kasir", dapatkanAngkaMurni("input_pengeluaran_kasir"));
-            dataKirim.append("tabungan_a", dapatkanAngkaMurni("input_tabungan_a"));
-            dataKirim.append("tabungan_b", dapatkanAngkaMurni("input_tabungan_b"));
-
-            fetch(WEB_APP_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: dataKirim.toString()
-            })
-            .then(() => {
-                alert(`Data tanggal ${tglFormatAppsScript} Berhasil Dikirim!\nSilakan cek beberapa saat lagi di Spreadsheet.`);
-                
-                formFotokopi.reset();
-                if (selectBulanOperasional) selectBulanOperasional.value = "";
-                if (wrapperFormKerja) wrapperFormKerja.classList.add("pointer-events-none", "opacity-40", "blur-[1px]");
-                
-                labelStatusCloud.textContent = "Tentukan bulan kerja dahulu...";
-                boxStatusCloud.className = "w-full px-4 py-3 bg-gray-100 border-2 border-gray-300 rounded-[14px] font-black text-gray-500 tracking-wide flex items-center gap-2";
-                iconStatusCloud.className = "fa-solid fa-circle-question";
-
-                document.querySelectorAll("[id^='hint_']").forEach(hint => {
-                    if(hint.id.includes("meterai")) {
-                        hint.textContent = "0 PCS";
-                    } else {
-                        hint.textContent = "Rp 0";
-                    }
-                });
-
-                // Segarkan info riwayat baris di atas setelah submit sukses
-                muatDataTerakhirCloud();
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Gagal mengirim data! Periksa koneksi atau URL script.");
-            })
-            .finally(() => {
-                btnSubmit.disabled = false;
-                btnSubmit.innerHTML = teksAwalBtn;
+            document.querySelectorAll("[id^='hint_']").forEach(hint => {
+                if(hint.id.includes("meterai")) {
+                    hint.textContent = "0 PCS";
+                } else {
+                    hint.textContent = "Rp 0";
+                }
             });
+
+            muatDataTerakhirCloud();
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            // KLIK GAGAL: Memanggil alert kustom bertema merah rose
+            bukaAlertFotokopi(
+                "error",
+                "Gagal Kirim<br>Data Kasir",
+                "Terjadi gangguan transmisi. Mohon periksa kembali stabilitas jaringan internet Anda atau validasi URL Web App Script."
+            );
+        })
+        .finally(() => {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = teksAwalBtn;
         });
+    });
     }
 });
 
@@ -4265,6 +4251,145 @@ function tutupTentangAplikasi() {
 </script>
 
 
+<!-- ================= MODAL ALERT UNIVERSAL CLOUD FOTOKOPI ================= -->
+<div id="modal-alert-fotokopi" class="fixed inset-0 z-[99999] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+    <div id="fotokopi-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
+        
+        <!-- Wadah Lingkaran Icon (Warna & Icon akan diatur dinamis lewat JS) -->
+        <div id="fotokopi-alert-icon-box" class="mx-auto w-16 h-16 rounded-full flex items-center justify-center text-2xl animate-bounce">
+            <i id="fotokopi-alert-icon" class="fa-solid"></i>
+        </div>
+
+        <!-- Wadah Teks Informasi -->
+        <div class="space-y-1">
+            <h3 id="fotokopi-alert-judul" class="text-lg font-black text-gray-900 uppercase tracking-wide leading-tight"></h3>
+            <p id="fotokopi-alert-deskripsi" class="text-xs font-bold text-gray-500 leading-relaxed px-2"></p>
+        </div>
+
+        <!-- Tombol Konfirmasi -->
+        <button type="button" onclick="tutupAlertFotokopi()" id="fotokopi-alert-btn"
+            class="w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all">
+            SAYA MENGERTI
+        </button>
+    </div>
+</div>
+
+
+
+<script>
+/**
+ * GLOBAL OVERRIDE: Mengalihkan fungsi alert() bawaan browser secara otomatis
+ * ke modal kustom NSA CLOUD Fotokopi tanpa mengubah kode lama satu per satu.
+ */
+window.alert = function(pesan) {
+    // Deteksi otomatis: jika ada kata 'gagal', 'error', 'salah', atau 'periksa', set jadi tipe error
+    const kataKunciError = ['gagal', 'error', 'salah', 'periksa', 'ditolak', 'kosong', 'ulang', 'ulangi', 'tidak berhasil'];
+    const apakahError = kataKunciError.some(kata => pesan.toLowerCase().includes(kata));
+
+    if (apakahError) {
+        bukaAlertFotokopi(
+            "error", 
+            "Sistem Peringatan", 
+            pesan.replace(/\n/g, "<br>") // Ubah \n bawaan alert lama menjadi <br> agar rapi di HTML
+        );
+    } else {
+        bukaAlertFotokopi(
+            "sukses", 
+            "Notifikasi Sistem", 
+            pesan.replace(/\n/g, "<br>")
+        );
+    }
+};
+</script>
+
+<script>
+/**
+ * UTILITY: Membuka Modal Alert Kustom Fotokopi (Dinamis Sukses/Gagal)
+ * @param {string} tipe - 'sukses' atau 'error'
+ */
+function bukaAlertFotokopi(tipe, judul, deskripsi) {
+    const modal = document.getElementById('modal-alert-fotokopi');
+    const box = document.getElementById('fotokopi-box-content');
+    const iconBox = document.getElementById('fotokopi-alert-icon-box');
+    const icon = document.getElementById('fotokopi-alert-icon');
+    const judulElem = document.getElementById('fotokopi-alert-judul');
+    const deskripsiElem = document.getElementById('fotokopi-alert-deskripsi');
+    const btn = document.getElementById('fotokopi-alert-btn');
+
+    if (!modal || !box || !iconBox || !icon || !judulElem || !deskripsiElem || !btn) return;
+
+    // Setel konten teks
+    judulElem.innerHTML = judul;
+    deskripsiElem.innerHTML = deskripsi;
+
+    // Atur visual berdasarkan tipe respon cloud
+    if (tipe === 'sukses') {
+        // Tema Hijau Emerald khas Fotokopi
+        box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
+        iconBox.className = "mx-auto w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl animate-bounce border border-emerald-200";
+        icon.className = "fa-solid fa-cloud-arrow-up";
+        btn.className = "w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
+    } else {
+        // Tema Merah/Rose jika terjadi masalah koneksi
+        box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-rose-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
+        iconBox.className = "mx-auto w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center text-2xl animate-pulse border border-rose-200";
+        icon.className = "fa-solid fa-circle-exclamation";
+        btn.className = "w-full py-3 bg-gradient-to-r from-rose-500 to-red-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
+    }
+
+    // Aktifkan layout grid PWA
+    modal.classList.remove('hidden');
+    modal.classList.add('grid');
+    
+    setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+    }, 50);
+}
+
+/**
+ * UTILITY: Menutup Modal Alert Kustom Fotokopi
+ */
+function tutupAlertFotokopi() {
+    const modal = document.getElementById('modal-alert-fotokopi');
+    const box = document.getElementById('fotokopi-box-content');
+
+    if (!modal || !box) return;
+
+    box.classList.remove('scale-100', 'opacity-100');
+    box.classList.add('scale-95', 'opacity-0');
+
+    setTimeout(() => {
+        modal.classList.remove('grid');
+        modal.classList.add('hidden');
+    }, 300);
+}
+</script>
+
+<!-- Popup Khusus Mei -->
+						<div id="popup-mei-final" 
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; padding: 1rem;"
+    onclick="this.style.display = 'none'"> <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"></div>
+
+    <div class="animate-ios" 
+        style="position: relative; background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 2.5rem 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);"
+        onclick="event.stopPropagation()"> <div style="width: 65px; height: 65px; background: #f0fdf4; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+            <i class="fa-solid fa-clock fa-2xl"></i>
+        </div>
+            
+        <h3 style="font-size: 1.3rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">Data Belum Tersedia</h3>
+        <p style="font-size: 0.9rem; color: #4b5563; line-height: 1.6; margin-bottom: 1.8rem;">
+            Data untuk bulan <b>Mei 2026</b> baru akan muncul setelah rekapitulasi akhir bulan selesai diproses.
+        </p>
+
+        <button onclick="document.getElementById('popup-mei-final').style.display = 'none'" 
+            style="width: 100%; background: #16a34a; color: white; padding: 1.1rem; border-radius: 20px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s;"
+            onmouseover="this.style.background='#15803d'"
+            onmouseout="this.style.background='#16a34a'">
+            Saya Mengerti
+        </button>
+    </div>
+</div>
 
 </body>
 </html>
