@@ -213,6 +213,23 @@ document.addEventListener('keydown', function(e) {
 }
 </style>
 
+<style>
+.dynamic-island-transition {
+  /* cubic-bezier ini memberikan efek kenyal (bouncy) khas iOS saat melebar */
+  transition: all 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.1) !important;
+  max-height: 48px; /* Mengunci tinggi awal (setara h-12) */
+}
+
+.fade-in-text {
+  animation: fadeInTeksSistem 0.4s ease-out forwards;
+}
+
+@keyframes fadeInTeksSistem {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
 
 </head>
 
@@ -3798,85 +3815,86 @@ function setTombolAktif() {
   });
 
   /**
- * ENGINE MODAL FOREGROUND: DYNAMIC ISLAND ANIMATION STRATEGY
- */
-function bukaModalNotifForeground(judul, isi) {
-    const modal = document.getElementById('modal-notif-foreground');
-    const overlay = document.getElementById('nsa-fg-overlay');
-    const island = document.getElementById('dynamic-island');
-    const content = document.getElementById('nsa-fg-content');
-    const elemenJudul = document.getElementById('nsa-fg-judul');
-    const elemenIsi = document.getElementById('nsa-fg-isi');
+   * ENGINE MODAL FOREGROUND: DYNAMIC ISLAND ANIMATION STRATEGY (SMOOTH VERSION)
+   */
+  function bukaModalNotifForeground(judul, isi) {
+      const modal = document.getElementById('modal-notif-foreground');
+      const overlay = document.getElementById('nsa-fg-overlay');
+      const island = document.getElementById('dynamic-island');
+      const content = document.getElementById('nsa-fg-content');
+      const elemenJudul = document.getElementById('nsa-fg-judul');
+      const elemenIsi = document.getElementById('nsa-fg-isi');
 
-    if (!modal || !island || !content) return;
+      if (!modal || !island || !content) return;
 
-    // Inject teks pesan secara dinamis
-    if (elemenJudul) elemenJudul.innerText = judul;
-    if (elemenIsi) elemenIsi.innerText = isi;
+      // Inject teks pesan secara dinamis
+      if (elemenJudul) elemenJudul.innerText = judul;
+      if (elemenIsi) elemenIsi.innerText = isi;
 
-    // Aktifkan container utama (Flex)
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+      // Aktifkan container utama (Flex)
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
 
-    // TAHAP 1: Munculkan Punch Hole Kamera (Bulat Kecil)
-    setTimeout(() => {
-        overlay.classList.remove('opacity-0');
-        overlay.classList.add('opacity-100'); 
-        
-        island.classList.remove('scale-0', 'opacity-0');
-        island.classList.add('scale-100', 'opacity-100');
-    }, 50);
+      // TAHAP 1: Munculkan Punch Hole Kamera (Bulat Kecil)
+      setTimeout(() => {
+          overlay.classList.remove('opacity-0');
+          overlay.classList.add('opacity-100'); 
+          
+          island.classList.remove('scale-0', 'opacity-0');
+          island.classList.add('scale-100', 'opacity-100');
+      }, 50);
 
-    // TAHAP 2: Melebar secara Horizontal (Bentuk Kapsul)
-    setTimeout(() => {
-        island.classList.remove('w-12', 'rounded-full');
-        island.classList.add('w-full', 'max-w-[320px]', 'rounded-[24px]'); 
-    }, 650); 
+      // TAHAP 2: Melebar secara Horizontal (Bentuk Kapsul)
+      setTimeout(() => {
+          island.classList.remove('w-12', 'rounded-full');
+          island.classList.add('w-full', 'max-w-[320px]', 'rounded-[24px]'); 
+      }, 650); 
 
-    // TAHAP 3: Ekspansi Vertikal ke Bawah & Fade-In Isi Konten
-    setTimeout(() => {
-        island.classList.remove('h-12');
-        island.classList.add('h-auto'); 
-        
-        content.classList.remove('hidden');
-        content.classList.add('flex', 'fade-in-text'); // Pastikan class animasi teks Anda sudah ada di CSS
-    }, 1250); 
-}
+      // TAHAP 3: Ekspansi Vertikal ke Bawah Menggunakan style.maxHeight & Fade-In Isi Konten
+      setTimeout(() => {
+          // Solusi Kaku: Hindari h-auto langsung, melar menggunakan properti maxHeight agar dibaca browser
+          island.classList.remove('max-h-12');
+          island.style.maxHeight = "400px"; 
+          
+          // Memunculkan teks secara halus tanpa interupsi display block instan
+          content.classList.remove('opacity-0', 'pointer-events-none');
+      }, 1250); 
+  }
 
-/**
- * FUNGSI PENUTUP: Kebalikan dari Proses Ekspansi (Mengecil Kembali)
- */
-function tutupModalNotifForeground() {
-    const modal = document.getElementById('modal-notif-foreground');
-    const overlay = document.getElementById('nsa-fg-overlay');
-    const island = document.getElementById('dynamic-island');
-    const content = document.getElementById('nsa-fg-content');
+  /**
+   * FUNGSI PENUTUP: Kebalikan dari Proses Ekspansi (Mengecil Kembali)
+   */
+  function tutupModalNotifForeground() {
+      const modal = document.getElementById('modal-notif-foreground');
+      const overlay = document.getElementById('nsa-fg-overlay');
+      const island = document.getElementById('dynamic-island');
+      const content = document.getElementById('nsa-fg-content');
 
-    if (!modal || !island || !content) return;
+      if (!modal || !island || !content) return;
 
-    // Sembunyikan konten teks terlebih dahulu
-    content.classList.remove('flex', 'fade-in-text');
-    content.classList.add('hidden');
+      // Sembunyikan konten teks dengan opacity terlebih dahulu
+      content.classList.add('opacity-0', 'pointer-events-none');
 
-    // Kembalikan dimensi kapsul besar ke ukuran lingkaran semula
-    island.classList.remove('w-full', 'max-w-[320px]', 'h-auto', 'rounded-[24px]');
-    island.classList.add('w-12', 'h-12', 'rounded-full');
+      // Kembalikan dimensi kapsul besar ke ukuran lingkaran semula (menciut)
+      island.classList.remove('w-full', 'max-w-[320px]', 'rounded-[24px]');
+      island.style.maxHeight = "48px"; // Menurunkan kembali max-height secara gradual
+      island.classList.add('w-12', 'rounded-full', 'max-h-12');
 
-    // Transisi memudar dan mengecilkan total elemen
-    setTimeout(() => {
-        overlay.classList.remove('opacity-100');
-        overlay.classList.add('opacity-0');
-        
-        island.classList.remove('scale-100', 'opacity-100');
-        island.classList.add('scale-0', 'opacity-0');
-        
-        // Sembunyikan total layout dari view setelah animasi selesai
-        setTimeout(() => {
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }, 400);
-    }, 400);
-}
+      // Transisi memudar dan mengecilkan total elemen
+      setTimeout(() => {
+          overlay.classList.remove('opacity-100');
+          overlay.classList.add('opacity-0');
+          
+          island.classList.remove('scale-100', 'opacity-100');
+          island.classList.add('scale-0', 'opacity-0');
+          
+          // Sembunyikan total layout setelah animasi mengecil selesai sempurna
+          setTimeout(() => {
+              modal.classList.remove('flex');
+              modal.classList.add('hidden');
+          }, 400);
+      }, 400);
+  }
   // =========================================================================
 
 
@@ -3968,6 +3986,8 @@ function tutupModalNotifForeground() {
   });
 </script>
 
+
+<!-- MODAL DYNAMIC ISLAND APOTEK -->
 <!-- OVERLAY BACKGROUND BLURRY (Layer Paling Luar) -->
 <!-- Kita set z-[13000] agar berada tepat di atas modal pengatur dev yang bernilai 50 kemarin -->
 <div id="modal-notif-foreground" class="fixed inset-0 z-[15000] items-start justify-center hidden p-4">
