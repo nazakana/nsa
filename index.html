@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PORTAL NSA</title>
 	<meta name="description" content="Portal untuk masuk ke sistem NSA Nurjaya Abadi Photocopy dan Apotek Nurjaya">
-	<meta name="theme-color" content="#2ecc71">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="mobile-web-app-capable" content="yes">
     <!-- Resource Eksternal Terpusat -->
@@ -389,6 +388,119 @@
         .icon-pos-6 { display: block; bottom: 10%; left: 22%; font-size: 3rem; animation: floatLoopB 7s infinite; }
         .icon-pos-8 { display: block; bottom: 8%; right: 22%; font-size: 3.5rem; animation: floatLoopA 12s infinite; }
     }
+	
+	/* ========================================================================= */
+/* ANIMASI TRANSISI PERPINDAHAN HALAMAN PREMIUM (ALA BOOTING OS)            */
+/* ========================================================================= */
+.nsa-transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column; /* Menyusun konten secara vertikal ke bawah */
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Munculkan overlay utama saat fungsi dipicu */
+.nsa-transition-overlay.show-layer {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Lingkaran ripple yang meluas menyapu layar */
+.nsa-transition-circle {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1;
+}
+
+.nsa-transition-overlay.active-fotokopi .nsa-transition-circle {
+    background: linear-gradient(135deg, #13a83f 0%, #0a9666 100%);
+    transform: scale(35);
+}
+
+.nsa-transition-overlay.active-apotek .nsa-transition-circle {
+    background: linear-gradient(135deg, #e01194 0%, #be1b66 100%);
+    transform: scale(35);
+}
+
+/* Wadah Konten Tengah (Ikon, Judul, Loading) */
+.nsa-transition-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 30px;
+}
+
+/* Animasi Ikon Membal */
+.nsa-transition-icon-box {
+    color: #ffffff;
+    font-size: 3.5rem;
+    opacity: 0;
+    transform: scale(0.4);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-bottom: 20px;
+}
+.nsa-transition-overlay.active .nsa-transition-icon-box {
+    opacity: 1;
+    transform: scale(1) rotate(360deg);
+}
+
+/* Teks Judul Unit */
+.nsa-transition-title {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease 0.2s; /* Delay sedikit setelah ikon muncul */
+    margin-bottom: 8px;
+}
+.nsa-transition-overlay.active .nsa-transition-title {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Teks Subtitle / Loading Sistem */
+.nsa-transition-loading-text {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease 0.4s; /* Delay muncul paling terakhir */
+    animation: nsaPulseText 1.5s infinite ease-in-out; /* Efek kedip halus */
+}
+.nsa-transition-overlay.active .nsa-transition-loading-text {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Efek kedip teks ala OS loading */
+@keyframes nsaPulseText {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Fade out total sebelum pindah file HTML */
+.nsa-transition-overlay.fade-out {
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+}
     </style>
 </head>
 <body>
@@ -467,93 +579,97 @@
 
 </div>
 
-<!-- 1. Logika Navigasi Menu Utama -->
 <script>
     function pilihUnitNSA(mode, targetUrl) {
+        const overlay = document.getElementById('portal-transition');
+        const iconElement = document.getElementById('transition-icon');
+        const titleElement = document.getElementById('transition-title');
+        const loadingElement = document.getElementById('transition-loading');
+        
+        // 1. Tampilkan layer dasar & bersihkan kelas sisa jika ada
+        overlay.classList.remove('active-fotokopi', 'active-apotek', 'active', 'fade-out');
+        overlay.classList.add('show-layer');
+        
+        // 2. Set Konten Visual Berdasarkan Unit Kerja yang dipilih
+        if (mode === 'fotokopi') {
+            iconElement.className = 'fas fa-print';
+            titleElement.innerText = 'NURJAYA ABADI PHOTOCOPY';
+            overlay.classList.add('active-fotokopi');
+        } else if (mode === 'apotek') {
+            iconElement.className = 'fas fa-flask';
+            titleElement.innerText = 'APOTEK NURJAYA';
+            overlay.classList.add('active-apotek');
+        }
+        
+        // 3. Picu animasi lingkaran menyapu & teks membal muncul
+        // Diberi sekejap waktu (50ms) agar browser siap mengeksekusi transisi CSS
+        setTimeout(() => {
+            overlay.classList.add('active');
+        }, 50);
+        
+        // Simpan status session mode aktif
         sessionStorage.setItem('nsa_active_mode', mode);
-        window.location.href = targetUrl;
+        
+        // 4. Skenario Perubahan Teks Loading ala Booting OS (Total Jeda: 2500ms)
+        
+        // Tahap 1: Detik ke 0.6
+        setTimeout(() => {
+            loadingElement.innerText = 'Memverifikasi hak akses jaringan NSA...';
+        }, 600);
+        
+        // Tahap 2: Detik ke 1.3
+        setTimeout(() => {
+            loadingElement.innerText = 'Sinkronisasi dengan pangkalan basis data cloud...';
+        }, 1300);
+        
+        // Tahap 3: Detik ke 2.0
+        setTimeout(() => {
+            loadingElement.innerText = 'Membuka gerbang enkripsi arsip internal...';
+        }, 2000);
+        
+        // Tahap Akhir: Detik ke 2.5 (Fade out total, lalu pindah halaman)
+        setTimeout(() => {
+            overlay.classList.add('fade-out');
+            
+            // Berpindah halaman tepat saat efek fade out selesai (400ms sesuai CSS)
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 400);
+
+        }, 2500);
     }
 </script>
 
-<!-- 2. Panggil Library Firebase (Versi Compat) -->
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
 
-<!-- 3. Otomatisasi Fitur Notifikasi Firebase Tanpa Tombol -->
+
 <script>
-  // Konfigurasi Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyAAVlFcF5gs5ik0ESDg1Ka0Mxuy8Hh6uw8",
-    authDomain: "nurjaya-smart-archive.firebaseapp.com",
-    projectId: "nurjaya-smart-archive",
-    storageBucket: "nurjaya-smart-archive.firebasestorage.app",
-    messagingSenderId: "930477308354",
-    appId: "1:930477308354:web:b69a818a7ff73eb88f3e5b"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const messaging = firebase.messaging();
-
-  // Jalankan otomatis begitu halaman selesai dimuat sepenuhnya
-  window.addEventListener('load', function() {
-    
-    // 1. Registrasi Service Worker Terlebih Dahulu
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then((reg) => {
-                console.log('SW terdaftar:', reg.scope);
-                
-                // Cek ketersediaan fitur Notifikasi di browser
-                if (!("Notification" in window)) {
-                    console.warn("Browser ini tidak mendukung fitur Web Notification.");
-                    return;
-                }
-
-                // Jalankan proses inisiasi token otomatis
-                prosesIzinDanToken(reg);
-            })
-            .catch((err) => console.error('SW Error:', err));
-    }
-  });
-
-  // Fungsi Inti Otomatisasi Notifikasi
-  function prosesIzinDanToken(registration) {
-      // Minta izin otomatis ke pengguna (Pop-up bawaan browser akan muncul di awal)
-      Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-              console.log("Izin notifikasi Portal NSA aktif. Menghubungkan ke Firebase...");
-
-              // Ambil Token FCM menggunakan Service Worker yang sudah siap
-              messaging.getToken({
-                  serviceWorkerRegistration: registration,
-                  vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4'
-              })
-              .then((currentToken) => {
-                  if (currentToken) {
-                      console.log('FCM Token Berhasil Didapat:', currentToken);
-
-                      // Jalankan sinkronisasi background ke Google Apps Script Web App
-                      const urlScript = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
-                      
-                      fetch(`${urlScript}?token=${currentToken}`, { 
-                          mode: 'no-cors' 
-                      })
-                      .then(() => console.log("Sinkronisasi otomatis token ke Apps Script sukses."))
-                      .catch(err => console.error("Gagal sinkronisasi ke Apps Script:", err));
-
-                  } else {
-                      console.warn("Token kosong. Periksa file sw.js Anda.");
-                  }
-              })
-              .catch((err) => {
-                  console.error('Error saat eksekusi getToken:', err);
-              });
-          } else {
-              console.warn("Pengguna menolak izin notifikasi.");
-          }
-      });
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker terdaftar!', reg))
+        .catch(err => console.error('Gagal daftar Service Worker:', err));
+    });
   }
 </script>
+
+<!-- Struktur Elemen Transisi Premium (Booting OS Style) -->
+<div id="portal-transition" class="nsa-transition-overlay">
+    <div class="nsa-transition-circle"></div>
+    
+    <div class="nsa-transition-content">
+        <!-- Ikon Tengah -->
+        <div class="nsa-transition-icon-box">
+            <i id="transition-icon" class="fas fa-circle"></i>
+        </div>
+        
+        <!-- Judul Unit Kerja Dinamis -->
+        <h3 id="transition-title" class="nsa-transition-title">Menghubungkan...</h3>
+        
+        <!-- Log Teks Sistem Loading -->
+        <p id="transition-loading" class="nsa-transition-loading-text">Menginisialisasi sistem...</p>
+    </div>
+</div>
+
 
 </body>
 </html>
