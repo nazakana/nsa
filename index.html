@@ -640,6 +640,28 @@
     }
 </script>
 
+<script>
+// =========================================================================
+// FIX BUG BACK BUTTON: Reset overlay transisi saat user kembali ke portal
+// =========================================================================
+window.addEventListener('pageshow', function(event) {
+    // event.persisted akan bernilai 'true' jika halaman dimuat dari cache (tombol Back)
+    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        const overlay = document.getElementById('portal-transition');
+        
+        if (overlay) {
+            // Hapus semua class yang mengunci layar dan menyembunyikan elemen
+            overlay.classList.remove('show-layer', 'active', 'active-fotokopi', 'active-apotek', 'fade-out');
+            
+            // Opsional: Kembalikan teks loading ke posisi semula
+            const loadingElement = document.getElementById('transition-loading');
+            if (loadingElement) {
+                loadingElement.innerText = 'Menginisialisasi sistem...';
+            }
+        }
+    }
+});
+</script>
 
 
 <script>
