@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APOTEK NURJAYA ARCHIVE</title>
 	<meta name="description" content="Arsip Pembukuan dan Riwayat Keuangan Apotek  Nurjaya.">
-	<meta name="theme-color" content="#DB2777"> 
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="mobile-web-app-capable" content="yes">
     <!-- Resource Eksternal Terpusat -->
@@ -376,10 +375,10 @@ document.addEventListener('keydown', function(e) {
         
         <div class="flex gap-2 md:gap-3 items-center">
             
-            <button id="btnNotifAksi" onclick="void(0)"
-                    class="w-10 h-10 md:w-12 md:h-12 bg-white text-pink-600 rounded-full shadow-lg flex items-center justify-center focus:outline-none flex-shrink-0 hover:bg-pink-50 transition-all active:scale-95">
-                <i class="fas fa-bell text-xs md:text-base"></i>
-            </button>
+            <button id="btnNotifAksi"
+        class="w-10 h-10 md:w-12 md:h-12 bg-white text-pink-600 rounded-full shadow-lg flex items-center justify-center focus:outline-none flex-shrink-0 hover:bg-pink-50 transition-all active:scale-95">
+    <i class="fas fa-bell text-xs md:text-base"></i>
+</button>
 
             <button id="btnOpenDevApotek" onclick="bukaModalDevApotek()"
                     class="w-10 h-10 md:w-12 md:h-12 bg-pink-500 text-white rounded-full shadow-lg flex items-center justify-center focus:outline-none flex-shrink-0 hover:bg-pink-600 transition-all active:scale-95">
@@ -3720,8 +3719,298 @@ function tutupAlertKustom() {
 </script>
 
 
+<script>
+// GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
+function cekStatusNotif() {
+    if (!("Notification" in window)) return; // Browser jadul tidak support
+
+    if (Notification.permission !== "granted") {
+        const modal = document.getElementById('popupReminder');
+        if (modal) {
+            modal.classList.remove('hidden'); // Munculkan modal pengadang
+        }
+    } else {
+        // Jika sudah granted, otomatis ubah tombol lonceng jadi hijau (Emerald)
+        setTombolAktif();
+    }
+}
+
+// Panggil fungsi 1 detik setelah loading
+window.addEventListener('load', () => {
+    setTimeout(cekStatusNotif, 1000);
+});
+
+// Jalankan fungsi saat web dibuka
+window.addEventListener('load', cekIzinNotifikasi);
+
+// Tambahkan logika tambahan pada fungsi setTombolAktif yang sudah kamu punya
+// Modifikasi sedikit fungsi milikmu agar popup hilang saat tombol diklik
+function setTombolAktif() {
+    const btn = document.getElementById('btnNotifAksi');
+    const icon = btn ? btn.querySelector('i') : null;
+    const reminder = document.getElementById('popupReminder');
+
+    if (btn && icon) {
+        btn.classList.replace('bg-white', 'bg-emerald-500');
+        btn.classList.replace('text-blue-600', 'text-white');
+        icon.className = "fas fa-check text-xs md:text-base";
+        btn.style.cursor = "default";
+        btn.classList.add('shadow-emerald-200');
+        
+        // Hapus popup jika tombol sudah diaktifkan (hijau)
+        if (reminder) reminder.remove();
+        
+        console.log("UI Tombol berhasil diubah ke Hijau.");
+    }
+}
+</script>
+
+
+<!-- 1. Panggil library Firebase (Versi Compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
+
+<script>
+  // 1. Konfigurasi
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAVlFcF5gs5ik0ESDg1Ka0Mxuy8Hh6uw8",
+    authDomain: "nurjaya-smart-archive.firebaseapp.com",
+    projectId: "nurjaya-smart-archive",
+    storageBucket: "nurjaya-smart-archive.firebasestorage.app",
+    messagingSenderId: "930477308354",
+    appId: "1:930477308354:web:b69a818a7ff73eb88f3e5b"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  // =========================================================================
+  // KUNCI UTAMA: MENANGKAP NOTIFIKASI DI FOREGROUND (APOTEK)
+  // =========================================================================
+  messaging.onMessage((payload) => {
+      console.log("Notifikasi Foreground Diterima (Apotek):", payload);
+
+      const judulPesan = payload.notification?.title || payload.data?.title || "Notifikasi Sistem";
+      const isiPesan = payload.notification?.body || payload.data?.body || "Ada pesan baru masuk.";
+
+      // Panggil Dynamic Island khusus Apotek
+      bukaModalNotifForeground(judulPesan, isiPesan);
+  });
+
+  /**
+ * ENGINE MODAL FOREGROUND: DYNAMIC ISLAND ANIMATION STRATEGY
+ */
+function bukaModalNotifForeground(judul, isi) {
+    const modal = document.getElementById('modal-notif-foreground');
+    const overlay = document.getElementById('nsa-fg-overlay');
+    const island = document.getElementById('dynamic-island');
+    const content = document.getElementById('nsa-fg-content');
+    const elemenJudul = document.getElementById('nsa-fg-judul');
+    const elemenIsi = document.getElementById('nsa-fg-isi');
+
+    if (!modal || !island || !content) return;
+
+    // Inject teks pesan secara dinamis
+    if (elemenJudul) elemenJudul.innerText = judul;
+    if (elemenIsi) elemenIsi.innerText = isi;
+
+    // Aktifkan container utama (Flex)
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    // TAHAP 1: Munculkan Punch Hole Kamera (Bulat Kecil)
+    setTimeout(() => {
+        overlay.classList.remove('opacity-0');
+        overlay.classList.add('opacity-100'); 
+        
+        island.classList.remove('scale-0', 'opacity-0');
+        island.classList.add('scale-100', 'opacity-100');
+    }, 50);
+
+    // TAHAP 2: Melebar secara Horizontal (Bentuk Kapsul)
+    setTimeout(() => {
+        island.classList.remove('w-12', 'rounded-full');
+        island.classList.add('w-full', 'max-w-[320px]', 'rounded-[24px]'); 
+    }, 650); 
+
+    // TAHAP 3: Ekspansi Vertikal ke Bawah & Fade-In Isi Konten
+    setTimeout(() => {
+        island.classList.remove('h-12');
+        island.classList.add('h-auto'); 
+        
+        content.classList.remove('hidden');
+        content.classList.add('flex', 'fade-in-text'); // Pastikan class animasi teks Anda sudah ada di CSS
+    }, 1250); 
+}
+
+/**
+ * FUNGSI PENUTUP: Kebalikan dari Proses Ekspansi (Mengecil Kembali)
+ */
+function tutupModalNotifForeground() {
+    const modal = document.getElementById('modal-notif-foreground');
+    const overlay = document.getElementById('nsa-fg-overlay');
+    const island = document.getElementById('dynamic-island');
+    const content = document.getElementById('nsa-fg-content');
+
+    if (!modal || !island || !content) return;
+
+    // Sembunyikan konten teks terlebih dahulu
+    content.classList.remove('flex', 'fade-in-text');
+    content.classList.add('hidden');
+
+    // Kembalikan dimensi kapsul besar ke ukuran lingkaran semula
+    island.classList.remove('w-full', 'max-w-[320px]', 'h-auto', 'rounded-[24px]');
+    island.classList.add('w-12', 'h-12', 'rounded-full');
+
+    // Transisi memudar dan mengecilkan total elemen
+    setTimeout(() => {
+        overlay.classList.remove('opacity-100');
+        overlay.classList.add('opacity-0');
+        
+        island.classList.remove('scale-100', 'opacity-100');
+        island.classList.add('scale-0', 'opacity-0');
+        
+        // Sembunyikan total layout dari view setelah animasi selesai
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }, 400);
+    }, 400);
+}
+  // =========================================================================
+
+
+  // 3. Pasang Logika saat Halaman Siap (SINKRONISASI ID ALERT APOTEK)
+  window.addEventListener('load', function() {
+    const btn = document.getElementById('btnNotifAksi');
+    console.log("Status tombol:", btn ? "Ditemukan" : "Tidak ditemukan");
+
+    if (btn) {
+        btn.onclick = function(e) {
+            e.preventDefault();
+            console.log("Klik terdeteksi!");
+
+            if (!("Notification" in window)) {
+                if (typeof bukaAlertNarasi === "function") {
+                    bukaAlertNarasi("Gagal", "Browser tidak mendukung notifikasi.");
+                } else {
+                    alert("Browser tidak mendukung notifikasi.");
+                }
+                return;
+            }
+
+            Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                    console.log("Izin diterima! Menghubungkan ke Firebase...");
+
+                    navigator.serviceWorker.ready.then((registration) => {
+                        messaging.getToken({
+                            serviceWorkerRegistration: registration,
+                            vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4'
+                        })
+                        .then((currentToken) => {
+                            if (currentToken) {
+                                console.log('Token didapat:', currentToken);
+
+                                // --- PENDAFTARAN TOPIK OTOMATIS VIA APPS SCRIPT ---
+                                const urlScript = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
+                                
+                                fetch(`${urlScript}?token=${currentToken}`, { 
+                                    mode: 'no-cors' 
+                                })
+                                .then(() => console.log("Laporan token ke Apps Script berhasil."))
+                                .catch(err => console.error("Gagal daftar topik:", err));
+                                // --------------------------------------------------
+
+                                if (typeof bukaAlertNarasi === "function") {
+                                    bukaAlertNarasi("Berhasil", "Sistem Pengingat NSA Aktif!");
+                                } else {
+                                    alert("Sistem Pengingat NSA Aktif!");
+                                }
+                                setTombolAktif();
+                            } else {
+                                if (typeof bukaAlertNarasi === "function") {
+                                    bukaAlertNarasi("Error Token", "Token kosong. Periksa sw.js.");
+                                } else {
+                                    alert("Token kosong. Periksa sw.js.");
+                                }
+                            }
+                        })
+                        .catch((err) => {
+                            console.error('Error getToken:', err);
+                            if (typeof bukaAlertNarasi === "function") {
+                                bukaAlertNarasi("Gagal Sinkronisasi", err.message);
+                            } else {
+                                alert("Gagal sinkronisasi: " + err.message);
+                            }
+                        });
+                    });
+                } else {
+                    if (typeof bukaAlertNarasi === "function") {
+                        bukaAlertNarasi("Akses Ditolak", "Izin notifikasi ditolak oleh staff apotek.");
+                    } else {
+                        alert("Izin notifikasi ditolak.");
+                    }
+                }
+            });
+        };
+    }
+
+    // Registrasi Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then((reg) => {
+                console.log('SW terdaftar:', reg.scope);
+                if (Notification.permission === "granted") setTombolAktif();
+            })
+            .catch((err) => console.error('SW Error:', err));
+    }
+  });
+</script>
+
+<!-- OVERLAY BACKGROUND BLURRY (Layer Paling Luar) -->
+<!-- Kita set z-[13000] agar berada tepat di atas modal pengatur dev yang bernilai 50 kemarin -->
+<div id="modal-notif-foreground" class="fixed inset-0 z-[15000] items-start justify-center hidden p-4">
+    <!-- Backdrop Blur Hitam Transparan -->
+    <div id="nsa-fg-overlay" class="absolute inset-0 bg-slate-950/20 backdrop-blur-sm opacity-0 transition-opacity duration-500"></div>
+
+    <!-- DYNAMIC ISLAND CONTAINER -->
+    <!-- Tahap 1 Awal: Berbentuk lingkaran kecil hitam/hijau tua layaknya punch hole kamera -->
+    <div id="dynamic-island" class="dynamic-island-transition relative z-10 bg-slate-900 border border-emerald-800 text-white shadow-2xl overflow-hidden mt-2
+         w-12 h-12 rounded-full flex items-center justify-center scale-0 opacity-0">
+        
+        <!-- KONTEN INTERNAL NOTIFIKASI (Disembunyikan saat fase transisi bentuk) -->
+        <div id="nsa-fg-content" class="hidden w-full p-5 flex-col">
+            <!-- Header Notif -->
+            <div class="flex items-center gap-3 border-b border-emerald-800/40 pb-3 mb-3">
+                <div class="w-8 h-8 bg-emerald-600 rounded-xl flex items-center justify-center shadow-inner animate-pulse">
+                    <i class="fas fa-bullhorn text-white text-sm"></i>
+                </div>
+                <div>
+                    <h3 id="nsa-fg-judul" class="font-black text-sm text-emerald-400 uppercase tracking-wide leading-tight">Mencari Data...</h3>
+                    <p class="text-[9px] text-emerald-500/80 uppercase font-bold tracking-[0.15em] mt-0.5">Pesan Masuk NSA Cloud</p>
+                </div>
+            </div>
+
+            <!-- Isi Pesan -->
+            <div class="flex-1 py-1">
+                <p id="nsa-fg-isi" class="text-xs text-slate-200 leading-relaxed font-medium">Memuat isi pesan...</p>
+            </div>
+
+            <!-- Tombol Mengerti / Tutup -->
+            <div class="mt-4 pt-1">
+                <button onclick="tutupModalNotifForeground()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-xl font-black text-xs transition-all tracking-wider uppercase shadow-md shadow-emerald-900/40">
+                    OKE, SAYA MENGERTI
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <!-- ================= MODAL ALERT UNIVERSAL NARASI & LAPORAN (BARU) ================= -->
-<div id="modal-alert-narasi" class="fixed inset-0 z-[99999] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+<div id="modal-alert-narasi" class="fixed inset-0 z-[12000] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
     <div id="narasi-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-pink-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
         <!-- Icon Warning Animasi khas Apotek -->
         <div class="mx-auto w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-2xl animate-bounce">
