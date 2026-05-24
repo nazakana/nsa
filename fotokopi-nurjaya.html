@@ -326,6 +326,16 @@
   to { opacity: 1; transform: translateY(0); }
 }
 </style>
+
+<style>
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-pop-in {
+  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+</style>
 	
 	<script>
 window.intipFotoKaryawan = function(sumberGambar) {
@@ -3913,7 +3923,7 @@ function tutupAlertCloud() {
 
 
 <!-- POPUP REMINDER IZIN NOTIFIKASI (MODAL TENGAH) -->
-<div id="popupReminder" class="fixed inset-0 z-[200] flex items-center justify-center px-6 hidden">
+<div id="popupReminder" class="fixed inset-0 z-[18000] flex items-center justify-center px-6 hidden">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
     
     <div class="relative bg-white w-full max-w-sm p-8 rounded-[32px] shadow-2xl text-center transform transition-all animate-pop-in">
@@ -3935,15 +3945,7 @@ function tutupAlertCloud() {
     </div>
 </div>
 
-<style>
-@keyframes pop-in {
-  0% { opacity: 0; transform: scale(0.9); }
-  100% { opacity: 1; transform: scale(1); }
-}
-.animate-pop-in {
-  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-</style>
+
 			
 <script>
 // GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
