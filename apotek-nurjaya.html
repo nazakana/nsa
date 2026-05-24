@@ -229,7 +229,15 @@ document.addEventListener('keydown', function(e) {
   to { opacity: 1; transform: translateY(0); }
 }
 </style>
-
+<style>
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-pop-in {
+  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+</style>
 
 </head>
 
@@ -4027,6 +4035,38 @@ function setTombolAktif() {
     </div>
 </div>
 
+
+<!-- POPUP REMINDER IZIN NOTIFIKASI (MODAL TENGAH) - EDISI APOTEK NURJAYA -->
+<div id="popupReminder" class="fixed inset-0 z-[18000] flex items-center justify-center px-6 hidden">
+    <!-- Backdrop Gelap Lembut dengan Blur Efek -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    
+    <!-- Kotak Modal Utama -->
+    <div class="relative bg-white w-full max-w-sm p-8 rounded-[32px] shadow-2xl text-center transform transition-all animate-pop-in">
+        
+        <!-- Wadah Ikon Lonceng Bergaya Miring Estetik (Khas Apotek Pink) -->
+        <div class="w-20 h-20 bg-rose-50 text-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12">
+            <i class="fas fa-bell-slash fa-2xl"></i>
+        </div>
+        
+        <!-- Judul Notifikasi -->
+        <h2 class="text-xl font-extrabold text-gray-900 mb-2">Notifikasi Tidak Aktif!</h2>
+        
+        <!-- Deskripsi Petunjuk Sistem -->
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+            Fitur <span class="font-bold text-pink-600">Realtime NSA</span> memerlukan izin notifikasi. Silakan klik <strong>tombol lonceng</strong> di samping searchbox atas untuk mengaktifkan.<br> Setelah klik OK, tunggu sampai muncul:<br> <strong>"Sistem Pengingat NSA Aktif!"</strong>
+        </p>
+
+        <!-- Tombol Aksi Tutup -->
+        <button onclick="document.getElementById('popupReminder').classList.add('hidden')" 
+            class="w-full py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold rounded-2xl transition-all active:scale-95">
+            Nanti Saja
+        </button>
+        
+        <!-- Catatan Kaki Medis Khusus -->
+        <p class="text-[10px] text-pink-600/70 mt-4 uppercase tracking-widest font-bold">IZINKAN UNTUK MEMANTAU NOTIFIKASI OBAT & DATA</p>
+    </div>
+</div>
 
 
 <!-- ================= MODAL ALERT UNIVERSAL NARASI & LAPORAN (BARU) ================= -->
