@@ -520,17 +520,8 @@ document.addEventListener('keydown', function(event) {
 </aside>
 
 		
-
-   
-
-
-
-
-	<!-- KONTEN TAB: NURJAYA HOME -->
-	
-	<main class="main-content">
-			
-	<!-- HEADER -->
+<main class="main-content">
+   <!-- HEADER -->
 	<div class="header-banner">
     <div class="flex flex-col md:flex-row md:items-end justify-between w-full">
     <div class="fade-in">
@@ -542,15 +533,24 @@ document.addEventListener('keydown', function(event) {
 			</div>
 
 
+
+
+	<!-- KONTEN TAB: NURJAYA HOME -->
+	
+	
+			
+	
+
+
         <!-- KONTEN: NURJAYA HOME -->
 
  
 <!-- CONTAINER UTAMA -->
-<div id="tab-dashboard" class="tab-content p-4 md:p-14 fade-in" style="font-family: sans-serif;">
+<div id="tab-dashboard" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in" style="font-family: sans-serif;">
    
    
-  <div class="w-full max-w-5xl mx-auto px-2 md:px-4 mb-7">
-    <div class="n-box-grafik bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)] relative mb-4">
+  <div class="w-full mb-7">
+    <div class="n-box-grafik bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)] relative">
         
         <div id="loading-layer-harian" class="absolute top-0 left-0 w-full h-full bg-white/90 z-50 flex flex-col justify-center items-center transition-opacity duration-300">
             <div class="spinner-putar w-8 h-8 border-4 border-green-100 border-top-4 border-green-500 rounded-full animate-spin"></div>
@@ -581,20 +581,18 @@ document.addEventListener('keydown', function(event) {
                 </table>
             </div>
 
-            <!-- Cukup ubah bagian ini di HTML Fotokopi Anda -->
-			<div class="flex-grow overflow-x-auto p-2 md:p-4 bg-white flex items-center" style="-webkit-overflow-scrolling: touch;">
-			<!-- Dikunci di angka 850px agar pas: tidak mepet, tidak kejauhan -->
-			<div class="w-[850px] min-w-[850px] h-[145px] md:h-[200px] relative">
-			<canvas id="statistik_bulan_ini"></canvas>
-			</div>
-			</div>
-			</div>
-			</div>
-			</div>
+            <div class="flex-grow overflow-x-auto p-2 md:p-4 bg-white flex items-center" style="-webkit-overflow-scrolling: touch;">
+                <div class="w-[850px] min-w-[850px] h-[145px] md:h-[200px] relative">
+                    <canvas id="statistik_bulan_ini"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-<div class="w-full max-w-5xl mx-auto px-2 md:px-4 mb-6">
-    <div id="sesi-grafik" class="searchable-content bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)] mb-4">
+<div class="w-full mb-6">
+    <div id="sesi-grafik" class="searchable-content bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)]">
         
         <div class="p-3 md:p-5 border-b border-green-100 flex justify-between items-center bg-gradient-to-r from-white to-green-50/30">
             <h2 class="text-xs md:text-sm font-medium text-gray-900 m-0 leading-tight">
@@ -924,7 +922,7 @@ document.addEventListener('keydown', function(event) {
 		
 
         <!-- KONTEN TAB: DAILY INPUT -->
-<div id="tab-dailyinput" class="tab-content p-4 md:p-8 hidden fade-in">
+<div id="tab-dailyinput" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
     
     <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
         
@@ -1124,7 +1122,7 @@ document.addEventListener('keydown', function(event) {
 
 
         <!-- KONTEN TAB: ARSIP LAPORAN -->
-        <div id="tab-archive" class="tab-content p-6 md:p-14 hidden fade-in">
+        <div id="tab-archive" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
             <div class="flex flex-wrap gap-3 md:gap-5 mb-8 md:mb-12">
                 <button data-search="januari 2026" onclick="loadDrive('1Bd1Dh_RkNXEtCHXI9D6nqQvYwplwIocC', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
                     <i class="fa-solid fa-file-pdf text-green-500"></i>
@@ -1167,7 +1165,7 @@ document.addEventListener('keydown', function(event) {
         </div>
 
         <!-- KONTEN TAB: PRESENSI STAF -->
-        <div id="tab-presensi" class="tab-content p-6 md:p-14 hidden fade-in">
+       <div id="tab-presensi" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
             <div class="flex flex-wrap gap-3 md:gap-5 mb-8 md:mb-12">
                 <button onclick="loadDriveSub('1s9GTi4B8dpnT2HNx0f2gE512dFV-8YX0', this, 'viewer-container-presensi')" class="sub-tab-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
                     <i class="fa-solid fa-user text-blue-500"></i>
@@ -1188,14 +1186,15 @@ document.addEventListener('keydown', function(event) {
         </div>
 
        <!-- KONTEN TAB: JADWAL STAF -->
-        <div id="tab-calendar" class="tab-content p-6 md:p-14 hidden fade-in">
+        <div id="tab-calendar" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
+		
              <div class="viewer-container">
                 <iframe src="https://drive.google.com/file/d/1qflKRaii_7xWrcUPbyrbM3Vdp-tY2w2O/preview" allow="autoplay" loading="lazy"></iframe>
             </div>
         </div>
 
 		<!-- KONTEN TAB: PROFIL NURJAYA -->
-		<div id="tab-about" class="tab-content hidden fade-in">
+		<div id="tab-about" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
 		<!-- Container Utama: Kita kecilkan padding samping di mobile (px-4) agar kartu lebih lebar -->
 		<div class="container mx-auto px-4 md:px-8 lg:px-12 py-4">
         
@@ -1256,96 +1255,129 @@ document.addEventListener('keydown', function(event) {
             </div>
 
             <!-- Grid Informasi Toko & Layanan -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 px-2">
-                <!-- Kolom 1 -->
-                <div class="space-y-6">
-                    <h4 class="text-xl font-black flex items-center gap-4 text-[#3B4D45] uppercase tracking-tighter">
-                        <span class="w-10 h-10 rounded-xl bg-yellow-100 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-briefcase text-yellow-600"></i>
-                        </span> 
-                        Informasi Toko
-                    </h4>
-                    <div class="text-gray-600 text-sm md:text-base leading-relaxed font-medium space-y-4 text-justify">
-                        <p>Nurjaya Abadi Photocopy adalah penyedia layanan jasa fotokopi, print, dan pusat ATK yang didirikan dan dikelola oleh apt. Siti Nurjanah, S.Farm.</p>
-                        <p>Kami mengutamakan kualitas layanan dan kelengkapan produk untuk memenuhi segala kebutuhan dokumentasi harian, baik bagi perorangan maupun instansi.</p>
-                        
-                        <p>Sistem NSA ini didesain khusus untuk mengelola seluruh data operasional dan arsip digital agar lebih terorganisir.</p>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    <h4 class="text-xl font-black flex items-center gap-3 text-[#3B4D45] uppercase tracking-tighter">
-                        <span class="w-8 h-8 rounded-lg bg-mint-pastel/20 flex items-center justify-center"><i class="fa-solid fa-map-location-dot text-mint-deep text-xs"></i></span> 
-                        Layanan & Jasa
-                    </h4>
-                    <div class="text-gray-500 text-sm md:text-base leading-relaxed font-medium">
-                         <ul class="list-disc list-inside space-y-1 mb-4 ml-1">
-                                    <li>Fotokopi</li>
-									<li>Print Dokumen (Hitam Putih & Warna)</li>
-									<li>Cetak Foto Kualitas Tinggi</li>
-									<li>Scan Dokumen</li>
-                                    <li>Alat Tulis Kantor (ATK)</li>
-                                    <li>Penjilidan</li>
-                                    <li>Laminating</li>
-                                </ul>
-                        
-                    </div>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 px-2">
+    
+    <div class="bg-gradient-to-br from-white to-[#F2F7F5] p-6 md:p-8 rounded-[35px] border border-emerald-100 shadow-xs transition-all hover:shadow-md flex flex-col justify-between">
+        <div class="space-y-5">
+            <h4 class="text-xl font-black flex items-center gap-4 text-[#3B4D45] uppercase tracking-tight">
+                <span class="w-10 h-10 rounded-xl bg-yellow-100 border border-yellow-200 flex items-center justify-center shrink-0 shadow-xs">
+                    <i class="fa-solid fa-briefcase text-yellow-600"></i>
+                </span> 
+                Informasi Toko
+            </h4>
+            
+            <div class="text-[#52635B] text-sm md:text-base leading-relaxed font-medium space-y-4 text-justify">
+                <p>Nurjaya Abadi Photocopy adalah penyedia layanan jasa fotokopi, print, dan pusat ATK yang didirikan dan dikelola oleh apt. Siti Nurjanah, S.Farm.</p>
+                <p>Kami mengutamakan kualitas layanan dan kelengkapan produk untuk memenuhi segala kebutuhan dokumentasi harian, baik bagi perorangan maupun instansi.</p>
+                <p>Sistem <span class="font-black text-[#2D3B34] bg-emerald-100/60 px-2 py-0.5 rounded-md">NSA</span> ini didesain khusus untuk mengelola seluruh data operasional dan arsip digital agar lebih terorganisir.</p>
             </div>
+        </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-white to-[#F2F7F5] p-6 md:p-8 rounded-[35px] border border-emerald-100 shadow-xs transition-all hover:shadow-md flex flex-col justify-between">
+        <div class="space-y-5">
+            <h4 class="text-xl font-black flex items-center gap-4 text-[#3B4D45] uppercase tracking-tight">
+                <span class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0 shadow-xs">
+                    <i class="fa-solid fa-map-location-dot text-emerald-700"></i>
+                </span> 
+                Layanan & Jasa
+            </h4>
+            
+            <div class="flex flex-wrap gap-2.5 pt-1">
+                <span class="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-[#3B4D45] bg-white border border-emerald-200 px-3.5 py-2 rounded-2xl shadow-xs">
+                    <i class="fa-solid fa-copy text-emerald-600"></i> Fotokopi
+                </span>
+                <span class="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-[#3B4D45] bg-white border border-emerald-200 px-3.5 py-2 rounded-2xl shadow-xs">
+                    <i class="fa-solid fa-print text-emerald-600"></i> Print Dokumen (Hitam Putih & Warna)
+                </span>
+                <span class="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-[#3B4D45] bg-white border border-emerald-200 px-3.5 py-2 rounded-2xl shadow-xs">
+                    <i class="fa-solid fa-image text-emerald-600"></i> Cetak Foto Kualitas Tinggi
+                </span>
+                
+                <span class="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-[#3B4D45] bg-white border border-emerald-200 px-3.5 py-2 rounded-2xl shadow-xs">
+                    <i class="fa-solid fa-file-lines text-emerald-600"></i> Scan Dokumen
+                </span>
+                
+                <span class="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-[#3B4D45] bg-white border border-emerald-200 px-3.5 py-2 rounded-2xl shadow-xs">
+                    <i class="fa-solid fa-pen-nib text-emerald-600"></i> Alat Tulis Kantor (ATK)
+                </span>
+                <span class="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-[#3B4D45] bg-white border border-emerald-200 px-3.5 py-2 rounded-2xl shadow-xs">
+                    <i class="fa-solid fa-book-open text-emerald-600"></i> Penjilidan
+                </span>
+                <span class="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-[#3B4D45] bg-white border border-emerald-200 px-3.5 py-2 rounded-2xl shadow-xs">
+                    <i class="fa-solid fa-box text-emerald-600"></i> Laminating
+                </span>
+            </div>
+        </div>
+    </div>
+
+</div>
 
             <!-- BAGIAN BARU: PROFIL KARYAWAN -->
 			<hr class="my-8 border-gray-100">
 
-			<div class="space-y-4">
-			<h4 class="text-xl font-black flex items-center gap-3 text-[#3B4D45] uppercase tracking-tighter">
-			<span class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"><i class="fa-solid fa-users text-blue-600 text-xs"></i></span> 
-			Tim Operasional
-			</h4>
+<div class="space-y-6">
+    <h4 class="text-xl font-black flex items-center justify-center md:justify-start gap-4 text-[#3B4D45] uppercase tracking-tight">
+        <span class="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-200 flex items-center justify-center shrink-0 shadow-xs">
+            <i class="fa-solid fa-users text-emerald-700"></i>
+        </span> 
+        Tim Operasional
+    </h4>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-			
-			<!-- Karyawan 1 -->
-    <div class="bg-gray-50/50 mt-6 p-0 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
-        <div class="flex items-center gap-6 w-full bg-blue-50 p-5 rounded-[40px] shadow-sm border border-blue-100">
-            <div class="relative shrink-0 group">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
+        
+        <div class="bg-[#E8F1EC] p-5 rounded-[35px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 sm:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full max-w-md mx-auto md:mx-0">
+            <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/19Sujdw3IaUtF7npqv06HmrruHAXYykcg')">
                 <img src="https://lh3.googleusercontent.com/d/19Sujdw3IaUtF7npqv06HmrruHAXYykcg" 
-                     onclick="intipFotoKaryawan(this.src)"
-                     class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md cursor-pointer transition-all duration-300 group-hover:brightness-90 group-hover:scale-105 active:scale-95">
-                <div class="absolute bottom-1 right-1 bg-white w-7 h-7 rounded-full flex items-center justify-center shadow text-blue-500 pointer-events-none">
-                    <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+                     class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                <div class="absolute bottom-0 right-0 bg-emerald-600 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] sm:text-[9px]">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
                 </div>
             </div>
-            <div class="flex flex-col min-w-0">
-                <span class="text-[20px] font-black text-gray-800 border-b-2 border-blue-400 leading-tight">M. Cahya Ardiansyah</span>
-                <span class="text-[12px] font-bold text-blue-600 uppercase tracking-widest mt-2">Staf / Operator</span>
+            
+            <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+                <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">M. Cahya Ardiansyah</h5>
+                
+                <div class="flex items-center gap-1.5 mt-2.5">
+                    <a href="https://wa.me/6285721962654" target="_blank"
+                       class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                       title="Hubungi WhatsApp">
+                        <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                    </a>
+                    
+                    <span class="inline-flex items-center h-7 text-[10px] sm:text-xs font-black text-emerald-800 uppercase tracking-widest bg-white border border-[#B3D3C4] px-3 rounded-xl shadow-xs">
+                        Staf / Operator
+                    </span>
+                </div>
             </div>
         </div>
-        <a href="https://wa.me/6285721962654" target="_blank" class="mt-4 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-center flex items-center justify-center gap-3 shadow-md transition-all active:scale-95 group">
-            <i class="fa-brands fa-whatsapp text-2xl group-hover:rotate-12 transition-transform"></i> 
-            <span class="text-[14px] font-black uppercase tracking-wide">Kontak WhatsApp</span>
-        </a>
-    </div>
 
-    <!-- Karyawan 2 -->
-    <div class="bg-gray-50/50 mt-6 p-0 rounded-[30px] border border-gray-100 flex flex-col items-center sm:items-start transition-all">
-        <div class="flex items-center gap-6 w-full bg-orange-50 p-5 rounded-[40px] shadow-sm border border-orange-100">
-            <div class="relative shrink-0 group">
+        <div class="bg-[#E8F1EC] p-5 rounded-[35px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 sm:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full max-w-md mx-auto md:mx-0">
+            <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL')">
                 <img src="https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL" 
-                     onclick="intipFotoKaryawan(this.src)"
-                     class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md cursor-pointer transition-all duration-300 group-hover:brightness-90 group-hover:scale-105 active:scale-95">
-                <div class="absolute bottom-1 right-1 bg-white w-7 h-7 rounded-full flex items-center justify-center shadow text-orange-500 pointer-events-none">
-                    <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+                     class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                <div class="absolute bottom-0 right-0 bg-emerald-600 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] sm:text-[9px]">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
                 </div>
             </div>
-            <div class="flex flex-col min-w-0">
-                <span class="text-[20px] font-black text-gray-800 border-b-2 border-orange-400 leading-tight">Dadan Nurfaizal</span>
-                <span class="text-[12px] font-bold text-orange-600 uppercase tracking-widest mt-2">Staf / Operator</span>
+            
+            <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+                <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Dadan Nurfaizal</h5>
+                
+                <div class="flex items-center gap-1.5 mt-2.5">
+                    <a href="https://wa.me/6283130578886" target="_blank"
+                       class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                       title="Hubungi WhatsApp">
+                        <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                    </a>
+                    
+                    <span class="inline-flex items-center h-7 text-[10px] sm:text-xs font-black text-emerald-800 uppercase tracking-widest bg-white border border-[#B3D3C4] px-3 rounded-xl shadow-xs">
+                        Staf / Operator
+                    </span>
+                </div>
             </div>
         </div>
-        <a href="https://wa.me/6283130578886" target="_blank" class="mt-4 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-center flex items-center justify-center gap-3 shadow-md transition-all active:scale-95 group">
-            <i class="fa-brands fa-whatsapp text-2xl group-hover:rotate-12 transition-transform"></i> 
-            <span class="text-[14px] font-black uppercase tracking-wide">Kontak WhatsApp</span>
-        </a>
+
     </div>
 </div>
 
