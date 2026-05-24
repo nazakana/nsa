@@ -239,6 +239,34 @@ document.addEventListener('keydown', function(e) {
 }
 </style>
 
+<style>
+    /* Di desktop: Tampilkan ukuran asli normal */
+    .wrapper-skala-a4 {
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    /* Di layar HP (Maksimal lebar 768px seperti Tablet/HP): Kita paksa zoom out agar FIT murni */
+    @media (max-width: 768px) {
+        .wrapper-skala-a4 {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Trik kunci: menggunakan css zoom agar dokumen mengecil presisi mengikuti lebar layar */
+            zoom: 0.45; 
+            -moz-transform: scale(0.45);
+            -moz-transform-origin: top center;
+        }
+    }
+    @media (max-width: 480px) {
+        .wrapper-skala-a4 {
+            zoom: 0.40; /* Khusus HP berlayar kecil biar benar-benar pas masuk layar */
+            -moz-transform: scale(0.40);
+        }
+    }
+</style>
+
 </head>
 
 
@@ -438,82 +466,85 @@ document.addEventListener('keydown', function(e) {
    
 
     <!-- MAIN CONTENT CONTAINER -->
-    <main class="mt-6 px-6 w-full mx-auto max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl">
+    <main class="mt-6 px-4 sm:px-6 md:px-8 w-full max-w-[92%] lg:max-w-[88%] xl:max-w-[85%] 2xl:max-w-7xl mx-auto">
         
         <!-- ================= TAB 1: BERANDA ================= -->
         <!-- ================= TAB 1: BERANDA ================= -->
 <div id="tab-beranda" class="tab-content active space-y-6">
     
     <!-- CARD PROGRES HARIAN (Grafik Pendapatan Kotor Bulan Ini - Khusus Apotek) -->
-<div class="card-progress-apotek bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-100 overflow-hidden">
-    
-    <div class="flex justify-between items-center mb-3 md:mb-5">
-        <div>
-            <h3 class="text-[10px] font-extrabold text-pink-500 uppercase tracking-widest leading-none">Progres Harian :</h3>
-            <h4 class="text-sm md:text-lg font-black text-gray-900 flex items-center gap-2 mt-1">
-                <i class="fa-solid fa-chart-line text-pink-500 text-xs md:text-base"></i>
-                <span class="tracking-tight">Pendapatan Harian: Mei 2026</span>
-            </h4>
+<div class="w-full flex flex-col xl:grid xl:grid-cols-2 gap-6 items-stretch mb-6">
+
+    <div class="card-progress-apotek bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-full h-full overflow-hidden flex flex-col">
+        
+        <div class="flex justify-between items-center mb-3 md:mb-5 shrink-0">
+            <div>
+                <h3 class="text-[10px] font-extrabold text-pink-500 uppercase tracking-widest leading-none">Progres Harian :</h3>
+                <h4 class="text-sm md:text-lg font-black text-gray-900 flex items-center gap-2 mt-1">
+                    <i class="fa-solid fa-chart-line text-pink-500 text-xs md:text-base"></i>
+                    <span class="tracking-tight">Pendapatan Harian: Mei 2026</span>
+                </h4>
+            </div>
+            <span class="text-[10px] text-pink-600 font-bold flex items-center gap-1.5 bg-pink-50/70 px-3 py-1 rounded-full dynamic-scroll-hint animate-pulse border border-pink-100/30">
+                Geser <i class="fas fa-arrow-right text-[8px]"></i>
+            </span>
         </div>
-        <span class="text-[10px] text-pink-600 font-bold flex items-center gap-1.5 bg-pink-50/70 px-3 py-1 rounded-full dynamic-scroll-hint animate-pulse border border-pink-100/30">
-            Geser <i class="fas fa-arrow-right text-[8px]"></i>
-        </span>
+
+        <div class="flex flex-nowrap w-full border border-pink-100/60 rounded-2xl overflow-hidden shadow-xs bg-white h-[200px] md:h-[260px]">
+            
+            <div class="w-[145px] flex-shrink-0 bg-gradient-to-b from-pink-50/20 to-transparent p-2 border-r border-pink-100/40 h-full overflow-y-auto scrollbar-none">
+                <table class="w-full text-[10px] border-collapse text-left">
+                    <thead class="sticky top-0 bg-white border-b-2 border-pink-500 z-10 font-bold">
+                        <tr>
+                            <th class="pb-1.5 text-pink-600 font-black pl-1 uppercase tracking-wider">Tgl</th>
+                            <th class="pb-1.5 text-right text-pink-600 font-black pr-1 whitespace-nowrap uppercase tracking-wider">Rp (Kotor)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-ringkasan-kotor-apotek" class="text-gray-700 divide-y divide-pink-100/30 font-semibold">
+                        <tr id="loading-row-apotek">
+                            <td colspan="2" class="text-center py-10 text-gray-400 italic text-[9px]">
+                                <i class="fa-solid fa-spinner fa-spin text-pink-500 mb-1 block text-[12px]"></i>
+                                Memuat...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex-grow flex-shrink overflow-x-auto p-3 bg-white scrollbar-none flex items-center h-full">
+                <div class="w-[900px] min-w-[900px] h-[170px] md:h-[230px] relative flex items-center">
+                    <canvas id="chartApotekKotorBulanIni"></canvas>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <div class="flex flex-nowrap w-full border border-pink-100/60 rounded-2xl overflow-hidden shadow-xs bg-white">
+    <div class="card-rekap-bulanan-apotek bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-full h-full overflow-hidden flex flex-col">
         
-        <div class="w-[145px] flex-shrink-0 bg-gradient-to-b from-pink-50/20 to-transparent p-2 border-r border-pink-100/40 h-[200px] overflow-y-auto scrollbar-none">
-            <table class="w-full text-[10px] border-collapse text-left">
-                <thead class="sticky top-0 bg-white border-b-2 border-pink-500 z-10 font-bold">
-                    <tr>
-                        <th class="pb-1.5 text-pink-600 font-black pl-1 uppercase tracking-wider">Tgl</th>
-                        <th class="pb-1.5 text-right text-pink-600 font-black pr-1 whitespace-nowrap uppercase tracking-wider">Rp (Kotor)</th>
-                    </tr>
-                </thead>
-                <tbody id="tabel-ringkasan-kotor-apotek" class="text-gray-700 divide-y divide-pink-100/30 font-semibold">
-                    <tr id="loading-row-apotek">
-                        <td colspan="2" class="text-center py-10 text-gray-400 italic text-[9px]">
-                            <i class="fa-solid fa-spinner fa-spin text-pink-500 mb-1 block text-[12px]"></i>
-                            Memuat...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="flex-grow flex-shrink overflow-x-auto p-3 bg-white scrollbar-none flex items-center">
-            <div class="w-[900px] min-w-[900px] h-[140px] relative">
-                <canvas id="chartApotekKotorBulanIni"></canvas>
+        <div class="flex justify-between items-center mb-3 md:mb-5 shrink-0">
+            <div>
+                <h3 class="text-[10px] font-extrabold text-pink-500 uppercase tracking-widest leading-none">Performa Bisnis :</h3>
+                <h4 class="text-sm md:text-lg font-black text-gray-900 flex items-center gap-2 mt-1">
+                    <i class="fa-solid fa-chart-bar text-pink-500 text-xs md:text-base"></i>
+                    <span class="tracking-tight">Omset Bulanan Apotek (2026)</span>
+                </h4>
             </div>
         </div>
 
-    </div>
-</div>
-
-
-           <!-- CARD REKAPITULASI BULANAN (Grafik Batang Omset Bulanan - Khusus Apotek - Compact Version) -->
-<div class="card-rekap-bulanan-apotek bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-100 overflow-hidden">
-    
-    <div class="flex justify-between items-center mb-3 md:mb-5">
-        <div>
-            <h3 class="text-[10px] font-extrabold text-pink-500 uppercase tracking-widest leading-none">Performa Bisnis :</h3>
-            <h4 class="text-sm md:text-lg font-black text-gray-900 flex items-center gap-2 mt-1">
-                <i class="fa-solid fa-chart-bar text-pink-500 text-xs md:text-base"></i>
-                <span class="tracking-tight">Omset Bulanan Apotek (2026)</span>
-            </h4>
-        </div>
-    </div>
-
-    <div class="p-3 bg-gradient-to-b from-pink-50/20 to-transparent border border-pink-100/50 rounded-2xl shadow-xs bg-white">
-        <div id="container-canvas-bulanan-apotek" class="w-full h-[200px] relative">
-            <div class="flex items-center justify-center h-full text-gray-400 font-semibold text-[11px] py-6">
-                <i class="fa-solid fa-spinner fa-spin text-pink-500 mr-2 text-sm"></i> Mempersiapkan grafik bulanan...
+        <div class="p-3 bg-gradient-to-b from-pink-50/20 to-transparent border border-pink-100/50 rounded-2xl shadow-xs bg-white h-[200px] md:h-[260px] flex flex-col justify-center">
+            <div id="container-canvas-bulanan-apotek" class="w-full h-[170px] md:h-[230px] relative">
+                <div class="flex items-center justify-center h-full text-gray-400 font-semibold text-[11px] py-6">
+                    <i class="fa-solid fa-spinner fa-spin text-pink-500 mr-2 text-sm"></i> Mempersiapkan grafik bulanan...
+                </div>
             </div>
         </div>
+        
     </div>
-    
+
 </div>
-</div>
+
+
 		</div>
 		
 		
@@ -1045,7 +1076,7 @@ document.addEventListener('keydown', function(e) {
         </button>
     </div>
 
-</div> <div id="modal-preview-laporan" class="fixed inset-0 z-[999999] hidden grid place-items-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-all duration-300 overflow-y-auto">
+<div id="modal-preview-laporan" class="fixed inset-0 z-[999999] hidden grid place-items-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-all duration-300 overflow-y-auto">
     
 	
 	<!-- ================= BOX PREVIEW LAPORAN PDF ================= -->
@@ -1136,59 +1167,14 @@ document.addEventListener('keydown', function(e) {
 
 </div>
 
-<style>
-    /* Di desktop: Tampilkan ukuran asli normal */
-    .wrapper-skala-a4 {
-        width: 100%;
-        overflow-x: auto;
-    }
-    
-    /* Di layar HP (Maksimal lebar 768px seperti Tablet/HP): Kita paksa zoom out agar FIT murni */
-    @media (max-width: 768px) {
-        .wrapper-skala-a4 {
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* Trik kunci: menggunakan css zoom agar dokumen mengecil presisi mengikuti lebar layar */
-            zoom: 0.45; 
-            -moz-transform: scale(0.45);
-            -moz-transform-origin: top center;
-        }
-    }
-    @media (max-width: 480px) {
-        .wrapper-skala-a4 {
-            zoom: 0.40; /* Khusus HP berlayar kecil biar benar-benar pas masuk layar */
-            -moz-transform: scale(0.40);
-        }
-    }
-</style>
+
 	
 	
 </div>
 </div>
 
-<div id="modal-closing-invalid" class="fixed inset-0 z-[999999] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
-    <div id="box-closing-invalid" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-amber-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
-        
-        <div class="mx-auto w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-2xl animate-bounce">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-        </div>
-        
-        <div class="space-y-1.5">
-            <h3 class="text-lg font-black text-gray-900 uppercase tracking-wide leading-tight">Tutup Buku Gagal</h3>
-            <p class="text-xs font-bold text-amber-700 bg-amber-50 py-1 px-2 rounded-lg inline-block">Data Bulanan Belum Tuntas!</p>
-            <p class="text-xs font-semibold text-gray-500 leading-relaxed px-1 mt-1">
-                Proses tutup buku Apotek Nurjaya belum bisa dilakukan karena rekaman data harian di NSA CLOUD belum terisi penuh hingga tanggal akhir bulan ini. Silakan tuntaskan input harian terlebih dahulu.
-            </p>
-        </div>
-        
-        <button type="button" onclick="tutupModalClosingInvalid()"
-            class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all">
-            Mengerti
-        </button>
-    </div>
-</div>
+
+
 
         <!-- ================= TAB 5: TENTANG APOTEK ================= -->
         <div id="tab-tentang" class="tab-content hidden fade-in space-y-8">
@@ -1319,76 +1305,88 @@ document.addEventListener('keydown', function(e) {
             Tim Asisten Apoteker
         </h4>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
             
-            <div class="bg-gradient-to-br from-white to-pink-50 p-6 rounded-[35px] border border-pink-200 flex flex-row items-center gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden min-h-[140px]">
+            <div class="bg-gradient-to-br from-white to-pink-50 p-5 rounded-[35px] border border-pink-200 flex flex-col md:flex-row items-center gap-4 md:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full md:max-w-md mx-auto md:mx-auto lg:mx-0">
                 <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500', 'Eka Ainun Nisa')">
                     <img src="https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500" 
-                         class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
-                    <div class="absolute bottom-0 right-0 bg-pink-600 w-6 h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[9px]">
+                         class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                    <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] md:text-[9px]">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
                 </div>
-                <div class="flex-1 min-w-0 flex flex-col items-center text-center justify-center pr-10">
+                
+                <div class="flex-1 min-w-0 flex flex-col items-center text-center md:items-start md:text-left justify-center">
                     <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Eka Ainun Nisa</h5>
-                    <span class="inline-block text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 py-1 rounded-full mt-2 shadow-xs">
-                        Asisten Apoteker
-                    </span>
+                    
+                    <div class="flex items-center gap-1.5 mt-2">
+                        <a href="https://wa.me/6285523823280" target="_blank" onclick="playClickSound()" 
+                           class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                           title="Hubungi WhatsApp">
+                            <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                        </a>
+                        
+                        <span class="inline-flex items-center h-7 text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 rounded-xl shadow-xs">
+                            Asisten Apoteker
+                        </span>
+                    </div>
                 </div>
-                <a href="https://wa.me/6285523823280" target="_blank" onclick="playClickSound()" 
-                   class="absolute bottom-4 right-4 w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 group">
-                    <i class="fa-brands fa-whatsapp text-xl group-hover:rotate-12 transition-transform"></i>
-                    <span class="sr-only">WhatsApp</span>
-                </a>
             </div>
 
-            <div class="bg-gradient-to-br from-white to-pink-50 p-6 rounded-[35px] border border-pink-200 flex flex-row items-center gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden min-h-[140px]">
+            <div class="bg-gradient-to-br from-white to-pink-50 p-5 rounded-[35px] border border-pink-200 flex flex-col md:flex-row items-center gap-4 md:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full md:max-w-md mx-auto md:mx-auto lg:mx-0">
                 <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500', 'Fadilla Nailul Wafa')">
                     <img src="https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500" 
-                         class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
-                    <div class="absolute bottom-0 right-0 bg-pink-600 w-6 h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[9px]">
+                         class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                    <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] md:text-[9px]">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
                 </div>
-                <div class="flex-1 min-w-0 flex flex-col items-center text-center justify-center pr-10">
+                
+                <div class="flex-1 min-w-0 flex flex-col items-center text-center md:items-start md:text-left justify-center">
                     <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Fadilla Nailul Wafa</h5>
-                    <span class="inline-block text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 py-1 rounded-full mt-2 shadow-xs">
-                        Asisten Apoteker
-                    </span>
+                    
+                    <div class="flex items-center gap-1.5 mt-2">
+                        <a href="https://wa.me/6282120737797" target="_blank" onclick="playClickSound()" 
+                           class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                           title="Hubungi WhatsApp">
+                            <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                        </a>
+                        <span class="inline-flex items-center h-7 text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 rounded-xl shadow-xs">
+                            Asisten Apoteker
+                        </span>
+                    </div>
                 </div>
-                <a href="https://wa.me/6282120737797" target="_blank" onclick="playClickSound()" 
-                   class="absolute bottom-4 right-4 w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 group">
-                    <i class="fa-brands fa-whatsapp text-xl group-hover:rotate-12 transition-transform"></i>
-                    <span class="sr-only">WhatsApp</span>
-                </a>
             </div>
 
-            <div class="bg-gradient-to-br from-white to-pink-50 p-6 rounded-[35px] border border-pink-200 flex flex-row items-center gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden min-h-[140px]">
+            <div class="bg-gradient-to-br from-white to-pink-50 p-5 rounded-[35px] border border-pink-200 flex flex-col md:flex-row items-center gap-4 md:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full md:max-w-md mx-auto md:mx-auto lg:mx-0">
                 <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500', 'Dea Nove Asyari')">
                     <img src="https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500" 
-                         class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
-                    <div class="absolute bottom-0 right-0 bg-pink-600 w-6 h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[9px]">
+                         class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                    <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] md:text-[9px]">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
                 </div>
-                <div class="flex-1 min-w-0 flex flex-col items-center text-center justify-center pr-10">
+                
+                <div class="flex-1 min-w-0 flex flex-col items-center text-center md:items-start md:text-left justify-center">
                     <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Dea Nove Asyari</h5>
-                    <span class="inline-block text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 py-1 rounded-full mt-2 shadow-xs">
-                        Asisten Apoteker
-                    </span>
+                    
+                    <div class="flex items-center gap-1.5 mt-2">
+                        <a href="https://wa.me/6285220786175" target="_blank" onclick="playClickSound()" 
+                           class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                           title="Hubungi WhatsApp">
+                            <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                        </a>
+                        <span class="inline-flex items-center h-7 text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 rounded-xl shadow-xs">
+                            Asisten Apoteker
+                        </span>
+                    </div>
                 </div>
-                <a href="https://wa.me/6285220786175" target="_blank" onclick="playClickSound()" 
-                   class="absolute bottom-4 right-4 w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 group">
-                    <i class="fa-brands fa-whatsapp text-xl group-hover:rotate-12 transition-transform"></i>
-                    <span class="sr-only">WhatsApp</span>
-                </a>
             </div>
 
         </div>
     </div>
 </div>
-	
-</div>
+
 
 
 
@@ -1428,7 +1426,6 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 </div>
-
 
 
 
@@ -4068,6 +4065,29 @@ function setTombolAktif() {
     </div>
 </div>
 
+<!-- MODAL TUTUP BUKU INVALID -->
+
+<div id="modal-closing-invalid" class="fixed inset-0 z-[12500] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+    <div id="box-closing-invalid" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-amber-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
+        
+        <div class="mx-auto w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-2xl animate-bounce">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        
+        <div class="space-y-1.5">
+            <h3 class="text-lg font-black text-gray-900 uppercase tracking-wide leading-tight">Tutup Buku Gagal</h3>
+            <p class="text-xs font-bold text-amber-700 bg-amber-50 py-1 px-2 rounded-lg inline-block">Data Bulanan Belum Tuntas!</p>
+            <p class="text-xs font-semibold text-gray-500 leading-relaxed px-1 mt-1">
+                Proses tutup buku Apotek Nurjaya belum bisa dilakukan karena rekaman data harian di NSA CLOUD belum terisi penuh hingga tanggal akhir bulan ini. Silakan tuntaskan input harian terlebih dahulu.
+            </p>
+        </div>
+        
+        <button type="button" onclick="tutupModalClosingInvalid()"
+            class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all">
+            Mengerti
+        </button>
+    </div>
+</div>
 
 <!-- ================= MODAL ALERT UNIVERSAL NARASI & LAPORAN (BARU) ================= -->
 <div id="modal-alert-narasi" class="fixed inset-0 z-[12000] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
