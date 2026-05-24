@@ -310,20 +310,21 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 	<style>
-  /* Efek transisi super smooth ala Apple */
-  .dynamic-island-transition {
-    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  
-  /* Animasi fade in lembut untuk isi teks notifikasi */
-  .fade-in-text {
-    animation: fadeInContent 0.4s ease forwards;
-  }
+<style>
+.dynamic-island-transition {
+  /* cubic-bezier ini memberikan efek kenyal (bouncy) khas iOS saat melebar */
+  transition: all 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.1) !important;
+  max-height: 48px; /* Mengunci tinggi awal (setara h-12) */
+}
 
-  @keyframes fadeInContent {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+.fade-in-text {
+  animation: fadeInTeksSistem 0.4s ease-out forwards;
+}
+
+@keyframes fadeInTeksSistem {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 	
 	<script>
