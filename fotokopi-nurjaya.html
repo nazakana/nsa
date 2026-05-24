@@ -7,7 +7,7 @@
 
     <meta name="description" content="Arsip Pembukuan dan Riwayat Keuangan Nurjaya Abadi Photocopy.">
 	<link rel="manifest" href="manifest.json">
-	<meta name="theme-color" content="#2ecc71">
+	<meta name="theme-color" content="#2563eb">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="mobile-web-app-capable" content="yes">
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
@@ -309,7 +309,22 @@
         .fade-in { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
-	
+	<style>
+  /* Efek transisi super smooth ala Apple */
+  .dynamic-island-transition {
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  /* Animasi fade in lembut untuk isi teks notifikasi */
+  .fade-in-text {
+    animation: fadeInContent 0.4s ease forwards;
+  }
+
+  @keyframes fadeInContent {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
 	
 	<script>
 window.intipFotoKaryawan = function(sumberGambar) {
@@ -2772,10 +2787,107 @@ document.getElementById('formUpdatePendapatan').addEventListener('submit', funct
   firebase.initializeApp(firebaseConfig);
   const messaging = firebase.messaging();
 
-  
+  // =========================================================================
+  // KUNCI BARU: MENANGKAP NOTIFIKASI SAAT APLIKASI TERBUKA (FOREGROUND)
+  // =========================================================================
+  messaging.onMessage((payload) => {
+      console.log("Notifikasi Foreground Diterima:", payload);
 
-// 3. Pasang Logika saat Halaman Siap
-window.addEventListener('load', function() {
+      // Ambil judul dan isi pesan dari kiriman Apps Script / Firebase
+      // Biasanya berstruktur payload.notification ATAU payload.data tergantung cara kirim di Apps Script
+      const judulPesan = payload.notification?.title || payload.data?.title || "Notifikasi Sistem";
+      const isiPesan = payload.notification?.body || payload.data?.body || "Ada pesan baru masuk.";
+
+      // Tembakkan ke modal kustom
+      bukaModalNotifForeground(judulPesan, isiPesan);
+  });
+
+  /**
+ * REVISI ENGINE MODAL FOREGROUND: ALA DYNAMIC ISLAND
+ */
+function bukaModalNotifForeground(judul, isi) {
+    const modal = document.getElementById('modal-notif-foreground');
+    const overlay = document.getElementById('nsa-fg-overlay');
+    const island = document.getElementById('dynamic-island');
+    const content = document.getElementById('nsa-fg-content');
+    const elemenJudul = document.getElementById('nsa-fg-judul');
+    const elemenIsi = document.getElementById('nsa-fg-isi');
+
+    if (!modal || !island || !content) return;
+
+    // Set teks terlebih dahulu saat wadah masih tersembunyi
+    if (elemenJudul) elemenJudul.innerText = judul;
+    if (elemenIsi) elemenIsi.innerText = isi;
+
+    // Aktifkan container utama (Masih transparan)
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    // TAHAP 1: Munculkan Punch Hole Bulat Kecil di Atas Layar
+    setTimeout(() => {
+        overlay.classList.remove('opacity-0');
+        overlay.classList.add('opacity-100'); // Blur background aktif
+        
+        island.classList.remove('scale-0', 'opacity-0');
+        island.classList.add('scale-100', 'opacity-100');
+    }, 50);
+
+    // TAHAP 2: Melebar ke Samping (Kapsul Mendatar)
+    setTimeout(() => {
+        island.classList.remove('w-12', 'rounded-full');
+        // Berubah jadi kapsul panjang lebar
+        island.classList.add('w-full', 'max-w-[320px]', 'rounded-[24px]'); 
+    }, 650); // Eksekusi setelah animasi tahap 1 selesai
+
+    // TAHAP 3: Ekspansi Menjadi Kotak Sempurna & Tampilkan Teks
+    setTimeout(() => {
+        island.classList.remove('h-12');
+        island.classList.add('h-auto'); // Menyesuaikan tinggi isi pesan otomatis
+        
+        // Munculkan text isi dengan efek fade-in
+        content.classList.remove('hidden');
+        content.classList.add('flex', 'fade-in-text');
+    }, 1250); // Eksekusi setelah tahap kedua melebar maksimal
+}
+
+/**
+ * FUNGSI PENUTUP: Kebalikan dari proses Dynamic Island (Mengecil lalu Hilang)
+ */
+function tutupModalNotifForeground() {
+    const modal = document.getElementById('modal-notif-foreground');
+    const overlay = document.getElementById('nsa-fg-overlay');
+    const island = document.getElementById('dynamic-island');
+    const content = document.getElementById('nsa-fg-content');
+
+    if (!modal || !island || !content) return;
+
+    // Sembunyikan konten teks terlebih dahulu secara instan
+    content.classList.remove('flex', 'fade-in-text');
+    content.classList.add('hidden');
+
+    // Kembalikan ukuran bentuk kotak menjadi bulat kecil kembali
+    island.classList.remove('w-full', 'max-w-[320px]', 'h-auto', 'rounded-[24px]');
+    island.classList.add('w-12', 'h-12', 'rounded-full');
+
+    // Setelah mengecil, hilangkan total modal dari layar
+    setTimeout(() => {
+        overlay.classList.remove('opacity-100');
+        overlay.classList.add('opacity-0');
+        
+        island.classList.remove('scale-100', 'opacity-100');
+        island.classList.add('scale-0', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }, 400);
+    }, 400);
+}
+  // =========================================================================
+
+
+  // 3. Pasang Logika saat Halaman Siap
+  window.addEventListener('load', function() {
     const btn = document.getElementById('btnNotifAksi');
     console.log("Status tombol:", btn ? "Ditemukan" : "Tidak ditemukan");
 
@@ -2785,49 +2897,69 @@ window.addEventListener('load', function() {
             console.log("Klik terdeteksi!");
 
             if (!("Notification" in window)) {
-                alert("Browser tidak mendukung notifikasi.");
+                if (typeof bukaAlertFotokopi === "function") {
+                    bukaAlertFotokopi("Gagal", "Browser tidak mendukung notifikasi.");
+                } else {
+                    alert("Browser tidak mendukung notifikasi.");
+                }
                 return;
             }
 
             Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-        alert("Izin diterima! Menghubungkan ke Firebase...");
+                if (permission === 'granted') {
+                    console.log("Izin diterima! Menghubungkan ke Firebase...");
 
-        // Pastikan Service Worker siap
-        navigator.serviceWorker.ready.then((registration) => {
-            messaging.getToken({
-                serviceWorkerRegistration: registration,
-                vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4'
-            })
-            .then((currentToken) => {
-                if (currentToken) {
-                    console.log('Token didapat:', currentToken);
+                    // Pastikan Service Worker siap
+                    navigator.serviceWorker.ready.then((registration) => {
+                        messaging.getToken({
+                            serviceWorkerRegistration: registration,
+                            vapidKey: 'BDyTHC3SEmJmGVfX8vS5wFqQeHaP5mOs1IOELu8YUleZL1e8Jkwc6vO1ZxS9sAQzy1DcQDP1pd_l3FcKHQS7oF4'
+                        })
+                        .then((currentToken) => {
+                            if (currentToken) {
+                                console.log('Token didapat:', currentToken);
 
-                    // --- BAGIAN BARU: PENDAFTARAN TOPIK OTOMATIS ---
-                    const urlScript = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
-                    
-                    fetch(`${urlScript}?token=${currentToken}`, { 
-                        mode: 'no-cors' 
-                    })
-                    .then(() => console.log("Laporan token ke Apps Script berhasil."))
-                    .catch(err => console.error("Gagal daftar topik:", err));
-                    // ----------------------------------------------
+                                // --- PENDAFTARAN TOPIK OTOMATIS ---
+                                const urlScript = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
+                                
+                                fetch(`${urlScript}?token=${currentToken}`, { 
+                                    mode: 'no-cors' 
+                                })
+                                .then(() => console.log("Laporan token ke Apps Script berhasil."))
+                                .catch(err => console.error("Gagal daftar topik:", err));
+                                // ----------------------------------
 
-                    alert("Sistem Pengingat NSA Aktif!");
-                    setTombolAktif();
+                                if (typeof bukaAlertFotokopi === "function") {
+                                    bukaAlertFotokopi("Berhasil", "Sistem Pengingat NSA Aktif!");
+                                } else {
+                                    alert("Sistem Pengingat NSA Aktif!");
+                                }
+                                setTombolAktif();
+                            } else {
+                                if (typeof bukaAlertFotokopi === "function") {
+                                    bukaAlertFotokopi("Error Token", "Token kosong. Periksa sw.js.");
+                                } else {
+                                    alert("Token kosong. Periksa sw.js.");
+                                }
+                            }
+                        })
+                        .catch((err) => {
+                            console.error('Error getToken:', err);
+                            if (typeof bukaAlertFotokopi === "function") {
+                                bukaAlertFotokopi("Gagal Sinkronisasi", err.message);
+                            } else {
+                                alert("Gagal sinkronisasi: " + err.message);
+                            }
+                        });
+                    });
                 } else {
-                    alert("Token kosong. Periksa sw.js.");
+                    if (typeof bukaAlertFotokopi === "function") {
+                        bukaAlertFotokopi("Akses Ditolak", "Izin notifikasi ditolak oleh kasir.");
+                    } else {
+                        alert("Izin notifikasi ditolak.");
+                    }
                 }
-            })
-            .catch((err) => {
-                console.error('Error getToken:', err);
-                alert("Gagal sinkronisasi: " + err.message);
             });
-        });
-    } else {
-        alert("Izin notifikasi ditolak.");
-    }
-});
         };
     }
 
@@ -2840,9 +2972,7 @@ window.addEventListener('load', function() {
             })
             .catch((err) => console.error('SW Error:', err));
     }
-});
-
-
+  });
 </script>
 
 
@@ -4390,6 +4520,48 @@ function tutupAlertFotokopi() {
         </button>
     </div>
 </div>
+
+
+
+<!-- OVERLAY BACKGROUND BLURRY (Layer Paling Luar) -->
+<!-- Kita set z-[60] agar berada tepat di atas modal pengatur dev yang bernilai 50 kemarin -->
+<div id="modal-notif-foreground" class="fixed inset-0 z-[60] items-start justify-center hidden p-4">
+    <!-- Backdrop Blur Hitam Transparan -->
+    <div id="nsa-fg-overlay" class="absolute inset-0 bg-slate-950/20 backdrop-blur-sm opacity-0 transition-opacity duration-500"></div>
+
+    <!-- DYNAMIC ISLAND CONTAINER -->
+    <!-- Tahap 1 Awal: Berbentuk lingkaran kecil hitam/hijau tua layaknya punch hole kamera -->
+    <div id="dynamic-island" class="dynamic-island-transition relative z-10 bg-slate-900 border border-emerald-800 text-white shadow-2xl overflow-hidden mt-2
+         w-12 h-12 rounded-full flex items-center justify-center scale-0 opacity-0">
+        
+        <!-- KONTEN INTERNAL NOTIFIKASI (Disembunyikan saat fase transisi bentuk) -->
+        <div id="nsa-fg-content" class="hidden w-full p-5 flex-col">
+            <!-- Header Notif -->
+            <div class="flex items-center gap-3 border-b border-emerald-800/40 pb-3 mb-3">
+                <div class="w-8 h-8 bg-emerald-600 rounded-xl flex items-center justify-center shadow-inner animate-pulse">
+                    <i class="fas fa-bullhorn text-white text-sm"></i>
+                </div>
+                <div>
+                    <h3 id="nsa-fg-judul" class="font-black text-sm text-emerald-400 uppercase tracking-wide leading-tight">Mencari Data...</h3>
+                    <p class="text-[9px] text-emerald-500/80 uppercase font-bold tracking-[0.15em] mt-0.5">Pesan Masuk NSA Cloud</p>
+                </div>
+            </div>
+
+            <!-- Isi Pesan -->
+            <div class="flex-1 py-1">
+                <p id="nsa-fg-isi" class="text-xs text-slate-200 leading-relaxed font-medium">Memuat isi pesan...</p>
+            </div>
+
+            <!-- Tombol Mengerti / Tutup -->
+            <div class="mt-4 pt-1">
+                <button onclick="tutupModalNotifForeground()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-xl font-black text-xs transition-all tracking-wider uppercase shadow-md shadow-emerald-900/40">
+                    OKE, SAYA MENGERTI
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </body>
 </html>
