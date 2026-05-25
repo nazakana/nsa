@@ -4549,20 +4549,15 @@ function tutupAlertFotokopi() {
 // CONFIG & INSTANSIASI FITUR BARANG KOSONG (NSA)
 // ====================================================================
 const API_BARANG_KOSONG = "https://script.google.com/macros/s/AKfycbxEOZBmgmXeFeG_lkkCY5OOUESufebQ2Pj9Y9NiaNcpLde-bPUQshXrlVnzDtf3s1-wfQ/exec";
-const NO_WA_TUJUAN = "6285211029598"; // Format internasional tanpa tanda + atau spasi
+const NO_WA_TUJUAN = "6285211029598"; 
 
-// 1. Fungsi Utama: Buka Modal & Set Elemen Dinamis
+// 1. Fungsi Utama: Buka Modal
 function bukaModalBK() {
     const modal = document.getElementById('modalBarangKosongBK');
     if (!modal) return;
-    
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-    
-    // Set Tanggal Hari Ini secara otomatis di Header Modal
     setTanggalHariIni();
-    
-    // Tarik data dari sheets
     muatDataBarangKosong();
 }
 
@@ -4575,7 +4570,7 @@ function tutupModalBK() {
     }
 }
 
-// 3. Ambil Data (GET) & Render Laporan
+// 3. Ambil Data dari Sheets & Render ke Layar
 async function muatDataBarangKosong() {
     const wrapper = document.getElementById('wrapperItemBK');
     const txtUangSisa = document.getElementById('txtUangSisaBK');
@@ -4585,7 +4580,7 @@ async function muatDataBarangKosong() {
     wrapper.innerHTML = `
         <div class="flex flex-col items-center justify-center py-10 gap-3 text-green-600 animate-pulse">
             <i class="fas fa-spinner fa-spin text-3xl"></i>
-            <span class="text-xs font-bold uppercase tracking-wider">Menghubungkan ke Google Sheets...</span>
+            <span class="text-xs font-bold uppercase tracking-wider">Menghubungkan ke NSA Cloud...</span>
         </div>
     `;
 
@@ -4646,31 +4641,23 @@ async function muatDataBarangKosong() {
             <div class="text-center py-10 text-rose-500">
                 <i class="fas fa-exclamation-circle text-4xl mb-2"></i>
                 <p class="text-xs font-bold uppercase">Gagal Memuat Laporan</p>
-                <p class="text-[10px] text-gray-500 mt-1 normal-case">Terjadi pemblokiran browser (CORS) atau sistem backend bermasalah.</p>
             </div>
         `;
     }
 }
 
-// 4. Fungsi Kirim Data ke Sheets (POST) & Buka WhatsApp Chatbox
+// 4. Fungsi Kirim Laporan ke Google Sheets & WhatsApp
 async function simpanDataDanKirimWA() {
     const btnSimpan = document.getElementById('btnSimpanBK');
-    const iconSimpan = document.getElementById('iconSimpanBK');
-    const textSimpan = document.getElementById('textSimpanBK');
-    
     const txtUangSisa = document.getElementById('txtUangSisaBK')?.innerText || "Rp 0";
     const txtUangTabungan = document.getElementById('txtUangTabunganBK')?.innerText || "Rp 0";
     const strTanggal = document.getElementById('txtTanggalBK')?.innerText || "";
     
     const inputElements = document.querySelectorAll('.input-jumlah-belanja');
-    if (inputElements.length === 0) {
-        alert("Tidak ada data barang untuk diproses.");
-        return;
-    }
+    if (inputElements.length === 0) return;
 
     const dataUpdateSheets = [];
-    let teksLaporanWA = `*LAPORAN BELANJA BARANG KOSONG*\n`;
-    teksLaporanWA += `*NURJAYA ABADI PHOTOCOPY*\n`;
+    let teksLaporanWA = `*LAPORAN BELANJA BARANG KOSONG*\n*NURJAYA ABADI PHOTOCOPY*\n`;
     if(strTanggal) teksLaporanWA += `_Per Hari/Tanggal: ${strTanggal}_\n\n`;
     
     let adaBarangDibelanja = false;
@@ -4678,27 +4665,21 @@ async function simpanDataDanKirimWA() {
     inputElements.forEach(input => {
         const nama = input.getAttribute('data-barang');
         const jumlah = input.value.trim();
-
         dataUpdateSheets.push({ nama: nama, jumlah: jumlah });
 
-        if (jumlah !== "") {
+        if (jumlah !== "" && jumlah !== "0") {
             teksLaporanWA += `${nama}\t${jumlah}\n`;
             adaBarangDibelanja = true;
         }
     });
 
-    if (!adaBarangDibelanja) {
-        teksLaporanWA += "_(Semua kebutuhan barang masih terpenuhi/kosong)_\n";
-    }
+    if (!adaBarangDibelanja) teksLaporanWA += "_(Semua kebutuhan barang masih terpenuhi/kosong)_\n";
 
     teksLaporanWA += `\n----------------------------------\n`;
     teksLaporanWA += `*Uang Sisa Akhir:* ${txtUangSisa}\n`;
     teksLaporanWA += `*Uang Tabungan B:* ${txtUangTabungan}`;
 
     btnSimpan.disabled = true;
-    btnSimpan.classList.replace('bg-emerald-600', 'bg-gray-400');
-    if (iconSimpan) iconSimpan.className = "fas fa-spinner fa-spin";
-    if (textSimpan) textSimpan.innerText = "PROSES INTEGRASI...";
 
     try {
         const response = await fetch(API_BARANG_KOSONG, {
@@ -4706,62 +4687,292 @@ async function simpanDataDanKirimWA() {
             mode: "cors",
             body: JSON.stringify({ barang: dataUpdateSheets })
         });
-
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const result = await response.json();
-
-        if (result.status !== "success") {
-            throw new Error(result.message || "Gagal sinkronisasi data.");
-        }
+        if (result.status !== "success") throw new Error(result.message);
 
         await navigator.clipboard.writeText(teksLaporanWA);
-        const linkWhatsApp = `https://api.whatsapp.com/send?phone=${NO_WA_TUJUAN}&text=${encodeURIComponent(teksLaporanWA)}`;
-        window.open(linkWhatsApp, '_blank');
+        window.open(`https://api.whatsapp.com/send?phone=${NO_WA_TUJUAN}&text=${encodeURIComponent(teksLaporanWA)}`, '_blank');
         tutupModalBK();
-
     } catch (error) {
-        console.error("Detail Kendala Integrasi:", error);
-        alert("Proses Terhambat!\nDetail: " + error.message + "\n\nSistem tetap membuka WhatsApp.");
-        
-        try {
-            await navigator.clipboard.writeText(teksLaporanWA);
-            window.open(`https://api.whatsapp.com/send?phone=${NO_WA_TUJUAN}&text=${encodeURIComponent(teksLaporanWA)}`, '_blank');
-        } catch(e) { console.error(e); }
+        alert("Sinkronisasi gagal, langsung mengalihkan ke WhatsApp.");
+        window.open(`https://api.whatsapp.com/send?phone=${NO_WA_TUJUAN}&text=${encodeURIComponent(teksLaporanWA)}`, '_blank');
     } finally {
         btnSimpan.disabled = false;
-        btnSimpan.classList.replace('bg-gray-400', 'bg-emerald-600');
-        if (iconSimpan) iconSimpan.className = "fab fa-whatsapp text-sm";
-        if (textSimpan) textSimpan.innerText = "Simpan & Kirim ke WhatsApp";
     }
 }
 
-// 5. Helper: Generate Hari & Tanggal Otomatis Format ID
+// 5. REVISI UTAMA: FITUR GENERATE JPG KERTAS CHECKLIST PORTRAIT (A4 FORMAT)
+// Variabel global untuk menyimpan data gambar hasil render agar bisa diunduh kapan saja
+let listDataGambarPreview = [];
+
+async function buatFormatCetakJPG() {
+    const inputElements = document.querySelectorAll('.input-jumlah-belanja');
+    const strTanggal = document.getElementById('txtTanggalBK')?.innerText || "";
+
+    const listBarangValid = [];
+    inputElements.forEach(input => {
+        const nama = input.getAttribute('data-barang');
+        const jumlah = input.value.trim();
+        if (jumlah !== "" && jumlah !== "0") {
+            listBarangValid.push({ nama: nama, jumlah: jumlah });
+        }
+    });
+
+    if (listBarangValid.length === 0) {
+        alert("Tidak ada item belanjaan aktif untuk dicetak!");
+        return;
+    }
+
+    // Ubah icon tombol cetak ke mode loading
+    const iconCetak = document.getElementById('iconCetakBK');
+    if(iconCetak) iconCetak.className = "fas fa-spinner fa-spin text-sm";
+
+    // Reset penampung gambar global
+    listDataGambarPreview = [];
+
+    const scale = 4; 
+    const baseRowHeight = 22;      
+    const baseWidth = 350;         
+    const baseHeight = 700;        
+    const maxItemsPerPage = 25;    
+    const totalPages = Math.ceil(listBarangValid.length / maxItemsPerPage);
+
+    const posX_Check = (baseWidth - 32) * scale; 
+    const posX_QTY = (baseWidth - 100) * scale;  
+
+    // Bersihkan kontainer preview html lama
+    const containerPreview = document.getElementById('previewCetakContainer');
+    containerPreview.innerHTML = "";
+
+    for (let p = 0; p < totalPages; p++) {
+        const startIndex = p * maxItemsPerPage;
+        const endIndex = Math.min(startIndex + maxItemsPerPage, listBarangValid.length);
+        const barangHalamanIni = listBarangValid.slice(startIndex, endIndex);
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = baseWidth * scale;   
+        canvas.height = baseHeight * scale; 
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.lineWidth = 4 * scale;
+        ctx.strokeStyle = "#059669"; 
+        ctx.strokeRect(2 * scale, 2 * scale, canvas.width - (4 * scale), canvas.height - (4 * scale));
+
+        let currentY = 30 * scale; 
+
+        // RENDER HEADER
+        if (p === 0) {
+            ctx.textAlign = "center";
+            ctx.fillStyle = "#111827"; 
+            ctx.font = `bold ${13 * scale}px Arial`; 
+            ctx.fillText("DAFTAR BELANJA ATK", canvas.width / 2, currentY);
+            
+            currentY += 18 * scale;
+            ctx.font = `bold ${11 * scale}px Arial`;
+            ctx.fillStyle = "#059669";
+            ctx.fillText("NURJAYA ABADI PHOTOCOPY", canvas.width / 2, currentY);
+
+            currentY += 18 * scale;
+            ctx.font = `italic ${10 * scale}px Arial`;
+            ctx.fillStyle = "#6b7280";
+            ctx.fillText(`Cetak: ${strTanggal}`, canvas.width / 2, currentY);
+
+            currentY += 11 * scale;
+            ctx.lineWidth = 1 * scale;
+            ctx.strokeStyle = "#d1d5db";
+            ctx.beginPath();
+            ctx.moveTo(15 * scale, currentY);
+            ctx.lineTo(canvas.width - (15 * scale), currentY);
+            ctx.stroke();
+
+            currentY += 16 * scale;
+            ctx.font = `bold ${10 * scale}px Arial`;
+            ctx.fillStyle = "#374151";
+            
+            ctx.textAlign = "left";
+            ctx.fillText("NAMA BARANG", 20 * scale, currentY);
+            
+            ctx.textAlign = "center";
+            ctx.fillText("QTY", posX_QTY, currentY);   
+            ctx.fillText("CHECK", posX_Check, currentY); 
+
+            currentY += 7 * scale;
+            ctx.beginPath();
+            ctx.moveTo(15 * scale, currentY);
+            ctx.lineTo(canvas.width - (15 * scale), currentY);
+            ctx.stroke();
+
+            currentY += 14 * scale; 
+        } else {
+            ctx.textAlign = "center";
+            ctx.fillStyle = "#6b7280";
+            ctx.font = `bold ${10 * scale}px Arial`;
+            ctx.fillText(`SAMBUNGAN DAFTAR BELANJA - HALAMAN ${p + 1}`, canvas.width / 2, currentY);
+            
+            currentY += 10 * scale;
+            ctx.lineWidth = 1 * scale;
+            ctx.strokeStyle = "#e5e7eb";
+            ctx.beginPath();
+            ctx.moveTo(15 * scale, currentY);
+            ctx.lineTo(canvas.width - (15 * scale), currentY);
+            ctx.stroke();
+
+            currentY += 18 * scale; 
+        }
+
+        // RENDER BARANG
+        barangHalamanIni.forEach((item, innerIndex) => {
+            const globalIndex = startIndex + innerIndex;
+            const startX = 20 * scale;
+
+            ctx.textAlign = "left";
+            ctx.font = `500 ${11 * scale}px Arial`; 
+            ctx.fillStyle = "#1f2937"; 
+            
+            let namaBarang = `${globalIndex + 1}. ${item.nama.toUpperCase()}`;
+            if (namaBarang.length > 18) {
+                namaBarang = namaBarang.substring(0, 16) + "..";
+            }
+            ctx.fillText(namaBarang, startX, currentY);
+
+            ctx.textAlign = "center";
+            ctx.font = `bold ${11 * scale}px Arial`; 
+            ctx.fillStyle = "#047857"; 
+            let teksQty = item.jumlah.toUpperCase();
+            ctx.fillText(teksQty, posX_QTY, currentY);
+
+            ctx.textAlign = "left";
+            ctx.font = `500 ${10 * scale}px Arial`; 
+            ctx.fillStyle = "#1f2937"; 
+
+            const lebarNama = ctx.measureText(namaBarang).width;
+            const lebarQty = ctx.measureText(teksQty).width;
+            
+            let titikStartX = startX + lebarNama + (5 * scale);
+            const titikEndX = posX_QTY - (lebarQty / 2) - (16 * scale);
+            const lebarSatuTitik = ctx.measureText(".").width;
+
+            while (titikStartX < titikEndX) {
+                ctx.fillText(".", titikStartX, currentY);
+                titikStartX += lebarSatuTitik + (2 * scale);
+            }
+
+            const boxSize = 14 * scale; 
+            const boxX = posX_Check - (boxSize / 2); 
+            const boxY = currentY - (11 * scale);
+            const borderRadius = 3 * scale; 
+
+            ctx.strokeStyle = "#4b5563";
+            ctx.lineWidth = 1 * scale;
+            
+            ctx.beginPath();
+            ctx.roundRect(boxX, boxY, boxSize, boxSize, borderRadius); 
+            ctx.stroke();
+
+            ctx.lineWidth = 0.5 * scale;
+            ctx.strokeStyle = "#f9fafb";
+            ctx.beginPath();
+            ctx.moveTo(15 * scale, currentY + (5 * scale));
+            ctx.lineTo(canvas.width - (15 * scale), currentY + (5 * scale));
+            ctx.stroke();
+
+            currentY += (baseRowHeight * scale);
+        });
+
+        ctx.textAlign = "center";
+        ctx.font = `bold ${8 * scale}px Arial`;
+        ctx.fillStyle = "#9ca3af";
+        ctx.fillText(`GENERATED BY NSA SYSTEM • HALAMAN ${p + 1} DARI ${totalPages}`, canvas.width / 2, canvas.height - (15 * scale));
+
+        // Dapatkan string base64 gambar
+        const dataUrlGambar = canvas.toDataURL("image/jpeg", 1.0);
+        
+        // Simpan ke array global untuk didownload nanti
+        listDataGambarPreview.push({
+            pageNumber: p + 1,
+            dataUrl: dataUrlGambar
+        });
+
+        // Buat elemen <img> pembantu untuk ditampilkan secara live di modal
+        const imgElement = document.createElement('img');
+        imgElement.src = dataUrlGambar;
+        imgElement.alt = `Halaman ${p + 1}`;
+        imgElement.className = "w-[260px] h-[520px] object-contain rounded-xl shadow-xl border-2 border-neutral-600 bg-white";
+        containerPreview.appendChild(imgElement);
+    }
+
+    // Kembalikan icon cetak ke semula
+    if(iconCetak) iconCetak.className = "fas fa-image text-sm";
+
+    // Pindah Tampilan / View ke Tab Preview Struk
+    document.getElementById('viewInputBK').classList.add('hidden');
+    document.getElementById('viewPreviewBK').classList.remove('hidden');
+    document.getElementById('titleModalBK').innerText = "PREVIEW FORMAT CETAK";
+}
+
+// 6. Helper: Set Tanggal Dinamis
 function setTanggalHariIni() {
     const elTanggal = document.getElementById('txtTanggalBK');
     if (!elTanggal) return;
-
     const tgl = new Date();
     const daftarHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    const daftarBulan = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-
-    const namaHari = daftarHari[tgl.getDay()];
-    const tanggalHari = tgl.getDate();
-    const namaBulan = daftarBulan[tgl.getMonth()];
-    const tahunHari = tgl.getFullYear();
-
-    // Satukan menjadi string rapi: Senin, 25 Mei 2026
-    elTanggal.innerText = `${namaHari}, ${tanggalHari} ${namaBulan} ${tahunHari}`;
+    const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    elTanggal.innerText = `${daftarHari[tgl.getDay()]}, ${tgl.getDate()} ${daftarBulan[tgl.getMonth()]} ${tgl.getFullYear()}`;
 }
 
-// 6. Helper: Format Rupiah
+// 7. Helper: Format Rupiah Latar Modal
 function formatRupiahManual(angkaStr) {
     if (!angkaStr || angkaStr === "0" || angkaStr === "-") return "Rp 0";
     let cleanNumber = angkaStr.replace(/[^0-9]/g, '');
     if (!cleanNumber) return "Rp " + angkaStr;
     return "Rp " + parseInt(cleanNumber, 10).toLocaleString('id-ID');
+}
+</script>
+
+
+<script>
+// Fungsi untuk membatalkan preview dan kembali ke pengisian jumlah barang kosong
+function kembaliKeInputBK() {
+    document.getElementById('viewPreviewBK').classList.add('hidden');
+    document.getElementById('viewInputBK').classList.remove('hidden');
+    document.getElementById('titleModalBK').innerText = "DAFTAR Barang Kosong";
+}
+
+// Fungsi eksekusi download berantai untuk semua halaman gambar yang ada di memori
+async function eksekusiUnduhSemuaJPG() {
+    if (listDataGambarPreview.length === 0) return;
+    
+    const strTanggal = document.getElementById('txtTanggalBK')?.innerText || "";
+    const formatTanggal = strTanggal.replace(/[^a-zA-Z0-9]/g, "_");
+
+    for (let i = 0; i < listDataGambarPreview.length; i++) {
+        const item = listDataGambarPreview[i];
+        
+        await new Promise((resolve) => {
+            try {
+                const linkDownload = document.createElement('a');
+                linkDownload.download = `Struk_Checklist_Hal_${item.pageNumber}_NURJAYA_${formatTanggal}.jpg`;
+                linkDownload.href = item.dataUrl;
+                linkDownload.click();
+                
+                // Jeda 350ms agar browser tidak mendeteksi sebagai spam pop-up download
+                setTimeout(resolve, 350);
+            } catch (e) {
+                console.error(e);
+                resolve();
+            }
+        });
+    }
+}
+
+// Opsional: Pastikan saat fungsi tutupModalBK() dipanggil, view di-reset kembali ke input dasar
+function tutupModalBK_Wrapper() {
+    // Jalankan logika tutup modal bawaan sistem Anda di sini, lalu reset view:
+    kembaliKeInputBK();
 }
 </script>
 
@@ -4803,7 +5014,7 @@ function formatRupiahManual(angkaStr) {
                     <i class="fas fa-exclamation-triangle text-lg text-amber-300"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold leading-none uppercase tracking-wide">DAFTAR Barang Kosong</h3>
+                    <h3 id="titleModalBK" class="text-lg font-bold leading-none uppercase tracking-wide">DAFTAR Barang Kosong</h3>
                     <p class="text-[10px] opacity-90 mt-1 uppercase tracking-wider font-medium flex flex-wrap items-center gap-1.5">
                         <span>(DIISI OLEH OWNER)</span>
                         <span class="opacity-40">•</span>
@@ -4818,40 +5029,79 @@ function formatRupiahManual(angkaStr) {
             </button>
         </div>
 
-        <div class="bg-green-50/80 px-5 py-3 border-b border-green-100 flex items-center gap-2.5 text-green-800">
-            <i class="fas fa-info-circle text-xs text-green-600 flex-shrink-0"></i>
-            <span class="text-[11px] font-bold uppercase tracking-wider">Petunjuk: Isi dengan angka <span class="bg-green-200 px-1.5 py-0.5 rounded text-green-900 font-black">0</span> jika barang tidak perlu dibeli.</span>
-        </div>
-
-        <div id="bodyListBK" class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50/50">
-            <div id="wrapperItemBK" class="space-y-4">
-                </div>
-        </div>
-
-        <div class="bg-emerald-50 border-t border-green-100 p-5 space-y-3">
-            <h5 class="text-[11px] font-black text-emerald-800 uppercase tracking-widest flex items-center gap-2">
-                <i class="fas fa-wallet text-sm"></i> Rincian Dana Saat Ini
-            </h5>
-            
-            <div class="grid grid-cols-1 gap-2">
-                <div class="flex justify-between items-center bg-white p-3 rounded-2xl border border-green-100 shadow-sm">
-                    <span class="text-[11px] font-bold text-gray-500 uppercase">Uang Sisa Akhir</span>
-                    <span id="txtUangSisaBK" class="text-sm font-black text-emerald-700 tracking-tight">Rp 0</span>
-                </div>
-                
-                <div class="flex justify-between items-center bg-white p-3 rounded-2xl border border-green-100 shadow-sm">
-                    <span class="text-[11px] font-bold text-gray-500 uppercase">Uang Tabungan B</span>
-                    <span id="txtUangTabunganBK" class="text-sm font-black text-emerald-700 tracking-tight">Rp 0</span>
-                </div>
+        <div id="viewInputBK" class="flex flex-col flex-1 overflow-hidden">
+            <div class="bg-green-50/80 px-5 py-3 border-b border-green-100 flex items-center gap-2.5 text-green-800">
+                <i class="fas fa-info-circle text-xs text-green-600 flex-shrink-0"></i>
+                <span class="text-[11px] font-bold uppercase tracking-wider">Petunjuk: Isi dengan angka <span class="bg-green-200 px-1.5 py-0.5 rounded text-green-900 font-black">0</span> jika barang tidak perlu dibeli.</span>
             </div>
 
-            <button type="button"
-                    id="btnSimpanBK"
-                    onclick="simpanDataDanKirimWA()"
-                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all mt-2 flex items-center justify-center gap-2 focus:outline-none">
-                <i id="iconSimpanBK" class="fab fa-whatsapp text-sm"></i>
-                <span id="textSimpanBK">Simpan & Kirim ke WhatsApp</span>
-            </button>
+            <div id="bodyListBK" class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50/50">
+                <div id="wrapperItemBK" class="space-y-4"></div>
+            </div>
+
+            <div class="bg-emerald-50 border-t border-green-100 p-5 space-y-3">
+                <h5 class="text-[11px] font-black text-emerald-800 uppercase tracking-widest flex items-center gap-2">
+                    <i class="fas fa-wallet text-sm"></i> Rincian Uang Tersedia
+                </h5>
+                
+                <div class="grid grid-cols-1 gap-2">
+                    <div class="flex justify-between items-center bg-white p-3 rounded-2xl border border-green-100 shadow-sm">
+                        <span class="text-[11px] font-bold text-gray-500 uppercase">Uang Sisa Akhir</span>
+                        <span id="txtUangSisaBK" class="text-sm font-black text-emerald-700 tracking-tight">Rp 0</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center bg-white p-3 rounded-2xl border border-green-100 shadow-sm">
+                        <span class="text-[11px] font-bold text-gray-500 uppercase">Uang Tabungan B</span>
+                        <span id="txtUangTabunganBK" class="text-sm font-black text-emerald-700 tracking-tight">Rp 0</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                    <button type="button"
+                            id="btnCetakBK"
+                            onclick="buatFormatCetakJPG()"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+                        <i id="iconCetakBK" class="fas fa-image text-sm"></i>
+                        <span>Generate List Belanja</span>
+                    </button>
+
+                    <button type="button"
+                            id="btnSimpanBK"
+                            onclick="simpanDataDanKirimWA()"
+                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+                        <i id="iconSimpanBK" class="fab fa-whatsapp text-sm"></i>
+                        <span>Simpan & Kirim ke WA</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="viewPreviewBK" class="flex flex-col flex-1 overflow-hidden hidden">
+            <div class="bg-amber-50 px-5 py-3 border-b border-amber-100 flex items-center gap-2.5 text-amber-900">
+                <i class="fas fa-eye text-xs text-amber-600 flex-shrink-0"></i>
+                <span class="text-[11px] font-bold uppercase tracking-wider">Silakan periksa kembali hasil cetakan struk di bawah sebelum diunduh.</span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-6 bg-neutral-800 flex flex-col items-center gap-6">
+                <div id="previewCetakContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-full justify-center">
+                    </div>
+            </div>
+
+            <div class="bg-neutral-900 p-5 grid grid-cols-1 sm:grid-cols-2 gap-2 border-t border-neutral-700">
+                <button type="button"
+                        onclick="kembaliKeInputBK()"
+                        class="w-full bg-gray-700 hover:bg-gray-600 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+                    <i class="fas fa-arrow-left text-sm"></i>
+                    <span>Kembali Edit</span>
+                </button>
+
+                <button type="button"
+                        onclick="eksekusiUnduhSemuaJPG()"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+                    <i class="fas fa-cloud-download-alt text-sm"></i>
+                    <span>Download Semua JPG</span>
+                </button>
+            </div>
         </div>
 
     </div>
