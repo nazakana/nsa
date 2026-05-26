@@ -864,15 +864,17 @@ document.addEventListener('keydown', function(e) {
         </div>
     </div>
     
-    <div id="viewer-container-summary-apotek" class="viewer-container border-2 border-dashed border-pink-100 rounded-3xl bg-pink-50/10 flex flex-col items-center justify-center transition-all duration-300" style="height: 650px;">
-        <div id="placeholder-viewer-drive" class="flex flex-col items-center justify-center h-full p-10 text-center">
-            <div class="w-20 h-20 bg-pink-50 text-pink-400 rounded-full flex items-center justify-center mb-5 border border-pink-100 ring-4 ring-pink-50/50">
-                <i class="fa-solid fa-folder-open text-3xl opacity-80"></i>
-            </div>
-            <p class="font-black text-lg text-gray-700 mb-1">Arsip Summary</p>
-            <p class="text-xs text-gray-400 max-w-xs leading-relaxed">Silakan pilih salah satu bulan pada menu dropdown di atas untuk menampilkan Laporan Penutupan Pembukuan.</p>
+    <div id="viewer-container-summary-apotek" class="viewer-container border-2 border-dashed border-pink-100 rounded-3xl bg-pink-50/10 flex flex-col items-center justify-center transition-all duration-300 overflow-hidden" style="height: 650px;">
+    
+    <div id="placeholder-viewer-drive" class="flex flex-col items-center justify-center h-full p-10 text-center">
+        <div class="w-20 h-20 bg-pink-50 text-pink-400 rounded-full flex items-center justify-center mb-5 border border-pink-100 ring-4 ring-pink-50/50">
+            <i class="fa-solid fa-folder-open text-3xl opacity-80"></i>
         </div>
+        <p class="font-black text-lg text-gray-700 mb-1">Arsip Summary</p>
+        <p class="text-xs text-gray-400 max-w-xs leading-relaxed">Silakan pilih salah satu bulan pada menu dropdown di atas untuk menampilkan Laporan Penutupan Pembukuan.</p>
     </div>
+
+</div>
 
 </div>
 
@@ -1878,117 +1880,322 @@ function lockFormKembali() {
 	
 	
 	<script>
-	// Global database penyimpan link dari Google Drive
-let listArsipDriveApotek = {}; 
+    // Global database penyimpan link dari Google Drive
+    let listArsipDriveApotek = {}; 
 
-// Daftar master nama bulan 2026
-const masterBulan2026 = [
-    "Januari 2026", "Februari 2026", "Maret 2026", "April 2026", 
-    "Mei 2026", "Juni 2026", "Juli 2026", "Agustus 2026", 
-    "September 2026", "Oktober 2026", "November 2026", "Desember 2026"
-];
+    // Daftar master nama bulan 2026
+    const masterBulan2026 = [
+        "Januari 2026", "Februari 2026", "Maret 2026", "April 2026", 
+        "Mei 2026", "Juni 2026", "Juli 2026", "Agustus 2026", 
+        "September 2026", "Oktober 2026", "November 2026", "Desember 2026"
+    ];
 
-/**
- * AMBIL DATA UTAMA: Ambil daftar file di Drive via doGet
- */
-function muatUlangDaftarArsipDrive() {
-    const dropdown = document.getElementById('dropdown-bulan-apotek');
-    dropdown.innerHTML = '<option value="" disabled selected>⏳ Sinkronisasi Cloud...</option>';
+    // State global untuk mengontrol zoom dan tracking data url PDF
+    let levelZoomPDFCurrent = 1;
+    let urlAksesPDFCurrent = "";
 
-    const urlAppsScriptMas = "https://script.google.com/macros/s/AKfycbyK-vMV9b3R5s85FzsuCTdEQDAgsCsNJGXUq3kVpEdzKttDXc6UqPj_Hm45mvAbuxZR6Q/exec";
+    /**
+     * AMBIL DATA UTAMA: Ambil daftar file di Drive via doGet
+     */
+    function muatUlangDaftarArsipDrive() {
+        const dropdown = document.getElementById('dropdown-bulan-apotek');
+        dropdown.innerHTML = '<option value="" disabled selected>⏳ Sinkronisasi Cloud...</option>';
 
-    fetch(urlAppsScriptMas)
-        .then(response => response.json())
-        .then(hasil => {
-            listArsipDriveApotek = {}; 
-            
-            if (hasil.success && hasil.data) {
-                hasil.data.forEach(file => {
-                    const namaBersih = file.nama.replace(/\.[^/.]+$/, ""); // Potong ekstensi .pdf
-                    listArsipDriveApotek[namaBersih] = file.url;
-                });
-            }
-            // Susun ulang opsi pilihan di dalam elemen dropdown
-            renderOpsiDropdownBulan();
-        })
-        .catch(err => {
-            console.error("Gagal sinkronisasi Drive:", err);
-            renderOpsiDropdownBulan(); // Tetap render list walaupun gagal/offline
-        });
-}
+        const urlAppsScriptMas = "https://script.google.com/macros/s/AKfycbyK-vMV9b3R5s85FzsuCTdEQDAgsCsNJGXUq3kVpEdzKttDXc6UqPj_Hm45mvAbuxZR6Q/exec";
 
-/**
- * RE-RENDER DROPDOWN OPTIONS: Menyusun list pilihan bulan
- */
-function renderOpsiDropdownBulan() {
-    const dropdown = document.getElementById('dropdown-bulan-apotek');
-    
-    // Kembalikan ke format default pilihan kosong awal
-    dropdown.innerHTML = '<option value="" disabled selected>📂 Pilih Bulan Laporan</option>';
-
-    masterBulan2026.forEach(bulan => {
-        const linkFileDrive = listArsipDriveApotek[bulan];
-        const isTersedia = !!linkFileDrive;
-
-        const opsi = document.createElement('option');
-        opsi.value = bulan;
-        
-        // Beri tanda visual teks (Contoh: "Januari 2026 ✔" jika ada file di cloud)
-        opsi.textContent = isTersedia ? `📂 ${bulan}  ` : `❌ ${bulan} (Belum Ada)`;
-        
-        dropdown.appendChild(opsi);
-    });
-}
-
-/**
- * EVENT CONTROLLER DROPDOWN: Mengecek pilihan user
- */
-function aksiPilihBulanDropdown(bulanTerpilih) {
-    if (!bulanTerpilih) return;
-
-    const linkFileDrive = listArsipDriveApotek[bulanTerpilih];
-
-    if (linkFileDrive) {
-        // Jika file ada, langsung tembak ke Iframe Preview
-        bukaIframePreviewDrive(linkFileDrive);
-    } else {
-        // Jika tidak ada, pancing popup warning pink apotek keluar
-        bukaPopupBelumTersedia(bulanTerpilih);
-        
-        // Kembalikan posisi tulisan dropdown ke placeholder awal
-        document.getElementById('dropdown-bulan-apotek').value = "";
+        fetch(urlAppsScriptMas)
+            .then(response => response.json())
+            .then(hasil => {
+                listArsipDriveApotek = {}; 
+                
+                if (hasil.success && hasil.data) {
+                    hasil.data.forEach(file => {
+                        const namaBersih = file.nama.replace(/\.[^/.]+$/, ""); // Potong ekstensi .pdf
+                        listArsipDriveApotek[namaBersih] = file.url;
+                    });
+                }
+                // Susun ulang opsi pilihan di dalam elemen dropdown
+                renderOpsiDropdownBulan();
+            })
+            .catch(err => {
+                console.error("Gagal sinkronisasi Drive:", err);
+                renderOpsiDropdownBulan(); // Tetap render list walaupun gagal/offline
+            });
     }
-}
 
-/**
- * PREVIEW ENGINE: Memasang file PDF ke dalam container iframe
- */
-function bukaIframePreviewDrive(urlPreview) {
-    const container = document.getElementById('viewer-container-summary-apotek');
-    
-    container.className = "viewer-container border border-gray-200 rounded-3xl bg-white overflow-hidden transition-all duration-300";
-    container.innerHTML = `
-        <iframe src="${urlPreview}" class="w-full h-full border-none" allow="autoplay"></iframe>
-    `;
-}
+    /**
+     * RE-RENDER DROPDOWN OPTIONS: Menyusun list pilihan bulan
+     */
+    function renderOpsiDropdownBulan() {
+        const dropdown = document.getElementById('dropdown-bulan-apotek');
+        
+        // Kembalikan ke format default pilihan kosong awal
+        dropdown.innerHTML = '<option value="" disabled selected>📂 Pilih Bulan Laporan</option>';
 
-/**
- * CONTROLLER MODAL: Mengatur popup info data kosong
- */
-function bukaPopupBelumTersedia(namaBulan) {
-    document.getElementById('teks-target-bulan-kosong').innerText = namaBulan;
-    document.getElementById('popup-drive-belum-tersedia').style.display = 'flex';
-}
+        masterBulan2026.forEach(bulan => {
+            const linkFileDrive = listArsipDriveApotek[bulan];
+            const isTersedia = !!linkFileDrive;
 
-function tutupPopupBelumTersedia() {
-    document.getElementById('popup-drive-belum-tersedia').style.display = 'none';
-}
+            const opsi = document.createElement('option');
+            opsi.value = bulan;
+            
+            // Beri tanda visual teks (Contoh: "Januari 2026 ✔" jika ada file di cloud)
+            opsi.textContent = isTersedia ? `📂 ${bulan}   ` : `❌ ${bulan} (Belum Ada)`;
+            
+            dropdown.appendChild(opsi);
+        });
+    }
 
-// Inisialisasi otomatis saat pertama kali web dibuka
-document.addEventListener("DOMContentLoaded", function() {
-    muatUlangDaftarArsipDrive();
-});
-	</script>
+    /**
+     * EVENT CONTROLLER DROPDOWN: Mengecek pilihan user
+     */
+    function aksiPilihBulanDropdown(bulanTerpilih) {
+        if (!bulanTerpilih) return;
+
+        const linkFileDrive = listArsipDriveApotek[bulanTerpilih];
+
+        if (linkFileDrive) {
+            // Jika file ada, langsung tembak ke Iframe Preview
+            bukaIframePreviewDrive(linkFileDrive);
+        } else {
+            // Jika tidak ada, pancing popup warning pink apotek keluar
+            bukaPopupBelumTersedia(bulanTerpilih);
+            
+            // Kembalikan posisi tulisan dropdown ke placeholder awal
+            document.getElementById('dropdown-bulan-apotek').value = "";
+        }
+    }
+
+    /**
+     * PREVIEW ENGINE: Memasang file PDF ke dalam container iframe + Toolbar Navigasi
+     */
+    function bukaIframePreviewDrive(urlPreview) {
+        const container = document.getElementById('viewer-container-summary-apotek');
+        
+        if (!urlPreview) {
+            alert("URL file tidak valid atau kosong!");
+            return;
+        }
+
+        // FILTER OTOMATIS: Mengubah Link Google Drive biasa ke Format Embed/Preview resmi
+        let urlBersih = urlPreview;
+        if (urlPreview.includes("drive.google.com")) {
+            const matchId = urlPreview.match(/\/d\/([a-zA-Z0-9-_]+)/);
+            if (matchId && matchId[1]) {
+                const fileId = matchId[1];
+                urlBersih = `https://drive.google.com/file/d/${fileId}/preview?authuser=0`;
+            }
+        }
+
+        // Kunci data ke variabel global
+        urlAksesPDFCurrent = urlBersih;
+        levelZoomPDFCurrent = 1; // Reset tingkat zoom setiap kali mengganti dokumen
+
+        // Bersihkan border dashed bawaan placeholder, ganti ke solid modern
+        container.className = "viewer-container border border-gray-200 rounded-3xl bg-neutral-100 overflow-hidden flex flex-col transition-all duration-300";
+        
+        // Masukkan struktur Toolbar Interaktif + Pembungkus Iframe yang bisa di-zoom
+        container.innerHTML = `
+            <div class="bg-gray-900 text-white px-4 py-2.5 flex items-center justify-between border-b border-gray-800 shrink-0 shadow-md">
+                <div class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                    <i class="fa-solid fa-file-pdf text-red-400 text-sm"></i>
+                    <span>Apotek Summary</span>
+                </div>
+                
+                <div class="flex items-center bg-gray-800 rounded-xl p-0.5 border border-gray-700">
+                    <button type="button" onclick="ubahSkalaZoomPDF(0.1)" title="Perbesar (Zoom In)"
+                            class="w-8 h-8 flex items-center justify-center hover:bg-gray-700 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
+                        <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+                    </button>
+                    
+                    <span id="labelPersentaseZoom" class="text-[11px] font-mono font-bold px-2.5 min-w-[50px] text-center text-amber-300">100%</span>
+                    
+                    <button type="button" onclick="ubahSkalaZoomPDF(-0.1)" title="Perkecil (Zoom Out)"
+                            class="w-8 h-8 flex items-center justify-center hover:bg-gray-700 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
+                        <i class="fa-solid fa-magnifying-glass-minus text-xs"></i>
+                    </button>
+                    
+                    <div class="w-px h-4 bg-gray-700 mx-1"></div>
+                    
+                    <button type="button" onclick="resetSkalaZoomPDF()" title="Reset Ukuran Awal"
+                            class="px-2.5 h-8 flex items-center justify-center hover:bg-gray-700 text-[10px] font-bold rounded-lg text-gray-400 hover:text-white transition-all focus:outline-none">
+                        RESET
+                    </button>
+                </div>
+                
+                <div>
+                    <button type="button" onclick="toggleFullscreenPDF()" id="btnToggleFS" title="Layar Penuh"
+                       class="flex items-center gap-1.5 px-3 py-1.5 bg-pink-600 hover:bg-pink-700 text-white text-[10px] font-bold uppercase tracking-wider rounded-xl shadow-md transition-all active:scale-95 focus:outline-none">
+                        <span id="textBtnFS">Layar Penuh</span>
+                        <i id="iconBtnFS" class="fa-solid fa-expand text-[9px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-auto p-4 flex justify-center items-start bg-neutral-800 scrollbar-thin">
+                <div id="wrapperPenyanggaIframe" class="w-full h-full bg-white shadow-lg rounded-xl overflow-hidden origin-top transition-transform duration-150" style="transform: scale(1); min-height: 100%;">
+                    <iframe src="${urlBersih}&rm=minimal" class="w-full h-full border-none" allow="autoplay"></iframe>
+                </div>
+            </div>
+        `;
+
+        // Suntikkan aturan style khusus pendukung fullscreen
+        injectStyleFullscreenDinamis();
+    }
+
+    /**
+     * ENGINE PENGATUR SKALA ZOOM SECARA REAL-TIME
+     */
+    function ubahSkalaZoomPDF(faktorPerubahan) {
+        const wrapper = document.getElementById('wrapperPenyanggaIframe');
+        const label = document.getElementById('labelPersentaseZoom');
+        
+        if (!wrapper) return;
+
+        // Batasi level zoom: Minimal 50%, Maksimal 250%
+        let targetZoom = levelZoomPDFCurrent + faktorPerubahan;
+        if (targetZoom < 0.5) targetZoom = 0.5;
+        if (targetZoom > 2.5) targetZoom = 2.5;
+
+        levelZoomPDFCurrent = targetZoom;
+
+        // Eksekusi perubahan skala CSS Transform ke pembungkus iframe
+        wrapper.style.transform = `scale(${levelZoomPDFCurrent})`;
+        
+        // Sesuaikan lebar pembungkus agar saat di-zoom in, area scroll internal melebar otomatis
+        if (levelZoomPDFCurrent > 1) {
+            wrapper.style.width = `${100 * levelZoomPDFCurrent}%`;
+            wrapper.style.height = `${100 * levelZoomPDFCurrent}%`;
+        } else {
+            wrapper.style.width = "100%";
+            wrapper.style.height = "100%";
+        }
+
+        // Perbarui angka indikator persen di toolbar
+        if (label) {
+            label.innerText = `${Math.round(levelZoomPDFCurrent * 100)}%`;
+        }
+    }
+
+    /**
+     * RESET UKURAN PDF KEMBALI NORMAL (100%)
+     */
+    function resetSkalaZoomPDF() {
+        levelZoomPDFCurrent = 1;
+        const wrapper = document.getElementById('wrapperPenyanggaIframe');
+        const label = document.getElementById('labelPersentaseZoom');
+        
+        if (wrapper) {
+            wrapper.style.transform = "scale(1)";
+            wrapper.style.width = "100%";
+            wrapper.style.height = "100%";
+        }
+        if (label) {
+            label.innerText = "100%";
+        }
+    }
+
+    /**
+     * HTML5 FULLSCREEN API CONTROLLER
+     */
+    function toggleFullscreenPDF() {
+        const targetElement = document.getElementById('viewer-container-summary-apotek');
+        const txtBtn = document.getElementById('textBtnFS');
+        const iconBtn = document.getElementById('iconBtnFS');
+
+        if (!targetElement) return;
+
+        const isCurrentlyFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+
+        if (!isCurrentlyFS) {
+            if (targetElement.requestFullscreen) {
+                targetElement.requestFullscreen();
+            } else if (targetElement.webkitRequestFullscreen) { // Safari / iOS iPad
+                targetElement.webkitRequestFullscreen();
+            } else if (targetElement.msRequestFullscreen) { // Windows / IE
+                targetElement.msRequestFullscreen();
+            }
+            
+            if(txtBtn) txtBtn.innerText = "Keluar";
+            if(iconBtn) iconBtn.className = "fa-solid fa-compress text-[9px]";
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    }
+
+    /**
+     * LISTENER SYSTEM: Menjaga UI sinkron jika user keluar via tombol ESC fisik bawaan device
+     */
+    function deteksiPerubahanLayarPenuh() {
+        const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+        const txtBtn = document.getElementById('textBtnFS');
+        const iconBtn = document.getElementById('iconBtnFS');
+        
+        if(!txtBtn || !iconBtn) return;
+
+        if (!isFS) {
+            txtBtn.innerText = "Layar Penuh";
+            iconBtn.className = "fa-solid fa-expand text-[9px]";
+        }
+    }
+
+    /**
+     * UTILITY STYLE INJECTION: Memaksa tinggi container menjadi penuh 100vh saat mode fullscreen aktif
+     */
+    function injectStyleFullscreenDinamis() {
+        const idStyle = "css-override-fullscreen-apotek";
+        if (document.getElementById(idStyle)) return;
+
+        const styleSheet = document.createElement("style");
+        styleSheet.id = idStyle;
+        styleSheet.innerText = `
+            #viewer-container-summary-apotek:fullscreen {
+                width: 100vw !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                border-radius: 0px !important;
+                border: none !important;
+            }
+            #viewer-container-summary-apotek:-webkit-full-screen {
+                width: 100vw !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                border-radius: 0px !important;
+                border: none !important;
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    }
+
+    /**
+     * CONTROLLER MODAL: Mengatur popup info data kosong
+     */
+    function bukaPopupBelumTersedia(namaBulan) {
+        document.getElementById('teks-target-bulan-kosong').innerText = namaBulan;
+        document.getElementById('popup-drive-belum-tersedia').style.display = 'flex';
+    }
+
+    function tutupPopupBelumTersedia() {
+        document.getElementById('popup-drive-belum-tersedia').style.display = 'none';
+    }
+
+    // Sambungkan fungsi deteksi fullscreen ke event browser gadget
+    document.addEventListener('fullscreenchange', deteksiPerubahanLayarPenuh);
+    document.addEventListener('webkitfullscreenchange', deteksiPerubahanLayarPenuh);
+    document.addEventListener('mozfullscreenchange', deteksiPerubahanLayarPenuh);
+    document.addEventListener('MSFullscreenChange', deteksiPerubahanLayarPenuh);
+
+    // Inisialisasi otomatis saat pertama kali web dibuka
+    document.addEventListener("DOMContentLoaded", function() {
+        muatUlangDaftarArsipDrive();
+    });
+</script>
 	
 
 <script>
