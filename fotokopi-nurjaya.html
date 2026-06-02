@@ -5420,7 +5420,7 @@ async function simpanDataDanKirimWA() {
     }
 }
 
-// 5. FITUR GENERATE PREVIEW STRUK JPG (A4 FORMAT) - FIXED OVERFLOW & CASE SENSITIVE
+// 5. FITUR GENERATE PREVIEW STRUK JPG (A4 FORMAT) - FIXED DYNAMIC VERTICAL OVERFLOW
 async function buatFormatCetakJPG() {
     const inputElements = document.querySelectorAll('.input-jumlah-belanja');
     const strTanggal = document.getElementById('txtTanggalBK')?.innerText || "";
@@ -5452,19 +5452,85 @@ async function buatFormatCetakJPG() {
     const baseRowHeight = 26;     
     const baseWidth = 350;         
     const baseHeight = 700;        
-    const maxItemsPerPage = 22;    
-    const totalPages = Math.ceil(listBarangValid.length / maxItemsPerPage);
-
+    
+    // Penentu Batas Aman Vertikal Kanvas (dalam skala normal sebelum dikali scale)
+    const bottomSafeMargin = 640; 
+    
     const posX_Check = (baseWidth - 32) * scale; 
     const posX_QTY = (baseWidth - 100) * scale;  
 
     const containerPreview = document.getElementById('previewCetakContainer');
     containerPreview.innerHTML = "";
 
+    // Helper untuk memecah teks nama barang
+    function wrapText(context, text, maxWidth) {
+        let words = text.split(' ');
+        let line = '';
+        let lines = [];
+
+        for (let n = 0; n < words.length; n++) {
+            let testLine = line + words[n] + ' ';
+            let metrics = context.measureText(testLine);
+            let testWidth = metrics.width;
+            if (testWidth > maxWidth && n > 0) {
+                lines.push(line.trim());
+                line = words[n] + ' ';
+            } else {
+                line = testLine;
+            }
+        }
+        lines.push(line.trim());
+        return lines;
+    }
+
+    // LOGIKA BARU: Distribusikan item ke dalam array halaman berdasarkan kalkulasi tinggi riil Y
+    const pagesData = [];
+    let currentPageItems = [];
+    let testY = 120; // Estimasi awal posisi Y setelah Header di Halaman 1
+
+    listBarangValid.forEach((item, index) => {
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.font = `500 ${11 * scale}px Arial`;
+        
+        let teksFull = `${index + 1}. ${item.nama}`;
+        const barisNama = wrapText(tempCtx, teksFull, 190 * scale);
+        
+        // Hitung berapa space vertikal yang dibutuhkan item ini
+        let itemHeightNeeded = baseRowHeight;
+        if (barisNama.length > 1) itemHeightNeeded += 4;
+        if (item.catatan) itemHeightNeeded += 4;
+
+        // Jika item ini dimasukkan, apakah akan menembus batas bawah halaman?
+        if (testY + itemHeightNeeded > bottomSafeMargin) {
+            // Berarti lembar ini sudah penuh, amankan halaman yang ada
+            pagesData.push(currentPageItems);
+            
+            // Buka halaman baru, reset array item dan kembalikan testY ke posisi atas halaman sambungan
+            currentPageItems = [];
+            testY = 60; // Halaman sambungan headernya lebih pendek, jadi mulai lebih atas
+        }
+
+        currentPageItems.push({
+            ...item,
+            globalIndex: index,
+            barisNama: barisNama,
+            itemHeightNeeded: itemHeightNeeded
+        });
+        
+        testY += itemHeightNeeded;
+    });
+
+    // Masukkan sisa item terakhir jika masih ada
+    if (currentPageItems.length > 0) {
+        pagesData.push(currentPageItems);
+    }
+
+    const totalPages = pagesData.length;
+
+    // LOOPING GENERATE CANVAS BERDASARKAN HASIL PAGINASI DINAMIS
     for (let p = 0; p < totalPages; p++) {
-        const startIndex = p * maxItemsPerPage;
-        const endIndex = Math.min(startIndex + maxItemsPerPage, listBarangValid.length);
-        const barangHalamanIni = listBarangValid.slice(startIndex, endIndex);
+        const barangHalamanIni = pagesData[p];
 
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -5542,68 +5608,38 @@ async function buatFormatCetakJPG() {
         }
 
         // RENDER DATA BARANG & CATATAN KE KANVAS
-        barangHalamanIni.forEach((item, innerIndex) => {
-            const globalIndex = startIndex + innerIndex;
+        barangHalamanIni.forEach((item) => {
             const startX = 20 * scale;
-            const maxWidthNama = 190 * scale; // Batas lebar area nama barang sebelum wrap
 
             ctx.textAlign = "left";
             ctx.font = `500 ${11 * scale}px Arial`; 
             ctx.fillStyle = "#1f2937"; 
-
-            let teksFull = `${globalIndex + 1}. ${item.nama}`;
-            
-            // Fungsi Helper untuk memecah teks menjadi beberapa baris berdasarkan kata
-            function wrapText(context, text, maxWidth) {
-                let words = text.split(' ');
-                let line = '';
-                let lines = [];
-
-                for (let n = 0; n < words.length; n++) {
-                    let testLine = line + words[n] + ' ';
-                    let metrics = context.measureText(testLine);
-                    let testWidth = metrics.width;
-                    if (testWidth > maxWidth && n > 0) {
-                        lines.push(line.trim());
-                        line = words[n] + ' ';
-                    } else {
-                        line = testLine;
-                    }
-                }
-                lines.push(line.trim());
-                return lines;
-            }
-
-            const barisNama = wrapText(ctx, teksFull, maxWidthNama);
             
             // Render Baris Pertama Nama Barang
-            ctx.fillText(barisNama[0], startX, currentY);
+            ctx.fillText(item.barisNama[0], startX, currentY);
 
             // Render Baris Kedua Nama Barang (Jika ada)
-            if (barisNama.length > 1) {
-                currentY += 12 * scale; // Turunkan posisi Y untuk baris kedua
-                let barisKedua = barisNama[1];
-                // Antisipasi jika baris kedua masih terlalu panjang (potong ekor)
+            if (item.barisNama.length > 1) {
+                currentY += 12 * scale;
+                let barisKedua = item.barisNama[1];
                 if (barisKedua.length > 30) barisKedua = barisKedua.substring(0, 28) + "..";
-                ctx.fillText(barisKedua, startX + (10 * scale), currentY); // Indentasi sedikit agar rapi
-                
-                // Kembalikan Y sementara ke posisi baris pertama untuk meluruskan QTY & Titik-titik
-                currentY -= 12 * scale; 
+                ctx.fillText(barisKedua, startX + (10 * scale), currentY);
+                currentY -= 12 * scale; // Kembalikan ke posisi baseline baris pertama
             }
 
-            // Cetak Jumlah Kuantitas Belanjaan (Sejajar baris pertama)
+            // Cetak Jumlah Kuantitas Belanjaan
             ctx.textAlign = "center";
             ctx.font = `bold ${11 * scale}px Arial`; 
             ctx.fillStyle = "#047857"; 
             let teksQty = item.jumlah;
             ctx.fillText(teksQty, posX_QTY, currentY);
 
-            // Pembuatan Jalur Titik-Titik Penghubung (Mengacu pada baris pertama nama barang)
+            // Pembuatan Jalur Titik-Titik Penghubung
             ctx.textAlign = "left";
             ctx.font = `500 ${10 * scale}px Arial`; 
             ctx.fillStyle = "#d1d5db"; 
 
-            const lebarNama = ctx.measureText(barisNama[0]).width;
+            const lebarNama = ctx.measureText(item.barisNama[0]).width;
             const lebarQty = ctx.measureText(teksQty).width;
             
             let titikStartX = startX + lebarNama + (6 * scale);
@@ -5615,7 +5651,7 @@ async function buatFormatCetakJPG() {
                 titikStartX += lebarSatuTitik + (2 * scale);
             }
 
-            // Pembuatan Box Kotak Checklist Manual (Sejajar baris pertama)
+            // Pembuatan Box Kotak Checklist Manual
             const boxSize = 13 * scale; 
             const boxX = posX_Check - (boxSize / 2); 
             const boxY = currentY - (10 * scale);
@@ -5630,7 +5666,7 @@ async function buatFormatCetakJPG() {
 
             // JIKA ADA CATATAN OWNER, CETAK DI BAWAH BARIS TERAKHIR NAMA BARANG
             if (item.catatan) {
-                let offsetCatatan = (barisNama.length > 1) ? 22 * scale : 12 * scale;
+                let offsetCatatan = (item.barisNama.length > 1) ? 22 * scale : 12 * scale;
                 currentY += offsetCatatan;
                 
                 ctx.textAlign = "left";
@@ -5642,11 +5678,11 @@ async function buatFormatCetakJPG() {
                     teksCatatanStruk = teksCatatanStruk.substring(0, 38) + "..";
                 }
                 ctx.fillText(teksCatatanStruk, startX + (10 * scale), currentY);
-                currentY -= offsetCatatan; // Kembalikan sumbu Y utama
+                currentY -= offsetCatatan; 
             }
 
-            // Hitung kalkulasi ruang ekstra secara dinamis untuk garis pemisah agar tidak menabrak teks
-            let extraSpace = (barisNama.length > 1) ? 14 * scale : 7 * scale;
+            // Hitung ruang ekstra garis pemisah
+            let extraSpace = (item.barisNama.length > 1) ? 14 * scale : 7 * scale;
             if (item.catatan) extraSpace += 10 * scale;
 
             // Garis tipis pemisah antar baris barang
@@ -5657,15 +5693,11 @@ async function buatFormatCetakJPG() {
             ctx.lineTo(canvas.width - (15 * scale), currentY + extraSpace);
             ctx.stroke();
 
-            // Geser koordinat Y ke bawah secara dinamis untuk item berikutnya
-            let rowShift = baseRowHeight;
-            if (barisNama.length > 1) rowShift += 4;
-            if (item.catatan) rowShift += 4;
-
-            currentY += (rowShift * scale);
+            // Geser koordinat Y utama berdasarkan kebutuhan riil item ini
+            currentY += (item.itemHeightNeeded * scale);
         });
 
-        // Catatan Kaki Dokumen (Footer)
+        // Catatan Kaki Dokumen (Footer) aman di posisi bawah tanpa tertimpa item belanja
         ctx.textAlign = "center";
         ctx.font = `bold ${8 * scale}px Arial`;
         ctx.fillStyle = "#9ca3af";
