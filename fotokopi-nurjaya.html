@@ -597,7 +597,7 @@ document.addEventListener('keydown', function(event) {
         <div class="p-3 md:p-5 border-b border-green-100 flex justify-between items-center bg-gradient-to-r from-white to-green-50/30">
             <h2 class="text-xs md:text-sm font-medium text-gray-900 m-0 leading-tight">
                 <span class="text-green-600 text-[10px] font-black uppercase tracking-wider">PROGRES BULANAN</span><br>
-                <strong>Januari - Mei 2026</strong>
+                <strong>Januari - April 2026</strong>
             </h2>
             <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-0.5 rounded-full">
                 <span class="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span>
@@ -1792,12 +1792,12 @@ document.addEventListener('keydown', function(event) {
         gradientBatang.addColorStop(0, '#2ecc71'); 
         gradientBatang.addColorStop(1, '#27ae60'); 
 
-        const dataPendapatan = [13214500, 10560500, 11715000, 15283500, 14690700];
+        const dataPendapatan = [13214500, 10560500, 11715000, 15283500];
 
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei'],
+                labels: ['Januari', 'Februari', 'Maret', 'April'],
                 datasets: [{
                     label: 'Pendapatan',
                     data: dataPendapatan, 
@@ -3693,13 +3693,23 @@ window.onload = muatStatistikBulanIni;
 <script>
 (function() {
     // 1. URL Web App Google Apps Script Nurjaya Photocopy milikmu
-    const SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbxS5Ly5fEBsZqIKCj1BAIQW5ns5AyQ87NgPN2hINvSsqGf3GOo7bwXAW3yfVIS1nxkKbQ/exec";
+    const SPREADSHEET_BASE_URL = "https://script.google.com/macros/s/AKfycbxS5Ly5fEBsZqIKCj1BAIQW5ns5AyQ87NgPN2hINvSsqGf3GOo7bwXAW3yfVIS1nxkKbQ/exec";
 
     // 2. Fungsi utama untuk menarik data dan mengisi HTML secara mandiri
     async function ambilDataLaporanHarian() {
         try {
+            // --- OTOMATISASI PENENTUAN NAMA SHEET BULAN BERJALAN ---
+            const sekarang = new Date();
+            const listBulanDinamis = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const namaBulanAktif = listBulanDinamis[sekarang.getMonth()]; 
+            const tahunAktif = sekarang.getFullYear();             
+            
+            const parameterBulan = `${namaBulanAktif}${tahunAktif}`;   
+            const urlDenganParam = `${SPREADSHEET_BASE_URL}?bulan=${encodeURIComponent(parameterBulan)}`;
+
             // Ambil data dari Google Sheets via Apps Script
-            const response = await fetch(SPREADSHEET_URL);
+            const response = await fetch(urlDenganParam);
             
             if (!response.ok) {
                 throw new Error("Gagal menyambung ke server Google Apps Script");
@@ -3707,52 +3717,41 @@ window.onload = muatStatistikBulanIni;
             
             const hasil = await response.json();
             
-            // Pastikan status sukses dan datanya ada
             if (hasil.status === "success" && hasil.data && hasil.data.length > 0) {
                 const daftarData = hasil.data;
-                
-                // AMBIL DATA BARIS PALING BAWAH (DATA TERBARU DI SPREADSHEET)
                 const dataTerbaru = daftarData[daftarData.length - 1];
                 
                 // --- PROSES INJEKSI DATA KE ID HTML ---
                 
-                // Tanggal laporan terbaru
-               // --- REVISI FORMAT TANGGAL AGAR MENJADI: HARI, XX BULAN 20XX ---
-if (document.getElementById('hari-terbaru-tgl')) {
-    let teksTanggal = dataTerbaru.tanggal;
-    
-    // Cek jika data tanggal berupa string bawaan GMT, atau kita paksa konversi ke Objek Date JavaScript
-    let objekTanggal = new Date(teksTanggal);
-    
-    // Jika formatnya valid, ubah menjadi "Senin, 11 Mei 2026"
-    if (!isNaN(objekTanggal.getTime())) {
-        teksTanggal = objekTanggal.toLocaleDateString('id-ID', {
-            weekday: 'long', // Memunculkan nama hari (Senin, Selasa, dst)
-            day: 'numeric',   // Angka tanggal (11)
-            month: 'long',   // Nama bulan penuh (Mei, Juni, dst)
-            year: 'numeric'  // Angka tahun penuh (2026)
-        });
-    } else {
-        // Antisipasi jika dari App Script sudah dikirim string format "dd/MM/yyyy"
-        // Kita pecah manual agar susunannya rapi sesuai nama bulan Indonesia
-        const bagian = teksTanggal.split('/');
-        if (bagian.length === 3) {
-            const listBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            const tgl = parseInt(bagian[0], 10);
-            const bln = listBulan[parseInt(bagian[1], 10) - 1];
-            const thn = bagian[2];
-            
-            // Cari tahu nama hari secara manual berdasarkan tanggal tersebut
-            const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const tglDibuat = new Date(thn, parseInt(bagian[1], 10) - 1, tgl);
-            const hari = hariNama[tglDibuat.getDay()];
-            
-            teksTanggal = `${hari}, ${tgl} ${bln} ${thn}`;
-        }
-    }
-    
-    document.getElementById('hari-terbaru-tgl').innerText = teksTanggal;
-}
+                // --- FIX BUG TANGGAL TERTUKAR (HARI/BULAN VS BULAN/HARI) ---
+                if (document.getElementById('hari-terbaru-tgl')) {
+                    let teksTanggalRaw = dataTerbaru.tanggal; // Isinya pasti string seperti "01/06/2026"
+                    let teksTanggalFinal = teksTanggalRaw;
+
+                    // Kita pecah manual string "01/06/2026" berdasarkan tanda miring "/"
+                    const bagian = teksTanggalRaw.split('/');
+                    
+                    if (bagian.length === 3) {
+                        const listBulanManual = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                        const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                        
+                        // bagian[0] = Tanggal (01), bagian[1] = Bulan (06), bagian[2] = Tahun (2026)
+                        const tgl = parseInt(bagian[0], 10);
+                        const blnIndex = parseInt(bagian[1], 10) - 1; // Dikurangi 1 karena array mulai dari 0
+                        const thn = parseInt(bagian[2], 10);
+                        
+                        const blnNama = listBulanManual[blnIndex];
+                        
+                        // Membuat objek Date yang valid dan aman (Tahun, Index Bulan, Tanggal)
+                        const tglDibuat = new Date(thn, blnIndex, tgl);
+                        const hariNamaBenar = hariNama[tglDibuat.getDay()];
+                        
+                        // Gabungkan menjadi format: "Senin, 1 Juni 2026"
+                        teksTanggalFinal = `${hariNamaBenar}, ${tgl} ${blnNama} ${thn}`;
+                    }
+                    
+                    document.getElementById('hari-terbaru-tgl').innerText = teksTanggalFinal;
+                }
                 
                 // Angka nominal uang (format mata uang Rupiah)
                 if (document.getElementById('hari-terbaru-kotor')) {
@@ -3774,7 +3773,7 @@ if (document.getElementById('hari-terbaru-tgl')) {
                     document.getElementById('hari-terbaru-tabungan-b').innerText = 'Rp ' + Number(dataTerbaru.tabungan_b).toLocaleString('id-ID');
                 }
                 
-                // Angka jumlah meterai (tanpa imbuhan Rp)
+                // Angka jumlah meterai
                 if (document.getElementById('hari-terbaru-meterai')) {
                     document.getElementById('hari-terbaru-meterai').innerText = dataTerbaru.meterai_terjual;
                 }
@@ -3782,7 +3781,7 @@ if (document.getElementById('hari-terbaru-tgl')) {
                     document.getElementById('hari-terbaru-meterai-qris').innerText = dataTerbaru.meterai_terjual_qris;
                 }
                 
-                // --- LOGIKA CEK TARGET TABUNGAN B (Wajib Pas 255.000) ---
+                // --- LOGIKA CEK TARGET TABUNGAN B ---
                 const targetElement = document.getElementById('hari-terbaru-target');
                 if (targetElement) {
                     if (Number(dataTerbaru.tabungan_b) === 255000) {
@@ -3795,14 +3794,13 @@ if (document.getElementById('hari-terbaru-tgl')) {
                 }
                 
             } else {
-                console.error("Data kosong atau Apps Script mengembalikan status error:", hasil.message);
+                console.error("Data kosong atau Apps Script error:", hasil.message);
             }
         } catch (error) {
             console.error("Gagal melakukan fetch data laporan harian:", error);
         }
     }
 
-    // 3. Jalankan fungsi di atas secara otomatis begitu browser selesai memuat dokumen
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', ambilDataLaporanHarian);
     } else {
@@ -5246,10 +5244,12 @@ function tutupAlertFotokopi() {
 
 <script>
 // ====================================================================
-// CONFIG & INSTANSIASI FITUR BARANG KOSONG (NSA)
+// CONFIG & INSTANSIASI FITUR BARANG KOSONG (NSA) - V2 WITH CATATAN
 // ====================================================================
 const API_BARANG_KOSONG = "https://script.google.com/macros/s/AKfycbxEOZBmgmXeFeG_lkkCY5OOUESufebQ2Pj9Y9NiaNcpLde-bPUQshXrlVnzDtf3s1-wfQ/exec";
 const NO_WA_TUJUAN = "6285211029598"; 
+
+let listDataGambarPreview = [];
 
 // 1. Fungsi Utama: Buka Modal
 function bukaModalBK() {
@@ -5270,7 +5270,7 @@ function tutupModalBK() {
     }
 }
 
-// 3. Ambil Data dari Sheets & Render ke Layar
+// 3. Ambil Data dari Sheets & Render ke Layar (Include 2 Form: Jumlah & Catatan)
 async function muatDataBarangKosong() {
     const wrapper = document.getElementById('wrapperItemBK');
     const txtUangSisa = document.getElementById('txtUangSisaBK');
@@ -5309,24 +5309,35 @@ async function muatDataBarangKosong() {
                 const namaBarang = item["Nama Barang"] || "-";
                 const stokSaatIni = item["Stok Saat Ini"] || "0";
                 const harusBelanja = item["Harus Belanja"] || "";
+                const catatanBarang = item["Catatan"] || "";
 
                 const cardHTML = `
                     <div class="bg-white border border-green-100 p-4 rounded-3xl shadow-sm flex flex-col gap-3 transition-all hover:border-green-300">
                         <div class="flex justify-between items-start">
                             <div class="flex items-center gap-3">
                                 <span class="w-7 h-7 bg-green-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center flex-shrink-0">${index + 1}</span>
-                                <h4 class="font-bold text-gray-800 text-xs md:text-sm uppercase tracking-wide">${namaBarang}</h4>
+                                <h4 class="font-bold text-gray-800 text-xs md:text-sm tracking-wide">${namaBarang}</h4>
                             </div>
                             <span class="px-3 py-1 bg-rose-100 text-rose-600 text-[10px] font-bold rounded-full uppercase flex-shrink-0">Stok: ${stokSaatIni}</span>
                         </div>
                         
-                        <div class="relative">
-                            <label class="text-[9px] font-bold text-green-700 uppercase ml-2 mb-1 block">Jumlah Yang Harus Dibeli & Keterangan Owner</label>
-                            <input type="text" 
-                                   value="${harusBelanja}"
-                                   data-barang="${namaBarang}"
-                                   class="input-jumlah-belanja w-full bg-green-50 border-2 border-transparent focus:border-green-500 focus:bg-white rounded-2xl px-4 py-2.5 text-xs font-semibold transition-all outline-none text-gray-700 shadow-inner"
-                                   placeholder="Contoh: 5 Rim / 2 Pack">
+                        <div class="space-y-2">
+                            <div>
+                                <label class="text-[9px] font-bold text-green-700 uppercase ml-2 mb-1 block">Jumlah Yang Harus Dibeli</label>
+                                <input type="text" 
+                                       value="${harusBelanja}"
+                                       data-barang="${namaBarang}"
+                                       class="input-jumlah-belanja w-full bg-green-50 border-2 border-transparent focus:border-green-500 focus:bg-white rounded-2xl px-4 py-2 text-xs font-semibold transition-all outline-none text-gray-700 shadow-inner"
+                                       placeholder="Contoh: 5 Rim / 2 Pack">
+                            </div>
+                            <div>
+                                <label class="text-[9px] font-bold text-slate-500 uppercase ml-2 mb-1 block">Catatan Tambahan Owner</label>
+                                <input type="text" 
+                                       value="${catatanBarang}"
+                                       data-barang-catatan="${namaBarang}"
+                                       class="input-catatan-belanja w-full bg-slate-50 border-2 border-transparent focus:border-emerald-500 focus:bg-white rounded-2xl px-4 py-2 text-xs font-medium transition-all outline-none text-gray-600 shadow-inner"
+                                       placeholder="Contoh: Merk PaperOne atau yang bergaris">
+                            </div>
                         </div>
                     </div>
                 `;
@@ -5346,7 +5357,7 @@ async function muatDataBarangKosong() {
     }
 }
 
-// 4. Fungsi Kirim Laporan ke Google Sheets & WhatsApp
+// 4. Fungsi Kirim Laporan ke Google Sheets & WhatsApp (Include Data Catatan)
 async function simpanDataDanKirimWA() {
     const btnSimpan = document.getElementById('btnSimpanBK');
     const txtUangSisa = document.getElementById('txtUangSisaBK')?.innerText || "Rp 0";
@@ -5365,10 +5376,17 @@ async function simpanDataDanKirimWA() {
     inputElements.forEach(input => {
         const nama = input.getAttribute('data-barang');
         const jumlah = input.value.trim();
-        dataUpdateSheets.push({ nama: nama, jumlah: jumlah });
+        
+        // Cari input catatan pendamping yang memiliki nama barang sama
+        const inputCatatan = document.querySelector(`[data-barang-catatan="${nama}"]`);
+        const catatan = inputCatatan ? inputCatatan.value.trim() : "";
+
+        dataUpdateSheets.push({ nama: nama, jumlah: jumlah, catatan: catatan });
 
         if (jumlah !== "" && jumlah !== "0") {
-            teksLaporanWA += `${nama}\t${jumlah}\n`;
+            teksLaporanWA += `• *${nama}* ➔ _${jumlah}_`;
+            if (catatan) teksLaporanWA += `\n  (Ket: ${catatan})`;
+            teksLaporanWA += `\n`;
             adaBarangDibelanja = true;
         }
     });
@@ -5385,6 +5403,7 @@ async function simpanDataDanKirimWA() {
         const response = await fetch(API_BARANG_KOSONG, {
             method: "POST",
             mode: "cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({ barang: dataUpdateSheets })
         });
         const result = await response.json();
@@ -5394,17 +5413,14 @@ async function simpanDataDanKirimWA() {
         window.open(`https://api.whatsapp.com/send?phone=${NO_WA_TUJUAN}&text=${encodeURIComponent(teksLaporanWA)}`, '_blank');
         tutupModalBK();
     } catch (error) {
-        alert("Sinkronisasi gagal, langsung mengalihkan ke WhatsApp.");
+        alert("Sinkronisasi database tertunda, langsung mengalihkan format ke WhatsApp.");
         window.open(`https://api.whatsapp.com/send?phone=${NO_WA_TUJUAN}&text=${encodeURIComponent(teksLaporanWA)}`, '_blank');
     } finally {
         btnSimpan.disabled = false;
     }
 }
 
-// 5. REVISI UTAMA: FITUR GENERATE JPG KERTAS CHECKLIST PORTRAIT (A4 FORMAT)
-// Variabel global untuk menyimpan data gambar hasil render agar bisa diunduh kapan saja
-let listDataGambarPreview = [];
-
+// 5. FITUR GENERATE PREVIEW STRUK JPG (A4 FORMAT) - FIXED OVERFLOW & CASE SENSITIVE
 async function buatFormatCetakJPG() {
     const inputElements = document.querySelectorAll('.input-jumlah-belanja');
     const strTanggal = document.getElementById('txtTanggalBK')?.innerText || "";
@@ -5413,8 +5429,12 @@ async function buatFormatCetakJPG() {
     inputElements.forEach(input => {
         const nama = input.getAttribute('data-barang');
         const jumlah = input.value.trim();
+        
+        const inputCatatan = document.querySelector(`[data-barang-catatan="${nama}"]`);
+        const catatan = inputCatatan ? inputCatatan.value.trim() : "";
+
         if (jumlah !== "" && jumlah !== "0") {
-            listBarangValid.push({ nama: nama, jumlah: jumlah });
+            listBarangValid.push({ nama: nama, jumlah: jumlah, catatan: catatan });
         }
     });
 
@@ -5423,24 +5443,21 @@ async function buatFormatCetakJPG() {
         return;
     }
 
-    // Ubah icon tombol cetak ke mode loading
     const iconCetak = document.getElementById('iconCetakBK');
     if(iconCetak) iconCetak.className = "fas fa-spinner fa-spin text-sm";
 
-    // Reset penampung gambar global
     listDataGambarPreview = [];
 
     const scale = 4; 
-    const baseRowHeight = 22;      
+    const baseRowHeight = 26;     
     const baseWidth = 350;         
     const baseHeight = 700;        
-    const maxItemsPerPage = 25;    
+    const maxItemsPerPage = 22;    
     const totalPages = Math.ceil(listBarangValid.length / maxItemsPerPage);
 
     const posX_Check = (baseWidth - 32) * scale; 
     const posX_QTY = (baseWidth - 100) * scale;  
 
-    // Bersihkan kontainer preview html lama
     const containerPreview = document.getElementById('previewCetakContainer');
     containerPreview.innerHTML = "";
 
@@ -5464,7 +5481,7 @@ async function buatFormatCetakJPG() {
 
         let currentY = 30 * scale; 
 
-        // RENDER HEADER
+        // RENDER HEADER STRUK
         if (p === 0) {
             ctx.textAlign = "center";
             ctx.fillStyle = "#111827"; 
@@ -5524,36 +5541,73 @@ async function buatFormatCetakJPG() {
             currentY += 18 * scale; 
         }
 
-        // RENDER BARANG
+        // RENDER DATA BARANG & CATATAN KE KANVAS
         barangHalamanIni.forEach((item, innerIndex) => {
             const globalIndex = startIndex + innerIndex;
             const startX = 20 * scale;
+            const maxWidthNama = 190 * scale; // Batas lebar area nama barang sebelum wrap
 
             ctx.textAlign = "left";
             ctx.font = `500 ${11 * scale}px Arial`; 
             ctx.fillStyle = "#1f2937"; 
-            
-            let namaBarang = `${globalIndex + 1}. ${item.nama.toUpperCase()}`;
-            if (namaBarang.length > 18) {
-                namaBarang = namaBarang.substring(0, 16) + "..";
-            }
-            ctx.fillText(namaBarang, startX, currentY);
 
+            let teksFull = `${globalIndex + 1}. ${item.nama}`;
+            
+            // Fungsi Helper untuk memecah teks menjadi beberapa baris berdasarkan kata
+            function wrapText(context, text, maxWidth) {
+                let words = text.split(' ');
+                let line = '';
+                let lines = [];
+
+                for (let n = 0; n < words.length; n++) {
+                    let testLine = line + words[n] + ' ';
+                    let metrics = context.measureText(testLine);
+                    let testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                        lines.push(line.trim());
+                        line = words[n] + ' ';
+                    } else {
+                        line = testLine;
+                    }
+                }
+                lines.push(line.trim());
+                return lines;
+            }
+
+            const barisNama = wrapText(ctx, teksFull, maxWidthNama);
+            
+            // Render Baris Pertama Nama Barang
+            ctx.fillText(barisNama[0], startX, currentY);
+
+            // Render Baris Kedua Nama Barang (Jika ada)
+            if (barisNama.length > 1) {
+                currentY += 12 * scale; // Turunkan posisi Y untuk baris kedua
+                let barisKedua = barisNama[1];
+                // Antisipasi jika baris kedua masih terlalu panjang (potong ekor)
+                if (barisKedua.length > 30) barisKedua = barisKedua.substring(0, 28) + "..";
+                ctx.fillText(barisKedua, startX + (10 * scale), currentY); // Indentasi sedikit agar rapi
+                
+                // Kembalikan Y sementara ke posisi baris pertama untuk meluruskan QTY & Titik-titik
+                currentY -= 12 * scale; 
+            }
+
+            // Cetak Jumlah Kuantitas Belanjaan (Sejajar baris pertama)
             ctx.textAlign = "center";
             ctx.font = `bold ${11 * scale}px Arial`; 
             ctx.fillStyle = "#047857"; 
-            let teksQty = item.jumlah.toUpperCase();
+            let teksQty = item.jumlah;
             ctx.fillText(teksQty, posX_QTY, currentY);
 
+            // Pembuatan Jalur Titik-Titik Penghubung (Mengacu pada baris pertama nama barang)
             ctx.textAlign = "left";
             ctx.font = `500 ${10 * scale}px Arial`; 
-            ctx.fillStyle = "#1f2937"; 
+            ctx.fillStyle = "#d1d5db"; 
 
-            const lebarNama = ctx.measureText(namaBarang).width;
+            const lebarNama = ctx.measureText(barisNama[0]).width;
             const lebarQty = ctx.measureText(teksQty).width;
             
-            let titikStartX = startX + lebarNama + (5 * scale);
-            const titikEndX = posX_QTY - (lebarQty / 2) - (16 * scale);
+            let titikStartX = startX + lebarNama + (6 * scale);
+            const titikEndX = posX_QTY - (lebarQty / 2) - (12 * scale);
             const lebarSatuTitik = ctx.measureText(".").width;
 
             while (titikStartX < titikEndX) {
@@ -5561,9 +5615,10 @@ async function buatFormatCetakJPG() {
                 titikStartX += lebarSatuTitik + (2 * scale);
             }
 
-            const boxSize = 14 * scale; 
+            // Pembuatan Box Kotak Checklist Manual (Sejajar baris pertama)
+            const boxSize = 13 * scale; 
             const boxX = posX_Check - (boxSize / 2); 
-            const boxY = currentY - (11 * scale);
+            const boxY = currentY - (10 * scale);
             const borderRadius = 3 * scale; 
 
             ctx.strokeStyle = "#4b5563";
@@ -5573,31 +5628,56 @@ async function buatFormatCetakJPG() {
             ctx.roundRect(boxX, boxY, boxSize, boxSize, borderRadius); 
             ctx.stroke();
 
+            // JIKA ADA CATATAN OWNER, CETAK DI BAWAH BARIS TERAKHIR NAMA BARANG
+            if (item.catatan) {
+                let offsetCatatan = (barisNama.length > 1) ? 22 * scale : 12 * scale;
+                currentY += offsetCatatan;
+                
+                ctx.textAlign = "left";
+                ctx.font = `italic ${8.5 * scale}px Arial`;
+                ctx.fillStyle = "#6b7280";
+                
+                let teksCatatanStruk = ` *Ket: ${item.catatan}`;
+                if (teksCatatanStruk.length > 40) {
+                    teksCatatanStruk = teksCatatanStruk.substring(0, 38) + "..";
+                }
+                ctx.fillText(teksCatatanStruk, startX + (10 * scale), currentY);
+                currentY -= offsetCatatan; // Kembalikan sumbu Y utama
+            }
+
+            // Hitung kalkulasi ruang ekstra secara dinamis untuk garis pemisah agar tidak menabrak teks
+            let extraSpace = (barisNama.length > 1) ? 14 * scale : 7 * scale;
+            if (item.catatan) extraSpace += 10 * scale;
+
+            // Garis tipis pemisah antar baris barang
             ctx.lineWidth = 0.5 * scale;
-            ctx.strokeStyle = "#f9fafb";
+            ctx.strokeStyle = "#f3f4f6";
             ctx.beginPath();
-            ctx.moveTo(15 * scale, currentY + (5 * scale));
-            ctx.lineTo(canvas.width - (15 * scale), currentY + (5 * scale));
+            ctx.moveTo(15 * scale, currentY + extraSpace);
+            ctx.lineTo(canvas.width - (15 * scale), currentY + extraSpace);
             ctx.stroke();
 
-            currentY += (baseRowHeight * scale);
+            // Geser koordinat Y ke bawah secara dinamis untuk item berikutnya
+            let rowShift = baseRowHeight;
+            if (barisNama.length > 1) rowShift += 4;
+            if (item.catatan) rowShift += 4;
+
+            currentY += (rowShift * scale);
         });
 
+        // Catatan Kaki Dokumen (Footer)
         ctx.textAlign = "center";
         ctx.font = `bold ${8 * scale}px Arial`;
         ctx.fillStyle = "#9ca3af";
         ctx.fillText(`GENERATED BY NSA SYSTEM • HALAMAN ${p + 1} DARI ${totalPages}`, canvas.width / 2, canvas.height - (15 * scale));
 
-        // Dapatkan string base64 gambar
         const dataUrlGambar = canvas.toDataURL("image/jpeg", 1.0);
         
-        // Simpan ke array global untuk didownload nanti
         listDataGambarPreview.push({
             pageNumber: p + 1,
             dataUrl: dataUrlGambar
         });
 
-        // Buat elemen <img> pembantu untuk ditampilkan secara live di modal
         const imgElement = document.createElement('img');
         imgElement.src = dataUrlGambar;
         imgElement.alt = `Halaman ${p + 1}`;
@@ -5605,10 +5685,8 @@ async function buatFormatCetakJPG() {
         containerPreview.appendChild(imgElement);
     }
 
-    // Kembalikan icon cetak ke semula
     if(iconCetak) iconCetak.className = "fas fa-image text-sm";
 
-    // Pindah Tampilan / View ke Tab Preview Struk
     document.getElementById('viewInputBK').classList.add('hidden');
     document.getElementById('viewPreviewBK').classList.remove('hidden');
     document.getElementById('titleModalBK').innerText = "PREVIEW FORMAT CETAK";
@@ -5630,6 +5708,36 @@ function formatRupiahManual(angkaStr) {
     let cleanNumber = angkaStr.replace(/[^0-9]/g, '');
     if (!cleanNumber) return "Rp " + angkaStr;
     return "Rp " + parseInt(cleanNumber, 10).toLocaleString('id-ID');
+}
+
+function kembaliKeInputBK() {
+    document.getElementById('viewPreviewBK').classList.add('hidden');
+    document.getElementById('viewInputBK').classList.remove('hidden');
+    document.getElementById('titleModalBK').innerText = "DAFTAR Barang Kosong";
+}
+
+async function eksekusiUnduhSemuaJPG() {
+    if (listDataGambarPreview.length === 0) return;
+    
+    const strTanggal = document.getElementById('txtTanggalBK')?.innerText || "";
+    const formatTanggal = strTanggal.replace(/[^a-zA-Z0-9]/g, "_");
+
+    for (let i = 0; i < listDataGambarPreview.length; i++) {
+        const item = listDataGambarPreview[i];
+        
+        await new Promise((resolve) => {
+            try {
+                const linkDownload = document.createElement('a');
+                linkDownload.download = `Struk_Checklist_Hal_${item.pageNumber}_NURJAYA_${formatTanggal}.jpg`;
+                linkDownload.href = item.dataUrl;
+                linkDownload.click();
+                setTimeout(resolve, 350);
+            } catch (e) {
+                console.error(e);
+                resolve();
+            }
+        });
+    }
 }
 </script>
 
@@ -5783,8 +5891,7 @@ function tutupModalBK_Wrapper() {
             </div>
 
             <div class="flex-1 overflow-y-auto p-6 bg-neutral-800 flex flex-col items-center gap-6">
-                <div id="previewCetakContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-full justify-center">
-                    </div>
+                <div id="previewCetakContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-full justify-center"></div>
             </div>
 
             <div class="bg-neutral-900 p-5 grid grid-cols-1 sm:grid-cols-2 gap-2 border-t border-neutral-700">
