@@ -883,10 +883,10 @@ document.addEventListener('keydown', function(event) {
                     <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Nurjaya Abadi Photocopy</p>
                 </div>
             </div>
-            <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-1 rounded-full">
-                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <small class="text-green-700 text-[10px] font-black uppercase tracking-wider">Form Siap</small>
-            </div>
+            <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-1 rounded-full whitespace-nowrap flex-nowrap">
+    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></span>
+    <small class="text-green-700 text-[10px] font-black uppercase tracking-wider block whitespace-nowrap">Form Siap</small>
+</div>
         </div>
 
         <!-- Banner Informasi Riwayat Data & Fitur Seleksi Bulan -->
@@ -1195,7 +1195,10 @@ document.addEventListener('keydown', function(event) {
         <div id="wrapper_form_presensi" class="p-6 md:px-8 md:pb-8 space-y-6 text-gray-700">
             <form id="form-presensi-nsa" class="space-y-6">
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                
+                    
+ <div class="p-4 sm:p-5 bg-emerald-50 rounded-[24px] border border-emerald-200/80 shadow-md mt-6 mb-4 space-y-5">
+ <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div class="space-y-1.5">
                         <label for="presensi-tanggal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
                             <i class="fa-solid fa-calendar-day text-green-600"></i> Hari / Tanggal Kerja
@@ -1203,98 +1206,113 @@ document.addEventListener('keydown', function(event) {
                         <input type="date" id="presensi-tanggal" required 
                             class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
                     </div>
-                    
-                    <div class="space-y-1.5">
-                        <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-green-600"></i> Status Kehadiran
-                        </label>
-                        <div class="relative">
-                            <select id="presensi-kehadiran" required 
-                                class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                                <option value="YA">YA (Hadir Kerja)</option>
-                                <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                            </div>
-                        </div>
-                    </div>
+ 
+    
+    <div class="space-y-1.5">
+        <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-circle-check text-green-600"></i> Status Kehadiran
+        </label>
+        <div class="relative">
+            <select id="presensi-kehadiran" required 
+                class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                <option value="YA">YA (Hadir Kerja)</option>
+                <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </div>
+        </div>
+    </div>
+
+    <hr class="border-dashed border-emerald-200/60 my-2">
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div class="space-y-1.5">
+            <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
+            </label>
+            <div class="relative">
+                <select id="presensi-jadwal" required 
+                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                    <option value="2">2 Karyawan (Full Team)</option>
+                    <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
                 </div>
+            </div>
+        </div>
+        
+        <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
+            <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus 1 Karyawan/Lembur)</span>
+            </label>
+            <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
+                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+        </div>
+    </div>
+
+    <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
+        <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-exclamation text-green-600"></i> Alasan Tidak Hadir <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus jika TIDAK HADIR)</span>
+        </label>
+        <input type="text" id="presensi-alasan-absen" placeholder="Contoh: jatah libur, izin, sakit" disabled 
+            class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+    </div>
+
+</div>
 
                 <hr class="border-dashed border-green-100">
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div class="space-y-1.5">
-                        <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
-                        </label>
-                        <div class="relative">
-                            <select id="presensi-jadwal" required 
-                                class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                                <option value="2">2 Karyawan (Full Team)</option>
-                                <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
-                        <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus 1 Karyawan/Lembur)</span>
-                        </label>
-                        <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                    </div>
-                </div>
 
-                <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
-                    <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-exclamation text-green-600"></i> Alasan Tidak Hadir <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus jika TIDAK HADIR)</span>
-                    </label>
-                    <input type="text" id="presensi-alasan-absen" placeholder="Contoh: jatah libur, izin, sakit" disabled 
-                        class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                </div>
+</div>
 
-                <hr class="border-dashed border-green-100">
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div class="space-y-1.5">
-                        <label for="presensi-potongan" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-business-time text-green-600"></i> Potongan Jam Kerja <span class="text-[10px] text-gray-400 font-bold normal-case">(Opsional)</span>
-                        </label>
-                        <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00 (jam.menit)" 
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                    </div>
-                    
-                    <div class="space-y-1.5">
-                        <label for="presensi-alasan-potongan" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-comment-dots text-green-600"></i> Alasan Potongan Jam <span class="text-[10px] text-gray-400 font-bold normal-case">(Opsional)</span>
-                        </label>
-                        <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk pagi hari" 
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                    </div>
-                </div>
+            <div class="p-4 sm:p-5 bg-orange-500 rounded-[24px] border border-orange-600 shadow-md mt-6 mb-5 space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div class="space-y-1.5">
+            <label for="presensi-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-business-time text-orange-100"></i> Potongan Jam Kerja <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
+            </label>
+            <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00 (jam.menit)" 
+                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+        </div>
+        
+        <div class="space-y-1.5">
+            <label for="presensi-alasan-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-comment-dots text-orange-100"></i> Alasan Potongan Jam <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
+            </label>
+            <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk pagi hari" 
+                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+        </div>
+    </div>
+</div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div class="space-y-1.5">
-                        <label for="presensi-tambahan" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-clock text-green-600"></i> Tambahan Jam / Overtime <span class="text-[10px] text-gray-400 font-bold normal-case">(Opsional)</span>
-                        </label>
-                        <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00 (jam.menit)" 
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        <small class="text-[10px] text-gray-400 font-bold italic block pl-1">Lebihan waktu di luar batas wajar</small>
-                    </div>
-                    
-                    <div class="space-y-1.5">
-                        <label for="presensi-alasan-tambahan" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-signature text-green-600"></i> Alasan Tambahan Jam <span class="text-[10px] text-gray-400 font-bold normal-case">(Opsional)</span>
-                        </label>
-                        <input type="text" id="presensi-alasan-tambahan" placeholder="Contoh: tutup toko jam 20.45" 
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                    </div>
-                </div>
+<div class="p-4 sm:p-5 bg-blue-500 rounded-[24px] border border-blue-600 shadow-md mt-6 mb-4 space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div class="space-y-1.5">
+            <label for="presensi-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-user-clock text-blue-100"></i> Tambahan Jam / Overtime <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
+            </label>
+            <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00 (jam.menit)" 
+                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+            <small class="text-[10px] text-blue-100 font-bold italic block pl-1">Lebihan waktu di luar batas wajar</small>
+        </div>
+        
+        <div class="space-y-1.5">
+            <label for="presensi-alasan-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-file-signature text-blue-100"></i> Alasan Tambahan Jam <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
+            </label>
+            <input type="text" id="presensi-alasan-tambahan" placeholder="Contoh: tutup toko jam 20.45" 
+                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+        </div>
+    </div>
+</div>
+
+
+
+
+
 
                 <div class="pt-4 border-t border-gray-100 flex justify-end">
                     <button type="submit" id="btn-submit-presensi"
@@ -1317,7 +1335,7 @@ document.addEventListener('keydown', function(event) {
             </form>
         </div>
 
-    </div>
+    
 </div>
 
        <!-- KONTEN TAB: JADWAL STAF -->
