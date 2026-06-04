@@ -482,7 +482,7 @@ document.addEventListener('keydown', function(e) {
                 <h3 class="text-[10px] font-extrabold text-pink-500 uppercase tracking-widest leading-none">Progres Harian :</h3>
                 <h4 class="text-sm md:text-lg font-black text-gray-900 flex items-center gap-2 mt-1">
                     <i class="fa-solid fa-chart-line text-pink-500 text-xs md:text-base"></i>
-                    <span class="tracking-tight">Pendapatan Harian: Mei 2026</span>
+                    <span id="judul-tren-bulan-apotek" class="tracking-tight">Pendapatan Harian: Memuat...</span>
                 </h4>
             </div>
             <span class="text-[10px] text-pink-600 font-bold flex items-center gap-1.5 bg-pink-50/70 px-3 py-1 rounded-full dynamic-scroll-hint animate-pulse border border-pink-100/30">
@@ -519,12 +519,16 @@ document.addEventListener('keydown', function(e) {
 
         </div>
     </div>
+	
+	
+	
+	
 
     <div class="card-rekap-bulanan-apotek bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-full h-full overflow-hidden flex flex-col">
         
         <div class="flex justify-between items-center mb-3 md:mb-5 shrink-0">
             <div>
-                <h3 class="text-[10px] font-extrabold text-pink-500 uppercase tracking-widest leading-none">Performa Bisnis :</h3>
+                <h3 class="text-[10px] font-extrabold text-pink-500 uppercase tracking-widest leading-none">Progres Bulanan :</h3>
                 <h4 class="text-sm md:text-lg font-black text-gray-900 flex items-center gap-2 mt-1">
                     <i class="fa-solid fa-chart-bar text-pink-500 text-xs md:text-base"></i>
                     <span class="tracking-tight">Omset Bulanan Apotek (2026)</span>
@@ -864,9 +868,9 @@ document.addEventListener('keydown', function(e) {
         </div>
     </div>
     
-    <div id="viewer-container-summary-apotek" class="viewer-container border-2 border-dashed border-pink-100 rounded-3xl bg-pink-50/10 flex flex-col items-center justify-center transition-all duration-300 overflow-hidden" style="height: 650px;">
+    <div id="viewer-container-summary-apotek" class="viewer-container border-2 border-dashed border-pink-200 rounded-3xl bg-pink-50/10 flex flex-col items-center justify-center transition-all duration-300 overflow-hidden relative" style="height: 650px;">
     
-    <div id="placeholder-viewer-drive" class="flex flex-col items-center justify-center h-full p-10 text-center">
+    <div id="placeholder-viewer-drive" class="flex flex-col items-center justify-center h-full p-10 text-center z-10 bg-white w-full">
         <div class="w-20 h-20 bg-pink-50 text-pink-400 rounded-full flex items-center justify-center mb-5 border border-pink-100 ring-4 ring-pink-50/50">
             <i class="fa-solid fa-folder-open text-3xl opacity-80"></i>
         </div>
@@ -874,7 +878,30 @@ document.addEventListener('keydown', function(e) {
         <p class="text-xs text-gray-400 max-w-xs leading-relaxed">Silakan pilih salah satu bulan pada menu dropdown di atas untuk menampilkan Laporan Penutupan Pembukuan.</p>
     </div>
 
+    <div id="loading-viewer-pink" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-white z-20 select-none animate-pulse">
+        <div class="relative mb-4">
+            <div class="absolute -inset-4 bg-pink-100 rounded-full blur-xl opacity-70 animate-ping"></div>
+            <i class="fa-solid fa-file-medical text-5xl text-pink-500 relative animate-bounce"></i>
+        </div>
+        <div class="space-y-2 w-2/3 text-center">
+            <p id="teks-loading-summary" class="text-xs font-black text-pink-700 tracking-wide">Menghubungkan jaringan NSA Cloud...</p>
+            <div class="h-1.5 w-full bg-pink-100 rounded-full overflow-hidden relative">
+                <div class="h-full w-1/2 bg-pink-500 rounded-full absolute top-0 left-0" style="animation: slide-pink 1.5s infinite"></div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<style>
+@keyframes slide-pink {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+/* Memperhalus scrollbar internal di HP */
+.scrollbar-clean::-webkit-scrollbar { width: 4px; height: 4px; }
+.scrollbar-clean::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; }
+</style>
 
 </div>
 
@@ -1661,55 +1688,114 @@ const inputBersih = document.getElementById('input-bersih');
 const bannerInfoTanggal = document.getElementById('info-tanggal-terakhir');
 const labelTglTerakhir = document.getElementById('label-tgl-terakhir');
 
-// Elemen Modal Alert Kustom
-const modalAlert = document.getElementById('modal-alert-apotek');
-const alertBox = document.getElementById('alert-box-content');
-
-// URL Web App Akses Spreadsheet
+// URL Web App Akses Spreadsheet (Sama dengan API harian)
 const urlWebAppApotek = "https://script.google.com/macros/s/AKfycbxbV9cqDZg5J5pRnWFPUNCV8rk6mkNoim739KTELNi1SJhsbVW8jxAq2vsLYlSR0dDFXA/exec";
 
 /**
  * Pemicu otomatis setiap kali Dropdown Bulan diubah
+ * REVISI: Bebas hambatan, langsung lempar cek tanggal terakhir ke Cloud
  */
 function cekKetersediaanBulan(elemen) {
-    if (elemen.value !== "Mei2026" && elemen.value !== "") {
-        // Perbaikan: Gunakan 'grid' sesuai dengan class HTML terbarunya
-        modalAlert.classList.remove('hidden');
-        modalAlert.classList.add('grid');
-        
-        setTimeout(() => {
-            alertBox.classList.remove('scale-95', 'opacity-0');
-            alertBox.classList.add('scale-100', 'opacity-100');
-        }, 10);
+    const nilaiBulan = elemen.value;
+    if (!nilaiBulan) return;
 
-        // Paksa kembalikan nilai dropdown ke kosong agar alur validasi kunci form terjaga
-        elemen.value = "";
+    perbaruiInfoTanggalTerakhir(nilaiBulan);
+}
+
+/**
+ * Handle Pilihan Bulan dan Buka Gembok Form Operasional secara Dinamis
+ */
+function handlePilihanBulan(selectElement) {
+    const nilaiBulan = selectElement.value;
+    const wrapper = document.getElementById('wrapper-input-data');
+    const alertTeks = document.getElementById('alert-pilih-bulan');
+    const seluruhInput = wrapper.querySelectorAll('input, button');
+
+    if (nilaiBulan) {
+        // 1. Jalankan pengecekan database cloud
+        cekKetersediaanBulan(selectElement); 
+        
+        // 2. DINAMIS: Langsung buka gembok form untuk bulan apa pun yang dipilih!
+        wrapper.classList.remove('opacity-40', 'blur-[1px]', 'pointer-events-none');
+        alertTeks.classList.add('hidden');
+        
+        seluruhInput.forEach(el => {
+            if(el.id !== 'input-bersih') { 
+                el.removeAttribute('disabled');
+            }
+        });
     } else {
-        // Tarik data baris terbaru jika yang dipilih adalah bulan yang valid (Mei 2026)
-        perbaruiInfoTanggalTerakhir(elemen.value);
+        lockFormKembali();
     }
 }
 
 /**
- * Fungsi Menutup Modal Alert Kustom dengan Animasi Redup & Mengunci Form Kembali
+ * Fungsi pembantu jika kasir menekan tombol "Reset"
  */
-function tutupAlertKustom() {
-    // 1. Jalankan animasi mengecil dan memudar pada box putih
-    alertBox.classList.remove('scale-100', 'opacity-100');
-    alertBox.classList.add('scale-95', 'opacity-0');
+function lockFormKembali() {
+    const wrapper = document.getElementById('wrapper-input-data');
+    const alertTeks = document.getElementById('alert-pilih-bulan');
+    const seluruhInput = wrapper.querySelectorAll('input, button');
     
-    // 2. Jalankan fungsi penguncian form kembali ke mode blur/greyed out
-    lockFormKembali();
+    selectBulan.value = ""; 
+    wrapper.classList.add('opacity-40', 'blur-[1px]', 'pointer-events-none');
+    alertTeks.classList.remove('hidden');
     
-    // 3. Sembunyikan kontainer hitam setelah animasi memudar selesai (300ms)
-    setTimeout(() => {
-        modalAlert.classList.remove('grid'); // Diperbaiki dari 'flex' menjadi 'grid'
-        modalAlert.classList.add('hidden');
-    }, 300);
+    seluruhInput.forEach(el => {
+        el.setAttribute('disabled', 'true');
+    });
+
+    if (bannerInfoTanggal) {
+        bannerInfoTanggal.classList.remove('flex');
+        bannerInfoTanggal.classList.add('hidden');
+    }
 }
 
 /**
- * Format input teks menjadi berformat ribuan (titik) secara real-time
+ * REVISI SMART: Sinkronisasi Info Tanggal Terakhir 
+ * HANYA mendeteksi baris yang 'pendapatankotor' nya sudah terisi > 0
+ */
+function perbaruiInfoTanggalTerakhir(bulan) {
+    if (!bulan) return;
+
+    bannerInfoTanggal.classList.remove('hidden');
+    bannerInfoTanggal.classList.add('flex');
+    labelTglTerakhir.innerText = "Memeriksa data transaksi...";
+
+    fetch(`${urlWebAppApotek}?bulan=${bulan}`)
+        .then(response => response.json())
+        .then(resJson => {
+            let arrayData = [];
+            if (resJson.status === "success" && Array.isArray(resJson.data)) {
+                arrayData = resJson.data;
+            }
+
+            // FILTER: Ambil hanya data yang 'pendapatankotor' nya ada isinya (> 0)
+            // Kita ubah string jadi angka dulu untuk memastikan perbandingannya akurat
+            const dataTerisi = arrayData.filter(item => {
+                const kotor = parseFloat(item.pendapatankotor) || 0;
+                return kotor > 0;
+            });
+
+            if (dataTerisi && dataTerisi.length > 0) {
+                // Ambil elemen terakhir dari array yang sudah difilter
+                const dataTerakhir = dataTerisi[dataTerisi.length - 1];
+                
+                // Cari tahu baris aslinya di spreadsheet berdasarkan tanggalnya
+                // (Ini opsional, kalau mau lebih akurat tinggal ambil dari dataTerakhir)
+                labelTglTerakhir.innerHTML = `Tanggal ${dataTerakhir.tanggal} (Data terakhir yang terisi)`;
+            } else {
+                labelTglTerakhir.innerText = "Belum ada transaksi di bulan ini.";
+            }
+        })
+        .catch(error => {
+            console.error("Gagal memuat:", error);
+            labelTglTerakhir.innerText = "Gagal memuat status sinkronisasi.";
+        });
+}
+
+/**
+ * Format input teks menjadi ribuan
  */
 function formatRupiahElemen(elemen) {
     let nilaiBersih = elemen.value.replace(/\D/g, '');
@@ -1738,42 +1824,7 @@ function hitungPendapatanBersih() {
     }
 }
 
-/**
- * ─── FUNGSI TAMBAHAN: AMBIL TANGGAL & BARIS TERAKHIR DARI SPREADSHEET ───
- */
-function perbaruiInfoTanggalTerakhir(bulan) {
-    if (!bulan) {
-        bannerInfoTanggal.classList.remove('flex');
-        bannerInfoTanggal.classList.add('hidden');
-        return;
-    }
-
-    // Tampilkan banner dengan status loading awal
-    bannerInfoTanggal.classList.remove('hidden');
-    bannerInfoTanggal.classList.add('flex');
-    labelTglTerakhir.innerText = "Memeriksa basis data cloud...";
-
-    // Fetch data menggunakan fungsi doGet Apps Script
-    fetch(`${urlWebAppApotek}?bulan=${bulan}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data && data.length > 0) {
-                // Objek terakhir di dalam array adalah baris paling bawah di spreadsheet
-                const dataTerakhir = data[data.length - 1];
-                const barisTerakhirDiSheet = data.length + 1; // Ditambah 1 karena data dimulai dari baris ke-2 (Baris 1 = Header)
-                
-                labelTglTerakhir.innerHTML = `Tanggal ${dataTerakhir.tanggal} (Baris ke-${barisTerakhirDiSheet} di Google Sheet)`;
-            } else {
-                labelTglTerakhir.innerText = "Belum ada data terisi (Sheet Kosong / Hanya Header)";
-            }
-        })
-        .catch(error => {
-            console.error("Gagal memuat tanggal terakhir:", error);
-            labelTglTerakhir.innerText = "Gagal memuat data sinkronisasi.";
-        });
-}
-
-// Logika saat Form dikirim (Submit)
+// Logika POST simpan data harian
 formApotek.addEventListener('submit', function(event) {
     event.preventDefault();
     
@@ -1803,18 +1854,15 @@ formApotek.addEventListener('submit', function(event) {
     fetch(urlWebAppApotek, {
         method: 'POST',
         mode: 'no-cors',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataForm)
     })
     .then(() => {
         alert(`Data Apotek sukses disimpan ke Cloud Spreadsheet Tab [${bulanTerpilih}]!`);
         formApotek.reset(); 
+        lockFormKembali();
         
-        // Perbarui kembali banner info setelah sukses upload biar angkanya langsung maju
-        perbaruiInfoTanggalTerakhir(bulanTerpilih);
-        
+        // Refresh grafik harian utama agar langsung update live
         if (typeof muatDataGrafikApotek === "function") {
             muatDataGrafikApotek();
         }
@@ -1828,54 +1876,6 @@ formApotek.addEventListener('submit', function(event) {
         btnSimpan.innerHTML = textAwalTombol;
     });
 });
-function handlePilihanBulan(selectElement) {
-    const nilaiBulan = selectElement.value;
-    const wrapper = document.getElementById('wrapper-input-data');
-    const alertTeks = document.getElementById('alert-pilih-bulan');
-    const seluruhInput = wrapper.querySelectorAll('input, button');
-
-    if (nilaiBulan) {
-        // 1. Jalankan pengecekan ketersediaan database cloud
-        cekKetersediaanBulan(selectElement); 
-        
-        // 2. Jika bulan yang dipilih valid (Mei 2026), buka gembok form harian
-        if (selectElement.value === "Mei2026") {
-            wrapper.classList.remove('opacity-40', 'blur-[1px]', 'pointer-events-none');
-            alertTeks.classList.add('hidden');
-            
-            seluruhInput.forEach(el => {
-                if(el.id !== 'input-bersih') { 
-                    el.removeAttribute('disabled');
-                }
-            });
-        }
-    }
-}
-
-/**
- * Fungsi pembantu jika kasir menekan tombol "Reset" atau "Kembali" dari modal eror
- */
-function lockFormKembali() {
-    const wrapper = document.getElementById('wrapper-input-data');
-    const alertTeks = document.getElementById('alert-pilih-bulan');
-    const seluruhInput = wrapper.querySelectorAll('input, button');
-    
-    document.getElementById('input-bulan-target').value = ""; // Reset dropdown ke default awal
-    wrapper.classList.add('opacity-40', 'blur-[1px]', 'pointer-events-none');
-    alertTeks.classList.remove('hidden');
-    
-    seluruhInput.forEach(el => {
-        el.setAttribute('disabled', 'true');
-    });
-
-    // Hilangkan banner info sinkronisasi karena status form direset kosong
-    if (bannerInfoTanggal) {
-        bannerInfoTanggal.classList.remove('flex');
-        bannerInfoTanggal.classList.add('hidden');
-    }
-}
-
-
 </script>
 	
 	
@@ -1890,16 +1890,19 @@ function lockFormKembali() {
         "September 2026", "Oktober 2026", "November 2026", "Desember 2026"
     ];
 
-    // State global untuk mengontrol zoom dan tracking data url PDF
-    let levelZoomPDFCurrent = 1;
+    // State global untuk mengontrol zoom (Menggunakan pengali desimal 1.0 - 2.2)
+    let levelZoomPDFCurrent = 1.0; 
     let urlAksesPDFCurrent = "";
+    let intervalApotekIdx = null;
 
     /**
      * AMBIL DATA UTAMA: Ambil daftar file di Drive via doGet
      */
     function muatUlangDaftarArsipDrive() {
         const dropdown = document.getElementById('dropdown-bulan-apotek');
-        dropdown.innerHTML = '<option value="" disabled selected>⏳ Sinkronisasi Cloud...</option>';
+        if (dropdown) {
+            dropdown.innerHTML = '<option value="" disabled selected>⏳ Sinkronisasi Cloud...</option>';
+        }
 
         const urlAppsScriptMas = "https://script.google.com/macros/s/AKfycbyK-vMV9b3R5s85FzsuCTdEQDAgsCsNJGXUq3kVpEdzKttDXc6UqPj_Hm45mvAbuxZR6Q/exec";
 
@@ -1914,12 +1917,11 @@ function lockFormKembali() {
                         listArsipDriveApotek[namaBersih] = file.url;
                     });
                 }
-                // Susun ulang opsi pilihan di dalam elemen dropdown
                 renderOpsiDropdownBulan();
             })
             .catch(err => {
                 console.error("Gagal sinkronisasi Drive:", err);
-                renderOpsiDropdownBulan(); // Tetap render list walaupun gagal/offline
+                renderOpsiDropdownBulan(); 
             });
     }
 
@@ -1928,8 +1930,8 @@ function lockFormKembali() {
      */
     function renderOpsiDropdownBulan() {
         const dropdown = document.getElementById('dropdown-bulan-apotek');
+        if (!dropdown) return;
         
-        // Kembalikan ke format default pilihan kosong awal
         dropdown.innerHTML = '<option value="" disabled selected>📂 Pilih Bulan Laporan</option>';
 
         masterBulan2026.forEach(bulan => {
@@ -1938,8 +1940,6 @@ function lockFormKembali() {
 
             const opsi = document.createElement('option');
             opsi.value = bulan;
-            
-            // Beri tanda visual teks (Contoh: "Januari 2026 ✔" jika ada file di cloud)
             opsi.textContent = isTersedia ? `📂 ${bulan}   ` : `❌ ${bulan} (Belum Ada)`;
             
             dropdown.appendChild(opsi);
@@ -1955,19 +1955,16 @@ function lockFormKembali() {
         const linkFileDrive = listArsipDriveApotek[bulanTerpilih];
 
         if (linkFileDrive) {
-            // Jika file ada, langsung tembak ke Iframe Preview
             bukaIframePreviewDrive(linkFileDrive);
         } else {
-            // Jika tidak ada, pancing popup warning pink apotek keluar
             bukaPopupBelumTersedia(bulanTerpilih);
-            
-            // Kembalikan posisi tulisan dropdown ke placeholder awal
-            document.getElementById('dropdown-bulan-apotek').value = "";
+            const dropdown = document.getElementById('dropdown-bulan-apotek');
+            if (dropdown) dropdown.value = "";
         }
     }
 
     /**
-     * PREVIEW ENGINE: Memasang file PDF ke dalam container iframe + Toolbar Navigasi
+     * PREVIEW ENGINE: Menggunakan Tumpuan Kiri Atas (Mencegah Bug Mentok/Potong di HP)
      */
     function bukaIframePreviewDrive(urlPreview) {
         const container = document.getElementById('viewer-container-summary-apotek');
@@ -1977,7 +1974,6 @@ function lockFormKembali() {
             return;
         }
 
-        // FILTER OTOMATIS: Mengubah Link Google Drive biasa ke Format Embed/Preview resmi
         let urlBersih = urlPreview;
         if (urlPreview.includes("drive.google.com")) {
             const matchId = urlPreview.match(/\/d\/([a-zA-Z0-9-_]+)/);
@@ -1987,91 +1983,128 @@ function lockFormKembali() {
             }
         }
 
-        // Kunci data ke variabel global
         urlAksesPDFCurrent = urlBersih;
-        levelZoomPDFCurrent = 1; // Reset tingkat zoom setiap kali mengganti dokumen
+        levelZoomPDFCurrent = 1.0; // Reset ke normal (1.0) setiap ganti dokumen
 
-        // Bersihkan border dashed bawaan placeholder, ganti ke solid modern
-        container.className = "viewer-container border border-gray-200 rounded-3xl bg-neutral-100 overflow-hidden flex flex-col transition-all duration-300";
+        container.className = "viewer-container border border-gray-200 rounded-3xl bg-neutral-900 overflow-hidden flex flex-col transition-all duration-300 relative";
         
-        // Masukkan struktur Toolbar Interaktif + Pembungkus Iframe yang bisa di-zoom
         container.innerHTML = `
-            <div class="bg-gray-900 text-white px-4 py-2.5 flex items-center justify-between border-b border-gray-800 shrink-0 shadow-md">
-                <div class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-gray-400">
-                    <i class="fa-solid fa-file-pdf text-red-400 text-sm"></i>
-                    <span>Apotek Summary</span>
+            <div class="bg-gray-950 text-white px-3 py-2 flex items-center justify-between border-b border-gray-800 shrink-0 shadow-md z-30">
+                <div class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-pink-400">
+                    <i class="fa-solid fa-receipt text-xs"></i>
+                    <span class="text-white hidden sm:inline">Summary Apotek</span>
                 </div>
                 
-                <div class="flex items-center bg-gray-800 rounded-xl p-0.5 border border-gray-700">
-                    <button type="button" onclick="ubahSkalaZoomPDF(0.1)" title="Perbesar (Zoom In)"
-                            class="w-8 h-8 flex items-center justify-center hover:bg-gray-700 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
-                        <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+                <div class="flex items-center bg-gray-900 rounded-xl p-0.5 border border-gray-800">
+                    <button type="button" onclick="ubahSkalaZoomPDF(0.2)" title="Perbesar"
+                            class="w-7 h-7 flex items-center justify-center hover:bg-gray-800 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
+                        <i class="fa-solid fa-plus text-[10px]"></i>
                     </button>
                     
-                    <span id="labelPersentaseZoom" class="text-[11px] font-mono font-bold px-2.5 min-w-[50px] text-center text-amber-300">100%</span>
+                    <span id="labelPersentaseZoom" class="text-[10px] font-mono font-black px-2 min-w-[45px] text-center text-pink-400">100%</span>
                     
-                    <button type="button" onclick="ubahSkalaZoomPDF(-0.1)" title="Perkecil (Zoom Out)"
-                            class="w-8 h-8 flex items-center justify-center hover:bg-gray-700 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
-                        <i class="fa-solid fa-magnifying-glass-minus text-xs"></i>
+                    <button type="button" onclick="ubahSkalaZoomPDF(-0.2)" title="Perkecil"
+                            class="w-7 h-7 flex items-center justify-center hover:bg-gray-800 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
+                        <i class="fa-solid fa-minus text-[10px]"></i>
                     </button>
                     
-                    <div class="w-px h-4 bg-gray-700 mx-1"></div>
+                    <div class="w-px h-3 bg-gray-800 mx-1"></div>
                     
-                    <button type="button" onclick="resetSkalaZoomPDF()" title="Reset Ukuran Awal"
-                            class="px-2.5 h-8 flex items-center justify-center hover:bg-gray-700 text-[10px] font-bold rounded-lg text-gray-400 hover:text-white transition-all focus:outline-none">
+                    <button type="button" onclick="resetSkalaZoomPDF()" 
+                            class="px-2 h-7 flex items-center justify-center hover:bg-gray-800 text-[9px] font-black rounded-lg text-gray-400 hover:text-white transition-all focus:outline-none">
                         RESET
                     </button>
                 </div>
                 
                 <div>
-                    <button type="button" onclick="toggleFullscreenPDF()" id="btnToggleFS" title="Layar Penuh"
-                       class="flex items-center gap-1.5 px-3 py-1.5 bg-pink-600 hover:bg-pink-700 text-white text-[10px] font-bold uppercase tracking-wider rounded-xl shadow-md transition-all active:scale-95 focus:outline-none">
-                        <span id="textBtnFS">Layar Penuh</span>
-                        <i id="iconBtnFS" class="fa-solid fa-expand text-[9px]"></i>
+                    <button type="button" onclick="toggleFullscreenPDF()" id="btnToggleFS"
+                       class="flex items-center gap-1 px-2.5 py-1.5 bg-pink-600 hover:bg-pink-700 text-white text-[9px] font-black uppercase tracking-wider rounded-xl shadow-md transition-all active:scale-95 focus:outline-none">
+                        <span id="textBtnFS">Penuh</span>
+                        <i id="iconBtnFS" class="fa-solid fa-expand text-[8px]"></i>
                     </button>
                 </div>
             </div>
 
-            <div class="flex-1 overflow-auto p-4 flex justify-center items-start bg-neutral-800 scrollbar-thin">
-                <div id="wrapperPenyanggaIframe" class="w-full h-full bg-white shadow-lg rounded-xl overflow-hidden origin-top transition-transform duration-150" style="transform: scale(1); min-height: 100%;">
-                    <iframe src="${urlBersih}&rm=minimal" class="w-full h-full border-none" allow="autoplay"></iframe>
+            <div id="viewportScrollApotek" class="flex-1 overflow-auto p-3 bg-neutral-800 scrollbar-clean relative flex justify-start items-start" style="-webkit-overflow-scrolling: touch;">
+                
+                <div id="loading-viewer-pink" class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-neutral-800 z-20 select-none animate-pulse">
+                    <div class="relative mb-4">
+                        <div class="absolute -inset-4 bg-pink-500/20 rounded-full blur-xl opacity-70 animate-ping"></div>
+                        <i class="fa-solid fa-file-medical text-5xl text-pink-500 relative animate-bounce"></i>
+                    </div>
+                    <div class="space-y-2 w-2/3 text-center">
+                        <p id="teks-loading-summary" class="text-xs font-black text-pink-400 tracking-wide">Menghubungkan jaringan NSA Cloud...</p>
+                        <div class="h-1.5 w-full bg-neutral-700 rounded-full overflow-hidden relative">
+                            <div class="h-full w-1/2 bg-pink-500 rounded-full absolute top-0 left-0" style="animation: slide-pink 1.5s infinite"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="wrapperPenyanggaIframe" class="bg-white shadow-xl rounded-xl overflow-hidden transition-transform duration-200" 
+                     style="width: 100%; height: 580px; transform-origin: top left; transform: scale(1); flex-shrink: 0;">
+                    <iframe id="iframe-core-drive" src="${urlBersih}&rm=minimal" class="w-full h-full border-none bg-white" allow="autoplay" onload="clearLoadingViewApotek()"></iframe>
                 </div>
             </div>
         `;
 
-        // Suntikkan aturan style khusus pendukung fullscreen
+        clearInterval(intervalApotekIdx);
+        const txtLoading = document.getElementById('teks-loading-summary');
+        const listPesan = [
+            "Menarik data enkripsi summary...",
+            "Sinkronisasi arsip pembukuan...",
+            "Memuat berkas preview dari Drive...",
+            "Menyusun visual berkas halaman..."
+        ];
+        let idx = 0;
+        intervalApotekIdx = setInterval(() => {
+            idx = (idx + 1) % listPesan.length;
+            if (txtLoading) txtLoading.textContent = listPesan[idx];
+        }, 1200);
+
         injectStyleFullscreenDinamis();
     }
 
     /**
-     * ENGINE PENGATUR SKALA ZOOM SECARA REAL-TIME
+     * MEMATIKAN SCREEN LOADING JIKA IFRAME SELESAI DI-RENDER OLEH GOOGLE DRIVE
      */
-    function ubahSkalaZoomPDF(faktorPerubahan) {
+    function clearLoadingViewApotek() {
+        clearInterval(intervalApotekIdx);
+        const loadingScreen = document.getElementById('loading-viewer-pink');
+        if (loadingScreen) loadingScreen.classList.add('hidden');
+    }
+
+    /**
+     * FIX ENGINE: Zooming Menggunakan Kombinasi Scale + Scroll-Width Manual
+     */
+    function ubahSkalaZoomPDF(nilaiPerubahan) {
         const wrapper = document.getElementById('wrapperPenyanggaIframe');
         const label = document.getElementById('labelPersentaseZoom');
-        
-        if (!wrapper) return;
+        const viewport = document.getElementById('viewportScrollApotek');
+        if (!wrapper || !viewport) return;
 
-        // Batasi level zoom: Minimal 50%, Maksimal 250%
-        let targetZoom = levelZoomPDFCurrent + faktorPerubahan;
-        if (targetZoom < 0.5) targetZoom = 0.5;
-        if (targetZoom > 2.5) targetZoom = 2.5;
+        // Batas aman scale: Minimal 1.0x (100%), Maksimal 2.0x (200%)
+        let targetZoom = levelZoomPDFCurrent + nilaiPerubahan;
+        if (targetZoom < 1.0) targetZoom = 1.0;
+        if (targetZoom > 2.0) targetZoom = 2.0;
 
         levelZoomPDFCurrent = targetZoom;
 
-        // Eksekusi perubahan skala CSS Transform ke pembungkus iframe
+        // 1. Eksekusi Pembesaran Skala Visual Objek
         wrapper.style.transform = `scale(${levelZoomPDFCurrent})`;
-        
-        // Sesuaikan lebar pembungkus agar saat di-zoom in, area scroll internal melebar otomatis
-        if (levelZoomPDFCurrent > 1) {
-            wrapper.style.width = `${100 * levelZoomPDFCurrent}%`;
-            wrapper.style.height = `${100 * levelZoomPDFCurrent}%`;
+
+        // 2. ANTIDOTE BUG MOBILE: Melebarkan ruang scroll secara manual agar sisi kiri/kanan tidak mentok
+        if (levelZoomPDFCurrent > 1.0) {
+            // Beri ruang tambahan pada viewport agar scrollbar HP muncul secara merata ke kanan-bawah
+            viewport.style.width = "100%";
+            // Siasati elemen penampung agar lebarnya membesar mengikuti skala transform
+            wrapper.style.marginRight = `-${(levelZoomPDFCurrent - 1) * 100}%`;
+            wrapper.style.marginBottom = `-${(levelZoomPDFCurrent - 1) * 580}px`;
         } else {
-            wrapper.style.width = "100%";
-            wrapper.style.height = "100%";
+            // Kembalikan ke posisi normal
+            wrapper.style.marginRight = "0px";
+            wrapper.style.marginBottom = "0px";
         }
 
-        // Perbarui angka indikator persen di toolbar
         if (label) {
             label.innerText = `${Math.round(levelZoomPDFCurrent * 100)}%`;
         }
@@ -2081,14 +2114,14 @@ function lockFormKembali() {
      * RESET UKURAN PDF KEMBALI NORMAL (100%)
      */
     function resetSkalaZoomPDF() {
-        levelZoomPDFCurrent = 1;
+        levelZoomPDFCurrent = 1.0;
         const wrapper = document.getElementById('wrapperPenyanggaIframe');
         const label = document.getElementById('labelPersentaseZoom');
         
         if (wrapper) {
             wrapper.style.transform = "scale(1)";
-            wrapper.style.width = "100%";
-            wrapper.style.height = "100%";
+            wrapper.style.marginRight = "0px";
+            wrapper.style.marginBottom = "0px";
         }
         if (label) {
             label.innerText = "100%";
@@ -2100,53 +2133,48 @@ function lockFormKembali() {
      */
     function toggleFullscreenPDF() {
         const targetElement = document.getElementById('viewer-container-summary-apotek');
-        const txtBtn = document.getElementById('textBtnFS');
-        const iconBtn = document.getElementById('iconBtnFS');
-
         if (!targetElement) return;
 
-        const isCurrentlyFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+        const isCurrentlyFS = document.fullscreenElement || document.webkitFullscreenElement;
 
         if (!isCurrentlyFS) {
             if (targetElement.requestFullscreen) {
                 targetElement.requestFullscreen();
-            } else if (targetElement.webkitRequestFullscreen) { // Safari / iOS iPad
+            } else if (targetElement.webkitRequestFullscreen) {
                 targetElement.webkitRequestFullscreen();
-            } else if (targetElement.msRequestFullscreen) { // Windows / IE
-                targetElement.msRequestFullscreen();
             }
-            
-            if(txtBtn) txtBtn.innerText = "Keluar";
-            if(iconBtn) iconBtn.className = "fa-solid fa-compress text-[9px]";
+            setButtonFSText(true);
         } else {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
             } else if (document.webkitExitFullscreen) {
                 document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
             }
+            setButtonFSText(false);
         }
     }
 
-    /**
-     * LISTENER SYSTEM: Menjaga UI sinkron jika user keluar via tombol ESC fisik bawaan device
-     */
     function deteksiPerubahanLayarPenuh() {
-        const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+        const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+        setButtonFSText(isFS);
+    }
+
+    function setButtonFSText(statusFS) {
         const txtBtn = document.getElementById('textBtnFS');
         const iconBtn = document.getElementById('iconBtnFS');
-        
-        if(!txtBtn || !iconBtn) return;
+        if (!txtBtn || !iconBtn) return;
 
-        if (!isFS) {
-            txtBtn.innerText = "Layar Penuh";
-            iconBtn.className = "fa-solid fa-expand text-[9px]";
+        if (statusFS) {
+            txtBtn.innerText = "Keluar";
+            iconBtn.className = "fa-solid fa-compress text-[8px]";
+        } else {
+            txtBtn.innerText = "Penuh";
+            iconBtn.className = "fa-solid fa-expand text-[8px]";
         }
     }
 
     /**
-     * UTILITY STYLE INJECTION: Memaksa tinggi container menjadi penuh 100vh saat mode fullscreen aktif
+     * UTILITY STYLE INJECTION
      */
     function injectStyleFullscreenDinamis() {
         const idStyle = "css-override-fullscreen-apotek";
@@ -2156,18 +2184,14 @@ function lockFormKembali() {
         styleSheet.id = idStyle;
         styleSheet.innerText = `
             #viewer-container-summary-apotek:fullscreen {
-                width: 100vw !important;
-                height: 100vh !important;
-                max-height: 100vh !important;
-                border-radius: 0px !important;
-                border: none !important;
+                width: 100vw !important; height: 100vh !important; max-height: 100vh !important; border-radius: 0px !important; border: none !important;
             }
             #viewer-container-summary-apotek:-webkit-full-screen {
-                width: 100vw !important;
-                height: 100vh !important;
-                max-height: 100vh !important;
-                border-radius: 0px !important;
-                border: none !important;
+                width: 100vw !important; height: 100vh !important; max-height: 100vh !important; border-radius: 0px !important; border: none !important;
+            }
+            @keyframes slide-pink {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(200%); }
             }
         `;
         document.head.appendChild(styleSheet);
@@ -2177,21 +2201,20 @@ function lockFormKembali() {
      * CONTROLLER MODAL: Mengatur popup info data kosong
      */
     function bukaPopupBelumTersedia(namaBulan) {
-        document.getElementById('teks-target-bulan-kosong').innerText = namaBulan;
-        document.getElementById('popup-drive-belum-tersedia').style.display = 'flex';
+        const targetText = document.getElementById('teks-target-bulan-kosong');
+        const popup = document.getElementById('popup-drive-belum-tersedia');
+        if (targetText) targetText.innerText = namaBulan;
+        if (popup) popup.style.display = 'flex';
     }
 
     function tutupPopupBelumTersedia() {
-        document.getElementById('popup-drive-belum-tersedia').style.display = 'none';
+        const popup = document.getElementById('popup-drive-belum-tersedia');
+        if (popup) popup.style.display = 'none';
     }
 
-    // Sambungkan fungsi deteksi fullscreen ke event browser gadget
     document.addEventListener('fullscreenchange', deteksiPerubahanLayarPenuh);
     document.addEventListener('webkitfullscreenchange', deteksiPerubahanLayarPenuh);
-    document.addEventListener('mozfullscreenchange', deteksiPerubahanLayarPenuh);
-    document.addEventListener('MSFullscreenChange', deteksiPerubahanLayarPenuh);
 
-    // Inisialisasi otomatis saat pertama kali web dibuka
     document.addEventListener("DOMContentLoaded", function() {
         muatUlangDaftarArsipDrive();
     });
@@ -2199,7 +2222,7 @@ function lockFormKembali() {
 	
 
 <script>
-// 1. Deklarasi URL Web App Google Apps Script Kamu (Sudah terhubung dengan versi terbaru deployment Mei2026)
+// 1. Deklarasi URL Web App Google Apps Script Kamu
 const API_URL_APOTEK = "https://script.google.com/macros/s/AKfycbxbV9cqDZg5J5pRnWFPUNCV8rk6mkNoim739KTELNi1SJhsbVW8jxAq2vsLYlSR0dDFXA/exec";
 
 // Variabel global untuk menyimpan instance grafik agar tidak duplikat saat reload data
@@ -2211,34 +2234,56 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 /**
- * Fungsi Utama Ambil Data dari doGet Apps Script
+ * Fungsi Utama Ambil Data dari doGet Apps Script secara Dinamis
  */
 function muatDataGrafikApotek() {
-    console.log("Memulai penarikan data dari:", API_URL_APOTEK);
+    // 1. OTOMATISASI DETEKSI BULAN & TAHUN BERJALAN SAAT INI (LOKAL SYSTEM)
+    const daftarBulanIndo = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    const waktuSekarang = new Date();
+    const namaBulanAktif = daftarBulanIndo[waktuSekarang.getMonth()]; // Contoh: "Juni"
+    const tahunAktif = waktuSekarang.getFullYear();                  // Contoh: 2026
+    const parameterBulanNSA = `${namaBulanAktif}${tahunAktif}`;       // Gabung: "Juni2026"
 
-    fetch(API_URL_APOTEK, {
+    // 2. UPDATE TEXT BANNER SECARA LIVE DI BROWSER
+    const elemenJudul = document.getElementById("judul-tren-bulan-apotek");
+    if (elemenJudul) {
+        elemenJudul.innerText = `Pendapatan Harian: ${namaBulanAktif} ${tahunAktif}`;
+    }
+
+    // 3. SUNTIKKAN PARAMETER BULAN KE URL FETCH API (?bulan=Juni2026)
+    const urlDinamis = `${API_URL_APOTEK}?bulan=${parameterBulanNSA}`;
+    console.log("Memulai penarikan data dinamis dari URL:", urlDinamis);
+
+    fetch(urlDinamis, {
         method: "GET",
-        redirect: "follow" // Memaksa browser mengikuti pengalihan URL dari Google
+        redirect: "follow"
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json(); // Konversi ke JSON jika respons berhasil dipatuhi
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
     })
-    .then(data => {
-        console.log("Data mentah dari Apps Script sukses diterima:", data);
+    .then(resJson => {
+        console.log("Data harian sukses diterima:", resJson);
 
-        if (data.status === "error") {
-            throw new Error(data.message);
+        if (resJson.status === "error") throw new Error(resJson.message);
+        
+        // REVISI: Ambil array dari properti .data sesuai struktur GS yang baru
+        let kumpulanData = [];
+        if (resJson.status === "success" && Array.isArray(resJson.data)) {
+            kumpulanData = resJson.data;
+        } else if (resJson.status === "empty") {
+            kumpulanData = []; // Sheet kosong terdeteksi dengan aman
         }
 
         // Urutkan tanggal dari yang terkecil ke terbesar
-        data.sort((a, b) => parseInt(a.tanggal) - parseInt(b.tanggal));
+        kumpulanData.sort((a, b) => parseInt(a.tanggal) - parseInt(b.tanggal));
 
         // Eksekusi pengisian komponen web
-        isiTabelKotorApotek(data);
-        buatGrafikKotorApotek(data);
+        isiTabelKotorApotek(kumpulanData);
+        buatGrafikKotorApotek(kumpulanData);
     })
     .catch(error => {
         console.error("Detail Error Fetching:", error);
@@ -2251,21 +2296,18 @@ function muatDataGrafikApotek() {
 
 /**
  * Fungsi Pengisian Tabel Ringkasan Mini di Sisi Kiri
- * FIX: Menambahkan class 'whitespace-nowrap' agar nominal rupiah baru yang panjang tidak patah baris
  */
 function isiTabelKotorApotek(data) {
     const tbody = document.getElementById("tabel-ringkasan-kotor-apotek");
     if (!tbody) return;
 
-    // Bersihkan loading state spinner
-    tbody.innerHTML = "";
+    tbody.innerHTML = ""; // Bersihkan loading state spinner
 
-    if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="2" class="text-center py-10 text-gray-400 italic text-[10px]">Kosong</td></tr>`;
+    if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" class="text-center py-10 text-gray-400 italic text-[10px]">Belum ada data</td></tr>`;
         return;
     }
 
-    // Suntikkan baris data satu per satu
     data.forEach(item => {
         const row = document.createElement("tr");
         row.className = "hover:bg-pink-50/40 transition-colors duration-150";
@@ -2279,14 +2321,16 @@ function isiTabelKotorApotek(data) {
 
 /**
  * Fungsi Pembuatan Grafik Batang Line/Bar Chart.js di Sisi Kanan
- * FIX: Mengubah tema warna ke Pink Apotek & Mengunci format ribuan lokal Indonesia
- * REVISI: Mengubah label tanggal menjadi angka murni (1, 2, 3) agar tidak miring di mobile
  */
 function buatGrafikKotorApotek(data) {
     const ctx = document.getElementById("chartApotekKotorBulanIni");
     if (!ctx) return;
 
-    // REVISI: Langsung mengambil item.tanggal tanpa prefix teks "Tgl "
+    if (!data || data.length === 0) {
+        if (chartApotekInstance) chartApotekInstance.destroy();
+        return;
+    }
+
     const labelsTanggal = data.map(item => item.tanggal);
     const dataPendapatan = data.map(item => item.pendapatan);
 
@@ -2294,7 +2338,6 @@ function buatGrafikKotorApotek(data) {
         chartApotekInstance.destroy();
     }
 
-    // Inisialisasi Chart.js versi Khas Apotek (Pink Theme)
     chartApotekInstance = new Chart(ctx, {
         type: 'line', 
         data: {
@@ -2302,11 +2345,11 @@ function buatGrafikKotorApotek(data) {
             datasets: [{
                 label: 'Pendapatan Kotor (Rp)',
                 data: dataPendapatan,
-                borderColor: '#ec4899', // Pink-500 Tailwind murni
-                backgroundColor: 'rgba(236, 72, 153, 0.05)', // Efek gradasi transparan pink bawah garis
+                borderColor: '#ec4899',
+                backgroundColor: 'rgba(236, 72, 153, 0.05)',
                 borderWidth: 3,
                 pointBackgroundColor: '#ffffff',
-                pointBorderColor: '#db2777', // Pink-600 Tailwind untuk border titik lintasan
+                pointBorderColor: '#db2777',
                 pointBorderWidth: 2,
                 pointRadius: 4,
                 pointHoverRadius: 6,
@@ -2326,47 +2369,45 @@ function buatGrafikKotorApotek(data) {
                     padding: 10,
                     borderRadius: 12,
                     callbacks: {
-                        // REVISI OPTIONAL: Menambahkan keterangan "Tanggal" di dalam pop-up tooltip saat di-hover
-                        title: function(context) {
-                            return `Tanggal: ${context[0].label}`;
-                        },
-                        label: function(context) {
-                            return ` Omset: Rp ${context.raw.toLocaleString('id-ID')}`;
-                        }
+                        title: function(context) { return `Tanggal: ${context[0].label}`; },
+                        label: function(context) { return ` Omset: Rp ${context.raw.toLocaleString('id-ID')}`; }
                     }
                 }
             },
             scales: {
-                x: {
-                    grid: { display: false },
-                    ticks: {
-                        color: '#94a3b8',
-                        font: { size: 10, weight: 'bold' },
-                        maxRotation: 0, // KUNCI: Memaksa browser melarang rotasi miring pada teks x-axis
-                        minRotation: 0  // KUNCI: Memaksa teks x-axis selalu tegak lurus horizontal
-                    }
-                },
+               x: {
+    grid: { display: false },
+    ticks: { 
+        color: '#94a3b8', 
+        font: { size: 10, weight: 'bold' }, 
+        maxRotation: 0, 
+        minRotation: 0 
+    },
+    // SOLUSI: Berikan batas maksimal agar grafik tidak melebar ke seluruh lebar canvas
+    // Kita set 31 hari agar proporsi tetap terjaga sepanjang bulan
+    suggestedMax: 31 
+},
                 y: {
-                    grid: { color: '#f1f5f9' },
-                    ticks: {
-                        color: '#94a3b8',
-                        font: { size: 10 },
-                        callback: function(value) {
-                            return value.toLocaleString('id-ID');
-                        }
-                    }
-                }
+    beginAtZero: false, // Ubah jadi false agar garis mulai dari nilai terendah data, bukan dari 0
+    grace: '10%',       // Memberikan ruang 10% di bawah nilai terkecil agar tidak menempel dasar
+    grid: { color: '#f1f5f9' },
+    ticks: { 
+        color: '#94a3b8', 
+        font: { size: 10 }, 
+        callback: function(value) { 
+            // Opsional: Sederhanakan angka besar agar tidak terlalu panjang di sisi kiri
+            if (value >= 1000000) return (value / 1000000) + ' jt';
+            return value.toLocaleString('id-ID'); 
+        } 
+    }
+}
             }
         }
     });
 }
 
-/**
- * Helper Fungsi Format Angka ke Rupiah Utuh Ber-Titik
- */
 function formatRupiahApotek(angka) {
     if (angka === undefined || angka === null) return "Rp 0";
-    // Mengubah angka mentah dari sheet ke format mata uang murni IDR (Contoh: Rp 981.000)
     return "Rp " + parseInt(angka, 10).toLocaleString("id-ID");
 }
 </script>
@@ -2472,19 +2513,25 @@ function renderChartBulananApotek(data) {
             maintainAspectRatio: false,
             scales: {
                 y: { 
-                    beginAtZero: true, 
-                    grace: '18%', // Beri ruang kosong di atas batang agar teks datalabels tidak terpotong
-                    grid: { color: '#f1f5f9' },
-                    ticks: {
-                        color: '#94a3b8',
-                        font: { size: 10 },
-                        callback: function(value) {
-                            if (value >= 1000000) return (value / 1000000).toFixed(0) + 'M';
-                            if (value >= 1000) return (value / 1000).toFixed(0) + 'k';
-                            return value;
-                        }
-                    }
-                },
+    beginAtZero: true, 
+    grace: '18%',
+    grid: { color: '#f1f5f9' },
+    ticks: {
+        color: '#94a3b8',
+        font: { size: 10 },
+        callback: function(value) {
+            // Jika angka 1 juta atau lebih, bagi 1 juta lalu tambah " jt"
+            if (value >= 1000000) {
+                return (value / 1000000) + ' jt';
+            }
+            // Jika angka 1 ribu atau lebih, bagi 1 ribu lalu tambah " rb"
+            if (value >= 1000) {
+                return (value / 1000) + ' rb';
+            }
+            return value;
+        }
+    }
+},
                 x: {
                     grid: { display: false },
                     ticks: {
@@ -4312,6 +4359,64 @@ function setTombolAktif() {
     </div>
 </div>
 
+<script>
+/**
+ * GLOBAL OVERRIDE: Mengambil alih fungsi alert() browser 
+ * dan diarahkan ke modal #modal-alert-narasi yang sudah ada di HTML.
+ */
+window.alert = function(pesan) {
+    const modal = document.getElementById('modal-alert-narasi');
+    const box = document.getElementById('narasi-box-content');
+    const judulElem = document.getElementById('narasi-alert-judul');
+    const deskripsiElem = document.getElementById('narasi-alert-deskripsi');
+    const iconContainer = box.querySelector('.rounded-full');
+    const iconElem = iconContainer.querySelector('i');
+
+    if (!modal || !box) return;
+
+    // 1. Tentukan Tipe (Error/Warning atau Sukses)
+    const isError = ['gagal', 'error', 'salah', 'tidak', 'kosong', 'periksa'].some(k => pesan.toLowerCase().includes(k));
+    
+    // 2. Ubah Warna Border & Icon Dinamis
+    if (isError) {
+        box.className = box.className.replace(/border-pink-500/g, 'border-rose-500');
+        iconContainer.className = "mx-auto w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-2xl animate-pulse";
+        iconElem.className = "fa-solid fa-circle-exclamation";
+        judulElem.innerText = "PERINGATAN";
+    } else {
+        box.className = box.className.replace(/border-rose-500/g, 'border-pink-500');
+        iconContainer.className = "mx-auto w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-2xl animate-bounce";
+        iconElem.className = "fa-solid fa-cloud-arrow-up";
+        judulElem.innerText = "INFORMASI";
+    }
+
+    // 3. Masukkan pesan
+    deskripsiElem.innerText = pesan;
+
+    // 4. Tampilkan
+    modal.classList.remove('hidden');
+    modal.classList.add('grid');
+    setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+    }, 50);
+};
+
+/**
+ * FUNGSI TUTUP (Sesuai dengan onclick di HTML Bos)
+ */
+function tutupAlertNarasi() {
+    const modal = document.getElementById('modal-alert-narasi');
+    const box = document.getElementById('narasi-box-content');
+    
+    box.classList.remove('scale-100', 'opacity-100');
+    box.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+        modal.classList.remove('grid');
+        modal.classList.add('hidden');
+    }, 300);
+}
+</script>
 
 
 </body>
