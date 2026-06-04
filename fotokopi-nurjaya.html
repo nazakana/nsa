@@ -6000,6 +6000,9 @@ function tutupModalBK_Wrapper() {
                         <i class="fa-solid fa-spinner fa-spin mr-1"></i> Mencari data kehadiran...
                     </span>
                 </div>
+				
+				
+				
                 <div class="bg-white border-2 border-dashed border-slate-200 iframe-container-1to1 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-xl">
     
     <div id="placeholder-pdf-text" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-10">
@@ -6447,10 +6450,23 @@ document.addEventListener("DOMContentLoaded", function() {
     
     let intervalTeks; // Penampung timer teks
 
+    // Fungsi Pembantu: Mengubah String Base64 Menjadi Blob Objek yang Sangat Ringan (Fix Mobile Bug)
+    function base64ToBlob(base64, type = "application/pdf") {
+        const kepinganBase64 = base64.includes(",") ? base64.split(",")[1] : base64;
+        const byteCharacters = atob(kepinganBase64);
+        const byteNumbers = new Array(byteCharacters.length);
+        
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        
+        const byteArray = new Uint8Array(byteNumbers);
+        return new Blob([byteArray], { type: type });
+    }
+
     // --- FUNGSI BUKA & TUTUP MODAL DENGAN ENGINE ANIMATION ---
     function bukaModalGaji() {
         if (!loaderEngineKeuangan) {
-            // Jika elemen overlay belum ditaruh di HTML, langsung buka modal biasa (Fallback)
             bukaModalGajiAsli();
             return;
         }
@@ -6500,21 +6516,46 @@ document.addEventListener("DOMContentLoaded", function() {
         modalSlipGaji.classList.add("opacity-0", "pointer-events-none");
         modalSlipGaji.querySelector('.transform').classList.remove('scale-100');
         modalSlipGaji.querySelector('.transform').classList.add('scale-95');
+        
+        // Bersihkan memori Blob lama di browser agar tidak bengkak
+        if (iframePreviewPdf.src.startsWith("blob:")) {
+            URL.revokeObjectURL(iframePreviewPdf.src.split("#")[0]);
+        }
+        
         iframePreviewPdf.src = ""; 
         clearInterval(intervalTeks);
     }
 
-    function tampilkanIframe(srcUrl) {
+    function tampilkanIframe(base64Data) {
         clearInterval(intervalTeks);
         loadingPdfAnimation.classList.add("hidden");
         placeholderPdfText.classList.add("hidden");
         iframePreviewPdf.classList.remove("hidden");
         
-        iframePreviewPdf.src = srcUrl + "#toolbar=0&navpanes=0&view=FitH";
+        try {
+            // Bersihkan sisa Blob URL sebelumnya jika ada
+            if (iframePreviewPdf.src.startsWith("blob:")) {
+                URL.revokeObjectURL(iframePreviewPdf.src.split("#")[0]);
+            }
+
+            // Konversi teks raksasa base64 menjadi lokal Blob URL (Anti-Lemot di Desktop & Muncul di HP)
+            const blob = base64ToBlob(base64Data, "application/pdf");
+            const blobUrl = URL.createObjectURL(blob);
+            
+            iframePreviewPdf.src = blobUrl + "#toolbar=0&navpanes=0&view=FitH";
+        } catch (error) {
+            console.error("Gagal merender PDF:", error);
+            sembunyikanIframe("Gagal memproses visualisasi enkripsi data PDF.");
+        }
     }
 
     function sembunyikanIframe(pesanTeks) {
         clearInterval(intervalTeks);
+        
+        if (iframePreviewPdf.src.startsWith("blob:")) {
+            URL.revokeObjectURL(iframePreviewPdf.src.split("#")[0]);
+        }
+        
         iframePreviewPdf.classList.add("hidden");
         iframePreviewPdf.src = "";
         loadingPdfAnimation.classList.add("hidden");
