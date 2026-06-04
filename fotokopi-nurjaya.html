@@ -549,8 +549,9 @@ document.addEventListener('keydown', function(event) {
 <div id="tab-dashboard" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in" style="font-family: sans-serif;">
    
    
-  <div class="w-full mb-7">
-    <div class="n-box-grafik bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)] relative">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-7">
+
+    <div class="n-box-grafik bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)] relative flex flex-col justify-between">
         
         <div id="loading-layer-harian" class="absolute top-0 left-0 w-full h-full bg-white/90 z-50 flex flex-col justify-center items-center transition-opacity duration-300">
             <div class="spinner-putar w-8 h-8 border-4 border-green-100 border-top-4 border-green-500 rounded-full animate-spin"></div>
@@ -568,13 +569,13 @@ document.addEventListener('keydown', function(event) {
             </div>
         </div>
 
-        <div class="n-container-harian flex flex-nowrap h-[170px] md:h-[240px] overflow-hidden">
+        <div class="n-container-harian flex flex-nowrap h-[170px] md:h-[240px] overflow-hidden flex-grow">
             <div class="w-[110px] md:w-[140px] flex-shrink-0 overflow-y-auto border-r border-green-50 p-2 bg-gray-50/50">
                 <table class="w-full text-[11px] md:text-xs border-collapse font-medium text-gray-700">
                     <thead class="sticky top-0 bg-gray-50 z-10">
                         <tr>
                             <th class="text-left py-1 px-1.5 text-gray-500 font-bold text-[9px] uppercase">Tgl</th>
-                            <th class="text-right py-1 px-1.5 text-gray-500 font-bold text-[9px] uppercase">Total Rp</th>
+                            <th class="text-right py-1 px-1.5 text-gray-500 font-bold text-[9px] uppercase">Total</th>
                         </tr>
                     </thead>
                     <tbody id="tabel_ringkasan_bulan_ini"></tbody>
@@ -588,11 +589,8 @@ document.addEventListener('keydown', function(event) {
             </div>
         </div>
     </div>
-</div>
 
-
-<div class="w-full mb-6">
-    <div id="sesi-grafik" class="searchable-content bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)]">
+    <div id="sesi-grafik" class="searchable-content bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)] flex flex-col justify-between">
         
         <div class="p-3 md:p-5 border-b border-green-100 flex justify-between items-center bg-gradient-to-r from-white to-green-50/30">
             <h2 class="text-xs md:text-sm font-medium text-gray-900 m-0 leading-tight">
@@ -605,7 +603,7 @@ document.addEventListener('keydown', function(event) {
             </div>
         </div>
 
-        <div id="wadah-grafik" class="flex flex-nowrap h-[170px] md:h-[240px] overflow-hidden">
+        <div id="wadah-grafik" class="flex flex-nowrap h-[170px] md:h-[240px] overflow-hidden flex-grow">
             <div id="container-canvas" class="flex-grow p-3 md:p-4 bg-white flex items-center">
                 <div class="w-full h-[135px] md:h-[190px] relative">
                     <canvas id="grafikPendapatan"></canvas>
@@ -613,6 +611,7 @@ document.addEventListener('keydown', function(event) {
             </div>
         </div>
     </div>
+
 </div>
 		
 		
@@ -780,10 +779,6 @@ document.addEventListener('keydown', function(event) {
 
     <div class="space-y-4 text-gray-700 text-sm md:text-lg leading-relaxed font-medium">
         
-        <div class="flex gap-4 items-start">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Tampilan login dengan password kembali tersedia untuk keamanan, muncul saat pertama kali aplikasi dibuka.</p>
-        </div>
         
         <div class="flex gap-4 items-start">
             <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
@@ -807,18 +802,9 @@ document.addEventListener('keydown', function(event) {
         
         <div class="flex gap-4 items-start">
             <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Mode Developer dimutakhirkan: update summary, upload pendapatan, dan edit katalog.</p>
-        </div>
-        
-        <div class="flex gap-4 items-start">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
             <p>Summary pendapatan harian ter-update otomatis setelah tutup kasir.</p>
         </div>
         
-        <div class="flex gap-4 items-start">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Tersedia dalam aplikasi mandiri (Android) dan Web App yang ringan dengan dukungan notifikasi.</p>
-        </div>
         
         <div class="flex gap-4 items-start">
             <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
@@ -829,46 +815,8 @@ document.addEventListener('keydown', function(event) {
 </div>
 			
 
-                <!-- SUB JUDUL: KEBIJAKAN BARU -->
-                <div class="glass-element p-6 md:p-8 mb-6 rounded-[28px] border-4 border-green-400 bg-white shadow-[0_12px_40px_rgba(34,197,94,0.15)] relative overflow-hidden">
-    
-    <div class="absolute top-0 right-0 px-4 py-1 bg-green-600 text-white text-[10px] font-black rounded-bl-[20px] uppercase tracking-widest shadow-lg">
-        KEBIJAKAN BARU
-    </div>
+             
 
-    <h4 class="text-xl md:text-2xl font-black text-gray-900 mb-6 uppercase leading-tight pr-24">
-        KEBIJAKAN BARU
-    </h4>
-
-    <div class="space-y-4 text-gray-700 text-sm md:text-lg leading-relaxed font-medium">
-        
-        <div class="flex gap-4 items-start">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Tabungan Operasional Harian dibagi menjadi dua: <strong>Tabungan (A) Rp 45.000</strong> dan <strong>Tabungan (B) Rp 255.000</strong>.</p>
-        </div>
-        
-        <div class="flex gap-4 items-start">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Penyesuaian rumus perhitungan secara menyeluruh untuk adaptasi sistem Tabungan Operasional yang ter-split.</p>
-        </div>
-        
-        <div class="flex gap-4 items-start">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Target capaian harian Rp 300.000, dengan acuan utama <strong>Tabungan (B) Rp 255.000</strong> sebagai batas minimal.</p>
-        </div>
-        
-        <div class="flex gap-4 items-start">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-            <p>Revisi pelaporan Penjualan dan Laba Meterai untuk membedakan Laba fisik dan Laba Merchant QRIS.</p>
-        </div>
-        
-        <div class="flex gap-4 items-start">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-chevron-right"></i></div>
-            <p>Pembaruan logika target: Jika Tabungan (B) kurang dari target, sistem secara otomatis akan menghitung transaksi QRIS sebagai penutup kekurangan. Jika akumulasi mencukupi, status akan tetap <strong>"Target Terpenuhi"</strong>.</p>
-        </div>
-        
-    </div>
-</div>
 
 				<!-- SUB JUDUL: GALERI NURJAYA -->
                 <div class="pt-10 pb-6 px-6 md:px-14">
@@ -885,7 +833,7 @@ document.addEventListener('keydown', function(event) {
             
         </div>
     </div>
-</div>
+
 				
 	
 
@@ -916,7 +864,7 @@ document.addEventListener('keydown', function(event) {
 
 
 
-
+</div>
 
 </div>
 		
@@ -1186,30 +1134,42 @@ document.addEventListener('keydown', function(event) {
             <div class="p-4 bg-gray-50 border-2 border-gray-200 rounded-[22px] flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div class="text-center sm:text-left">
                     <p class="text-xs font-black text-gray-800 uppercase tracking-wider">FORM PRESENSI KARYAWAN</p>
-                    <p class="text-[11px] text-gray-500 font-bold">Cetak kartu presensi atau rekapitulasi slip bulanan.</p>
+                    <p class="text-[11px] text-gray-500 font-bold">Menu untuk isi presensi karyawan setiap hari, dan opsi pembuatan slip gaji (Khusus Owner Nurjaya)</p>
                 </div>
-                <div class="grid grid-cols-2 gap-3 w-full sm:w-auto min-w-[280px] sm:min-w-[350px]">
-                    <button type="button" class="px-4 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black text-xs md:text-sm shadow-md flex items-center justify-center gap-2 transition-all duration-200">
-                        <i class="fa-solid fa-address-card text-sm"></i> 
-                        <span class="truncate">Kartu Presensi</span>
-                    </button>
-                    
-                    <button type="button" onclick="javascript:void(0)" class="px-4 py-3 rounded-xl bg-slate-100 text-slate-400 font-black text-xs md:text-sm border-2 border-slate-200 flex items-center justify-center gap-2 transition-all duration-200 cursor-not-allowed" title="Fitur belum tersedia">
-                        <i class="fa-solid fa-file-invoice-dollar text-sm"></i> 
-                        <span class="truncate">Buat Slip Gaji</span>
-                    </button>
-                </div>
+				
+               <div class="grid grid-cols-2 gap-3 w-full sm:w-auto min-w-[280px] sm:min-w-[380px]">
+    <button type="button" class="group relative px-3 py-3.5 sm:px-4 sm:py-3 rounded-2xl bg-gradient-to-br from-emerald-600 to-green-700 hover:from-emerald-500 hover:to-green-600 text-white shadow-md hover:shadow-xl flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+            <i class="fa-solid fa-address-card text-sm sm:text-base"></i>
+        </div>
+        <div class="flex flex-col min-w-0 w-full">
+            <span class="font-black text-[11px] sm:text-[13px] tracking-wide truncate w-full">Kartu Presensi</span>
+            <span class="text-[8px] sm:text-[10px] font-medium text-green-100/75 tracking-wider uppercase mt-0.5 block truncate">Untuk Karyawan</span>
+        </div>
+    </button>
+    
+    <button type="button" id="btn-buka-modal-gaji" class="group relative px-3 py-3.5 sm:px-4 sm:py-3 rounded-2xl bg-gradient-to-br from-rose-700 to-red-800 hover:from-rose-600 hover:to-red-700 text-white shadow-md hover:shadow-xl flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden dynamic-btn">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+            <i class="fa-solid fa-file-invoice-dollar text-sm sm:text-base"></i>
+        </div>
+        <div class="flex flex-col min-w-0 w-full">
+            <span class="font-black text-[11px] sm:text-[13px] tracking-wide truncate w-full">Buat Slip Gaji</span>
+            <span class="text-[8px] sm:text-[10px] font-medium text-rose-200/75 tracking-wider uppercase mt-0.5 block truncate">Untuk Owner</span>
+        </div>
+    </button>
+</div>
+
             </div>
 
             <div class="p-4 bg-slate-50 border-2 border-slate-200 rounded-[22px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                 <div class="space-y-1">
                     <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-user-tie text-green-600"></i> Nama Karyawan Staf
+                        <i class="fa-solid fa-user-tie text-green-600"></i> Nama Karyawan
                     </label>
                     <div class="relative">
                         <select id="presensi-karyawan" required 
                             class="w-full pl-4 pr-12 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-sm appearance-none h-[48px]">
-                            <option value="" disabled selected hidden>-- Pilih Staff Karyawan --</option>
+                            <option value="" disabled selected hidden>-- Pilih Nama --</option>
                             <option value="Cahya">Muhammad Cahya Ardiansyah</option>
                             <option value="Dadan">Dadan Nurfaizal</option>
                         </select>
@@ -1263,34 +1223,31 @@ document.addEventListener('keydown', function(event) {
 
                 <hr class="border-dashed border-green-100">
 
-               <!-- GRID 2: JADWAL & KETERANGAN JADWAL -->
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-    <div class="space-y-1.5">
-        <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-            <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
-        </label>
-        <div class="relative">
-            <select id="presensi-jadwal" required 
-                class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                <option value="2">2 Karyawan (Full Team)</option>
-                <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                <i class="fa-solid fa-chevron-down text-[10px]"></i>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Wrapper Keterangan Jadwal -->
-    <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
-        <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-            <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus 1 Karyawan/Lembur)</span>
-        </label>
-        <!-- Mengubah bg-gray-100 menjadi bg-gray-50 agar mengikuti efek opacity container -->
-        <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
-            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-    </div>
-</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="space-y-1.5">
+                        <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
+                        </label>
+                        <div class="relative">
+                            <select id="presensi-jadwal" required 
+                                class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                                <option value="2">2 Karyawan (Full Team)</option>
+                                <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
+                        <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus 1 Karyawan/Lembur)</span>
+                        </label>
+                        <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
+                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                    </div>
+                </div>
 
                 <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
                     <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -1307,7 +1264,7 @@ document.addEventListener('keydown', function(event) {
                         <label for="presensi-potongan" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-business-time text-green-600"></i> Potongan Jam Kerja <span class="text-[10px] text-gray-400 font-bold normal-case">(Opsional)</span>
                         </label>
-                        <input type="text" id="presensi-potongan" placeholder="Format: 00.30" 
+                        <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00 (jam.menit)" 
                             class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
                     </div>
                     
@@ -1315,7 +1272,26 @@ document.addEventListener('keydown', function(event) {
                         <label for="presensi-alasan-potongan" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-comment-dots text-green-600"></i> Alasan Potongan Jam <span class="text-[10px] text-gray-400 font-bold normal-case">(Opsional)</span>
                         </label>
-                        <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk shift pagi" 
+                        <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk pagi hari" 
+                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="space-y-1.5">
+                        <label for="presensi-tambahan" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-clock text-green-600"></i> Tambahan Jam / Overtime <span class="text-[10px] text-gray-400 font-bold normal-case">(Opsional)</span>
+                        </label>
+                        <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00 (jam.menit)" 
+                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        <small class="text-[10px] text-gray-400 font-bold italic block pl-1">Lebihan waktu di luar batas wajar</small>
+                    </div>
+                    
+                    <div class="space-y-1.5">
+                        <label for="presensi-alasan-tambahan" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-signature text-green-600"></i> Alasan Tambahan Jam <span class="text-[10px] text-gray-400 font-bold normal-case">(Opsional)</span>
+                        </label>
+                        <input type="text" id="presensi-alasan-tambahan" placeholder="Contoh: tutup toko jam 20.45" 
                             class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
                     </div>
                 </div>
@@ -1326,17 +1302,17 @@ document.addEventListener('keydown', function(event) {
                         <i class="fa-solid fa-cloud-arrow-up text-sm"></i> KIRIM PRESENSI KE NSA CLOUD
                     </button>
                 </div>
-				
-				<div class="pt-2 border-t border-dashed border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
-    <div class="text-center sm:text-left">
-        <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Navigasi Slip & Riwayat</p>
-        <p class="text-[12px] text-gray-600 font-black uppercase">Pratinjau Kartu Bulanan Karyawan</p>
-    </div>
-    <button type="button" id="btn-buka-modal"
-        class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs rounded-[16px] uppercase tracking-wider shadow-md shadow-blue-600/10 transition-all duration-200 flex items-center justify-center gap-2">
-        <i class="fa-solid fa-address-card text-sm"></i> Tampilkan Kartu Presensi Bulan Ini
-    </button>
-</div>
+                
+                <div class="pt-2 border-t border-dashed border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
+                    <div class="text-center sm:text-left">
+                        <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Pengecekan Riwayat Pengisian</p>
+                        <p class="text-[12px] text-gray-600 font-black uppercase">Pratinjau Kartu Presensi</p>
+                    </div>
+                    <button type="button" id="btn-buka-modal" onclick="javascript:void(0)"
+                        class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs rounded-[16px] uppercase tracking-wider shadow-md shadow-blue-600/10 transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-address-card text-sm"></i> Tampilkan Presensi Bulan Ini
+                    </button>
+                </div>
 
             </form>
         </div>
@@ -1678,7 +1654,7 @@ document.addEventListener('keydown', function(event) {
                 'dashboard': ['NSA (Nurjaya Smart Archive)', 'Arsip Operasional Nurjaya Abadi'],
                 'dailyinput': ['Daily Input', 'Formulir Laporan Operasional Harian'], // Data untuk tab baru
                 'archive': ['Arsip Digital Laporan', 'Pusat Dokumentasi Keuangan'],
-                'presensi': ['Presensi Kehadiran', 'Monitor Staf Nurjaya Abadi'],
+                'presensi': ['Presensi Karyawan', 'Monitor Staf Nurjaya Abadi'],
                 'calendar': ['Jadwal & Shift Kerja', 'Pengaturan Operasional Toko'],
                 'about': ['Profil Nurjaya Abadi', 'Informasi Kepemilikan & Manajemen']
             };
@@ -3859,26 +3835,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputTanggal = document.getElementById("input_tanggal");
 
     // --- FUNGSI AMBIL DATA TERBARU (LAST ENTRY) SAAT MODAL DIBUKA ---
-    function muatDataTerakhirCloud() {
-        if (!bannerLastEntry) return;
-        
-        // Memanggil GAS dengan parameter cek_terakhir=true
-        fetch(`${WEB_APP_URL}?cek_terakhir=true`)
-            .then(response => response.json())
-            .then(res => {
-                if (res.status === "success" && res.tanggal_terakhir) {
-                    bannerLastEntry.className = "w-full px-4 py-3 bg-green-50 border-2 border-green-200 rounded-[18px] text-xs md:text-sm text-green-800 font-bold flex items-center gap-3 transition-all duration-300";
-                    bannerLastEntry.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 text-base"></i> <span>Data Operasional Terakhir yang Sukses Masuk Cloud: <strong class="underline font-black text-green-700">${res.tanggal_terakhir}</strong></span>`;
-                } else {
-                    bannerLastEntry.innerHTML = `<i class="fa-solid fa-circle-info text-blue-600"></i> <span>Belum ada riwayat baris data di sheet pembukuan utama.</span>`;
-                }
-            })
-            .catch(err => {
-                console.error("Gagal memuat status entri:", err);
-                bannerLastEntry.className = "w-full px-4 py-3 bg-yellow-50 border-2 border-yellow-200 rounded-[18px] text-xs md:text-sm text-yellow-800 font-bold flex items-center gap-3";
-                bannerLastEntry.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-yellow-600"></i> <span>Gagal membaca sinkronisasi data terakhir, namun form tetap siap digunakan.</span>`;
-            });
-    }
+    /**
+ * REVISI: Deteksi otomatis tanggal terakhir berdasarkan nilai pendapatan kotor > 0
+ */
+function muatDataTerakhirCloud() {
+    if (!bannerLastEntry) return;
+    
+    // Kita panggil parameter baru yang sudah cerdas dari server
+    fetch(`${WEB_APP_URL}?cek_terakhir=true`)
+        .then(response => response.json())
+        .then(res => {
+            if (res.status === "success" && res.tanggal_terakhir !== "-") {
+                bannerLastEntry.className = "w-full px-4 py-3 bg-green-50 border-2 border-green-200 rounded-[18px] text-xs md:text-sm text-green-800 font-bold flex items-center gap-3 transition-all duration-300";
+                bannerLastEntry.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 text-base"></i> <span>Data Operasional Terakhir: <strong class="underline font-black text-green-700">${res.tanggal_terakhir}</strong></span>`;
+            } else {
+                bannerLastEntry.innerHTML = `<i class="fa-solid fa-circle-info text-blue-600"></i> <span>Belum ada data transaksi yang tersimpan.</span>`;
+            }
+        })
+        .catch(err => {
+            console.error("Gagal memuat status entri:", err);
+        });
+}
 
     // Jalankan otomatis untuk memberi tahu kasir entri baris data terakhir
     muatDataTerakhirCloud();
@@ -4587,7 +4564,7 @@ function tutupTentangAplikasi() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 // =========================================================================
-// NSA PRESENSI JAVASCRIPT LOGIC - REVISI INPUT MODEL CHIP BERJEJER 5 BARIS
+// NSA PRESENSI JAVASCRIPT LOGIC - REVISI FIT TO SCREEN MOBILE (ANTI-BUG)
 // =========================================================================
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -4609,8 +4586,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const inputAlasanPotong  = document.getElementById("presensi-alasan-potongan");
     const formPresensi       = document.getElementById("form-presensi-nsa");
     const btnSubmit          = document.getElementById("btn-submit-presensi");
-
-    // 3. Elemen DOM Navigasi Modal (Sesuai HTML Baru)
+    
+    // --- ELEMEN UTAMA FORM TAMBAHAN JAM ---
+    const inputTambahanJamForm    = document.getElementById("presensi-tambahan");
+    const inputAlasanTambahanForm = document.getElementById("presensi-alasan-tambahan");
+    
+    // 3. Elemen DOM Navigasi Modal
     const btnBukaModal       = document.getElementById("btn-buka-modal");
     const btnBukaModalAlt    = document.getElementById("btn-buka-modal-alt");
     const btnTutupModal      = document.getElementById("btn-tutup-modal");
@@ -4618,24 +4599,25 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnUnduhPdf        = document.getElementById("btn-unduh-pdf");
     const btnUploadPresensiCloud = document.getElementById("btn-upload-presensi-cloud");
     
-    // Elemen Tabel Side-by-Side
     const tabelKiriBody      = document.getElementById("tabel-kiri-body");
     const tabelKananBody     = document.getElementById("tabel-kanan-body");
     
-    // Elemen Metadata & Counter di Dalam Modal
     const modalNamaKaryawan  = document.getElementById("modal-nama-karyawan");
     const modalPeriodeKerja  = document.getElementById("modal-periode-kerja");
     const modalTotalHariKerja = document.getElementById("modal-total-hari-kerja");
     const modalTotalPotongan = document.getElementById("modal-total-potongan");
+    const modalTotalTambahan = document.getElementById("modal-total-tambahan"); // SEKARANG WORK
     
     const rekapJadwal2       = document.getElementById("rekap-jadwal-2");
     const rekapJadwal1       = document.getElementById("rekap-jadwal-1");
     const rekapLibur         = document.getElementById("rekap-libur");
     const rekapAbsen         = document.getElementById("rekap-absen");
 
-    // Elemen Input Manual & Mirroring Baru (Model Array 5 Poin Chip)
+    // Elemen Input Manual & Mirroring Evaluasi Owner Dalam Modal
     const inputAlasanCustom  = document.getElementById("modal-alasan-potongan-custom");
     const mirrorAlasanCustom = document.getElementById("mirror-alasan-potongan-custom");
+    const inputAlasanTambahanCustom = document.getElementById("modal-alasan-tambahan-custom"); // SINKRON ID
+    const mirrorAlasanTambahanCustom = document.getElementById("mirror-alasan-tambahan-custom"); // SINKRON ID
     const mirrorCatatanFinal = document.getElementById("mirror-catatan-final");
 
     let namaPeriodeTerdeteksi = "";
@@ -4645,17 +4627,44 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================================
+    // FUNGSI RESPONSIVE AUTO-FIT SCALE (REVISI AMAN: TANPA MERUSAK RENDER PDF)
+    // =========================================================================
+    function paskanKartuKeLayarHP() {
+        const areaCetak = document.getElementById("area-cetak-pdf");
+        if (!areaCetak) return;
+
+        const lebarContainerModal = areaCetak.parentElement.clientWidth - 16;
+        const lebarAsliKartu = 756;
+
+        if (lebarContainerModal < lebarAsliKartu) {
+            const rasioSkala = lebarContainerModal / lebarAsliKartu;
+            areaCetak.style.transform = `scale(${rasioSkala})`;
+            areaCetak.style.transformOrigin = "top left";
+            
+            areaCetak.parentElement.style.height = `${756 * rasioSkala}px`;
+            areaCetak.parentElement.style.width = `${756 * rasioSkala}px`;
+            areaCetak.parentElement.style.margin = "0 auto";
+        } else {
+            areaCetak.style.transform = "scale(1)";
+            areaCetak.style.transformOrigin = "top center";
+            areaCetak.parentElement.style.height = "756px";
+            areaCetak.parentElement.style.width = "756px";
+        }
+    }
+
+    window.addEventListener("resize", paskanKartuKeLayarHP);
+
+    // =========================================================================
     // FUNGSI 1: LOGIKA TOGGLE FORM UTAMA (YA/TIDAK HADIR)
     // =========================================================================
     function handleFormInteractivity() {
         if (!selectKehadiran || !selectJadwal) return;
-        
         const isTidakHadir = selectKehadiran.value === "TIDAK";
         const jenisJadwal  = selectJadwal.value;
 
         if (isTidakHadir) {
             selectJadwal.setAttribute("disabled", "disabled");
-            selectJadwal.value = "2"; 
+            selectJadwal.value = "2";
             if (selectJadwal.parentElement) selectJadwal.parentElement.classList.add("opacity-40", "pointer-events-none");
             
             if (wrapperKetJadwal && inputKetJadwal) {
@@ -4707,7 +4716,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (!karyawanTerpilih) return;
 
             if (labelPeriode) {
-                labelPeriode.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-green-600"></i> <span class="text-xs font-medium italic text-amber-600">Mengecek buku periode...</span>`;
+                labelPeriode.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-green-600"></i> <span class="text-xs font-medium italic text-amber-600">Mengecek buku periode...</span>`;
                 labelPeriode.className = "text-xs font-bold text-amber-600 italic flex items-center gap-1.5";
             }
 
@@ -4734,7 +4743,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================================
-    // FUNGSI 3: FORMATTING & PARSING REKAPITULASI DATA
+    // FUNGSI 3: FORMATTING & PARSING REKAPITULASI DATA (METODE POTONGAN & LEMBUR)
     // =========================================================================
     function singkatanHariIndo(strTanggal) {
         if (!strTanggal) return "-";
@@ -4759,17 +4768,36 @@ document.addEventListener("DOMContentLoaded", function() {
         return `${Math.floor(totalMenit / 60)} jam ${totalMenit % 60} menit`;
     }
 
+    // --- MIRRORING METODE: UNTUK MENGHITUNG TOTAL OVERTIME DARI SPREADSHEET ---
+    function hitungTotalTambahanMinit(dataRows) {
+        let totalMenit = 0;
+        dataRows.forEach(row => {
+            const tam = row.tambahanjam || row.tambahan_jam; // Mengakomodasi penamaan properti JSON backend
+            if (tam) {
+                const parts = tam.toString().replace(',', '.').split('.');
+                const jam = parseInt(parts[0]) || 0;
+                const menit = parseInt(parts[1]) || 0;
+                totalMenit += (jam * 60) + menit;
+            }
+        });
+        return `${Math.floor(totalMenit / 60)} jam ${totalMenit % 60} menit`;
+    }
+
     // =========================================================================
-    // FUNGSI 4: LIVE MIRRORING TERBARU (5 INPUT CHIP EVALUASI OWNER)
+    // FUNGSI 4: LIVE MIRRORING TERBARU (SINKRONISASI EVALUASI OWNER)
     // =========================================================================
     function sinkronisasiTeksKeMirror() {
         if (inputAlasanCustom && mirrorAlasanCustom) {
             const txtAlasan = inputAlasanCustom.value.trim();
             mirrorAlasanCustom.innerHTML = txtAlasan === "" ? "-" : txtAlasan.toUpperCase();
         }
+	
+        if (inputAlasanTambahanCustom && mirrorAlasanTambahanCustom) {
+            const txtAlasanTambahan = inputAlasanTambahanCustom.value.trim();
+            mirrorAlasanTambahanCustom.innerHTML = txtAlasanTambahan === "" ? "-" : txtAlasanTambahan.toUpperCase();
+        }
 
         const listChipsInput = document.querySelectorAll('.input-catatan-chip');
-        
         if (mirrorCatatanFinal) {
             let htmlListChips = "";
             let adaIsi = false;
@@ -4790,6 +4818,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             mirrorCatatanFinal.innerHTML = adaIsi ? htmlListChips : `<li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- BELUM ADA CATATAN TAMBAHAN -</li>`;
         }
+        paskanKartuKeLayarHP();
     }
 
     function inisialisasiEventCatatanChip() {
@@ -4800,15 +4829,18 @@ document.addEventListener("DOMContentLoaded", function() {
         if (inputAlasanCustom) {
             inputAlasanCustom.addEventListener("input", sinkronisasiTeksKeMirror);
         }
+        if (inputAlasanTambahanCustom) {
+            inputAlasanTambahanCustom.addEventListener("input", sinkronisasiTeksKeMirror);
+        }
     }
+    inisialisasiEventCatatanChip();
 
     // =========================================================================
-    // FUNGSI 5: INJEKSI DATA API & TAMPILKAN MODAL PREVIEW
+    // FUNGSI 5: INJEKSI DATA API (DOGET SPREADSHEET) & PREVIEW MODAL
     // =========================================================================
     function pemicuBukaModal() {
         const karyawanTerpilih = selectKaryawan ? selectKaryawan.value : "";
         const pemetaanNamaLengkap = { "Cahya": "Muhammad Cahya Ardiansyah", "Dadan": "Dadan Nurfaizal" };
-
         if (!karyawanTerpilih) {
             alert("Pilih nama staf karyawan terlebih dahulu di form utama!");
             if (selectKaryawan) selectKaryawan.focus();
@@ -4824,15 +4856,17 @@ document.addEventListener("DOMContentLoaded", function() {
         if (modalNamaKaryawan) modalNamaKaryawan.textContent = pemetaanNamaLengkap[karyawanTerpilih] || karyawanTerpilih;
         if (modalPeriodeKerja) modalPeriodeKerja.textContent = labelPeriode ? labelPeriode.textContent.replace("Periode ", "") : "--";
         if (modalTotalHariKerja) modalTotalHariKerja.textContent = "...";
-
         if (modalPresensi) {
             modalPresensi.classList.remove("opacity-0", "pointer-events-none");
             const innerBox = modalPresensi.querySelector(".transform");
             if (innerBox) innerBox.classList.remove("scale-95");
+            modalPresensi.style.overflowY = "auto";
         }
 
         if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
         if (tabelKananBody) tabelKananBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
+        
+        setTimeout(paskanKartuKeLayarHP, 50);
 
         fetch(`${API_URL_PRESENSI}?karyawan=${karyawanTerpilih}`)
             .then(res => res.json())
@@ -4841,6 +4875,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
                     if (tabelKananBody) tabelKananBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
                     if (modalTotalHariKerja) modalTotalHariKerja.textContent = "0";
+                    if (modalTotalPotongan) modalTotalPotongan.textContent = "0 jam 0 menit";
+                    if (modalTotalTambahan) modalTotalTambahan.textContent = "0 jam 0 menit";
                     sinkronisasiTeksKeMirror();
                     return;
                 }
@@ -4856,7 +4892,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     const hariKe = index + 1;
                     const hadirVal = (row.kehadiran || "").toString().toUpperCase();
                     const jadwalVal = (row.jenisjadwalkerja || row.jenis_jadwal_kerja || "").toString();
-                    const ketJadwal = row.keteranganjadwal || row.keterangan_jadwal || "";
+                    const ketJadwal = row.keteranganjadwal || row.keterangan_jam || "";
                     const alasanAbsen = row.alasantidakhadir || row.alasan_tidak_hadir || "";
 
                     if (hadirVal === "YA") {
@@ -4873,14 +4909,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     const kolomKeterangan = hadirVal === "YA" ? (ketJadwal || "-") : (alasanAbsen || "-");
 
                     const trHtml = `
-    <tr class="h-[18px] bg-white text-[9px]">
-        <td class="border-r border-slate-500 py-0.5 text-center font-mono font-normal text-slate-500">${hariKe}</td>
-        <td class="border-r border-slate-500 py-0.5 text-center font-semibold">${singkatanHariIndo(row.tanggal)}</td>
-        <td class="border-r border-slate-500 py-0.5 ${kelasSimbol} text-center font-black">${simbolMasuk}</td>
-        <td class="border-r border-slate-500 py-0.5 text-center uppercase tracking-tighter text-[8px]">${teksJadwal}</td>
-        <td class="px-1 py-0.5 text-left uppercase text-[8px] truncate max-w-[90px]" title="${kolomKeterangan}">${kolomKeterangan}</td>
-    </tr>
-`;
+                        <tr class="h-[18px] bg-white text-[9px]">
+                            <td class="border-r border-slate-500 py-0.5 text-center font-mono font-normal text-slate-500">${hariKe}</td>
+                            <td class="border-r border-slate-500 py-0.5 text-center font-semibold">${singkatanHariIndo(row.tanggal)}</td>
+                            <td class="border-r border-slate-500 py-0.5 ${kelasSimbol} text-center font-black">${simbolMasuk}</td>
+                            <td class="border-r border-slate-500 py-0.5 text-center uppercase tracking-tighter text-[8px]">${teksJadwal}</td>
+                            <td class="px-1 py-0.5 text-left uppercase text-[8px] truncate max-w-[90px]" title="${kolomKeterangan}">${kolomKeterangan}</td>
+                        </tr>
+                    `;
 
                     if (hariKe <= 15) {
                         if (tabelKiriBody) tabelKiriBody.insertAdjacentHTML('beforeend', trHtml);
@@ -4904,10 +4940,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (rekapJadwal1) rekapJadwal1.textContent = `${cJ1} hari`;
                 if (rekapLibur)   rekapLibur.textContent   = `${cLibur} hari`;
                 if (rekapAbsen)   rekapAbsen.textContent   = `${cAbsen} hari`;
+                
+                // --- INJEKSI REKAPITULASI HITUNGAN WAKTU AKUMULATIF ---
                 if (modalTotalPotongan) modalTotalPotongan.textContent = hitungTotalPotonganMinit(result.data);
+                if (modalTotalTambahan) modalTotalTambahan.textContent = hitungTotalTambahanMinit(result.data);
 
                 sinkronisasiTeksKeMirror();
-
                 if (btnUnduhPdf) {
                     btnUnduhPdf.removeAttribute("disabled");
                     btnUnduhPdf.classList.remove("opacity-50", "cursor-not-allowed");
@@ -4925,7 +4963,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (btnBukaModal) btnBukaModal.addEventListener("click", pemicuBukaModal);
     if (btnBukaModalAlt) btnBukaModalAlt.addEventListener("click", pemicuBukaModal);
-
     if (btnTutupModal && modalPresensi) {
         btnTutupModal.addEventListener("click", function() {
             const innerBox = modalPresensi.querySelector(".transform");
@@ -4937,7 +4974,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================================
-    // FUNGSI 6: DOWNLOAD PDF LOKAL (HTML2PDF SETTING RASIO MANDATORY 1:1)
+    // FUNGSI 6: DOWNLOAD PDF LOKAL (FIXED FULL PAGE)
     // =========================================================================
     if (btnUnduhPdf) {
         btnUnduhPdf.addEventListener("click", function() {
@@ -4953,24 +4990,29 @@ document.addEventListener("DOMContentLoaded", function() {
             const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
             const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
             const namaFile = `Presensi_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.pdf`;
-
             btnUnduhPdf.setAttribute("disabled", "disabled");
             btnUnduhPdf.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> Merender PDF...`;
+
+            const styleAsli = elementTarget.getAttribute("style") || "";
+            elementTarget.style.setProperty("transform", "none", "important");
+            elementTarget.style.setProperty("margin-bottom", "0px", "important");
 
             const opsiSetelan = {
                 margin:       0,
                 filename:     namaFile,
                 image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0 },
+                html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
                 jsPDF:        { unit: 'cm', format: [20, 20], orientation: 'portrait' }, 
                 pagebreak:    { mode: ['css', 'legacy'] }
             };
 
             html2pdf().set(opsiSetelan).from(elementTarget).save().then(() => {
+                elementTarget.setAttribute("style", styleAsli);
                 btnUnduhPdf.removeAttribute("disabled");
                 btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
             }).catch(err => {
                 console.error(err);
+                elementTarget.setAttribute("style", styleAsli);
                 btnUnduhPdf.removeAttribute("disabled");
                 btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
             });
@@ -4978,7 +5020,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     // =========================================================================
-    // FUNGSI 7: ARSIP KARTU PRESENSI KE GOOGLE DRIVE (REVISI PIPELINE ANTI-KOSONG)
+    // FUNGSI 7: ARSIP KARTU PRESENSI KE GOOGLE DRIVE
     // =========================================================================
     if (btnUploadPresensiCloud) {
         btnUploadPresensiCloud.addEventListener("click", function() {
@@ -4994,24 +5036,26 @@ document.addEventListener("DOMContentLoaded", function() {
             const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
             const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
             const namaFile = `Presensi_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.pdf`;
-
+            
             btnUploadPresensiCloud.setAttribute("disabled", "disabled");
             btnUploadPresensiCloud.classList.add("opacity-50", "cursor-not-allowed");
             btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Merender & Mengupload...`;
+
+            const styleAsli = elementTarget.getAttribute("style") || "";
+            elementTarget.style.setProperty("transform", "none", "important");
+            elementTarget.style.setProperty("margin-bottom", "0px", "important");
 
             const opsiSetelan = {
                 margin:       0,
                 filename:     namaFile,
                 image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0 },
+                html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
                 jsPDF:        { unit: 'cm', format: [20, 20], orientation: 'portrait' }, 
                 pagebreak:    { mode: ['css', 'legacy'] }
             };
 
-            // PERBAIKAN: Gunakan .outputPdf('base64') langsung pada level instance html2pdf worker
             html2pdf().set(opsiSetelan).from(elementTarget).outputPdf('base64').then(function(base64String) {
-                
-                // FALLBACK LAYER: Jika base64 murni kosong, paksa menggunakan skema DataURI string
+                elementTarget.setAttribute("style", styleAsli);
                 if (!base64String || base64String.trim() === "") {
                     return html2pdf().set(opsiSetelan).from(elementTarget).output('datauristring').then(function(dataUri) {
                         const base64DariUri = dataUri.split(',')[1];
@@ -5019,25 +5063,19 @@ document.addEventListener("DOMContentLoaded", function() {
                         return kirimKeAppsScript(base64DariUri, namaFile);
                     });
                 }
-
                 return kirimKeAppsScript(base64String, namaFile);
             })
             .catch(err => {
                 console.error("Error ekspor/upload:", err);
+                elementTarget.setAttribute("style", styleAsli);
                 alert("Gagal merender/mengirim PDF: " + err.message);
                 resetStatusTombolUpload();
             });
         });
     }
 
-    // Fungsi pembantu kirim HTTP POST payload ke Apps Script
     function kirimKeAppsScript(base64Data, namaFile) {
-        const payloadCloud = {
-            action: "generateServerPDF",
-            filename: namaFile,
-            pdf_blob: base64Data 
-        };
-
+        const payloadCloud = { action: "generateServerPDF", filename: namaFile, pdf_blob: base64Data };
         fetch(API_URL_UPLOAD_DRIVE, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" }, 
@@ -5054,21 +5092,20 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error("Fetch Error:", err);
             alert("Terjadi gangguan komunikasi dengan server upload: " + err.message);
         })
-        .finally(() => {
-            resetStatusTombolUpload();
-        });
+        .finally(() => { resetStatusTombolUpload(); });
     }
 
-    function resetStatusTombolUpload() {
+    function transformToScaleNormal() {
         if (btnUploadPresensiCloud) {
             btnUploadPresensiCloud.removeAttribute("disabled");
             btnUploadPresensiCloud.classList.remove("opacity-50", "cursor-not-allowed");
             btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive`;
         }
     }
+    const resetStatusTombolUpload = transformToScaleNormal;
 
     // =========================================================================
-    // FUNGSI 8: SUBMIT DATA FORM UTAMA KE CLOUD SPREADSHEET
+    // FUNGSI 8: SUBMIT DATA FORM UTAMA KE CLOUD SPREADSHEET (INTEGRASI v4.8)
     // =========================================================================
     if (formPresensi) {
         formPresensi.addEventListener("submit", function(e) {
@@ -5091,7 +5128,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 keterangan_jadwal: inputKetJadwal ? inputKetJadwal.value : "",
                 alasan_tidak_hadir: inputAlasanAbsen ? inputAlasanAbsen.value : "",
                 potongan_jam: inputPotongan ? inputPotongan.value : "",
-                alasan_potongan_jam: inputAlasanPotong ? inputAlasanPotong.value : ""
+                alasan_potongan_jam: inputAlasanPotong ? inputAlasanPotong.value : "",
+                
+                // Ambil data langsung dari ID form utama Anda yang sudah sinkron
+                tambahan_jam: inputTambahanJamForm ? inputTambahanJamForm.value : "",
+                alasan_tambahan_jam: inputAlasanTambahanForm ? inputAlasanTambahanForm.value : ""
             };
 
             fetch(API_URL_PRESENSI, {
@@ -5101,11 +5142,24 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(res => {
                 alert(`Presensi harian ${karyawanTerpilih} sukses dikirim ke NSA Cloud!`);
+                
                 if (inputKetJadwal) inputKetJadwal.value = "";
                 if (inputAlasanAbsen) inputAlasanAbsen.value = "";
                 if (inputPotongan) inputPotongan.value = "";
                 if (inputAlasanPotong) inputAlasanPotong.value = "";
-                handleFormInteractivity();    
+                
+                // Mengosongkan isian form utama tambahan jam
+                if (inputTambahanJamForm) inputTambahanJamForm.value = "";
+                if (inputAlasanTambahanForm) inputAlasanTambahanForm.value = "";
+                
+                // Mengosongkan isian kustom evaluasi di dalam modal jika ada
+                if (inputAlasanCustom) inputAlasanCustom.value = "";
+                if (inputAlasanTambahanCustom) inputAlasanTambahanCustom.value = "";
+                
+                handleFormInteractivity(); 
+                if (typeof sinkronisasiTeksKeMirror === "function") {
+                    sinkronisasiTeksKeMirror();
+                }
             })
             .catch(error => {
                 console.error("Error posting presensi:", error);
@@ -5118,8 +5172,6 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
-
-    inisialisasiEventCatatanChip();
 });
 </script>
 
@@ -5842,6 +5894,1517 @@ function tutupModalBK_Wrapper() {
     </div>
 </div>
 
+
+<!-- ========================================== -->
+<!-- OVERLAY ANIMASI ENGINE KEUANGAN (NEW)      -->
+<!-- ========================================== -->
+<div id="loading-engine-keuangan" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[14000] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+    <div class="text-center max-w-xs w-full flex flex-col items-center">
+        <!-- Efek Gear Berputar -->
+        <div class="relative w-16 h-16 mb-6 flex items-center justify-center">
+            <div class="absolute -inset-4 bg-rose-500/10 rounded-full blur-2xl animate-pulse"></div>
+            <i class="fa-solid fa-cog text-4xl text-rose-500 animate-[spin_4s_infinite_linear]"></i>
+            <i class="fa-solid fa-gear text-2xl text-amber-400 absolute -top-1 -right-1 animate-[spin_2s_infinite_linear_reverse]"></i>
+            <i class="fa-solid fa-calculator text-sm text-white absolute"></i>
+        </div>
+        
+        <!-- Teks Progres Dinamis -->
+        <p id="teks-engine-loading" class="text-xs font-black text-rose-200 tracking-widest uppercase mb-3 min-h-[16px]">Memulai Engine...</p>
+        
+        <!-- Progress Bar -->
+        <div class="h-1 w-40 bg-slate-800 rounded-full overflow-hidden relative">
+            <div id="bar-engine-loading" class="h-full w-0 bg-gradient-to-r from-rose-500 to-amber-500 rounded-full transition-all duration-300 ease-out"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- MODAL SLIP GAJI -->
+<!-- Tambahkan Library html2canvas di bagian atas/bawah halaman untuk convert HTML ke JPG High-Res -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+    .iframe-container-1to1 {
+        position: relative;
+        width: 100%;
+        padding-bottom: 100%;
+        height: 0;
+        overflow: hidden;
+        border-radius: 16px;
+    }
+    .iframe-container-1to1 iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+    /* Style kustom untuk input angka agar hilangkan spinner default browser */
+    .sg-input-clean::-webkit-outer-spin-button,
+    .sg-input-clean::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .sg-input-clean {
+        -moz-appearance: textfield;
+    }
+    
+    /* Rasio Kunci Portrait Lembar Slip Gaji 1:2 untuk Kebutuhan Export Gambar */
+    .lembar-slip-gaji-cetak {
+        width: 500px;
+        height: 1000px;
+        background: #ffffff;
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-sizing: border-box;
+    }
+</style>
+
+<!-- ========================================== -->
+<!-- MODAL 1: ASISTEN HITUNG SLIP GAJI (UTAMA)  -->
+<!-- ========================================== -->
+<div id="modal-slip-gaji" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[13000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
+    <div class="bg-white border border-green-200 w-full max-w-2xl h-[95vh] rounded-[24px] shadow-[0_20px_50px_-12px_rgba(22,163,74,0.15)] overflow-hidden flex flex-col transform scale-95 transition-all duration-300">
+        
+        <div class="p-4 border-b border-slate-100 bg-green-50 flex justify-between items-center flex-shrink-0">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-6 bg-green-600 rounded-full"></div>
+                <div>
+                    <h3 class="text-xs font-black text-green-700 uppercase tracking-widest leading-none">Asisten Pembuatan Slip Gaji</h3>
+                    <p class="text-[10px] text-slate-500 font-medium mt-1">Mode Khusus Owner</p>
+                </div>
+            </div>
+            <button type="button" id="btn-tutup-modal-gaji" class="w-8 h-8 flex items-center justify-center rounded-xl bg-white text-slate-400 hover:bg-rose-50 hover:text-rose-600 border border-slate-200 hover:border-rose-200 shadow-sm transition-all duration-200">
+                <i class="fa-solid fa-xmark text-xs font-black"></i>
+            </button>
+        </div>
+
+        <div class="p-5 overflow-y-auto flex-1 bg-slate-50 flex flex-col gap-5">
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex flex-col gap-2">
+                <label for="gaji-pilih-karyawan" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Karyawan:</label>
+                <select id="gaji-pilih-karyawan" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-green-600 focus:ring-1 focus:ring-green-600 focus:outline-none transition-all cursor-pointer shadow-inner">
+                    <option value="" disabled selected>-- Pilih Karyawan --</option>
+                    <option value="Dadan">Dadan Nurfaizal</option>
+                    <option value="Cahya">M. Cahya Ardiansyah</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Kartu Presensi Terbaru</span>
+                    <span id="status-loading-pdf" class="text-[10px] font-bold text-green-600 hidden animate-pulse">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Mencari data kehadiran...
+                    </span>
+                </div>
+                <div class="bg-white border-2 border-dashed border-slate-200 iframe-container-1to1 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-xl">
+    
+    <div id="placeholder-pdf-text" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-10">
+        <i class="fa-solid fa-file-pdf text-4xl text-slate-300 mb-3"></i>
+        <p class="text-xs font-bold">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
+    </div>
+
+    <div id="loading-pdf-animation" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/80 z-20 select-none animate-pulse">
+        <div class="relative mb-4">
+            <div class="absolute -inset-4 bg-emerald-100 rounded-full blur-xl opacity-70 animate-ping"></div>
+            <i class="fa-solid fa-file-invoice-dollar text-5xl text-emerald-500 relative animate-bounce"></i>
+        </div>
+        <div class="space-y-2 w-2/3">
+            <p id="teks-progres-loading" class="text-xs font-black text-emerald-700 tracking-wide">Menghubungkan ke NSA Cloud...</p>
+            <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
+                <div class="h-full w-1/2 bg-emerald-500 rounded-full absolute top-0 left-0 animate-[shimmer_1.5s_infinite] ease-in-out" style="animation: slide 1.5s infinite"></div>
+            </div>
+        </div>
+    </div>
+
+    <iframe id="iframe-preview-pdf" class="hidden w-full h-full rounded-xl z-30" src=""></iframe>
+</div>
+
+<style>
+@keyframes slide {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+</style>
+            </div>
+
+            <div id="sg-container-form-owner" class="flex flex-col gap-4 border-t border-slate-200 pt-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-center">
+                        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Periode Kerja</span>
+                        <span id="sg-text-periode" class="text-xs font-extrabold text-slate-700 block mt-1">-</span>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-center">
+                        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Hari Periode Kerja</span>
+                        <span id="sg-text-total-hari" class="text-xs font-extrabold text-slate-700 block mt-1">-</span>
+                    </div>
+                </div>
+
+                <h4 class="text-[11px] font-black text-green-700 uppercase tracking-widest mt-2 px-1">Rincian Hari Kerja:</h4>
+
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-black text-slate-700 block">1. Jadwal 2 Karyawan</span>
+                        <span id="sg-lbl-jadwal2" class="text-[11px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-md inline-block mt-1">0 hari</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-slate-400">X</span>
+                        <div class="relative rounded-xl shadow-inner">
+                            <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                            <input type="text" id="sg-in-rate-jadwal2" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
+                        </div>
+                        <span class="text-xs font-bold text-slate-400">=</span>
+                        <span id="sg-out-total-jadwal2" class="text-xs font-black text-slate-700 min-w-[100px] text-right">Rp 0</span>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-black text-slate-700 block">2. Jadwal 1 Karyawan</span>
+                        <span id="sg-lbl-jadwal1" class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md inline-block mt-1">0 hari</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-slate-400">X</span>
+                        <div class="relative rounded-xl shadow-inner">
+                            <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                            <input type="text" id="sg-in-rate-jadwal1" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
+                        </div>
+                        <span class="text-xs font-bold text-slate-400">=</span>
+                        <span id="sg-out-total-jadwal1" class="text-xs font-black text-slate-700 min-w-[100px] text-right">Rp 0</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
+                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">3. Libur Diambil</span>
+                        <span id="sg-out-libur" class="text-xs font-extrabold text-indigo-600 block mt-1">0 hari</span>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
+                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">4. Absen Lainnya</span>
+                        <span id="sg-out-absen-lain" class="text-xs font-extrabold text-rose-600 block mt-1">0 hari</span>
+                    </div>
+                </div>
+
+               <!-- CARD 5: POTONGAN JAM KERJA -->
+<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+        <div class="max-w-md">
+            <span class="text-xs font-black text-slate-700 block">5. Potongan Jam Kerja <span class="text-slate-400 font-normal">(Opsional)</span></span>
+            <!-- Keterangan Aturan Potongan -->
+            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                (Potongan diberlakukan jika ada: Terlambat masuk sekian menit/jam, atau ada izin pribadi dalam menit/jam tertentu di waktu operasional)
+            </p>
+            <span id="sg-lbl-total-potongan-jam" class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md inline-block mt-2">0 jam 0 menit</span>
+        </div>
+        <div class="flex items-center gap-2 self-end sm:self-center">
+            <span class="text-rose-600 uppercase tracking-wider text-[10px] font-bold">Pengurangan (-)</span>
+            <div class="relative rounded-xl shadow-inner">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                <input type="text" id="sg-in-minus-potongan" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-rose-600 focus:outline-none text-right" placeholder="0">
+            </div>
+        </div>
+    </div>
+    
+    <div id="sg-wrapper-alasan-potongan-list" class="hidden border-t border-dashed border-slate-100 pt-2 flex flex-col gap-1">
+        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Rincian/Alasan:</span>
+        <ul id="sg-list-alasan-potongan" class="text-[11px] font-medium text-slate-600 list-disc list-inside space-y-0.5 pl-1">
+        </ul>
+    </div>
+</div>
+
+<!-- CARD 6: TAMBAHAN JAM KERJA -->
+<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+        <div class="max-w-md">
+            <span class="text-xs font-black text-slate-700 block">6. Tambahan Jam Kerja <span class="text-slate-400 font-normal">(Opsional)</span></span>
+            <!-- Keterangan Aturan Tambahan -->
+            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                (Tambahan diberikan jika ada: Jam Tutup Toko yang jauh melebihi batas wajar / overtime. Atau situasi lain yang memungkinkan, namun kembali lagi kepada kebijakan Owner Nurjaya)
+            </p>
+            <span id="sg-lbl-total-tambahan-jam" class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md inline-block mt-2">0 jam 0 menit</span>
+        </div>
+        <div class="flex items-center gap-2 self-end sm:self-center">
+            <span class="text-blue-600 uppercase tracking-wider text-[10px] font-bold">Penambahan (+)</span>
+            <div class="relative rounded-xl shadow-inner">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                <input type="text" id="sg-in-plus-tambahan" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-blue-600 focus:outline-none text-right" placeholder="0">
+            </div>
+        </div>
+    </div>
+    
+    <div id="sg-wrapper-alasan-tambahan-list" class="hidden border-t border-dashed border-slate-100 pt-2 flex flex-col gap-1">
+        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Rincian/Alasan:</span>
+        <ul id="sg-list-alasan-tambahan" class="text-[11px] font-medium text-slate-600 list-disc list-inside space-y-0.5 pl-1">
+            </ul>
+    </div>
+</div>
+
+                <!-- CARD 7: POIN TAMBAHAN -->
+<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+        <div class="max-w-md">
+            <span class="text-xs font-black text-slate-700 block">7. Poin Tambahan <span class="text-slate-400 font-normal">(Opsional)</span></span>
+            <!-- Keterangan Aturan Poin Tambahan -->
+            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                (Bersifat opsional dan hanya Owner Nurjaya yang menentukan, max 3 poin)
+            </p>
+        </div>
+        <div class="self-end sm:self-start">
+            <select id="sg-sel-poin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer w-24">
+                <option value="0">0 Poin</option>
+                <option value="1">1 Poin</option>
+                <option value="2">2 Poin</option>
+                <option value="3">3 Poin</option>
+            </select>
+        </div>
+    </div>
+    <!-- Wadah Input Baris Dinamis -->
+    <div id="sg-wrapper-poin-dinamis" class="flex flex-col gap-2"></div>
+</div>
+
+               <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <span class="text-xs font-black text-slate-700">8. Uang Rajin</span>
+        
+        <select id="sg-sel-uang-rajin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer" autocomplete="off">
+            <option value="" selected disabled>Pilih Dahulu</option>
+            <option value="full">Dapat Full</option>
+            <option value="tidak">Tidak Dapat</option>
+            <option value="penyesuaian">Penyesuaian</option>
+        </select>
+    </div>
+    <div id="sg-wrapper-uang-rajin-dinamis" class="mt-1 flex justify-end items-center gap-2">
+        <span class="text-xs font-bold text-slate-400">Total =</span>
+        <span id="sg-out-rajin-status" class="text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic">
+            Pilih status terlebih dahulu
+        </span>
+    </div>
+</div>
+
+                <div class="border-t-2 border-dashed border-slate-200 pt-4 mt-2 flex flex-col gap-3">
+                    <div class="bg-green-700 text-white p-4 rounded-2xl shadow-md flex justify-between items-center">
+                        <span class="text-xs font-black uppercase tracking-wider">Total Hitungan Gaji:</span>
+                        <span id="sg-out-total-gaji-bersih" class="text-xl font-black tracking-wide">Rp 0</span>
+                    </div>
+
+                    <!-- CARD PEMBULATAN KHUSUS -->
+<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+        <div class="max-w-md">
+            <span class="text-xs font-black text-slate-700 block">Pembulatan Khusus <span class="text-slate-400 font-normal">(Kebijakan Owner)</span></span>
+            <!-- Keterangan Aturan Pembulatan -->
+            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                (Bersifat opsional, jika tidak ingin menerapkan pembulatan, maka kosongkan)
+            </p>
+        </div>
+        <div class="flex items-center gap-2 self-end sm:self-start">
+            <div class="relative rounded-xl shadow-inner">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                <input type="text" id="sg-in-pembulatan" class="sg-input-clean w-44 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
+            </div>
+        </div>
+    </div>
+</div>
+
+                    <div class="bg-slate-900 text-amber-400 p-4 rounded-2xl shadow-md flex justify-between items-center">
+                        <span class="text-xs font-black uppercase tracking-wider">Gaji Akhir Diterima:</span>
+                        <span id="sg-out-final-gaji" class="text-xl font-black tracking-wide">Rp 0</span>
+                    </div>
+                    
+					<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-1.5">
+    <label for="owner-input-catatan" class="block text-[11px] font-black text-slate-700 uppercase tracking-wider">
+        <i class="fa-solid fa-pen-to-square text-green-600 mr-1"></i> Catatan Khusus dari Owner:
+    </label>
+    <textarea id="owner-input-catatan" rows="4" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-medium text-xs p-3 rounded-xl focus:border-green-600 focus:outline-none transition-all resize-none placeholder-slate-400 min-h-[96px] leading-relaxed" placeholder="Contoh: Uang Rajin tidak full karena ada absen 1 hari. Tingkatkan kualitas pelayanan ke pelanggan."></textarea>
+</div>
+
+                    <!-- REVISI: PENAMBAHAN TOMBOL GENERATE SLIP GAJI BARU -->
+                    <button type="button" id="btn-generate-slip-gaji" class="w-full mt-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-black text-xs uppercase tracking-widest py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-receipt text-sm"></i> Generate Slip Gaji Karyawan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ========================================================== -->
+<!-- MODAL 2: PREVIEW & EXPORT SLIP GAJI PORTRAIT (BIG GREEN)   -->
+<!-- ========================================================== -->
+<div id="modal-preview-slip" class="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[14000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
+    <div class="bg-slate-100 w-full max-w-xl h-[95vh] rounded-[24px] shadow-2xl overflow-hidden flex flex-col transform scale-95 transition-all duration-300 border border-slate-200">
+        
+        <!-- Header Pembungkus Modal Preview -->
+        <div class="p-3 border-b border-slate-200 bg-white flex justify-between items-center flex-shrink-0">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-receipt text-emerald-600 text-sm"></i>
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest leading-normal">Preview Slip Gaji</h3>
+            </div>
+            <button type="button" id="btn-tutup-preview-slip" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600 border border-slate-200 hover:border-rose-200 transition-all duration-200">
+                <i class="fa-solid fa-xmark text-xs font-bold"></i>
+            </button>
+        </div>
+
+        <!-- Area Scroll Preview Layar -->
+        <div class="p-2 sm:p-4 overflow-y-auto flex-1 flex justify-center items-start bg-slate-300/50 w-full box-border">
+            
+            <!-- SANDBOX CONTAINER -->
+            <div class="w-full max-w-full flex justify-center items-start">
+
+                <!-- LEMBAR NOTA UTAMA (DIREVISI: Lebih Rapat, Padat, dan Presisi) -->
+                <div id="elemen-slip-gaji-render" class="lembar-slip-gaji-cetak shadow-xl rounded-xl border-2 border-emerald-800 text-slate-800 bg-white p-4 sm:p-6 flex flex-col gap-4 box-border w-full max-w-[500px]" style="height: auto; font-family: sans-serif;">
+                    
+                    <!-- BAGIAN ATAS: LOGO & HEADER TEMA HIJAU -->
+                    <div class="w-full block">
+                        <!-- Logo Utama -->
+                        <div class="flex justify-center items-center pb-2 border-b-4 border-emerald-700 mb-3">
+                            <img src="https://lh3.googleusercontent.com/d/1Ab9sh5DMI9OP9CdZ46p1wS1m_US6wmJj" alt="Logo Nurjaya Abadi" class="h-12 sm:h-14 object-contain">
+                        </div>
+                        
+                        <div class="text-center mb-3">
+                            <h2 class="text-sm sm:text-base font-bold uppercase tracking-widest text-emerald-800 leading-normal">Slip Gaji Karyawan</h2>
+                            <div class="w-12 sm:w-16 h-1 bg-amber-500 mx-auto mt-0.5 rounded-full"></div>
+                        </div>
+
+                        <!-- DATA IDENTITAS KARYAWAN (Dibuat Lebih Ringkas) -->
+                        <div class="flex flex-col gap-1 bg-emerald-50 border border-emerald-200 p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs text-slate-800">
+                            <div class="flex items-center">
+                                <span class="w-[100px] sm:w-[120px] tracking-wider text-emerald-800 font-bold shrink-0">Nama Karyawan</span>
+                                <span class="mr-2 font-semibold shrink-0">:</span>
+                                <span id="pv-nama-karyawan" class="font-bold text-slate-900 truncate">-</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-[100px] sm:w-[120px] tracking-wider text-emerald-800 font-bold shrink-0">Unit Bisnis</span>
+                                <span class="mr-2 font-semibold shrink-0">:</span>
+                                <span id="pv-unit-bisnis" class="font-bold text-slate-900">Nurjaya Abadi Photocopy</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-[100px] sm:w-[120px] tracking-wider text-emerald-800 font-bold shrink-0">Jabatan</span>
+                                <span class="mr-2 font-semibold shrink-0">:</span>
+                                <span class="font-bold text-slate-900">Operator & Pramuniaga</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-[100px] sm:w-[120px] tracking-wider text-emerald-800 font-bold shrink-0">Status</span>
+                                <span class="mr-2 font-semibold shrink-0">:</span>
+                                <div class="flex items-center">
+                                    <span class="font-bold text-[9px] text-emerald-800 bg-emerald-200 px-1.5 py-0.5 rounded tracking-wider uppercase">Karyawan Aktif</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center border-t border-emerald-200/60 pt-1 mt-0.5">
+                                <span class="w-[100px] sm:w-[120px] tracking-wider text-emerald-800 font-bold shrink-0">Periode</span>
+                                <span class="mr-2 font-semibold shrink-0">:</span>
+                                <span id="pv-periode-kerja" class="font-bold text-slate-900 text-[11px] sm:text-xs">-</span>
+                            </div>
+                        </div>
+
+                        <!-- TABEL UTAMA DETAIL FINANSIAL (SUPER COMPACT: Baris Diperketat) -->
+                        <div class="mt-3 w-full border border-slate-300 rounded-lg overflow-hidden">
+                            <table class="w-full text-left border-collapse table-fixed text-[10px] sm:text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-800 text-[9px] font-bold uppercase text-slate-700 tracking-wider bg-slate-100">
+    <th class="py-1 w-[7%] text-center border-r border-slate-300">No</th>
+    <th class="py-1 w-[35%] text-center border-r border-slate-300">Rincian Hari/Jam</th>
+    <th class="py-1 w-[16%] text-center border-r border-slate-300">Jml</th>
+    <th class="py-1 w-[20%] text-center border-r border-slate-300">Tarif</th>
+    <th class="py-1 w-[22%] text-center">Jumlah</th>
+</tr>
+                                </thead>
+                                <tbody id="container-baris-slip" class="text-slate-800 divide-y divide-slate-300 break-words">
+    <tr class="align-middle bg-white">
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">1</td>
+        <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">2 Karyawan</td>
+        <td id="pv-hari-j2" class="py-1 text-center font-medium border-r border-slate-300">-</td>
+        <td id="pv-rate-j2" class="py-1 text-center text-slate-500 tracking-tighter border-r border-slate-300">0</td>
+        <td id="pv-total-j2" class="py-1 text-right pr-1 sm:pr-2 font-bold tracking-tighter text-slate-900">-</td>
+    </tr>
+    <tr class="align-middle bg-white">
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">2</td>
+        <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">1 Karyawan</td>
+        <td id="pv-hari-j1" class="py-1 text-center font-medium border-r border-slate-300">-</td>
+        <td id="pv-rate-j1" class="py-1 text-center text-slate-500 tracking-tighter border-r border-slate-300">0</td>
+        <td id="pv-total-j1" class="py-1 text-right pr-1 sm:pr-2 font-bold tracking-tighter text-slate-900">-</td>
+    </tr>
+    <tr class="align-middle bg-white">
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">3</td>
+        <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Libur Diambil</td>
+        <td id="pv-hari-libur" class="py-1 text-center font-medium border-r border-slate-300">-</td>
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">-</td>
+        <td class="py-1 text-center text-slate-400 font-bold pr-1 sm:pr-2">-</td>
+    </tr>
+    <tr class="align-middle bg-white">
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">4</td>
+        <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Absen Lainnya</td>
+        <td id="pv-hari-absen" class="py-1 text-center font-medium border-r border-slate-300">-</td>
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">-</td>
+        <td class="py-1 text-center text-slate-400 font-bold pr-1 sm:pr-2">-</td>
+    </tr>
+    <tr class="align-middle bg-white">
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">5</td>
+        <td class="py-1 pl-1 sm:pl-2 font-bold text-rose-600 border-r border-slate-300">Potongan Jam</td>
+        <td id="pv-lbl-potongan" class="py-0.5 text-center text-rose-600 font-bold border-r border-slate-300 text-[9px] sm:text-[11px] leading-none">-</td>
+        <td class="py-1 text-center text-rose-600 font-bold border-r border-slate-300">Potong</td>
+        <td id="pv-total-potongan" class="py-1 text-right pr-1 sm:pr-2 font-bold text-rose-600">-</td>
+    </tr>
+    <tr class="align-middle bg-white">
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">6</td>
+        <td class="py-1 pl-1 sm:pl-2 font-bold text-blue-600 border-r border-slate-300">Tambahan Jam</td>
+        <td id="pv-lbl-tambahan" class="py-0.5 text-center text-blue-600 font-bold border-r border-slate-300 text-[9px] sm:text-[11px] leading-none">-</td>
+        <td class="py-1 text-center text-blue-600 font-bold border-r border-slate-300">Bonus</td>
+        <td id="pv-total-tambahan" class="py-1 text-right pr-1 sm:pr-2 font-bold text-blue-600">-</td>
+    </tr>
+    <tr class="align-middle bg-white">
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">7</td>
+        <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Uang Rajin</td>
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">-</td>
+        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">-</td>
+        <td id="pv-total-rajin" class="py-1 text-right pr-1 sm:pr-2 font-bold text-slate-900">-</td>
+    </tr>
+</tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- BAGIAN BAWAH: REKAPITULASI TOTAL & TTD -->
+                    <div class="w-full block text-[11px] sm:text-xs">
+                        <div class="border-t-2 border-slate-800 pt-2 w-full block space-y-1">
+                            <div class="flex justify-between items-center text-slate-600 font-medium">
+                                <span>Total Hitungan Gaji:</span>
+                                <span id="pv-rekap-otomatis" class="text-slate-900 font-bold tracking-tighter">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-slate-600 font-medium mb-2">
+                                <span>Pembulatan / Bonus Khusus:</span>
+                                <span id="pv-rekap-pembulatan" class="text-slate-900 font-bold tracking-tighter">Rp 0</span>
+                            </div>
+                            
+                            <!-- CHIP TOTAL GAJI UTAMA -->
+                            <div class="w-full bg-emerald-900 rounded-xl p-2.5 sm:p-3 shadow-md block box-border">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-[9px] uppercase tracking-wider text-amber-300">
+                                        Total Gaji Diterima:
+                                    </span>
+                                    <span id="pv-rekap-final" class="font-bold text-xs sm:text-sm tracking-wide text-white">
+                                        Rp 0
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+						
+						<div id="pv-box-catatan-render" class="mt-2 bg-slate-50 border border-dashed border-slate-300 p-2 rounded-lg box-border hidden">
+    <span class="font-bold text-emerald-800 uppercase block text-[8px] tracking-wider mb-0.5">Catatan Penting dari Owner:</span>
+    <p id="pv-text-catatan-owner" class="italic font-medium text-slate-700 text-[9px] leading-tight m-0"></p>
+</div>
+						
+
+                        <!-- Tanda Tangan Digital & Tanggal Cetak (Jarak mt Diturunkan agar Kompres) -->
+                        <div class="w-full flex justify-between items-end text-[9px] sm:text-[10px] text-slate-400 mt-6 sm:mt-8 tracking-wider font-normal">
+                            <div class="text-left text-slate-600">
+                                Tgl Cetak: <span id="pv-tanggal-cetak" class="text-slate-800 font-bold">3 Juni 2026</span>
+                            </div>
+                            <!-- Penandatangan menggunakan ID agar bisa di-switch dinamis lewat script jika diperlukan -->
+                            <div id="pv-penandatangan-gaji" class="text-center border-t-2 border-slate-400 pt-2 w-36 sm:w-44 text-slate-800 normal-case tracking-normal font-bold">
+                                apt. Siti Nurjanah, S.Farm.
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- Selesai Lembar Nota -->
+            </div>
+        </div>
+
+        <!-- Footer Tombol WhatsApp & Input Catatan -->
+       <div class="p-3 bg-white border-t border-slate-200 flex flex-col gap-2 flex-shrink-0">
+    <button type="button" id="nsa-btn-wa-kirim-slip" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-widest py-3 px-6 rounded-xl shadow-md transform active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+        <i class="fa-brands fa-whatsapp text-base"></i> Kirim Slip Gaji ke WhatsApp
+    </button>
+</div>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Definisikan URL API Apps Script Standalone khusus PDF milik Anda
+    const API_URL_GET_PDF = "https://script.google.com/macros/s/AKfycbyM3-Z9bjejXlNYvBMuuNHL_KjiChYr56BZftvqnURDAETMSgB5fniZeqaxfSNwOXHD5A/exec";
+
+    // 2. Definisi Elemen DOM Modal Slip Gaji
+    const btnBukaModalGaji    = document.getElementById("btn-buka-modal-gaji");
+    const btnTutupModalGaji   = document.getElementById("btn-tutup-modal-gaji");
+    const modalSlipGaji       = document.getElementById("modal-slip-gaji");
+    const selectGajiKaryawan = document.getElementById("gaji-pilih-karyawan");
+    const iframePreviewPdf    = document.getElementById("iframe-preview-pdf");
+    const placeholderPdfText = document.getElementById("placeholder-pdf-text");
+    const loadingPdfAnimation = document.getElementById("loading-pdf-animation");
+    const teksProgresLoading  = document.getElementById("teks-progres-loading");
+    
+    // DEFINISI ELEMEN LOADER ENGINE KEUANGAN (NEW)
+    const loaderEngineKeuangan = document.getElementById('loading-engine-keuangan');
+    const txtEngineLoading     = document.getElementById('teks-engine-loading');
+    const barEngineLoading     = document.getElementById('bar-engine-loading');
+    
+    let intervalTeks; // Penampung timer teks
+
+    // --- FUNGSI BUKA & TUTUP MODAL DENGAN ENGINE ANIMATION ---
+    function bukaModalGaji() {
+        if (!loaderEngineKeuangan) {
+            // Jika elemen overlay belum ditaruh di HTML, langsung buka modal biasa (Fallback)
+            bukaModalGajiAsli();
+            return;
+        }
+
+        // 1. Munculkan Overlay Loading Engine Keuangan
+        loaderEngineKeuangan.classList.remove('opacity-0', 'pointer-events-none');
+        
+        // Tahap 1: Baca Database
+        barEngineLoading.style.width = '30%';
+        txtEngineLoading.innerText = '🤖 Membaca Database Presensi...';
+
+        // Tahap 2: Sinkronisasi Jam Kerja (800ms)
+        setTimeout(() => {
+            barEngineLoading.style.width = '65%';
+            txtEngineLoading.innerText = '⚙️ Menyinkronkan Jam Kerja...';
+        }, 800);
+
+        // Tahap 3: Kalkulasi Form (1600ms)
+        setTimeout(() => {
+            barEngineLoading.style.width = '100%';
+            txtEngineLoading.innerText = '📊 Menyiapkan Engine Slip Gaji...';
+        }, 1600);
+
+        // Tahap Akhir: Tutup Loader & Buka Modal Utama (2400ms)
+        setTimeout(() => {
+            loaderEngineKeuangan.classList.add('opacity-0', 'pointer-events-none');
+            
+            // Reset progres bar untuk pemanggilan berikutnya
+            setTimeout(() => { barEngineLoading.style.width = '0%'; }, 300);
+
+            // Tampilkan Modal Utama
+            bukaModalGajiAsli();
+        }, 2400);
+    }
+
+    // Fungsi internal untuk memunculkan modal utama
+    function bukaModalGajiAsli() {
+        modalSlipGaji.classList.remove("opacity-0", "pointer-events-none");
+        modalSlipGaji.querySelector('.transform').classList.remove('scale-95');
+        modalSlipGaji.querySelector('.transform').classList.add('scale-100');
+        
+        selectGajiKaryawan.value = "";
+        sembunyikanIframe("Silakan pilih nama karyawan di atas untuk memuat Kartu Presensi.");
+    }
+
+    function tutupModalGaji() {
+        modalSlipGaji.classList.add("opacity-0", "pointer-events-none");
+        modalSlipGaji.querySelector('.transform').classList.remove('scale-100');
+        modalSlipGaji.querySelector('.transform').classList.add('scale-95');
+        iframePreviewPdf.src = ""; 
+        clearInterval(intervalTeks);
+    }
+
+    function tampilkanIframe(srcUrl) {
+        clearInterval(intervalTeks);
+        loadingPdfAnimation.classList.add("hidden");
+        placeholderPdfText.classList.add("hidden");
+        iframePreviewPdf.classList.remove("hidden");
+        
+        iframePreviewPdf.src = srcUrl + "#toolbar=0&navpanes=0&view=FitH";
+    }
+
+    function sembunyikanIframe(pesanTeks) {
+        clearInterval(intervalTeks);
+        iframePreviewPdf.classList.add("hidden");
+        iframePreviewPdf.src = "";
+        loadingPdfAnimation.classList.add("hidden");
+        placeholderPdfText.classList.remove("hidden");
+        placeholderPdfText.innerHTML = `
+            <i class="fa-solid fa-file-pdf text-4xl text-slate-300 mb-3"></i>
+            <p class="text-xs font-bold px-4">${pesanTeks}</p>
+        `;
+    }
+
+    function jalankanAnimasiLoading() {
+        placeholderPdfText.classList.add("hidden");
+        iframePreviewPdf.classList.add("hidden");
+        loadingPdfAnimation.classList.remove("hidden");
+        
+        // Daftar teks interaktif biar user tahu script sedang bekerja di background
+        const listTeks = [
+            "Menghubungkan ke NSA Cloud...",
+            "Mencari Presensi karyawan terpilih...",
+            "Mengunduh enkripsi Base64...",
+            "Sinkronisasi hari kerja...",
+            "Sedikit lagi, memvalidasi tampilan..."
+        ];
+        
+        let index = 0;
+        teksProgresLoading.textContent = listTeks[0];
+        
+        // Ganti teks setiap 1.2 detik agar terasa dinamis
+        clearInterval(intervalTeks);
+        intervalTeks = setInterval(() => {
+            index = (index + 1) % listTeks.length;
+            teksProgresLoading.textContent = listTeks[index];
+        }, 1200);
+    }
+
+    // Event Listener Tombol Trigger Utama
+    if (btnBukaModalGaji) btnBukaModalGaji.addEventListener("click", bukaModalGaji);
+    if (btnTutupModalGaji) btnTutupModalGaji.addEventListener("click", tutupModalGaji);
+
+    // --- EVENT TRIGGER DROPDOWN KARYAWAN ---
+    selectGajiKaryawan.addEventListener("change", function() {
+        const keywordNama = this.value; 
+        if (!keywordNama) return;
+
+        // Picu animasi loading interaktif di dalam iframe
+        jalankanAnimasiLoading();
+
+        // Jalankan Ajax Fetch ke Apps Script Anda
+        fetch(`${API_URL_GET_PDF}?karyawan=${keywordNama}`)
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === "success" && result.data.length > 0) {
+                    const fileData = result.data[0];
+                    tampilkanIframe(fileData.pdf_base64);
+                } else {
+                    sembunyikanIframe(`Arsip tidak ditemukan! Gagal mencari file '${keywordNama}' di folder Drive.`);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching PDF:", error);
+                sembunyikanIframe("Terjadi kesalahan koneksi saat mencoba mengambil dokumen dari server cloud.");
+            });
+    });
+});
+</script>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // =========================================================================
+    // 1. KONSTANTA & DEFINISI DATA SOURCE (SLIP GAJI MANDIRI)
+    // =========================================================================
+    const API_URL_PRESENSI = "https://script.google.com/macros/s/AKfycbwyzHl2sdJAaskZR-OZNcAmcjSq4WebF8wfQk7u7He5ceMLcwyIRNPgwo1n-ZFxQyc-_A/exec";
+
+    // Elemen Dropdown Karyawan Utama
+    const selectGajiKaryawan = document.getElementById("gaji-pilih-karyawan");
+    const statusLoadingPdf   = document.getElementById("status-loading-pdf");
+
+    // Elemen Output Metadata
+    const txtPeriode    = document.getElementById("sg-text-periode");
+    const txtTotalHari  = document.getElementById("sg-text-total-hari");
+
+    // Elemen Jadwal 2 Karyawan
+    const lblJadwal2    = document.getElementById("sg-lbl-jadwal2");
+    const inRateJadwal2 = document.getElementById("sg-in-rate-jadwal2");
+    const outTotalJadwal2 = document.getElementById("sg-out-total-jadwal2");
+
+    // Elemen Jadwal 1 Karyawan
+    const lblJadwal1    = document.getElementById("sg-lbl-jadwal1");
+    const inRateJadwal1 = document.getElementById("sg-in-rate-jadwal1");
+    const outTotalJadwal1 = document.getElementById("sg-out-total-jadwal1");
+
+    // Elemen Libur & Absen Lain
+    const outLibur      = document.getElementById("sg-out-libur");
+    const outAbsenLain  = document.getElementById("sg-out-absen-lain");
+
+    // Elemen Jam Kerja (Potongan & Tambahan)
+    const lblPotonganJam   = document.getElementById("sg-lbl-total-potongan-jam");
+    const inMinusPotongan  = document.getElementById("sg-in-minus-potongan");
+    const lblTambahanJam   = document.getElementById("sg-lbl-total-tambahan-jam");
+    const inPlusTambahan   = document.getElementById("sg-in-plus-tambahan");
+
+    // Elemen Poin Tambahan
+    const selPoin          = document.getElementById("sg-sel-poin");
+    const wrapperPoin      = document.getElementById("sg-wrapper-poin-dinamis");
+
+    // Elemen Uang Rajin
+    const selUangRajin     = document.getElementById("sg-sel-uang-rajin");
+    const wrapperRajin     = document.getElementById("sg-wrapper-uang-rajin-dinamis");
+
+    // Elemen Hasil Akhir
+    const outTotalGajiBersih = document.getElementById("sg-out-total-gaji-bersih");
+    const inPembulatan       = document.getElementById("sg-in-pembulatan");
+    const outFinalGaji       = document.getElementById("sg-out-final-gaji");
+
+    // State Internal Penyimpanan Angka Hasil Hitung Presensi
+    let dataPresensiHitung = {
+        hariJadwal2: 0,
+        hariJadwal1: 0,
+        hariLibur: 0,
+        hariAbsenLain: 0
+    };
+
+    // Helper Utama: Format Angka ke Tampilan Rupiah Standar
+    function formatRupiah(angka) {
+        return "Rp " + Number(angka).toLocaleString("id-ID");
+    }
+
+    // --- HELPER SAKTI BARU: Manajemen Input Masking Titik & Anti-Scroll ---
+    function bersihkanAngkaMurni(teks) {
+        if (!teks) return 0;
+        return parseFloat(String(teks).replace(/[^0-9]/g, "")) || 0;
+    }
+
+    function pasangMaskingFormatTitik(inputElemen) {
+        if (!inputElemen) return;
+
+        inputElemen.type = "text";
+        inputElemen.setAttribute("inputmode", "numeric");
+
+        inputElemen.addEventListener("wheel", function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        inputElemen.addEventListener("input", function() {
+            let nilaiMurni = bersihkanAngkaMurni(this.value);
+            
+            if (nilaiMurni === 0) {
+                this.value = "";
+            } else {
+                this.value = nilaiMurni.toLocaleString("id-ID");
+            }
+            
+            hitungUlangSemuaKomponenGaji();
+        });
+    }
+
+    // =========================================================================
+    // 2. LOGIKA FETCH DATA & AKUMULASI DARI SPREADSHEET
+    // =========================================================================
+    if (selectGajiKaryawan) {
+        selectGajiKaryawan.addEventListener("change", function() {
+            const karyawanTerpilih = this.value;
+            if (!karyawanTerpilih) return;
+
+            resetFormSlipGaji();
+            if (statusLoadingPdf) statusLoadingPdf.classList.remove("hidden");
+
+            fetch(`${API_URL_PRESENSI}?karyawan=${karyawanTerpilih}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (statusLoadingPdf) statusLoadingPdf.classList.add("hidden");
+
+                    if (result.status === "success") {
+                        if (txtPeriode) txtPeriode.innerText = result.periode_langsung || "Tidak Terdeteksi";
+                        if (txtTotalHari) txtTotalHari.innerText = (result.data ? result.data.length : 0) + " Hari";
+
+                        prosesAkumulasiDataPresensi(result.data);
+                    } else {
+                        alert("Gagal memuat data presensi kalkulator: " + result.message);
+                    }
+                })
+                .catch(error => {
+                    if (statusLoadingPdf) statusLoadingPdf.classList.add("hidden");
+                    console.error("Error fetching kalkulator presensi:", error);
+                });
+        });
+    }
+
+   function prosesAkumulasiDataPresensi(rows) {
+    if (!rows || rows.length === 0) return;
+
+    let j2 = 0; 
+    let j1 = 0; 
+    let libur = 0; 
+    let absenLain = 0; 
+
+    let totalMenitPotongan = 0;
+    let totalMenitTambahan = 0;
+
+    // --- VARIABEL BARU: Untuk mengumpulkan elemen list HTML ---
+    let listHtmlPotongan = "";
+    let listHtmlTambahan = "";
+
+    rows.forEach(row => {
+        const hadirStatus = String(row.kehadiran || "").toUpperCase().trim();
+        
+        // Pemformatan tanggal agar rapi (DD/MM/YYYY) dari format yyyy-MM-dd bawaan .gs
+        let tanggalRapi = "-";
+        if (row.tanggal) {
+            const tglObj = new Date(row.tanggal);
+            if (!isNaN(tglObj)) {
+                tanggalRapi = String(tglObj.getDate()).padStart(2, '0') + '/' + 
+                              String(tglObj.getMonth() + 1).padStart(2, '0') + '/' + 
+                              tglObj.getFullYear();
+            } else {
+                tanggalRapi = String(row.tanggal).split("T")[0]; 
+            }
+        }
+
+        if (hadirStatus === "YA") {
+            const jenisJadwal = parseInt(row.jenisjadwalkerja);
+            if (jenisJadwal === 2) {
+                j2++;
+            } else if (jenisJadwal === 1) {
+                j1++;
+            }
+        } else if (hadirStatus === "TIDAK") {
+            const alasan = String(row.alasantidakhadir || "");
+            if (alasan.toLowerCase().includes("libur")) {
+                libur++;
+            } else {
+                absenLain++;
+            }
+        }
+
+        function dapatkanTotalMenit(nilaiJam) {
+            if (!nilaiJam) return 0;
+            let teksWaktu = String(nilaiJam).trim();
+            
+            if (teksWaktu.includes("1899") || teksWaktu.length > 15) {
+                const matchWaktu = teksWaktu.match(/(\d{2}):(\d{2}):(\d{2})/);
+                if (matchWaktu) {
+                    const jam = parseInt(matchWaktu[1]) || 0;
+                    const mnt = parseInt(matchWaktu[2]) || 0;
+                    return (jam * 60) + mnt;
+                }
+            }
+            
+            teksWaktu = teksWaktu.replace(".", ":");
+            if (teksWaktu.includes(":")) {
+                const splitWaktu = teksWaktu.split(":");
+                const jam = parseInt(splitWaktu[0]) || 0;
+                const mnt = parseInt(splitWaktu[1]) || 0;
+                return (jam * 60) + mnt;
+            }
+            return 0;
+        }
+
+        // --- CEK & AMBIL RINCIAN POTONGAN ---
+        if (row.potonganjam) {
+            const menitBiji = dapatkanTotalMenit(row.potonganjam);
+            if (menitBiji > 0) {
+                totalMenitPotongan += menitBiji;
+                // Ambil teks alasan dari properti row.alasanpotonganjam hasil convert keyClean .gs
+                const txtAlasanPot = row.alasanpotonganjam ? String(row.alasanpotonganjam).trim() : "Potongan jam kerja";
+                listHtmlPotongan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanPot}</li>`;
+            }
+        }
+
+        // --- CEK & AMBIL RINCIAN TAMBAHAN ---
+        if (row.tambahanjam) {
+            const menitBiji = dapatkanTotalMenit(row.tambahanjam);
+            if (menitBiji > 0) {
+                totalMenitTambahan += menitBiji;
+                // Ambil teks alasan dari properti row.alasantambahanjam hasil convert keyClean .gs
+                const txtAlasanTam = row.alasantambahanjam ? String(row.alasantambahanjam).trim() : "Tambahan jam kerja";
+                listHtmlTambahan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanTam}</li>`;
+            }
+        }
+    });
+
+    dataPresensiHitung.hariJadwal2 = j2;
+    dataPresensiHitung.hariJadwal1 = j1;
+    dataPresensiHitung.hariLibur = libur;
+    dataPresensiHitung.hariAbsenLain = absenLain;
+
+    if (lblJadwal2) lblJadwal2.innerText = j2 + " hari";
+    if (lblJadwal1) lblJadwal1.innerText = j1 + " hari";
+    if (outLibur) outLibur.innerText = libur + " hari";
+    if (outAbsenLain) outAbsenLain.innerText = absenLain + " hari";
+
+    const jamPot = Math.floor(totalMenitPotongan / 60);
+    const mntPot = totalMenitPotongan % 60;
+    if (lblPotonganJam) lblPotonganJam.innerText = `${jamPot} jam ${mntPot} menit`;
+
+    const jamTam = Math.floor(totalMenitTambahan / 60);
+    const mntTam = totalMenitTambahan % 60;
+    if (lblTambahanJam) lblTambahanJam.innerText = `${jamTam} jam ${mntTam} menit`;
+
+    // =========================================================================
+    // LOGIKA INJEKSI HTML DAN RENDER LIST POIN-POIN
+    // =========================================================================
+    const wrapperListPotongan = document.getElementById("sg-wrapper-alasan-potongan-list");
+    const ulPotongan = document.getElementById("sg-list-alasan-potongan");
+    if (wrapperListPotongan && ulPotongan) {
+        if (listHtmlPotongan !== "") {
+            ulPotongan.innerHTML = listHtmlPotongan;
+            wrapperListPotongan.classList.remove("hidden"); // Munculkan wrapper jika ada data
+        } else {
+            ulPotongan.innerHTML = "";
+            wrapperListPotongan.classList.add("hidden");    // Sembunyikan jika kosong
+        }
+    }
+
+    const wrapperListTambahan = document.getElementById("sg-wrapper-alasan-tambahan-list");
+    const ulTambahan = document.getElementById("sg-list-alasan-tambahan");
+    if (wrapperListTambahan && ulTambahan) {
+        if (listHtmlTambahan !== "") {
+            ulTambahan.innerHTML = listHtmlTambahan;
+            wrapperListTambahan.classList.remove("hidden"); // Munculkan wrapper jika ada data
+        } else {
+            ulTambahan.innerHTML = "";
+            wrapperListTambahan.classList.add("hidden");    // Sembunyikan jika kosong
+        }
+    }
+
+    // --- Bagian Penyesuaian Dropdown Uang Rajin Asli Milik Bos ---
+    if (selUangRajin) {
+        selUangRajin.selectedIndex = 0; 
+        const outRajinStatus = document.getElementById("sg-out-rajin-status");
+        if (outRajinStatus) {
+            outRajinStatus.innerText = "Pilih status terlebih dahulu";
+            outRajinStatus.className = "text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic";
+        }
+        const inputCustomLama = document.getElementById("sg-in-rajin-custom-wrapper");
+        if (inputCustomLama) inputCustomLama.remove();
+    }
+
+    hitungUlangSemuaKomponenGaji();
+}
+
+    // =========================================================================
+    // 3. INTERAKSI DINAMIS FORM POIN TAMBAHAN & UANG RAJIN (FIXED)
+    // =========================================================================
+    if (selPoin) {
+        selPoin.addEventListener("change", function() {
+            const jumlahPoin = parseInt(this.value) || 0;
+            if (!wrapperPoin) return;
+            
+            wrapperPoin.innerHTML = "";
+
+            // 1. Render semua baris HTML sesuai jumlah opsi yang dipilih
+            for (let i = 1; i <= jumlahPoin; i++) {
+                const barisHtml = `
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-2 p-2 bg-slate-50 border border-slate-100 rounded-xl animate-fadeIn">
+                        <input type="text" class="sg-in-poin-ket w-full flex-1 bg-white border border-slate-200 text-slate-700 font-bold text-xs px-3 py-2 rounded-xl focus:border-green-600 focus:outline-none" placeholder="Isi rincian poin tambahan ${i}...">
+                        
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                            <span class="text-xs font-bold text-slate-400 hidden sm:inline">=</span>
+                            <div class="relative rounded-xl shadow-inner w-full sm:w-36">
+                                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                                <input type="text" class="sg-in-poin-rp sg-input-clean w-full bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                wrapperPoin.insertAdjacentHTML("beforeend", barisHtml);
+            }
+
+            // 2. SOLUSI: Cari SEMUA input rupiah (.sg-in-poin-rp) yang baru dibuat, lalu pasang masking
+            const semuaInputPoinBaru = wrapperPoin.querySelectorAll(".sg-in-poin-rp");
+            semuaInputPoinBaru.forEach(input => {
+                pasangMaskingFormatTitik(input);
+            });
+
+            // 3. Hitung ulang total awal
+            hitungUlangSemuaKomponenGaji();
+        });
+    }
+
+   // =========================================================================
+    // 4. MESIN HITUNG OTOMATIS (REAL-TIME AUTO-CALCULATION)
+    // =========================================================================
+    pasangMaskingFormatTitik(inRateJadwal2);
+    pasangMaskingFormatTitik(inRateJadwal1);
+    pasangMaskingFormatTitik(inMinusPotongan);
+    pasangMaskingFormatTitik(inPlusTambahan);
+    pasangMaskingFormatTitik(inPembulatan);
+
+    function hitungUlangSemuaKomponenGaji() {
+        const rateJadwal2 = inRateJadwal2 ? bersihkanAngkaMurni(inRateJadwal2.value) : 0;
+        const rateJadwal1 = inRateJadwal1 ? bersihkanAngkaMurni(inRateJadwal1.value) : 0;
+
+        const rpTotalJadwal2 = dataPresensiHitung.hariJadwal2 * rateJadwal2;
+        const rpTotalJadwal1 = dataPresensiHitung.hariJadwal1 * rateJadwal1;
+
+        if (outTotalJadwal2) outTotalJadwal2.innerText = formatRupiah(rpTotalJadwal2);
+        if (outTotalJadwal1) outTotalJadwal1.innerText = formatRupiah(rpTotalJadwal1);
+
+        const rpMinusPotongan = inMinusPotongan ? bersihkanAngkaMurni(inMinusPotongan.value) : 0;
+        const rpPlusTambahan  = inPlusTambahan ? bersihkanAngkaMurni(inPlusTambahan.value) : 0;
+
+        // 1. Ambil Data Nilai Poin Tambahan secara Aman
+        let rpTotalPoinTambahan = 0;
+        if (wrapperPoin) {
+            const inputsPoinRp = wrapperPoin.querySelectorAll(".sg-in-poin-rp");
+            textInputsPoinRp = inputsPoinRp.forEach(input => {
+                rpTotalPoinTambahan += bersihkanAngkaMurni(input.value);
+            });
+        }
+
+        // 2. Kalkulasi Nilai Uang Rajin & Perbarui Badge Status Visual secara Real-Time
+        let rpUangRajin = 0;
+        const outRajinStatus = document.getElementById("sg-out-rajin-status");
+
+        if (selUangRajin) {
+            const tipeRajin = selUangRajin.value;
+            
+            if (tipeRajin === "") {
+                // POSISI AWAL / NONE: Jika belum memilih apapun
+                rpUangRajin = 0;
+                if (outRajinStatus) {
+                    outRajinStatus.innerText = "Pilih status terlebih dahulu";
+                    outRajinStatus.className = "text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic";
+                }
+            } else if (tipeRajin === "full") {
+                rpUangRajin = 300000;
+                if (outRajinStatus) {
+                    outRajinStatus.innerText = "Rp 300.000";
+                    outRajinStatus.className = "text-xs font-black text-green-700 bg-green-50 px-3 py-1 rounded-xl";
+                }
+            } else if (tipeRajin === "tidak") {
+                rpUangRajin = 0;
+                if (outRajinStatus) {
+                    outRajinStatus.innerText = "Rp 0";
+                    outRajinStatus.className = "text-xs font-black text-red-700 bg-red-50 px-3 py-1 rounded-xl";
+                }
+            } else if (tipeRajin === "penyesuaian") {
+                const inputCustomRajin = document.getElementById("sg-in-rajin-custom");
+                rpUangRajin = inputCustomRajin ? bersihkanAngkaMurni(inputCustomRajin.value) : 0;
+                if (outRajinStatus) {
+                    outRajinStatus.innerText = "Rp " + rpUangRajin.toLocaleString("id-ID");
+                    outRajinStatus.className = "text-xs font-black text-amber-700 bg-amber-50 px-3 py-1 rounded-xl";
+                }
+            } else {
+                if (outRajinStatus) {
+                    outRajinStatus.innerText = "-";
+                    outRajinStatus.className = "text-xs font-black text-slate-400 bg-slate-100 px-3 py-1 rounded-xl";
+                }
+            }
+        }
+
+        // 3. Akumulasi Total Awal Gaji Bersih Otomatis
+        const totalGajiOtomatis = 
+            rpTotalJadwal2 + 
+            rpTotalJadwal1 - 
+            rpMinusPotongan + 
+            rpPlusTambahan + 
+            rpTotalPoinTambahan + 
+            rpUangRajin;
+
+        if (outTotalGajiBersih) outTotalGajiBersih.innerText = formatRupiah(totalGajiOtomatis);
+
+        // 4. Logika Nota Pembulatan Manual / Final Gaji Diterima
+        const rpPembulatan = inPembulatan ? bersihkanAngkaMurni(inPembulatan.value) : 0;
+        let finalGajiDiterima = 0;
+
+        if (rpPembulatan > 0) {
+            finalGajiDiterima = rpPembulatan;
+        } else {
+            finalGajiDiterima = totalGajiOtomatis;
+        }
+
+        if (outFinalGaji) outFinalGaji.innerText = formatRupiah(finalGajiDiterima);
+    }
+
+    // =========================================================================
+    // LISTENERS DROPDOWN INTERAKSI UANG RAJIN (FORM DINAMIS PENYESUAIAN)
+    // =========================================================================
+    if (selUangRajin) {
+        selUangRajin.addEventListener("change", function() {
+            const wrapperUangRajinDinamis = document.getElementById("sg-wrapper-uang-rajin-dinamis");
+            
+            // Hapus input kustom lama jika sebelumnya ada
+            const inputCustomLama = document.getElementById("sg-in-rajin-custom-wrapper");
+            if (inputCustomLama) inputCustomLama.remove();
+
+            // Jika Owner memilih 'Penyesuaian', munculkan form input rupiah secara dinamis
+            if (this.value === "penyesuaian") {
+                const htmlInputCustom = `
+                    <div id="sg-in-rajin-custom-wrapper" class="relative rounded-xl shadow-inner w-32 animate-fadeIn">
+                        <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">Rp</span>
+                        <input type="text" id="sg-in-rajin-custom" class="w-full bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-1.5 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
+                    </div>
+                `;
+                // Sisipkan input baru tepat di sebelah kiri tulisan "Total ="
+                if (wrapperUangRajinDinamis) {
+                    wrapperUangRajinDinamis.insertAdjacentHTML("afterbegin", htmlInputCustom);
+                }
+                
+                const inputCustomRajin = document.getElementById("sg-in-rajin-custom");
+                if (inputCustomRajin) {
+                    pasangMaskingFormatTitik(inputCustomRajin);
+                    // Saat owner mengetik angka penyesuaian, jalankan hitung otomatis secara real-time
+                    inputCustomRajin.addEventListener("input", hitungUlangSemuaKomponenGaji);
+                }
+            }
+
+            // Jalankan kalkulator utama untuk merespon perubahan dropdown
+            hitungUlangSemuaKomponenGaji();
+        });
+    }
+
+    function resetFormSlipGaji() {
+    if (txtPeriode) txtPeriode.innerText = "-";
+    if (txtTotalHari) txtTotalHari.innerText = "-";
+    if (lblJadwal2) lblJadwal2.innerText = "0 hari";
+    if (lblJadwal1) lblJadwal1.innerText = "0 hari";
+    if (outTotalJadwal2) outTotalJadwal2.innerText = "Rp 0";
+    if (outTotalJadwal1) outTotalJadwal1.innerText = "Rp 0";
+    if (outLibur) outLibur.innerText = "0 hari";
+    if (outAbsenLain) outAbsenLain.innerText = "0 hari";
+    if (lblPotonganJam) lblPotonganJam.innerText = "0 jam 0 menit";
+    if (lblTambahanJam) lblTambahanJam.innerText = "0 jam 0 menit";
+
+    // --- RESET ELEMENT LIST BARU SUPAYA BERSIH SAAT GANTI KARYAWAN ---
+    const wrapperListPotongan = document.getElementById("sg-wrapper-alasan-potongan-list");
+    const ulPotongan = document.getElementById("sg-list-alasan-potongan");
+    if (ulPotongan) ulPotongan.innerHTML = "";
+    if (wrapperListPotongan) wrapperListPotongan.classList.add("hidden");
+
+    const wrapperListTambahan = document.getElementById("sg-wrapper-alasan-tambahan-list");
+    const ulTambahan = document.getElementById("sg-list-alasan-tambahan");
+    if (ulTambahan) ulTambahan.innerHTML = "";
+    if (wrapperListTambahan) wrapperListTambahan.classList.add("hidden");
+
+    if (inRateJadwal2) inRateJadwal2.value = "";
+    if (inRateJadwal1) inRateJadwal1.value = "";
+    if (inMinusPotongan) inMinusPotongan.value = "";
+    if (inPlusTambahan) inPlusTambahan.value = "";
+    if (inPembulatan) inPembulatan.value = "";
+    if (selPoin) selPoin.value = "0";
+    if (wrapperPoin) wrapperPoin.innerHTML = "";
+    
+    if (selUangRajin) selUangRajin.selectedIndex = 0; 
+    
+    const wrapperUangRajinDinamis = document.getElementById("sg-wrapper-uang-rajin-dinamis");
+    if (wrapperUangRajinDinamis) {
+        wrapperUangRajinDinamis.innerHTML = `
+            <span class="text-xs font-bold text-slate-400">Total =</span>
+            <span id="sg-out-rajin-status" class="text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic">Pilih status terlebih dahulu</span>
+        `;
+    }
+    
+    if (outTotalGajiBersih) outTotalGajiBersih.innerText = "Rp 0";
+    if (outFinalGaji) outFinalGaji.innerText = "Rp 0";
+
+    dataPresensiHitung = { hariJadwal2: 0, hariJadwal1: 0, hariLibur: 0, hariAbsenLain: 0 };
+}
+
+  // =========================================================================
+// 5. INTERAKSI MODAL POPUP & SINKRONISASI DATA PREVIEW SLIP GAJI
+// =========================================================================
+const modalPreviewSlip = document.getElementById("modal-preview-slip");
+const btnGenerateSlip   = document.getElementById("btn-generate-slip-gaji");
+const btnTutupPreview   = document.getElementById("btn-tutup-preview-slip");
+
+const ownerInputCatatan = document.getElementById("owner-input-catatan");
+
+// Elemen Target Utama Tabel Slip
+const containerBarisSlip = document.getElementById("container-baris-slip");
+
+// Elemen Output Dokumen Slip Preview
+const pvNamaKaryawan     = document.getElementById("pv-nama-karyawan");
+const pvPeriodeKerja     = document.getElementById("pv-periode-kerja");
+const pvHariJ2          = document.getElementById("pv-hari-j2");
+const pvRateJ2          = document.getElementById("pv-rate-j2");
+const pvTotalJ2         = document.getElementById("pv-total-j2");
+const pvHariJ1          = document.getElementById("pv-hari-j1");
+const pvRateJ1          = document.getElementById("pv-rate-j1");
+const pvTotalJ1         = document.getElementById("pv-total-j1");
+const pvHariLibur       = document.getElementById("pv-hari-libur");
+const pvHariAbsen       = document.getElementById("pv-hari-absen");
+const pvLblPotongan     = document.getElementById("pv-lbl-potongan");
+const pvTotalPotongan   = document.getElementById("pv-total-potongan");
+const pvLblTambahan     = document.getElementById("pv-lbl-tambahan");
+const pvTotalTambahan   = document.getElementById("pv-total-tambahan");
+const pvTotalRajin      = document.getElementById("pv-total-rajin");
+const pvRekapOtomatis   = document.getElementById("pv-rekap-otomatis");
+const pvRekapPembulatan = document.getElementById("pv-rekap-pembulatan");
+const pvRekapFinal      = document.getElementById("pv-rekap-final");
+const pvTanggalCetak    = document.getElementById("pv-tanggal-cetak");
+
+// Elemen Render Catatan (Box & Text)
+const pvBoxCatatanRender = document.getElementById("pv-box-catatan-render");
+const pvTextCatatanOwner = document.getElementById("pv-text-catatan-owner");
+
+// Membuka Modal Preview dan Sinkronisasi Seluruh Data Real-Time
+if (btnGenerateSlip) {
+    btnGenerateSlip.addEventListener("click", function() {
+        const karyawanAktif = selectGajiKaryawan ? selectGajiKaryawan.value : "";
+        if (!karyawanAktif) {
+            alert("Bos belum memilih nama karyawan! Silakan pilih terlebih dahulu di atas.");
+            return;
+        }
+
+        // 1. Tarik Nama Lengkap Karyawan Terpilih
+        let namaLengkap = "Karyawan";
+        if (karyawanAktif === "Dadan") namaLengkap = "Dadan Nurfaizal";
+        if (karyawanAktif === "Cahya") namaLengkap = "M. Cahya Ardiansyah";
+        if (pvNamaKaryawan) pvNamaKaryawan.innerText = namaLengkap;
+
+        // 2. Tarik Data Periode Dokumen
+        if (pvPeriodeKerja) pvPeriodeKerja.innerText = txtPeriode ? txtPeriode.innerText : "-";
+
+        // 3. Tarik Angka Rincian Komponen Gaji Utama
+        if (pvHariJ2) pvHariJ2.innerText = dataPresensiHitung.hariJadwal2 + " Hari";
+        if (pvRateJ2) {
+            const vRateJ2 = inRateJadwal2 && inRateJadwal2.value ? bersihkanAngkaMurni(inRateJadwal2.value) : 0;
+            pvRateJ2.innerText = vRateJ2.toLocaleString("id-ID");
+        }
+        if (pvTotalJ2) {
+            const vTotalJ2 = outTotalJadwal2 ? bersihkanAngkaMurni(outTotalJadwal2.innerText) : 0;
+            pvTotalJ2.innerText = vTotalJ2.toLocaleString("id-ID");
+        }
+
+        if (pvHariJ1) pvHariJ1.innerText = dataPresensiHitung.hariJadwal1 + " Hari";
+        if (pvRateJ1) {
+            const vRateJ1 = inRateJadwal1 && inRateJadwal1.value ? bersihkanAngkaMurni(inRateJadwal1.value) : 0;
+            pvRateJ1.innerText = vRateJ1.toLocaleString("id-ID");
+        }
+        if (pvTotalJ1) {
+            const vTotalJ1 = outTotalJadwal1 ? bersihkanAngkaMurni(outTotalGajiBersih.innerText) : 0; // Catatan: pastikan outTotalJadwal1 sesuai variabel bos
+            pvTotalJ1.innerText = vTotalJ1.toLocaleString("id-ID");
+        }
+
+        if (pvHariLibur) pvHariLibur.innerText = dataPresensiHitung.hariLibur + " Hari";
+        if (pvHariAbsen) pvHariAbsen.innerText = dataPresensiHitung.hariAbsenLain + " Hari";
+
+        // 4. Sinkronisasi Jam & Biaya
+        if (pvLblPotongan) pvLblPotongan.innerText = lblPotonganJam ? lblPotonganJam.innerText : '0 jam';
+        const minusPotonganValue = inMinusPotongan && inMinusPotongan.value ? bersihkanAngkaMurni(inMinusPotongan.value) : 0;
+        if (pvTotalPotongan) pvTotalPotongan.innerText = minusPotonganValue.toLocaleString("id-ID");
+
+        if (pvLblTambahan) pvLblTambahan.innerText = lblTambahanJam ? lblTambahanJam.innerText : '0 jam';
+        const plusTambahanValue = inPlusTambahan && inPlusTambahan.value ? bersihkanAngkaMurni(inPlusTambahan.value) : 0;
+        if (pvTotalTambahan) pvTotalTambahan.innerText = plusTambahanValue.toLocaleString("id-ID");
+
+        let rpUangRajin = 0;
+        if (selUangRajin) {
+            if (selUangRajin.value === "full") rpUangRajin = 300000;
+            else if (selUangRajin.value === "penyesuaian") {
+                const inputCustomRajin = document.getElementById("sg-in-rajin-custom");
+                if (inputCustomRajin) rpUangRajin = bersihkanAngkaMurni(inputCustomRajin.value);
+            }
+        }
+        if (pvTotalRajin) pvTotalRajin.innerText = rpUangRajin.toLocaleString("id-ID");
+
+        // Extraksi baris kustom dinamis poin tambahan ke preview tabel
+        const barisLamaDinamis = containerBarisSlip.querySelectorAll(".baris-poin-dinamis-pv");
+        barisLamaDinamis.forEach(row => row.remove());
+
+        if (wrapperPoin) {
+            const blokInputs = wrapperPoin.querySelectorAll(".flex-col, .sm\\:flex-row");
+            let nomorUrutTabel = 8;
+
+            blokInputs.forEach((blok) => {
+                const inputKet = blok.querySelector(".sg-in-poin-ket");
+                const inputRp  = blok.querySelector(".sg-in-poin-rp");
+
+                if (inputRp) {
+                    const nilaiRp = bersihkanAngkaMurni(inputRp.value);
+                    if (nilaiRp > 0) {
+                        const namaPoinKustom = inputKet && inputKet.value.trim() !== "" ? inputKet.value.trim() : `Poin Tambahan ${nomorUrutTabel - 7}`;
+
+                        const barisHtmlBaru = `
+                            <tr class="align-middle bg-white baris-poin-dinamis-pv">
+                                <td class="py-1.5 text-center text-slate-400 font-bold border-r border-slate-300">${nomorUrutTabel}</td>
+                                <td class="py-1.5 pl-1 sm:pl-2 break-words font-bold text-slate-900 leading-tight border-r border-slate-300">${namaPoinKustom}</td>
+                                <td class="py-1.5 text-center text-slate-300 border-r border-slate-300">-</td>
+                                <td class="py-1.5 text-center text-slate-300 border-r border-slate-300">-</td>
+                                <td class="py-1.5 text-right pr-1 sm:pr-2 text-slate-900 font-bold tracking-tighter">${nilaiRp.toLocaleString("id-ID")}</td>
+                            </tr>
+                        `;
+                        containerBarisSlip.insertAdjacentHTML("beforeend", barisHtmlBaru);
+                        nomorUrutTabel++;
+                    }
+                }
+            });
+        }
+
+        // 6. Sinkronisasi Blok Hasil Akhir Rekap Nota
+        if (pvRekapOtomatis) pvRekapOtomatis.innerText = outTotalGajiBersih ? outTotalGajiBersih.innerText : "Rp 0";
+        const pembulatanValue = inPembulatan && inPembulatan.value ? bersihkanAngkaMurni(inPembulatan.value) : 0;
+        if (pvRekapPembulatan) pvRekapPembulatan.innerText = "Rp " + pembulatanValue.toLocaleString("id-ID");
+        if (pvRekapFinal) pvRekapFinal.innerText = outFinalGaji ? outFinalGaji.innerText : "Rp 0";
+
+        // 7. Mengisi Tanggal Hari Ini Secara Otomatis
+        const hariIni = new Date();
+        if (pvTanggalCetak) pvTanggalCetak.innerText = hariIni.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+
+        // --- REVISI UTAMA: PROSES TRANSFER CATATAN OWNER SECARA AMAN ---
+        if (ownerInputCatatan && pvTextCatatanOwner && pvBoxCatatanRender) {
+            const isiCatatan = ownerInputCatatan.value.trim();
+            
+            if (isiCatatan !== "") {
+                pvTextCatatanOwner.innerText = isiCatatan;
+                pvBoxCatatanRender.classList.remove("hidden"); // Tampilkan kotak catatan
+            } else {
+                pvTextCatatanOwner.innerText = "";
+                pvBoxCatatanRender.classList.add("hidden");    // Sembunyikan jika kosong
+            }
+        }
+
+        // Tampilkan Modal Animasi Slide-In
+        if (modalPreviewSlip) {
+            modalPreviewSlip.classList.remove("opacity-0", "pointer-events-none");
+            modalPreviewSlip.querySelector(".transform").classList.remove("scale-95");
+            modalPreviewSlip.querySelector(".transform").classList.add("scale-100");
+        }
+    });
+}
+
+// Fungsi Pengamat Catatan Textarea (Menjaga sinkronisasi live jika diketik pas modal kebuka)
+if (ownerInputCatatan) {
+    ownerInputCatatan.addEventListener("input", function() {
+        if (pvTextCatatanOwner && pvBoxCatatanRender) {
+            const isiCatatan = this.value.trim();
+            if (isiCatatan === "") {
+                pvTextCatatanOwner.innerText = "";
+                pvBoxCatatanRender.classList.add("hidden");
+            } else {
+                pvTextCatatanOwner.innerText = isiCatatan;
+                pvBoxCatatanRender.classList.remove("hidden");
+            }
+        }
+    });
+}
+
+// Menutup Modal Preview Slip Gaji
+if (btnTutupPreview) {
+    btnTutupPreview.addEventListener("click", function() {
+        if (modalPreviewSlip) {
+            modalPreviewSlip.classList.add("opacity-0", "pointer-events-none");
+            modalPreviewSlip.querySelector(".transform").classList.add("scale-95");
+            modalPreviewSlip.querySelector(".transform").classList.remove("scale-100");
+        }
+    });
+}
+
+// =========================================================================
+// 6. INTEGRASI EMERALD BUTTON: RENDER HIGH-RES JPG + WEB SHARE API (MODERN)
+// =========================================================================
+const btnKirimWaReal = document.getElementById("nsa-btn-wa-kirim-slip");
+
+if (btnKirimWaReal) {
+    btnKirimWaReal.addEventListener("click", function() {
+        // A. Validasi Awal: Pastikan data presensi dan karyawan sudah siap
+        const karyawanTerpilih = selectGajiKaryawan ? selectGajiKaryawan.value : "";
+        if (!karyawanTerpilih || !txtPeriode || txtPeriode.innerText === "-") {
+            alert("Silakan pilih karyawan dan akumulasikan data terlebih dahulu!");
+            return;
+        }
+
+        // B. Tarik Nama Lengkap & Database Nomor WA (Untuk Fallback Metode Lama)
+        let namaLengkapKaryawan = "";
+        let nomorWa = "";
+
+        if (karyawanTerpilih === "Cahya") {
+            namaLengkapKaryawan = "M. Cahya Ardiansyah";
+            nomorWa = "6285721962654";
+        } else if (karyawanTerpilih === "Dadan") {
+            namaLengkapKaryawan = "Dadan Nurfaizal";
+            nomorWa = "6283130578886";
+        } else {
+            namaLengkapKaryawan = "Karyawan";
+            let inputNomor = prompt("Nomor WA karyawan tidak dikenal. Masukkan manual (Format: 628xxx):", "628");
+            if (!inputNomor) return;
+            nomorWa = inputNomor.replace(/[^0-9]/g, '');
+            if (nomorWa.startsWith("08")) nomorWa = "628" + nomorWa.slice(2);
+        }
+
+        const periodeGaji = txtPeriode.innerText;
+        const targetRenderImage = document.getElementById("elemen-slip-gaji-render");
+        
+        if (!targetRenderImage) {
+            alert("Elemen '#elemen-slip-gaji-render' tidak ditemukan di DOM!");
+            return;
+        }
+
+        // C. Efek Animasi Loading Spinner
+        const textAwalTombol = this.innerHTML;
+        this.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Slip Gaji...`;
+        this.disabled = true;
+
+        const catatanOwner = ownerInputCatatan && ownerInputCatatan.value ? ownerInputCatatan.value.trim() : "";
+
+      // D. Susun Pesan Teks Pendamping (Murni Pemberitahuan, Tanpa Catatan Owner)
+let teksSapaan = `Halo *${namaLengkapKaryawan}*,\n\nBerikut terlampir dokumen Slip Gaji untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Terima kasih atas dedikasi dan kerja kerasnya untuk Nurjaya Abadi Photocopy! 🙏 ✨\n\n*Owner Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
+
+        // E. Eksekusi Render Skala 2x Anti-Blur
+        setTimeout(() => {
+            if (typeof domtoimage !== 'undefined') {
+                const skalaSkor = 2;
+                const namaFileJpg = `Slip_Gaji_${namaLengkapKaryawan.replace(/\s+/g, '_')}_${periodeGaji.replace(/\s+/g, '_')}.jpg`;
+
+                domtoimage.toJpeg(targetRenderImage, {
+                    quality: 0.98,
+                    bgcolor: '#ffffff',
+                    width: targetRenderImage.offsetWidth * skalaSkor,
+                    height: targetRenderImage.offsetHeight * skalaSkor,
+                    style: {
+                        transform: `scale(${skalaSkor})`,
+                        transformOrigin: 'top left',
+                        width: targetRenderImage.offsetWidth + "px",
+                        height: targetRenderImage.offsetHeight + "px"
+                    }
+                })
+                .then(async function (dataUrl) {
+                    try {
+                        // 1. Konversi dataURL (Base64) bawaan domtoimage menjadi Objek Blob Asli
+                        const responBlob = await fetch(dataUrl);
+                        const blobGambar = await responBlob.blob();
+                        
+                        // 2. Bungkus Blob menjadi File struktur JPG yang siap dibagikan OS
+                        const fileGambar = new File([blobGambar], namaFileJpg, { type: "image/jpeg" });
+
+                        // 3. Eksekusi Pengecekan Fitur Web Share API untuk File Gambar
+                        if (navigator.canShare && navigator.canShare({ files: [fileGambar] })) {
+                            await navigator.share({
+                                files: [fileGambar],
+                                title: `Slip Gaji ${namaLengkapKaryawan}`,
+                                text: teksSapaan // Memasukkan teks sapaan langsung ke deskripsi share
+                            });
+                        } else {
+                            // FALLBACK JIKA BROWSER TIDAK SUPPORT SHARE FILE IMAGE (Pake Metode Lama Bos)
+                            jalankanMetodeLamaFallback(dataUrl, namaFileJpg, nomorWa, teksSapaan);
+                        }
+                    } catch (shareError) {
+                        // Jika user menutup paksa popup share, kembalikan tombol tanpa melempar alert error
+                        if (shareError.name !== "AbortError") {
+                            console.warn("Web Share gagal, dialihkan ke fallback:", shareError);
+                            jalankanMetodeLamaFallback(dataUrl, namaFileJpg, nomorWa, teksSapaan);
+                        }
+                    }
+
+                    // 4. Kembalikan status tombol emerald ke posisi semula
+                    btnKirimWaReal.innerHTML = textAwalTombol;
+                    btnKirimWaReal.disabled = false;
+                })
+                .catch(function (error) {
+                    console.error('Gagal konversi gambar HD:', error);
+                    alert("Gagal me-render gambar slip gaji.");
+                    btnKirimWaReal.innerHTML = textAwalTombol;
+                    btnKirimWaReal.disabled = false;
+                });
+            } else {
+                alert("Sistem library domtoimage offline.");
+                btnKirimWaReal.innerHTML = textAwalTombol;
+                btnKirimWaReal.disabled = false;
+            }
+        }, 200);
+    });
+}
+
+// F. FUNGSI UTAMA UNTUK SEBAGAI JALUR CADANGAN (METODE LAMA)
+function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
+    // Unduh Gambar Otomatis
+    let linkDownload = document.createElement('a');
+    linkDownload.download = namaFile;
+    linkDownload.href = dataUrl;
+    linkDownload.click();
+
+    // Buka Redirect Chat WA target
+    const pesanEncoded = encodeURIComponent(teksPesan);
+    const urlWhatsApp = `https://api.whatsapp.com/send?phone=${nomorTarget}&text=${pesanEncoded}`;
+    window.open(urlWhatsApp, '_blank');
+}
+
+
+}); // <=== SEKARANG SUDAH DI SINI, MEMBUNGKUS SEMUA KODE DENGAN AMAN!
+</script>
+
+
+
+
 <!-- MODAL BARANG KOSONG -->
 <div id="modalBarangKosongBK" 
      class="fixed inset-0 bg-black/70 backdrop-blur-md z-[10000] hidden flex items-center justify-center p-4 transition-all duration-300">
@@ -5954,18 +7517,68 @@ function tutupModalBK_Wrapper() {
 
 
 
-<!-- MODAL PREVIEW KARTU PRESENSI -->
+<style>
+    /* 1. KHUSUS UNTUK LAYAR MOBILE & TABLET (Ukurannya di-scale agar muat) */
+    @media (max-width: 768px) {
+        #wrapper-viewport-cetak {
+            display: block !important;
+            width: 100% !important;
+            overflow: hidden !important; 
+            position: relative !important;
+            flex-shrink: 0 !important; 
+        }
+        
+        #area-cetak-pdf {
+            transform-origin: top left !important;
+            transform: scale(calc((100vw - 48px) / 756)) !important; 
+            margin-bottom: calc((756px - (100vw - 48px)) * -1) !important;
+            left: 0 !important;
+            top: 0 !important;
+            position: relative !important;
+            contain: none !important;
+        }
+    }
+
+    /* 2. KHUSUS UNTUK LAYAR DESKTOP (Akar masalah bug scroll typing Anda) */
+    @media (min-width: 769px) {
+        #wrapper-viewport-cetak {
+            display: block !important;
+            /* Berikan ruang napas extra agar browser desktop tidak mendeteksi element "overflow" saat mengetik */
+            width: 780px !important; 
+            max-width: 100% !important;
+            padding: 12px !important;
+            overflow: visible !important;
+            box-sizing: border-box !important;
+        }
+        
+        #area-cetak-pdf {
+            transform: none !important;
+            margin-bottom: 0 !important;
+            margin-image: 0 !important;
+            position: relative !important;
+            
+            /* KUNCI UTAMA DESKTOP: Isolasi element agar browser tidak bisa menggeser koordinat x/y parent saat typing */
+            contain: layout style !important; 
+        }
+    }
+
+    /* Proteksi global anti geser horizontal untuk area scroll modal */
+    .modal-scroll-container {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+</style>
+
+<!-- MODAL PREVIEW KARTU PRESENSI PDF -->
 <div id="modal-kartu-presensi" class="fixed inset-0 bg-emerald-950/60 backdrop-blur-md z-[13000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
     
-    <!-- Modal Container dengan lekukan Smooth iOS Glass -->
     <div class="bg-slate-900/95 backdrop-blur-lg w-full max-w-5xl max-h-[95vh] rounded-[32px] border border-emerald-500/30 shadow-[0_0_50px_-12px_rgba(16,185,129,0.3)] overflow-hidden flex flex-col transform scale-95 transition-all duration-300">
         
-        <!-- Header Window Modal -->
         <div class="p-4 border-b border-slate-800 bg-slate-950/80 backdrop-blur-sm flex justify-between items-center flex-shrink-0">
             <div class="flex items-center gap-2">
                 <div class="w-2 h-6 bg-emerald-500 rounded-full animate-pulse"></div>
                 <h3 class="text-sm font-black text-white uppercase tracking-wider">
-                    <i class="fa-solid fa-address-card text-emerald-400 mr-1"></i> Preview Dokumen Cetak Kartu Presensi (Rasio 1:1)
+                    <i class="fa-solid fa-address-card text-emerald-400 mr-1"></i> Preview Kartu Presensi Siap Cetak
                 </h3>
             </div>
             <button type="button" id="btn-tutup-modal" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-400 hover:bg-rose-600 hover:text-white transition-all duration-200 shadow-inner">
@@ -5973,151 +7586,155 @@ function tutupModalBK_Wrapper() {
             </button>
         </div>
 
-        <!-- Area Viewport Kertas (Scrollable) -->
-        <div class="p-5 overflow-y-auto flex-1 bg-slate-950 pattern-grid-lg flex justify-center items-start">
+        <div class="p-5 overflow-y-auto overflow-x-hidden modal-scroll-container flex-1 bg-slate-950 pattern-grid-lg flex justify-center items-start">
             
-            <!-- AREA CETAK PDF (MANDATORY 200x200mm) -->
-            <div id="area-cetak-pdf" class="bg-white text-slate-900 p-6 rounded-[24px] border border-slate-200 shadow-2xl flex flex-col justify-between [color-scheme:light]" style="width: 200mm; height: 200mm; min-width: 200mm; min-height: 200mm; font-family: 'Arial', sans-serif;">
+            <div id="wrapper-viewport-cetak" style="width: 100%; max-width: 756px;">
                 
-                <!-- Header Kartu Cetak -->
-                <div class="text-center border-b-2 border-slate-700 pb-2.5 mb-3 flex-shrink-0">
-                    <h2 class="text-xl font-black tracking-widest text-emerald-900 m-0 leading-none">KARTU PRESENSI KARYAWAN</h2>
-                    <p class="text-[9px] text-emerald-700 font-bold tracking-widest uppercase mt-1 mb-2">Nurjaya Abadi Photocopy</p>
+                <div id="area-cetak-pdf" class="bg-white text-slate-900 pt-4 px-6 pb-6 rounded-[24px] border border-slate-200 shadow-2xl flex flex-col justify-between [color-scheme:light]" style="width: 756px; height: 756px; min-width: 756px; min-height: 756px; font-family: 'Arial', sans-serif; box-sizing: border-box;">
                     
-                    <!-- Sub-Header Informasi Karyawan -->
-                    <div class="grid grid-cols-3 text-[11px] font-medium text-slate-600 border-t border-slate-200 pt-2 max-w-2xl mx-auto">
-                        <div class="text-left">Nama: <span id="modal-nama-karyawan" class="font-bold text-slate-900">--</span></div>
-                        <div class="text-center">Unit: <span class="font-bold text-slate-900">Nurjaya Abadi Photocopy</span></div>
-                        <div class="text-right flex flex-col items-end leading-tight">
-                            <div>Periode: <span id="modal-periode-kerja" class="font-bold text-slate-900 italic">--</span></div>
-                            <div class="text-[10px] text-emerald-800 font-bold mt-0.5">Jumlah Hari Kerja: <span id="modal-total-hari-kerja" class="font-black bg-emerald-100 px-1.5 py-0.5 rounded-lg text-emerald-900">0</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Konten Grid Tabel Berdampingan -->
-                <div class="grid grid-cols-2 gap-3 items-stretch flex-1 mb-3">
-                    
-                    <!-- Blok Tabel Kiri (Hari Ke 1 - 15) -->
-                    <div class="border border-slate-700 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
-                        <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-slate-700">
-                            <thead>
-                                <tr class="bg-emerald-700 font-black text-white uppercase text-[9px] tracking-tight">
-                                    <th class="border-r border-b border-slate-700 py-2 w-[14%]">Hari Ke-</th>
-                                    <th class="border-r border-b border-slate-700 py-2 w-[22%]">Tgl / Hari</th>
-                                    <th class="border-r border-b border-slate-700 py-2 w-[14%]">Masuk Kerja</th>
-                                    <th class="border-r border-b border-slate-700 py-2 w-[22%]">Jenis Jadwal</th>
-                                    <th class="border-b border-slate-700 py-2 w-[28%]">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabel-kiri-body" class="font-bold text-slate-800 divide-y divide-slate-700 h-full">
-                                <!-- Diinjeksi JS -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Blok Tabel Kanan (Hari Ke 16 - 31) -->
-                    <div class="border border-slate-700 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
-                        <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-slate-700">
-                            <thead>
-                                <tr class="bg-emerald-700 font-black text-white uppercase text-[9px] tracking-tight">
-                                    <th class="border-r border-b border-slate-700 py-2 w-[14%]">Hari Ke-</th>
-                                    <th class="border-r border-b border-slate-700 py-2 w-[22%]">Tgl / Hari</th>
-                                    <th class="border-r border-b border-slate-700 py-2 w-[14%]">Status</th>
-                                    <th class="border-r border-b border-slate-700 py-2 w-[22%]">Jadwal</th>
-                                    <th class="border-b border-slate-700 py-2 w-[28%]">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabel-kanan-body" class="font-bold text-slate-800 divide-y divide-slate-700 h-full">
-                                <!-- Diinjeksi JS -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-
-                <!-- Footer panel bawah -->
-                <div class="grid grid-cols-2 gap-3 border-t-2 border-slate-700 pt-3 flex-shrink-0 items-stretch">
-                    
-                    <!-- Panel Kiri: Rekapitulasi Data Kehadiran -->
-                    <div class="p-3 border border-slate-700 bg-emerald-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
-                        <h4 class="font-black text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-2 flex items-center gap-1.5 flex-shrink-0">
-                            <i class="fa-solid fa-square-poll-vertical text-emerald-700"></i> Rekapitulasi Data Kehadiran
-                        </h4>
+                    <div class="text-center border-b-2 border-slate-700 pb-1.5 mb-2 flex-shrink-0">
+                        <h2 class="text-xl font-black tracking-widest text-emerald-900 m-0 leading-none">KARTU PRESENSI KARYAWAN</h2>
+                        <p class="text-[9px] text-emerald-700 font-bold tracking-widest uppercase mt-0.5 mb-1">Nurjaya Abadi Photocopy</p>
                         
-                        <ul class="space-y-1 font-semibold text-slate-700 flex-1 flex flex-col justify-between">
-                            <li class="flex justify-between items-center bg-white/80 border border-emerald-900/10 rounded-xl px-2.5 py-1.5 shadow-sm">
-                                <span class="flex items-center gap-1.5 text-slate-900 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-600"></span>Jadwal 2 Karyawan (Full Team)</span>
-                                <span id="rekap-jadwal-2" class="font-black text-emerald-900 bg-emerald-100/90 px-2 py-0.5 rounded-lg border border-emerald-200 text-[9.5px]">0 hari</span>
-                            </li>
-                            <li class="flex justify-between items-center bg-white/80 border border-emerald-900/10 rounded-xl px-2.5 py-1.5 shadow-sm">
-                                <span class="flex items-center gap-1.5 text-slate-900 font-bold"><span class="w-2 h-2 rounded-full bg-cyan-600"></span>Jadwal 1 Karyawan (Lembur)</span>
-                                <span id="rekap-jadwal-1" class="font-black text-cyan-900 bg-cyan-100/90 px-2 py-0.5 rounded-lg border border-cyan-200 text-[9.5px]">0 hari</span>
-                            </li>
-                            <li class="flex justify-between items-center bg-white/80 border border-emerald-900/10 rounded-xl px-2.5 py-1.5 shadow-sm">
-                                <span class="flex items-center gap-1.5 text-slate-900 font-bold"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Jatah Libur</span>
-                                <span id="rekap-libur" class="font-black text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-lg border border-amber-200 text-[9.5px]">0 hari</span>
-                            </li>
-                            <li class="flex justify-between items-center bg-white/80 border border-rose-900/20 rounded-xl px-2.5 py-1.5 shadow-sm">
-                                <span class="flex items-center gap-1.5 text-rose-950 font-bold"><span class="w-2 h-2 rounded-full bg-rose-600"></span>Absen Lainnya</span>
-                                <span id="rekap-absen" class="font-black text-rose-900 bg-rose-100 px-2 py-0.5 rounded-lg border border-rose-200 text-[9.5px]">0 hari</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Panel Kanan: Perhitungan Potongan Jam & Catatan -->
-                    <div class="p-3 border border-slate-700 bg-emerald-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
-                        <div class="flex flex-col flex-1 justify-between gap-2">
-                            <div class="flex items-stretch gap-2 flex-shrink-0">
-                                <div class="w-1/3 flex flex-col">
-                                    <span class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Potongan Jam</span>
-                                    <div id="modal-total-potongan" class="w-full flex-1 min-h-[32px] px-1 py-1 bg-white border border-slate-700 font-black text-center text-[10px] flex items-center justify-center text-rose-700 shadow-inner rounded-xl mt-0.5">0 jam 0 menit</div>
-                                </div>
-                                <div class="w-2/3 flex flex-col">
-                                    <label id="label-alasan" for="modal-alasan-potongan-custom" class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Alasan Izin</label>
-                                    <input type="text" id="modal-alasan-potongan-custom" placeholder="Ketik alasan di sini." class="print:hidden w-full flex-1 min-h-[32px] px-2 py-1 bg-white border border-slate-700 text-[10px] font-bold mt-0.5 focus:bg-emerald-50/40 focus:outline-none placeholder:text-slate-400 rounded-xl transition-all shadow-inner">
-                                    <div id="mirror-alasan-potongan-custom" class="hidden print:flex w-full flex-1 min-h-[32px] px-2 py-1 bg-white border border-slate-700 text-[10px] font-bold mt-0.5 items-center text-slate-800 text-left whitespace-pre-wrap break-words rounded-xl">-</div>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col flex-1 justify-end">
-                                <label class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight mb-1">Catatan Keterangan</label>
-                                <div class="print:hidden flex flex-col gap-1 flex-1 justify-between">
-                                    <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0.5 shadow-inner rounded-lg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
-                                        <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none">
-                                    </div>
-                                    <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0.5 shadow-inner rounded-lg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
-                                        <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none">
-                                    </div>
-                                    <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0.5 shadow-inner rounded-lg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
-                                        <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none">
-                                    </div>
-                                    <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0.5 shadow-inner rounded-lg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
-                                        <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none">
-                                    </div>
-                                    <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0.5 shadow-inner rounded-lg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
-                                        <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none">
-                                    </div>
-                                </div>
-                                <div class="hidden print:block w-full flex-1 text-left">
-                                    <ul id="mirror-catatan-final" class="space-y-0.5 text-[9px] font-bold text-slate-800 list-none p-0 m-0 [word-break:break-word]">
-                                        <li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- Teks otomatis sinkron di sini saat dicetak -</li>
-                                    </ul>
-                                </div>
+                        <div class="grid grid-cols-3 text-[11px] font-medium text-slate-600 border-t border-slate-200 pt-1.5 max-w-2xl mx-auto">
+                            <div class="text-left">Nama: <span id="modal-nama-karyawan" class="font-bold text-slate-900">--</span></div>
+                            <div class="text-center">Unit: <span class="font-bold text-slate-900">Nurjaya Abadi Photocopy</span></div>
+                            <div class="text-right flex flex-col items-end leading-tight">
+                                <div>Periode: <span id="modal-periode-kerja" class="font-bold text-slate-900 italic">--</span></div>
+                                <div class="text-[10px] text-emerald-800 font-bold mt-0.5">Jumlah Hari Kerja: <span id="modal-total-hari-kerja" class="font-black bg-emerald-100 px-1.5 py-0.5 rounded-lg text-emerald-900">0</span></div>
                             </div>
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-2 gap-3 items-stretch flex-1 mb-2">
+                        
+                        <div class="border border-slate-700 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
+                            <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-slate-700">
+                                <thead>
+                                    <tr class="bg-emerald-700 font-black text-white uppercase text-[9px] tracking-tight">
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[14%]">Hari Ke-</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[22%]">Tgl / Hari</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[14%]">Masuk Kerja</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[22%]">Jenis Jadwal</th>
+                                        <th class="border-b border-slate-700 py-1.5 w-[28%]">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-kiri-body" class="font-bold text-slate-800 divide-y divide-slate-700 h-full"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="border border-slate-700 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
+                            <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-slate-700">
+                                <thead>
+                                    <tr class="bg-emerald-700 font-black text-white uppercase text-[9px] tracking-tight">
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[14%]">Hari Ke-</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[22%]">Tgl / Hari</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[14%]">Masuk Kerja</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[22%]">Jenis Jadwal</th>
+                                        <th class="border-b border-slate-700 py-1.5 w-[28%]">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-kanan-body" class="font-bold text-slate-800 divide-y divide-slate-700 h-full"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 border-t-2 border-slate-700 pt-2 flex-shrink-0 items-stretch">
+                        
+                        <div class="p-3 border border-slate-700 bg-emerald-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
+                            <h4 class="font-black text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-2 flex items-center gap-1.5 flex-shrink-0">
+                                <i class="fa-solid fa-square-poll-vertical text-emerald-700"></i> Rekapitulasi Data Kehadiran
+                            </h4>
+                            
+                            <ul class="space-y-1 font-semibold text-slate-700 flex-1 flex flex-col justify-start gap-1.5">
+                                <li class="flex justify-between items-center bg-white/80 border border-emerald-900/10 rounded-xl px-2.5 py-1.5 shadow-sm flex-shrink-0">
+                                    <span class="flex items-center gap-1.5 text-slate-900 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-600"></span>Jadwal 2 Karyawan (Full Team)</span>
+                                    <span id="rekap-jadwal-2" class="font-black text-emerald-900 bg-emerald-100/90 px-2 py-0.5 rounded-lg border border-emerald-200 text-[9.5px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white/80 border border-emerald-900/10 rounded-xl px-2.5 py-1.5 shadow-sm flex-shrink-0">
+                                    <span class="flex items-center gap-1.5 text-slate-900 font-bold"><span class="w-2 h-2 rounded-full bg-cyan-600"></span>Jadwal 1 Karyawan (Lembur)</span>
+                                    <span id="rekap-jadwal-1" class="font-black text-cyan-900 bg-cyan-100/90 px-2 py-0.5 rounded-lg border border-cyan-200 text-[9.5px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white/80 border border-emerald-900/10 rounded-xl px-2.5 py-1.5 shadow-sm flex-shrink-0">
+                                    <span class="flex items-center gap-1.5 text-slate-900 font-bold"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Jatah Libur</span>
+                                    <span id="rekap-libur" class="font-black text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-lg border border-amber-200 text-[9.5px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white/80 border border-rose-900/20 rounded-xl px-2.5 py-1.5 shadow-sm flex-shrink-0">
+                                    <span class="flex items-center gap-1.5 text-rose-950 font-bold"><span class="w-2 h-2 rounded-full bg-rose-600"></span>Absen Lainnya</span>
+                                    <span id="rekap-absen" class="font-black text-rose-900 bg-rose-100 px-2 py-0.5 rounded-lg border border-rose-200 text-[9.5px]">0 hari</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="p-3 border border-slate-700 bg-emerald-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
+                            <div class="flex flex-col flex-1 justify-between gap-1.5">
+                                
+                                <div class="flex flex-col gap-1 flex-shrink-0">
+                                    <div class="flex items-stretch gap-2">
+                                        <div class="w-1/3 flex flex-col">
+                                            <span class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Potongan Jam</span>
+                                            <div id="modal-total-potongan" class="w-full flex-1 min-h-[26px] px-1 py-0.5 bg-white border border-slate-700 font-black text-center text-[10px] flex items-center justify-center text-rose-700 shadow-inner rounded-xl">0 jam 0 menit</div>
+                                        </div>
+                                        <div class="w-2/3 flex flex-col">
+                                            <label id="label-alasan" for="modal-alasan-potongan-custom" class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Alasan Potongan Jam</label>
+                                            <input type="text" id="modal-alasan-potongan-custom" placeholder="Alasan Potongan" class="print:hidden w-full flex-1 min-h-[26px] px-2 py-0.5 bg-white border border-slate-700 text-[10px] font-bold focus:bg-emerald-50/40 focus:outline-none placeholder:text-slate-400 rounded-xl transition-all shadow-inner block">
+                                            <div id="mirror-alasan-potongan-custom" class="hidden print:flex w-full flex-1 min-h-[26px] px-2 py-0.5 bg-white border border-slate-700 text-[10px] font-bold items-center text-slate-800 text-left whitespace-pre-wrap break-words rounded-xl">-</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-stretch gap-2">
+                                        <div class="w-1/3 flex flex-col">
+                                            <span class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Tambahan Jam</span>
+                                            <div id="modal-total-tambahan" class="w-full flex-1 min-h-[26px] px-1 py-0.5 bg-white border border-slate-700 font-black text-center text-[10px] flex items-center justify-center text-emerald-700 shadow-inner rounded-xl">0 jam 0 menit</div>
+                                        </div>
+                                        <div class="w-2/3 flex flex-col">
+                                            <label for="modal-alasan-tambahan-custom" class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Alasan Tambahan Jam</label>
+                                            <input type="text" id="modal-alasan-tambahan-custom" placeholder="Alasan Tambahan" class="print:hidden w-full flex-1 min-h-[26px] px-2 py-0.5 bg-white border border-slate-700 text-[10px] font-bold focus:bg-emerald-50/40 focus:outline-none placeholder:text-slate-400 rounded-xl transition-all shadow-inner block">
+                                            <div id="mirror-alasan-tambahan-custom" class="hidden print:flex w-full flex-1 min-h-[26px] px-2 py-0.5 bg-white border border-slate-700 text-[10px] font-bold items-center text-slate-800 text-left whitespace-pre-wrap break-words rounded-xl">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col flex-1 justify-end">
+                                    <label class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight mb-1">Catatan Keterangan</label>
+                                    <div class="print:hidden flex flex-col gap-1 flex-1 justify-between">
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                    </div>
+                                    <div class="hidden print:block w-full flex-1 text-left">
+                                        <ul id="mirror-catatan-final" class="space-y-0.5 text-[9px] font-bold text-slate-800 list-none p-0 m-0 [word-break:break-word]">
+                                            <li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- Teks otomatis sinkron di sini saat dicetak -</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
+            </div> 
         </div>
 
-        <!-- Action Footer -->
         <div class="px-6 py-4 bg-slate-950/90 border-t border-slate-800 flex flex-col sm:flex-row justify-end gap-3 flex-shrink-0">
             <button type="button" id="btn-upload-presensi-cloud" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-emerald-400 hover:text-emerald-300 font-bold text-xs rounded-2xl uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 border border-slate-700/60 shadow-md transform active:scale-95">
                 <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive
