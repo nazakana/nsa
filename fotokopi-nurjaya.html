@@ -6526,23 +6526,33 @@ document.addEventListener("DOMContentLoaded", function() {
         clearInterval(intervalTeks);
     }
 
-    function tampilkanIframe(base64Data) {
+    function tampilkanIframe(fileData) {
         clearInterval(intervalTeks);
         loadingPdfAnimation.classList.add("hidden");
         placeholderPdfText.classList.add("hidden");
         iframePreviewPdf.classList.remove("hidden");
         
         try {
-            // Bersihkan sisa Blob URL sebelumnya jika ada
-            if (iframePreviewPdf.src.startsWith("blob:")) {
-                URL.revokeObjectURL(iframePreviewPdf.src.split("#")[0]);
-            }
-
-            // Konversi teks raksasa base64 menjadi lokal Blob URL (Anti-Lemot di Desktop & Muncul di HP)
-            const blob = base64ToBlob(base64Data, "application/pdf");
-            const blobUrl = URL.createObjectURL(blob);
+            // 1. Deteksi otomatis apakah user membuka lewat HP (Android / iOS / Tablet)
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             
-            iframePreviewPdf.src = blobUrl + "#toolbar=0&navpanes=0&view=FitH";
+            // 2. KONDISI HP: Ikuti metode Apotek (Pake Link Preview Drive + Minimal Menu)
+            if (isMobile && fileData.pdf_embed_url) {
+                iframePreviewPdf.src = fileData.pdf_embed_url + "&rm=minimal";
+            } 
+            // 3. KONDISI LAPTOP/DESKTOP: Tetap pakai metode Base64 asli Fotokopi yang super cepat
+            else {
+                if (iframePreviewPdf.src.startsWith("blob:")) {
+                    URL.revokeObjectURL(iframePreviewPdf.src.split("#")[0]);
+                }
+                // Jika data yang dikirim berupa objek utuh, ambil properti pdf_base64-nya
+                const rawBase64 = typeof fileData === "object" ? fileData.pdf_base64 : fileData;
+                
+                const blob = base64ToBlob(rawBase64, "application/pdf");
+                const blobUrl = URL.createObjectURL(blob);
+                
+                iframePreviewPdf.src = blobUrl + "#toolbar=0&navpanes=0&view=FitH";
+            }
         } catch (error) {
             console.error("Gagal merender PDF:", error);
             sembunyikanIframe("Gagal memproses visualisasi enkripsi data PDF.");
@@ -6595,23 +6605,26 @@ document.addEventListener("DOMContentLoaded", function() {
     if (btnBukaModalGaji) btnBukaModalGaji.addEventListener("click", bukaModalGaji);
     if (btnTutupModalGaji) btnTutupModalGaji.addEventListener("click", tutupModalGaji);
 
-    // --- EVENT TRIGGER DROPDOWN KARYAWAN ---
+// --- EVENT TRIGGER DROPDOWN KARYAWAN (KEMBALI KE VALUE ASLI) ---
     selectGajiKaryawan.addEventListener("change", function() {
+        // KEMBALI KE AWAL: Ambil nilai value murni (Contoh: "Dadan" atau "Cahya")
         const keywordNama = this.value; 
         if (!keywordNama) return;
 
         // Picu animasi loading interaktif di dalam iframe
         jalankanAnimasiLoading();
 
-        // Jalankan Ajax Fetch ke Apps Script Anda
-        fetch(`${API_URL_GET_PDF}?karyawan=${keywordNama}`)
+        // Jalankan Ajax Fetch menggunakan kata kunci singkat bawaan asli Anda
+        fetch(`${API_URL_GET_PDF}?karyawan=${encodeURIComponent(keywordNama)}`)
             .then(response => response.json())
             .then(result => {
                 if (result.status === "success" && result.data.length > 0) {
                     const fileData = result.data[0];
-                    tampilkanIframe(fileData.pdf_base64);
+                    
+                    // Kirim objek utuh agar fungsi tampilkanIframe bisa pilah data untuk HP/Laptop
+                    tampilkanIframe(fileData); 
                 } else {
-                    sembunyikanIframe(`Arsip tidak ditemukan! Gagal mencari file '${keywordNama}' di folder Drive.`);
+                    sembunyikanIframe(`Arsip tidak ditemukan! Gagal mencari file dengan kata kunci '${keywordNama}' di folder Drive.`);
                 }
             })
             .catch(error => {
