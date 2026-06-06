@@ -5037,91 +5037,104 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
-    // =========================================================================
-    // FUNGSI 7: ARSIP KARTU PRESENSI KE GOOGLE DRIVE
-    // =========================================================================
-    if (btnUploadPresensiCloud) {
-        btnUploadPresensiCloud.addEventListener("click", function() {
-            const elementTarget = document.getElementById("area-cetak-pdf");
-            if (!elementTarget) return;
+// =========================================================================
+// FUNGSI 7: ARSIP KARTU PRESENSI KE GOOGLE DRIVE SEBAGAI GAMBAR JPG (FIXED PERFECT)
+// =========================================================================
+if (btnUploadPresensiCloud) {
+    btnUploadPresensiCloud.addEventListener("click", function() {
+        const elementTarget = document.getElementById("area-cetak-pdf");
+        if (!elementTarget) return;
 
-            if (elementTarget.innerText.includes("Memuat data...")) {
-                return alert("Mohon tunggu, data riwayat presensi belum selesai dimuat!");
-            }
+        if (elementTarget.innerText.includes("Memuat data...")) {
+            return alert("Mohon tunggu, data riwayat presensi belum selesai dimuat!");
+        }
 
-            sinkronisasiTeksKeMirror();
+        sinkronisasiTeksKeMirror();
 
-            const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
-            const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
-            const namaFile = `Presensi_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.pdf`;
+        const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
+        const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
+        
+        // 1. Nama file tetap berakhiran .jpg
+        const namaFile = `Presensi_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.jpg`;
+        
+        btnUploadPresensiCloud.setAttribute("disabled", "disabled");
+        btnUploadPresensiCloud.classList.add("opacity-50", "cursor-not-allowed");
+        btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Merender Gambar...`;
+
+        const styleAsli = elementTarget.getAttribute("style") || "";
+        elementTarget.style.setProperty("transform", "none", "important");
+        elementTarget.style.setProperty("margin-bottom", "0px", "important");
+
+        // Setelan disamakan 100% dengan Fungsi 6 (PDF) milikmu yang terbukti rapi
+        const opsiSetelan = {
+            margin:       0,
+            filename:     namaFile,
+            image:        { type: 'jpeg', quality: 1.0 },
+            html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
+            jsPDF:        { unit: 'cm', format: [20, 20], orientation: 'portrait' }, 
+            pagebreak:    { mode: ['css', 'legacy'] }
+        };
+
+        // 🚀 MANFAATKAN ENGINE HTML2PDF YANG SUDAH WORK!
+        // Kita panggil html2pdf, tapi alurnya dialihkan ke bentuk Image Data URL (bukan di-save jadi file pdf)
+        html2pdf().set(opsiSetelan).from(elementTarget).outputImg('dataurl').then(function(dataUri) {
+            // Kembalikan style asli setelah mesin html2pdf beres bekerja
+            elementTarget.setAttribute("style", styleAsli);
             
-            btnUploadPresensiCloud.setAttribute("disabled", "disabled");
-            btnUploadPresensiCloud.classList.add("opacity-50", "cursor-not-allowed");
-            btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Merender & Mengupload...`;
-
-            const styleAsli = elementTarget.getAttribute("style") || "";
-            elementTarget.style.setProperty("transform", "none", "important");
-            elementTarget.style.setProperty("margin-bottom", "0px", "important");
-
-            const opsiSetelan = {
-                margin:       0,
-                filename:     namaFile,
-                image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
-                jsPDF:        { unit: 'cm', format: [20, 20], orientation: 'portrait' }, 
-                pagebreak:    { mode: ['css', 'legacy'] }
-            };
-
-            html2pdf().set(opsiSetelan).from(elementTarget).outputPdf('base64').then(function(base64String) {
-                elementTarget.setAttribute("style", styleAsli);
-                if (!base64String || base64String.trim() === "") {
-                    return html2pdf().set(opsiSetelan).from(elementTarget).output('datauristring').then(function(dataUri) {
-                        const base64DariUri = dataUri.split(',')[1];
-                        if (!base64DariUri) throw new Error("Gagal mengurai fallback Base64 DataURI.");
-                        return kirimKeAppsScript(base64DariUri, namaFile);
-                    });
-                }
-                return kirimKeAppsScript(base64String, namaFile);
-            })
-            .catch(err => {
-                console.error("Error ekspor/upload:", err);
-                elementTarget.setAttribute("style", styleAsli);
-                alert("Gagal merender/mengirim PDF: " + err.message);
-                resetStatusTombolUpload();
-            });
-        });
-    }
-
-    function kirimKeAppsScript(base64Data, namaFile) {
-        const payloadCloud = { action: "generateServerPDF", filename: namaFile, pdf_blob: base64Data };
-        fetch(API_URL_UPLOAD_DRIVE, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" }, 
-            body: JSON.stringify(payloadCloud)
-        })
-        .then(response => {
-            if (!response.ok) throw new Error("Server merespon dengan status " + response.status);
-            return response.json();
-        })
-        .then(result => {
-            alert(result.status === "success" ? result.message : "Gagal memproses di Cloud: " + result.message);
+            // Ambil string base64 dari Data URI gambar hasil render perfect html2pdf
+            const base64String = dataUri.split(',')[1];
+            
+            if (!base64String || base64String.trim() === "") {
+                throw new Error("Gagal mengambil data gambar presensi.");
+            }
+            
+            btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Mengupload Gambar...`;
+            
+            // Kirim ke Apps Script kamu
+            return kirimKeAppsScript(base64String, namaFile);
         })
         .catch(err => {
-            console.error("Fetch Error:", err);
-            alert("Terjadi gangguan komunikasi dengan server upload: " + err.message);
-        })
-        .finally(() => { resetStatusTombolUpload(); });
-    }
+            console.error("Error ekspor/upload gambar:", err);
+            elementTarget.setAttribute("style", styleAsli);
+            alert("Gagal merender/mengirim Gambar: " + err.message);
+            resetStatusTombolUpload();
+        });
+    });
+}
 
-    function transformToScaleNormal() {
-        if (btnUploadPresensiCloud) {
-            btnUploadPresensiCloud.removeAttribute("disabled");
-            btnUploadPresensiCloud.classList.remove("opacity-50", "cursor-not-allowed");
-            btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive`;
-        }
-    }
-    const resetStatusTombolUpload = transformToScaleNormal;
+function kirimKeAppsScript(base64Data, namaFile) {
+    // Payload diubah action-nya agar Apps Script tahu ini adalah file Gambar
+    const payloadCloud = { action: "generateServerJPG", filename: namaFile, image_blob: base64Data };
+    fetch(API_URL_UPLOAD_DRIVE, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+        body: JSON.stringify(payloadCloud)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Server merespon dengan status " + response.status);
+        return response.json();
+    })
+    .then(result => {
+        alert(result.status === "success" ? result.message : "Gagal memproses di Cloud: " + result.message);
+    })
+    .catch(err => {
+        console.error("Fetch Error:", err);
+        alert("Terjadi gangguan komunikasi dengan server upload: " + err.message);
+    })
+    .finally(() => { resetStatusTombolUpload(); });
+}
 
+function transformToScaleNormal() {
+    if (btnUploadPresensiCloud) {
+        btnUploadPresensiCloud.removeAttribute("disabled");
+        btnUploadPresensiCloud.classList.remove("opacity-50", "cursor-not-allowed");
+        btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive`;
+    }
+}
+const resetStatusTombolUpload = transformToScaleNormal;
+	
+	
+	
     // =========================================================================
     // FUNGSI 8: SUBMIT DATA FORM UTAMA KE CLOUD SPREADSHEET (INTEGRASI v4.8)
     // =========================================================================
@@ -5912,29 +5925,93 @@ function tutupModalBK_Wrapper() {
     </div>
 </div>
 
+<!-- SPLASH SCREEN ASISTEN HITUNG GAJI -->
+<div id="loading-engine-keuangan" class="fixed inset-0 bg-white z-[14000] flex items-center justify-center p-6 transition-all duration-500 opacity-0 pointer-events-none select-none">
+    
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:3rem_3rem] opacity-70"></div>
+    <div class="absolute w-[35rem] h-[35rem] bg-emerald-50/40 rounded-full blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
 
-<!-- ========================================== -->
-<!-- OVERLAY ANIMASI ENGINE KEUANGAN (NEW)      -->
-<!-- ========================================== -->
-<div id="loading-engine-keuangan" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[14000] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
-    <div class="text-center max-w-xs w-full flex flex-col items-center">
-        <!-- Efek Gear Berputar -->
-        <div class="relative w-16 h-16 mb-6 flex items-center justify-center">
-            <div class="absolute -inset-4 bg-rose-500/10 rounded-full blur-2xl animate-pulse"></div>
-            <i class="fa-solid fa-cog text-4xl text-rose-500 animate-[spin_4s_infinite_linear]"></i>
-            <i class="fa-solid fa-gear text-2xl text-amber-400 absolute -top-1 -right-1 animate-[spin_2s_infinite_linear_reverse]"></i>
-            <i class="fa-solid fa-calculator text-sm text-white absolute"></i>
+    <div class="text-center max-w-md w-full flex flex-col items-center relative z-10">
+        
+        <div class="relative w-full max-w-[320px] h-28 mb-10 flex items-center justify-center">
+            
+            <div class="absolute h-[2px] w-4/5 bg-slate-100 top-1/2 -translate-y-1/2 z-0">
+                <div class="h-full w-1/3 bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-[flow_1.5s_infinite_linear]"></div>
+            </div>
+
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 z-10 animate-[float-slow_3s_infinite_ease-in-out]">
+                <div class="bg-white border border-slate-200 text-slate-600 p-3 rounded-full shadow-sm flex flex-col items-center justify-center w-12 h-12">
+                    <i class="fa-solid fa-user-clock text-base text-slate-500"></i>
+                </div>
+                <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-bold text-slate-400 tracking-wider whitespace-nowrap">PRESENSI</span>
+            </div>
+
+            <div class="absolute left-16 top-2 z-10 animate-[float-fast_2.5s_infinite_ease-in-out]">
+                <div class="bg-white border border-slate-150 text-slate-600 p-2.5 rounded-full shadow-sm flex items-center justify-center w-10 h-10">
+                    <i class="fa-solid fa-business-time text-sm text-emerald-600"></i>
+                </div>
+            </div>
+
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 z-10 animate-[float-slow_3.5s_infinite_ease-in-out]">
+                <div class="bg-white border border-slate-200 text-slate-600 p-3 rounded-full shadow-sm flex flex-col items-center justify-center w-12 h-12">
+                    <i class="fa-solid fa-wallet text-base text-slate-500"></i>
+                </div>
+                <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-bold text-slate-400 tracking-wider whitespace-nowrap">PAYROLL</span>
+            </div>
+
+            <div class="absolute right-16 bottom-1 z-10 animate-[float-fast_2.8s_infinite_ease-in-out]">
+                <div class="bg-white border border-slate-150 text-slate-600 p-2.5 rounded-full shadow-sm flex items-center justify-center w-10 h-10">
+                    <i class="fa-solid fa-chart-pie text-sm text-lime-600"></i>
+                </div>
+            </div>
+
+            <div class="relative z-20 w-20 h-20 flex items-center justify-center">
+                <div class="absolute inset-0 border border-emerald-500/20 rounded-2xl scale-125 animate-ping duration-1000"></div>
+                
+                <div class="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-600/20 transform rotate-4">
+                    <div class="transform -rotate-4 flex items-center justify-center">
+                        <i class="fa-solid fa-calculator text-2xl text-white"></i>
+                    </div>
+                </div>
+            </div>
+
         </div>
         
-        <!-- Teks Progres Dinamis -->
-        <p id="teks-engine-loading" class="text-xs font-black text-rose-200 tracking-widest uppercase mb-3 min-h-[16px]">Memulai Engine...</p>
+        <div class="flex items-center gap-1.5 mb-1.5">
+            <span class="h-[1px] w-3 bg-slate-300"></span>
+            <span class="text-[9px] font-bold text-slate-400 tracking-[0.3em] uppercase">Nurjaya Smart Archive</span>
+            <span class="h-[1px] w-3 bg-slate-300"></span>
+        </div>
         
-        <!-- Progress Bar -->
-        <div class="h-1 w-40 bg-slate-800 rounded-full overflow-hidden relative">
-            <div id="bar-engine-loading" class="h-full w-0 bg-gradient-to-r from-rose-500 to-amber-500 rounded-full transition-all duration-300 ease-out"></div>
+        <h3 id="teks-engine-loading" class="text-sm font-bold text-slate-700 tracking-wide mb-5 min-h-[20px]">
+            Menyiapkan Asisten Hitung...
+        </h3>
+        
+        <div class="h-1 w-44 bg-slate-100 rounded-full overflow-hidden relative border border-slate-200/40">
+            <div id="bar-engine-loading" class="h-full w-0 bg-emerald-600 rounded-full transition-all duration-300 ease-out"></div>
+        </div>
+
+        <div class="flex items-center gap-1 mt-6 text-slate-400 text-[9px] font-medium tracking-wide">
+            <i class="fa-solid fa-lock text-emerald-600 text-[10px]"></i>
+            <span class="uppercase text-slate-400">Enkripsi Payroll Aman</span>
         </div>
     </div>
 </div>
+
+<style>
+@keyframes float-slow {
+    0%, 100% { transform: translateY(-50%) translateY(-4px); }
+    50% { transform: translateY(-50%) translateY(4px); }
+}
+@keyframes float-fast {
+    0%, 100% { transform: translateY(3px); }
+    50% { transform: translateY(-3px); }
+}
+@keyframes flow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(300%); }
+}
+</style>
 
 
 
@@ -6021,28 +6098,35 @@ function tutupModalBK_Wrapper() {
 				
 				
 				
-                <div class="bg-white border-2 border-dashed border-slate-200 iframe-container-1to1 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-xl">
+				
+				<div class="bg-white border-2 border-dashed border-slate-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-xl w-full aspect-square">
     
-    <div id="placeholder-pdf-text" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-10">
-        <i class="fa-solid fa-file-pdf text-4xl text-slate-300 mb-3"></i>
+    <div id="placeholder-pdf-text" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
+        <i class="fa-solid fa-image text-4xl text-slate-300 mb-3"></i>
         <p class="text-xs font-bold">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
     </div>
 
-    <div id="loading-pdf-animation" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/80 z-20 select-none animate-pulse">
+    <div id="loading-pdf-animation" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/90 z-50 select-none animate-pulse transition-all duration-200">
         <div class="relative mb-4">
             <div class="absolute -inset-4 bg-emerald-100 rounded-full blur-xl opacity-70 animate-ping"></div>
             <i class="fa-solid fa-file-invoice-dollar text-5xl text-emerald-500 relative animate-bounce"></i>
         </div>
-        <div class="space-y-2 w-2/3">
+        <div class="space-y-2 w-2/3 mx-auto">
             <p id="teks-progres-loading" class="text-xs font-black text-emerald-700 tracking-wide">Menghubungkan ke NSA Cloud...</p>
             <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
-                <div class="h-full w-1/2 bg-emerald-500 rounded-full absolute top-0 left-0 animate-[shimmer_1.5s_infinite] ease-in-out" style="animation: slide 1.5s infinite"></div>
+                <div class="h-full w-1/2 bg-emerald-500 rounded-full absolute top-0 left-0" style="animation: slide 1.5s infinite"></div>
             </div>
         </div>
     </div>
 
-    <iframe id="iframe-preview-pdf" class="hidden w-full h-full rounded-xl z-30" src=""></iframe>
+    <img id="iframe-preview-pdf" 
+         class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300" 
+         src="" 
+         alt="Preview Kartu Presensi">
 </div>
+
+
+
 
 <style>
 @keyframes slide {
@@ -6425,86 +6509,67 @@ function tutupModalBK_Wrapper() {
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. Definisikan URL API Apps Script Standalone khusus PDF milik Anda
+    // 1. URL API Apps Script Standalone khusus penampil JPG (Pastikan ini URL doGet yang baru di-deploy)
     const API_URL_GET_PDF = "https://script.google.com/macros/s/AKfycbyM3-Z9bjejXlNYvBMuuNHL_KjiChYr56BZftvqnURDAETMSgB5fniZeqaxfSNwOXHD5A/exec";
 
-    // 2. Definisi Elemen DOM Modal Slip Gaji
+    // 2. Definisi Elemen DOM
     const btnBukaModalGaji    = document.getElementById("btn-buka-modal-gaji");
     const btnTutupModalGaji   = document.getElementById("btn-tutup-modal-gaji");
     const modalSlipGaji       = document.getElementById("modal-slip-gaji");
     const selectGajiKaryawan = document.getElementById("gaji-pilih-karyawan");
-    const iframePreviewPdf    = document.getElementById("iframe-preview-pdf");
+    
+    const imagePreviewContainer = document.getElementById("iframe-preview-pdf"); // ini tag <img> baru kamu
     const placeholderPdfText = document.getElementById("placeholder-pdf-text");
     const loadingPdfAnimation = document.getElementById("loading-pdf-animation");
     const teksProgresLoading  = document.getElementById("teks-progres-loading");
     
-    // DEFINISI ELEMEN LOADER ENGINE KEUANGAN (NEW)
     const loaderEngineKeuangan = document.getElementById('loading-engine-keuangan');
     const txtEngineLoading     = document.getElementById('teks-engine-loading');
     const barEngineLoading     = document.getElementById('bar-engine-loading');
     
-    let intervalTeks; // Penampung timer teks
+    let intervalTeks;
 
-    // Fungsi Pembantu: Mengubah String Base64 Menjadi Blob Objek yang Sangat Ringan (Fix Mobile Bug)
-    function base64ToBlob(base64, type = "application/pdf") {
-        const kepinganBase64 = base64.includes(",") ? base64.split(",")[1] : base64;
-        const byteCharacters = atob(kepinganBase64);
-        const byteNumbers = new Array(byteCharacters.length);
-        
-        for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        
-        const byteArray = new Uint8Array(byteNumbers);
-        return new Blob([byteArray], { type: type });
-    }
-
-    // --- FUNGSI BUKA & TUTUP MODAL DENGAN ENGINE ANIMATION ---
+    // --- FUNGSI BUKA & TUTUP MODAL ---
     function bukaModalGaji() {
         if (!loaderEngineKeuangan) {
             bukaModalGajiAsli();
             return;
         }
 
-        // 1. Munculkan Overlay Loading Engine Keuangan
+        // 1. Ambil & Munculkan Splash Screen Light Mode
         loaderEngineKeuangan.classList.remove('opacity-0', 'pointer-events-none');
-        
-        // Tahap 1: Baca Database
         barEngineLoading.style.width = '30%';
-        txtEngineLoading.innerText = '🤖 Membaca Database Presensi...';
+        txtEngineLoading.innerText = 'Mengumpulkan Riwayat Presensi Karyawan...';
 
-        // Tahap 2: Sinkronisasi Jam Kerja (800ms)
+        // 2. Fase Sinkronisasi (0.4 Detik)
         setTimeout(() => {
             barEngineLoading.style.width = '65%';
-            txtEngineLoading.innerText = '⚙️ Menyinkronkan Jam Kerja...';
-        }, 800);
+            txtEngineLoading.innerText = 'Mengalkulasi Jam Kerja...';
+        }, 400);
 
-        // Tahap 3: Kalkulasi Form (1600ms)
+        // 3. Fase Formulasi Gaji (0.8 Detik)
         setTimeout(() => {
             barEngineLoading.style.width = '100%';
-            txtEngineLoading.innerText = '📊 Menyiapkan Engine Slip Gaji...';
-        }, 1600);
+            txtEngineLoading.innerText = 'Menyiapkan Program Slip Gaji...';
+        }, 800);
 
-        // Tahap Akhir: Tutup Loader & Buka Modal Utama (2400ms)
+        // 4. Selesai & Luncurkan Modal Utama (1.2 Detik)
         setTimeout(() => {
             loaderEngineKeuangan.classList.add('opacity-0', 'pointer-events-none');
             
-            // Reset progres bar untuk pemanggilan berikutnya
-            setTimeout(() => { barEngineLoading.style.width = '0%'; }, 300);
-
-            // Tampilkan Modal Utama
+            // Reset bar ke 0% setelah transisi memudar selesai (0.2 detik)
+            setTimeout(() => { barEngineLoading.style.width = '0%'; }, 200);
+            
             bukaModalGajiAsli();
-        }, 2400);
+        }, 1200);
     }
-
-    // Fungsi internal untuk memunculkan modal utama
     function bukaModalGajiAsli() {
         modalSlipGaji.classList.remove("opacity-0", "pointer-events-none");
         modalSlipGaji.querySelector('.transform').classList.remove('scale-95');
         modalSlipGaji.querySelector('.transform').classList.add('scale-100');
         
         selectGajiKaryawan.value = "";
-        sembunyikanIframe("Silakan pilih nama karyawan di atas untuk memuat Kartu Presensi.");
+        sembunyikanPreview("Silakan pilih nama karyawan di atas untuk memuat Kartu Presensi.");
     }
 
     function tutupModalGaji() {
@@ -6512,97 +6577,127 @@ document.addEventListener("DOMContentLoaded", function() {
         modalSlipGaji.querySelector('.transform').classList.remove('scale-100');
         modalSlipGaji.querySelector('.transform').classList.add('scale-95');
         
-        // Bersihkan memori Blob lama di browser agar tidak bengkak
-        if (iframePreviewPdf.src.startsWith("blob:")) {
-            URL.revokeObjectURL(iframePreviewPdf.src.split("#")[0]);
-        }
-        
-        iframePreviewPdf.src = ""; 
+        // Bersihkan src tanpa membawa logika Blob lama
+        imagePreviewContainer.removeAttribute("src"); 
+        imagePreviewContainer.classList.add("hidden");
         clearInterval(intervalTeks);
     }
 
-    function tampilkanIframe(fileData) {
-    clearInterval(intervalTeks);
-    loadingPdfAnimation.classList.add("hidden");
-    placeholderPdfText.classList.add("hidden");
-    iframePreviewPdf.classList.remove("hidden");
-    
-    // Gunakan url yang sudah kita buat di Code.gs (yang pakai docs.google.com/viewer)
-    // Ini jauh lebih tahan terhadap blokir Google
-    iframePreviewPdf.src = fileData.pdf_embed_url;
-}
-
-    function sembunyikanIframe(pesanTeks) {
+   // FUNGSI BARU: Menampilkan Gambar JPG via Direct CDN Link Google
+    function tampilkanPreviewGambar(fileData) {
         clearInterval(intervalTeks);
         
-        if (iframePreviewPdf.src.startsWith("blob:")) {
-            URL.revokeObjectURL(iframePreviewPdf.src.split("#")[0]);
+        if (!fileData || !fileData.image_direct_url) {
+          sembunyikanPreview("Gagal memproses link gambar dari NSA Cloud.");
+          return;
         }
+
+        loadingPdfAnimation.classList.add("hidden");
+        placeholderPdfText.classList.add("hidden");
         
-        iframePreviewPdf.classList.add("hidden");
-        iframePreviewPdf.src = "";
+        // Suntikkan URL gambar langsung ke tag <img>
+        imagePreviewContainer.src = fileData.image_direct_url;
+        imagePreviewContainer.classList.remove("hidden");
+    }
+
+    function sembunyikanPreview(pesanTeks) {
+        clearInterval(intervalTeks);
+        
+        imagePreviewContainer.classList.add("hidden");
+        imagePreviewContainer.removeAttribute("src");
         loadingPdfAnimation.classList.add("hidden");
         placeholderPdfText.classList.remove("hidden");
         placeholderPdfText.innerHTML = `
-            <i class="fa-solid fa-file-pdf text-4xl text-slate-300 mb-3"></i>
+            <i class="fa-solid fa-image text-4xl text-slate-300 mb-3"></i>
             <p class="text-xs font-bold px-4">${pesanTeks}</p>
         `;
     }
 
+    // FUNGSI REVISI: Picu animasi loading kilat (durasi lebih singkat & responsif)
     function jalankanAnimasiLoading() {
         placeholderPdfText.classList.add("hidden");
-        iframePreviewPdf.classList.add("hidden");
+        imagePreviewContainer.classList.add("hidden");
+        
+        // Tampilkan kontainer animasi bawaan
         loadingPdfAnimation.classList.remove("hidden");
         
-        // Daftar teks interaktif biar user tahu script sedang bekerja di background
+        // Teks dipangkas menjadi 3 baris esensial agar tidak menumpuk lama
         const listTeks = [
-            "Menghubungkan ke NSA Cloud...",
-            "Mencari Presensi karyawan terpilih...",
-            "Mengunduh enkripsi Base64...",
-            "Sinkronisasi hari kerja...",
-            "Sedikit lagi, memvalidasi tampilan..."
+            "Menghubungkan ke Cloud...",
+            "Mencari Presensi...",
+            "Merender berkas..."
         ];
         
         let index = 0;
         teksProgresLoading.textContent = listTeks[0];
         
-        // Ganti teks setiap 1.2 detik agar terasa dinamis
         clearInterval(intervalTeks);
+        // Durasi dipercepat dari 1200ms menjadi 600ms (setengah kali lebih cepat)
         intervalTeks = setInterval(() => {
             index = (index + 1) % listTeks.length;
             teksProgresLoading.textContent = listTeks[index];
-        }, 1200);
+        }, 600);
     }
 
-    // Event Listener Tombol Trigger Utama
+    // Event Listener
     if (btnBukaModalGaji) btnBukaModalGaji.addEventListener("click", bukaModalGaji);
     if (btnTutupModalGaji) btnTutupModalGaji.addEventListener("click", tutupModalGaji);
 
-// --- EVENT TRIGGER DROPDOWN KARYAWAN (KEMBALI KE VALUE ASLI) ---
+    // EVENT DROPDOWN KARYAWAN
     selectGajiKaryawan.addEventListener("change", function() {
-        // KEMBALI KE AWAL: Ambil nilai value murni (Contoh: "Dadan" atau "Cahya")
-        const keywordNama = this.value; 
+        let keywordNama = this.value; 
         if (!keywordNama) return;
 
-        // Picu animasi loading interaktif di dalam iframe
+        // Ambil teks tampilan penuh di dropdown (contoh: "M. Cahya Ardiansyah") sebagai fallback
+        const teksTampilanDropdown = this.options[this.selectedIndex].text;
+        
+        // Pembersihan instan: Jika value dropdown mengandung titik (seperti "M."), ambil kata setelah titik
+        if (keywordNama.includes(".")) {
+            keywordNama = keywordNama.split(".").pop().trim();
+        }
+
         jalankanAnimasiLoading();
 
-        // Jalankan Ajax Fetch menggunakan kata kunci singkat bawaan asli Anda
+        // PENCARIAN TAHAP 1: Berdasarkan value dropdown yang sudah dibersihkan
         fetch(`${API_URL_GET_PDF}?karyawan=${encodeURIComponent(keywordNama)}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error("Respon server bermasalah (" + response.status + ")");
+                return response.json();
+            })
             .then(result => {
-                if (result.status === "success" && result.data.length > 0) {
+                // Monitor respon murni dari Google Drive via Console F12
+                console.log("NSA Cloud Response (Tahap 1):", result);
+
+                if (result.status === "success" && result.data && result.data.length > 0) {
                     const fileData = result.data[0];
-                    
-                    // Kirim objek utuh agar fungsi tampilkanIframe bisa pilah data untuk HP/Laptop
-                    tampilkanIframe(fileData); 
+                    tampilkanPreviewGambar(fileData); 
                 } else {
-                    sembunyikanIframe(`Arsip tidak ditemukan! Gagal mencari file dengan kata kunci '${keywordNama}' di folder Drive.`);
+                    // PENCARIAN TAHAP 2 (FALLBACK): Menggunakan potongan nama dari label text
+                    console.warn("Pencarian utama kosong. Menjalankan fallback nama alternatif...");
+                    
+                    // Hilangkan prefiks populer seperti M. / Apt. lalu ambil kata pertamanya saja
+                    const namaAlternatif = teksTampilanDropdown.replace(/M\.|Apt\./gi, '').trim().split(" ")[0];
+                    console.log("Kata kunci alternatif yang dicari: " + namaAlternatif);
+
+                    fetch(`${API_URL_GET_PDF}?karyawan=${encodeURIComponent(namaAlternatif)}`)
+                        .then(res => res.json())
+                        .then(resultKedua => {
+                            console.log("NSA Cloud Response (Tahap 2):", resultKedua);
+                            
+                            if (resultKedua.status === "success" && resultKedua.data && resultKedua.data.length > 0) {
+                                tampilkanPreviewGambar(resultKedua.data[0]);
+                            } else {
+                                sembunyikanPreview(`Arsip tidak ditemukan! File Presensi dengan kata kunci '${keywordNama}' atau '${namaAlternatif}' tidak ada di NSA Drive.`);
+                            }
+                        })
+                        .catch(() => {
+                            sembunyikanPreview(`Arsip tidak ditemukan! File Presensi dengan kata kunci '${keywordNama}' tidak ada di NSA Drive.`);
+                        });
                 }
             })
             .catch(error => {
-                console.error("Error fetching PDF:", error);
-                sembunyikanIframe("Terjadi kesalahan koneksi saat mencoba mengambil dokumen dari server cloud.");
+                console.error("Error fetching Image:", error);
+                sembunyikanPreview("Terjadi kesalahan koneksi atau internal script: " + error.message);
             });
     });
 });
