@@ -4160,20 +4160,28 @@ function tutupAlertCloud() {
 
 
 <!-- POPUP REMINDER IZIN NOTIFIKASI (MODAL TENGAH) -->
+<div id="popupReminder" class="fixed inset-0 z-[100] flex items-center justify-center px-6 hidden">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    
+    <div class="relative bg-white w-full max-w-sm p-8 rounded-[32px] shadow-2xl text-center transform transition-all animate-pop-in">
+        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12">
+            <i class="fas fa-bell fa-2xl animate-bounce"></i>
+        </div>
+        
+        <h2 class="text-xl font-extrabold text-gray-900 mb-2">Notifikasi Wajib Aktif!</h2>
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+            Fitur <span class="font-bold text-green-700">Realtime NSA</span> memerlukan izin notifikasi untuk mendapatkan info operasional.<br>
+            Silakan klik tombol di bawah untuk mengaktifkan sistem pengingat.
+        </p>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <button onclick="eksekusiMintaIzinNotif(event)" 
+    class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+    <i class="fas fa-check-circle"></i> Izinkan Sekarang
+</button>
+        
+        <p class="text-[10px] text-green-600/70 mt-4 uppercase tracking-widest font-bold">SISTEM PENGINGAT OTOMATIS NURJAYA ABADI</p>
+    </div>
+</div>
 
 
 
@@ -6220,7 +6228,7 @@ function tutupModalBK_Wrapper() {
 
                 <div class="grid grid-cols-2 gap-3">
                     <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
-                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">3. Libur Diambil</span>
+                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">3. Libur Wajib</span>
                         <span id="sg-out-libur" class="text-xs font-extrabold text-indigo-600 block mt-1">0 hari</span>
                     </div>
                     <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
@@ -6491,7 +6499,7 @@ function tutupModalBK_Wrapper() {
                                     </tr>
                                     <tr class="align-middle bg-white">
                                         <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">3</td>
-                                        <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Libur Diambil</td>
+                                        <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Libur Wajib</td>
                                         <td id="pv-hari-libur" class="py-1 text-center font-medium border-r border-slate-300">-</td>
                                         <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">-</td>
                                         <td class="py-1 text-center text-slate-400 font-bold pr-1 sm:pr-2">-</td>
