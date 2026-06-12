@@ -4160,28 +4160,22 @@ function tutupAlertCloud() {
 
 
 <!-- POPUP REMINDER IZIN NOTIFIKASI (MODAL TENGAH) -->
-<div id="popupReminder" class="fixed inset-0 z-[100] flex items-center justify-center px-6 hidden">
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-    
-    <div class="relative bg-white w-full max-w-sm p-8 rounded-[32px] shadow-2xl text-center transform transition-all animate-pop-in">
-        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12">
-            <i class="fas fa-bell fa-2xl animate-bounce"></i>
-        </div>
-        
-        <h2 class="text-xl font-extrabold text-gray-900 mb-2">Notifikasi Wajib Aktif!</h2>
-        <p class="text-sm text-gray-500 leading-relaxed mb-8">
-            Fitur <span class="font-bold text-green-700">Realtime NSA</span> memerlukan izin notifikasi untuk mendapatkan info operasional.<br>
-            Silakan klik tombol di bawah untuk mengaktifkan sistem pengingat.
-        </p>
 
-        <button onclick="eksekusiMintaIzinNotif(event)" 
-    class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition-all active:scale-95 flex items-center justify-center gap-2">
-    <i class="fas fa-check-circle"></i> Izinkan Sekarang
-</button>
-        
-        <p class="text-[10px] text-green-600/70 mt-4 uppercase tracking-widest font-bold">SISTEM PENGINGAT OTOMATIS NURJAYA ABADI</p>
-    </div>
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 			
@@ -6312,24 +6306,60 @@ function tutupModalBK_Wrapper() {
     <div id="sg-wrapper-poin-dinamis" class="flex flex-col gap-2"></div>
 </div>
 
-               <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+
+
+
+              <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+    
+    <div class="border-b border-slate-100 pb-2">
         <span class="text-xs font-black text-slate-700">8. Uang Rajin</span>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-100 p-3 rounded-xl flex flex-col gap-2">
+        <div class="text-[10px] uppercase font-black tracking-wider text-indigo-600">
+            INDIKATOR KEDISIPLINAN:
+        </div>
+        <p class="text-[11px] font-medium text-slate-500 leading-relaxed">
+            Uang Rajin adalah Reward yang diberikan jika karyawan <span class="font-bold text-slate-700">HADIR SECARA PENUH</span> tanpa ada absen (contoh: tanpa keterangan, izin, sakit, dll) (Yang tidak diberikan / diinstruksikan Owner).
+        </p>
         
-        <select id="sg-sel-uang-rajin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer" autocomplete="off">
+        <hr class="border-dashed border-slate-200 my-0.5">
+        
+        <div class="flex flex-col gap-1">
+            <p class="text-[11px] font-bold text-slate-700">
+                Absen Bulan Ini: 
+                <span id="sg-ur-indikator-absen" class="font-black text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md text-xs">0 hari</span>
+            </p>
+            
+            <p id="sg-ur-petunjuk-dinamis" class="text-[11px] font-medium text-slate-500 italic bg-white p-2 border border-slate-200 rounded-lg shadow-inner">
+                Menunggu data karyawan...
+            </p>
+        </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1 pt-1 border-t border-slate-50">
+        
+        <select id="sg-sel-uang-rajin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer w-full sm:w-auto" autocomplete="off">
             <option value="" selected disabled>Pilih Dahulu</option>
             <option value="full">Dapat Full</option>
             <option value="tidak">Tidak Dapat</option>
             <option value="penyesuaian">Penyesuaian</option>
         </select>
-    </div>
-    <div id="sg-wrapper-uang-rajin-dinamis" class="mt-1 flex justify-end items-center gap-2">
-        <span class="text-xs font-bold text-slate-400">Total =</span>
-        <span id="sg-out-rajin-status" class="text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic">
-            Pilih status terlebih dahulu
-        </span>
+
+        <div id="sg-wrapper-uang-rajin-dinamis" class="flex items-center gap-2 justify-end">
+            <span class="text-xs font-bold text-slate-400">Total =</span>
+            <span id="sg-out-rajin-status" class="text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic">
+                Pilih status terlebih dahulu
+            </span>
+        </div>
+        
     </div>
 </div>
+
+
+
+
+
 
                 <div class="border-t-2 border-dashed border-slate-200 pt-4 mt-2 flex flex-col gap-3">
                     <div class="bg-green-700 text-white p-4 rounded-2xl shadow-md flex justify-between items-center">
@@ -6882,14 +6912,38 @@ document.addEventListener("DOMContentLoaded", function() {
     let totalMenitPotongan = 0;
     let totalMenitTambahan = 0;
 
-    // --- VARIABEL BARU: Untuk mengumpulkan elemen list HTML ---
+    // --- VARIABEL: Untuk mengumpulkan elemen list HTML ---
     let listHtmlPotongan = "";
     let listHtmlTambahan = "";
+
+    // Helper Jam Kerja ditarik ke luar loop agar performa ringan & rapi
+    function dapatkanTotalMenit(nilaiJam) {
+        if (!nilaiJam) return 0;
+        let teksWaktu = String(nilaiJam).trim();
+        
+        if (teksWaktu.includes("1899") || teksWaktu.length > 15) {
+            const matchWaktu = teksWaktu.match(/(\d{2}):(\d{2}):(\d{2})/);
+            if (matchWaktu) {
+                const jam = parseInt(matchWaktu[1]) || 0;
+                const mnt = parseInt(matchWaktu[2]) || 0;
+                return (jam * 60) + mnt;
+            }
+        }
+        
+        teksWaktu = teksWaktu.replace(".", ":");
+        if (teksWaktu.includes(":")) {
+            const splitWaktu = teksWaktu.split(":");
+            const jam = parseInt(splitWaktu[0]) || 0;
+            const mnt = parseInt(splitWaktu[1]) || 0;
+            return (jam * 60) + mnt;
+        }
+        return 0;
+    }
 
     rows.forEach(row => {
         const hadirStatus = String(row.kehadiran || "").toUpperCase().trim();
         
-        // Pemformatan tanggal agar rapi (DD/MM/YYYY) dari format yyyy-MM-dd bawaan .gs
+        // Pemformatan tanggal agar rapi (DD/MM/YYYY)
         let tanggalRapi = "-";
         if (row.tanggal) {
             const tglObj = new Date(row.tanggal);
@@ -6918,35 +6972,11 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        function dapatkanTotalMenit(nilaiJam) {
-            if (!nilaiJam) return 0;
-            let teksWaktu = String(nilaiJam).trim();
-            
-            if (teksWaktu.includes("1899") || teksWaktu.length > 15) {
-                const matchWaktu = teksWaktu.match(/(\d{2}):(\d{2}):(\d{2})/);
-                if (matchWaktu) {
-                    const jam = parseInt(matchWaktu[1]) || 0;
-                    const mnt = parseInt(matchWaktu[2]) || 0;
-                    return (jam * 60) + mnt;
-                }
-            }
-            
-            teksWaktu = teksWaktu.replace(".", ":");
-            if (teksWaktu.includes(":")) {
-                const splitWaktu = teksWaktu.split(":");
-                const jam = parseInt(splitWaktu[0]) || 0;
-                const mnt = parseInt(splitWaktu[1]) || 0;
-                return (jam * 60) + mnt;
-            }
-            return 0;
-        }
-
         // --- CEK & AMBIL RINCIAN POTONGAN ---
         if (row.potonganjam) {
             const menitBiji = dapatkanTotalMenit(row.potonganjam);
             if (menitBiji > 0) {
                 totalMenitPotongan += menitBiji;
-                // Ambil teks alasan dari properti row.alasanpotonganjam hasil convert keyClean .gs
                 const txtAlasanPot = row.alasanpotonganjam ? String(row.alasanpotonganjam).trim() : "Potongan jam kerja";
                 listHtmlPotongan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanPot}</li>`;
             }
@@ -6957,27 +6987,58 @@ document.addEventListener("DOMContentLoaded", function() {
             const menitBiji = dapatkanTotalMenit(row.tambahanjam);
             if (menitBiji > 0) {
                 totalMenitTambahan += menitBiji;
-                // Ambil teks alasan dari properti row.alasantambahanjam hasil convert keyClean .gs
                 const txtAlasanTam = row.alasantambahanjam ? String(row.alasantambahanjam).trim() : "Tambahan jam kerja";
                 listHtmlTambahan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanTam}</li>`;
             }
         }
     });
 
+    // Simpan State internal kalkulator
     dataPresensiHitung.hariJadwal2 = j2;
     dataPresensiHitung.hariJadwal1 = j1;
     dataPresensiHitung.hariLibur = libur;
     dataPresensiHitung.hariAbsenLain = absenLain;
 
+    // Cetak ke element UI Utama
     if (lblJadwal2) lblJadwal2.innerText = j2 + " hari";
     if (lblJadwal1) lblJadwal1.innerText = j1 + " hari";
     if (outLibur) outLibur.innerText = libur + " hari";
     if (outAbsenLain) outAbsenLain.innerText = absenLain + " hari";
 
+    // --- SINKRONISASI BARU KE INDIKATOR UANG RAJIN & TABEL PREVIEW ---
+    const urIndikatorAbsen = document.getElementById("sg-ur-indikator-absen");
+    const pvHariAbsen = document.getElementById("pv-hari-absen");
+    
+    // Ambil Elemen Teks Keterangan Dinamis Baru
+    const urPetunjukDinamis = document.getElementById("sg-ur-petunjuk-dinamis");
+
+    if (urIndikatorAbsen) urIndikatorAbsen.innerText = absenLain + " hari";
+    if (pvHariAbsen) pvHariAbsen.innerText = absenLain + " hari";
+
+    // --- LOGIKA INTELLIGENT PETUNJUK OWNER ---
+    if (urPetunjukDinamis) {
+        if (absenLain === 0) {
+            urPetunjukDinamis.innerHTML = `
+                <span class="text-green-600 font-bold">✔ Rekomendasi:</span> 
+                Karyawan berhak mendapatkan Uang Rajin penuh (jika indikator absen bulan ini adalah 0 hari).
+            `;
+        } else {
+            urPetunjukDinamis.innerHTML = `
+                <span class="text-amber-600 font-bold">⚠ Rekomendasi:</span> 
+                Owner berhak menerapkan penyesuaian Uang Rajin karena karyawan memiliki absen <span class="text-rose-600 font-black">${absenLain} hari</span>.
+            `;
+        }
+    }
+
+    if (urIndikatorAbsen) urIndikatorAbsen.innerText = absenLain + " hari";
+    if (pvHariAbsen) pvHariAbsen.innerText = absenLain + " hari";
+
+    // Konversi Hitungan Jam Menit Potongan
     const jamPot = Math.floor(totalMenitPotongan / 60);
     const mntPot = totalMenitPotongan % 60;
     if (lblPotonganJam) lblPotonganJam.innerText = `${jamPot} jam ${mntPot} menit`;
 
+    // Konversi Hitungan Jam Menit Tambahan
     const jamTam = Math.floor(totalMenitTambahan / 60);
     const mntTam = totalMenitTambahan % 60;
     if (lblTambahanJam) lblTambahanJam.innerText = `${jamTam} jam ${mntTam} menit`;
@@ -7196,7 +7257,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function resetFormSlipGaji() {
+   function resetFormSlipGaji() {
     if (txtPeriode) txtPeriode.innerText = "-";
     if (txtTotalHari) txtTotalHari.innerText = "-";
     if (lblJadwal2) lblJadwal2.innerText = "0 hari";
@@ -7207,6 +7268,17 @@ document.addEventListener("DOMContentLoaded", function() {
     if (outAbsenLain) outAbsenLain.innerText = "0 hari";
     if (lblPotonganJam) lblPotonganJam.innerText = "0 jam 0 menit";
     if (lblTambahanJam) lblTambahanJam.innerText = "0 jam 0 menit";
+
+    // --- SINKRONISASI RESET INDIKATOR UANG RAJIN & TABEL PREVIEW ---
+    const urIndikatorAbsen = document.getElementById("sg-ur-indikator-absen");
+    const pvHariAbsen = document.getElementById("pv-hari-absen");
+    const urPetunjukDinamis = document.getElementById("sg-ur-petunjuk-dinamis"); // Tambahkan ini
+
+    if (urIndikatorAbsen) urIndikatorAbsen.innerText = "0 hari";
+    if (pvHariAbsen) pvHariAbsen.innerText = "-";
+    
+    // Kembalikan teks petunjuk ke posisi default awal saat reset
+    if (urPetunjukDinamis) urPetunjukDinamis.innerText = "Menunggu data karyawan...";
 
     // --- RESET ELEMENT LIST BARU SUPAYA BERSIH SAAT GANTI KARYAWAN ---
     const wrapperListPotongan = document.getElementById("sg-wrapper-alasan-potongan-list");
@@ -7227,14 +7299,19 @@ document.addEventListener("DOMContentLoaded", function() {
     if (selPoin) selPoin.value = "0";
     if (wrapperPoin) wrapperPoin.innerHTML = "";
     
+    // --- AMAN & REVISI BUG UANG RAJIN ---
+    // 1. Kembalikan indeks pilihan ke "Pilih Dahulu"
     if (selUangRajin) selUangRajin.selectedIndex = 0; 
     
-    const wrapperUangRajinDinamis = document.getElementById("sg-wrapper-uang-rajin-dinamis");
-    if (wrapperUangRajinDinamis) {
-        wrapperUangRajinDinamis.innerHTML = `
-            <span class="text-xs font-bold text-slate-400">Total =</span>
-            <span id="sg-out-rajin-status" class="text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic">Pilih status terlebih dahulu</span>
-        `;
+    // 2. Hapus input kustom penyesuaian jika ada sisa dari karyawan sebelumnya
+    const inputCustomLama = document.getElementById("sg-in-rajin-custom-wrapper");
+    if (inputCustomLama) inputCustomLama.remove();
+
+    // 3. Kembalikan teks status badge tanpa menimpa wadah HTML utama secara kasar
+    const outRajinStatus = document.getElementById("sg-out-rajin-status");
+    if (outRajinStatus) {
+        outRajinStatus.innerText = "Pilih status terlebih dahulu";
+        outRajinStatus.className = "text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic";
     }
     
     if (outTotalGajiBersih) outTotalGajiBersih.innerText = "Rp 0";
@@ -7275,6 +7352,7 @@ const pvRekapOtomatis   = document.getElementById("pv-rekap-otomatis");
 const pvRekapPembulatan = document.getElementById("pv-rekap-pembulatan");
 const pvRekapFinal      = document.getElementById("pv-rekap-final");
 const pvTanggalCetak    = document.getElementById("pv-tanggal-cetak");
+const urIndikatorAbsen = document.getElementById("sg-ur-indikator-absen");
 
 // Elemen Render Catatan (Box & Text)
 const pvBoxCatatanRender = document.getElementById("pv-box-catatan-render");
