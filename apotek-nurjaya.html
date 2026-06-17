@@ -2797,12 +2797,10 @@ function muatDataTinjauanModal(bulanTerpilih) {
     const kosong = document.getElementById('kosong-tabel-apotek-manual');
     const dropdownModal = document.getElementById('modal-filter-bulan-manual');
 
-    // PENCEGAT UTAMA: Jika dropdown kosong atau belum milih, JANGAN JALANKAN FETCH APA PUN!
     if (!dropdownModal || dropdownModal.value === "" || dropdownModal.value === null) {
         return;
     }
 
-    // Eksekusi pembersihan kontainer & nyalakan loading spinner manual
     if (tbody) tbody.innerHTML = "";
     if (kosong) kosong.classList.add('hidden');
     if (loading) {
@@ -2810,26 +2808,23 @@ function muatDataTinjauanModal(bulanTerpilih) {
         loading.classList.add('flex');
     }
 
-    // Ambil data resmi dari cloud Apps Script
     fetch(`${urlWebAppApotek}?bulan=${bulanTerpilih}`)
         .then(response => response.json())
-        .then(data => {
-            // Sembunyikan loading spinner manual setelah data tiba
+        .then(res => { // Mengubah variabel 'data' menjadi 'res' (response) agar tidak rancu
             if (loading) { loading.classList.remove('flex'); loading.classList.add('hidden'); }
 
-            // Proteksi jika user buru-buru mengubah pilihan dropdown ke bulan lain sebelum fetch selesai
             if (!dropdownModal || dropdownModal.value !== bulanTerpilih) return;
 
-            if (data && data.length > 0) {
-                if (tbody) tbody.innerHTML = ""; // Bersihkan teks panduan awal
+            // Pengecekan disesuaikan: ambil properti 'data' di dalam 'res'
+            if (res && res.status === "success" && res.data && res.data.length > 0) {
+                if (tbody) tbody.innerHTML = ""; 
                 
-                data.forEach(item => {
+                res.data.forEach(item => {
                     const row = document.createElement('tr');
                     row.className = "hover:bg-slate-50/80 transition-colors";
                     
                     const kelasWarnaBersih = item.pendapatanbersih < 0 ? "text-red-600 font-bold" : "text-blue-700 font-bold";
 
-                    // Menggunakan formatRupiahLokal internal yang aman
                     row.innerHTML = `
                         <td class="px-4 py-3 text-center font-bold text-gray-500 bg-gray-50/40">Tgl ${item.tanggal}</td>
                         <td class="px-4 py-3 text-right text-emerald-700 font-semibold">${formatRupiahLokal(item.pendapatankotor)}</td>
@@ -2840,6 +2835,7 @@ function muatDataTinjauanModal(bulanTerpilih) {
                     if (tbody) tbody.appendChild(row);
                 });
             } else {
+                // Berjalan jika status "empty" atau array 'res.data' kosong
                 if (kosong) kosong.classList.remove('hidden');
             }
         })
@@ -2857,7 +2853,7 @@ function gantiBulanTinjauanManual(val) {
 </script>
 
 
-
+<!-- SCRIPT INTI PROGRAM TUTUP BUKU -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 // ==================== URL AKSES WEB APP SPREADSHEET (NAMA BARU JAMINAN AMAN) ====================
@@ -2917,7 +2913,7 @@ function validasiTutupBukuBulan(selectElement) {
             if (!response.ok) throw new Error("Respon server Google Apps Script tidak OK.");
             return response.json();
         })
-        .then(data => {
+        .then(res => { // Menggunakan variabel 'res' agar konsisten dengan struktur objek cloud
             // Berikan jeda waktu (800ms) agar transisi animasi mulus dan memanjakan mata
             setTimeout(() => {
                 // Sembunyikan loading verifikasi
@@ -2926,8 +2922,10 @@ function validasiTutupBukuBulan(selectElement) {
                     loadingVerifikasi.classList.add('hidden');
                 }
 
-                if (data && data.length > 0 && !data.status) {
-                    const tanggalTerakhirDiCloud = parseInt(data[data.length - 1].tanggal) || 0;
+                // FIX DI SINI: Deteksi struktur baru { status: "success", data: [...] }
+                if (res && res.status === "success" && res.data && res.data.length > 0) {
+                    const arrayDataHarian = res.data;
+                    const tanggalTerakhirDiCloud = parseInt(arrayDataHarian[arrayDataHarian.length - 1].tanggal) || 0;
                     const batasHariMaksimum = mapHariTerakhir2026[keyBulan] || 31;
 
                     console.log(`Tanggal terakhir di cloud: ${tanggalTerakhirDiCloud}, Batas target: ${batasHariMaksimum}`);
@@ -2935,9 +2933,9 @@ function validasiTutupBukuBulan(selectElement) {
                     // Jalankan aturan ketat penutupan akhir bulan
                     if (tanggalTerakhirDiCloud >= batasHariMaksimum) { 
                         if (wrapperContent) wrapperContent.classList.remove('hidden');
-                        globalDataClosing = data; 
+                        globalDataClosing = arrayDataHarian; // Simpan array mentahnya ke global data
                         bukaWrapperClosing();     
-                        kalkulasiDanIsiFormClosing(data); 
+                        kalkulasiDanIsiFormClosing(arrayDataHarian); 
                     } 
                     else {
                         // Gagal: Tampilkan kembali wrapper ter-blur, lalu tembak modal error
@@ -2946,6 +2944,7 @@ function validasiTutupBukuBulan(selectElement) {
                         bukaModalClosingInvalid(); 
                     }
                 } else {
+                    // Masuk ke sini jika status "empty" atau data kosong / tidak ditemukan
                     if (wrapperContent) wrapperContent.classList.remove('hidden');
                     lockWrapperClosing();
                     bukaModalClosingInvalid();
