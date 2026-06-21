@@ -7395,14 +7395,15 @@ if (btnGenerateSlip) {
         }
 
         if (pvHariJ1 && typeof dataPresensiHitung !== 'undefined') pvHariJ1.innerText = dataPresensiHitung.hariJadwal1 + " Hari";
-        if (pvRateJ1) {
-            const vRateJ1 = typeof inRateJadwal1 !== 'undefined' && inRateJadwal1.value ? bersihkanAngkaMurni(inRateJadwal1.value) : 0;
-            pvRateJ1.innerText = vRateJ1.toLocaleString("id-ID");
-        }
-        if (pvTotalJ1) {
-            const vTotalJ1 = typeof outTotalGajiBersih !== 'undefined' ? bersihkanAngkaMurni(outTotalGajiBersih.innerText) : 0;
-            pvTotalJ1.innerText = vTotalJ1.toLocaleString("id-ID");
-        }
+if (pvRateJ1) {
+    const vRateJ1 = typeof inRateJadwal1 !== 'undefined' && inRateJadwal1.value ? bersihkanAngkaMurni(inRateJadwal1.value) : 0;
+    pvRateJ1.innerText = vRateJ1.toLocaleString("id-ID");
+}
+if (pvTotalJ1) {
+    // ✔ SEKARANG SUDAH FIX: Mengambil data dari outTotalJadwal1
+    const vTotalJ1 = typeof outTotalJadwal1 !== 'undefined' ? bersihkanAngkaMurni(outTotalJadwal1.innerText) : 0;
+    pvTotalJ1.innerText = vTotalJ1.toLocaleString("id-ID");
+}
 
         if (pvHariLibur && typeof dataPresensiHitung !== 'undefined') pvHariLibur.innerText = dataPresensiHitung.hariLibur + " Hari";
         if (pvHariAbsen && typeof dataPresensiHitung !== 'undefined') pvHariAbsen.innerText = dataPresensiHitung.hariAbsenLain + " Hari";
@@ -7638,7 +7639,7 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
 }
 
 
-}); // <=== SEKARANG SUDAH DI SINI, MEMBUNGKUS SEMUA KODE DENGAN AMAN!
+}); 
 </script>
 
 
