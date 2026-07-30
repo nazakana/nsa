@@ -6401,7 +6401,7 @@ function tutupModalBK_Wrapper() {
 </div>
 
                     <div class="bg-slate-900 text-amber-400 p-4 rounded-2xl shadow-md flex justify-between items-center">
-                        <span class="text-xs font-black uppercase tracking-wider">Gaji Akhir Diterima:</span>
+                        <span class="text-xs font-black uppercase tracking-wider">Gaji Bersih Diterima:</span>
                         <span id="sg-out-final-gaji" class="text-xl font-black tracking-wide">Rp 0</span>
                     </div>
                     
@@ -6443,10 +6443,31 @@ function tutupModalBK_Wrapper() {
             
             <div class="w-full max-w-full flex justify-start sm:justify-center items-start overflow-x-auto p-2">
 
-                <!-- KODE REVISI TERBARU (GANTI BAGIAN KODE HTML KAMU DENGAN INI): -->
-<div id="elemen-slip-gaji-render" class="lembar-slip-gaji-cetak shadow-xl rounded-xl border-2 border-emerald-800 text-slate-800 bg-white p-4 sm:p-6 flex flex-col gap-4 box-border w-full max-w-[500px]" style="height: auto; font-family: sans-serif;">
+                <!-- ELEMEN LEMBAR SLIP GAJI DENGAN WATERMARK JELAS & BERWARNA -->
+                <div id="elemen-slip-gaji-render" class="relative overflow-hidden lembar-slip-gaji-cetak shadow-xl rounded-xl border-2 border-emerald-800 text-slate-800 bg-white p-4 sm:p-6 flex flex-col gap-4 box-border w-full max-w-[500px]" style="height: auto; font-family: sans-serif;">
                     
-                    <div class="w-full block">
+                    <!-- ========================================================= -->
+                    <!-- WATERMARK KEUANGAN (BENTUK JELAS, BERWARNA & ELEGAN) -->
+                    <!-- ========================================================= -->
+                    <!-- 1. Pojok Kiri Atas: Uang Kertas Emerald & Koin Emas -->
+                    <div class="absolute top-2 left-2 text-emerald-600/20 pointer-events-none select-none z-0 transform -rotate-12">
+                        <i class="fa-solid fa-money-bill-wave text-5xl sm:text-6xl"></i>
+                    </div>
+                    <div class="absolute top-12 left-14 text-amber-500/25 pointer-events-none select-none z-0 transform rotate-12">
+                        <i class="fa-solid fa-coins text-3xl sm:text-4xl"></i>
+                    </div>
+
+                    <!-- 2. Pojok Kanan Bawah: Kantong Uang & Koin Emas -->
+                    <div class="absolute bottom-10 right-14 text-emerald-600/20 pointer-events-none select-none z-0 transform -rotate-12">
+                        <i class="fa-solid fa-sack-dollar text-4xl sm:text-5xl"></i>
+                    </div>
+                    <div class="absolute bottom-2 right-2 text-amber-500/25 pointer-events-none select-none z-0 transform rotate-12">
+                        <i class="fa-solid fa-coins text-5xl sm:text-6xl"></i>
+                    </div>
+                    <!-- ========================================================= -->
+
+                    <!-- KONTEN UTAMA SLIP GAJI -->
+                    <div class="w-full block relative z-10">
                         <div class="flex justify-center items-center pb-2 border-b-4 border-emerald-700 mb-3">
                             <img src="https://lh3.googleusercontent.com/d/1Ab9sh5DMI9OP9CdZ46p1wS1m_US6wmJj" alt="Logo Nurjaya Abadi" class="h-12 sm:h-14 object-contain">
                         </div>
@@ -6456,7 +6477,7 @@ function tutupModalBK_Wrapper() {
                             <div class="w-12 sm:w-16 h-1 bg-amber-500 mx-auto mt-0.5 rounded-full"></div>
                         </div>
 
-                        <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 bg-emerald-50 border border-emerald-200 p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs text-slate-800">
+                        <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 bg-emerald-50/90 border border-emerald-200 p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs text-slate-800 backdrop-blur-[1px]">
                             <div class="tracking-wider text-emerald-800 font-bold w-[95px] sm:w-[110px] shrink-0 whitespace-nowrap">Nama Karyawan</div>
                             <div class="font-bold text-slate-900 whitespace-nowrap">: <span id="pv-nama-karyawan" class="ml-1">-</span></div>
                             
@@ -6477,7 +6498,7 @@ function tutupModalBK_Wrapper() {
                             <div class="font-bold text-slate-900 text-[11px] sm:text-xs whitespace-nowrap">: <span id="pv-periode-kerja" class="ml-1">-</span></div>
                         </div>
 
-                        <div class="mt-3 w-full border border-slate-300 rounded-lg overflow-hidden">
+                        <div class="mt-3 w-full border border-slate-300 rounded-lg overflow-hidden bg-white/90 backdrop-blur-[1px]">
                             <table class="w-full text-left border-collapse table-fixed text-[10px] sm:text-xs">
                                 <thead>
                                     <tr class="border-b border-slate-800 text-[9px] font-bold uppercase text-slate-700 tracking-wider bg-slate-100">
@@ -6543,45 +6564,87 @@ function tutupModalBK_Wrapper() {
                         </div>
                     </div>
 
-                    <div class="w-full block text-[11px] sm:text-xs">
-                        <div class="border-t-2 border-slate-800 pt-2 w-full block space-y-1">
-                            <div class="flex justify-between items-center text-slate-600 font-medium">
-                                <span class="whitespace-nowrap">Total Hitungan Gaji:</span>
-                                <span id="pv-rekap-otomatis" class="text-slate-900 font-bold tracking-tighter whitespace-nowrap">Rp 0</span>
-                            </div>
-                            <div class="flex justify-between items-center text-slate-600 font-medium mb-2">
-                                <span class="whitespace-nowrap">Pembulatan / Bonus Khusus:</span>
-                                <span id="pv-rekap-pembulatan" class="text-slate-900 font-bold tracking-tighter whitespace-nowrap">Rp 0</span>
-                            </div>
-                            
-                            <div class="w-full bg-emerald-900 rounded-xl p-2.5 sm:p-3 shadow-md block box-border">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-[9px] uppercase tracking-wider text-amber-300 whitespace-nowrap">
-                                        Total Gaji Diterima:
-                                    </span>
-                                    <span id="pv-rekap-final" class="font-bold text-xs sm:text-sm tracking-wide text-white whitespace-nowrap">
-                                        Rp 0
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div id="pv-box-catatan-render" class="mt-2 bg-slate-50 border border-dashed border-slate-300 p-2 rounded-lg box-border hidden">
-                            <span class="font-bold text-emerald-800 uppercase block text-[8px] tracking-wider mb-0.5">Catatan Penting dari Owner:</span>
-                            <p id="pv-text-catatan-owner" class="italic font-medium text-slate-700 text-[9px] leading-tight m-0"></p>
-                        </div>
-                        
-                        <div class="w-full flex justify-between items-end text-[9px] sm:text-[10px] text-slate-400 mt-6 sm:mt-8 tracking-wider font-normal">
-                            <div class="text-left text-slate-600 whitespace-nowrap">
-                                Tgl Cetak: <span id="pv-tanggal-cetak" class="text-slate-800 font-bold">3 Juni 2026</span>
-                            </div>
-                            <div id="pv-penandatangan-gaji" class="text-center border-t-2 border-slate-400 pt-2 w-36 sm:w-44 text-slate-800 normal-case tracking-normal font-bold whitespace-nowrap">
-                                apt. Siti Nurjanah, S.Farm.
-                            </div>
-                        </div>
-                    </div>
+                    <div class="w-full block text-[11px] sm:text-xs relative z-10">
+    <div class="border-t-2 border-slate-800 pt-2 w-full block space-y-1.5">
+        
+        <!-- 1. Total Hitungan Gaji -->
+        <div class="flex justify-between items-center text-slate-600 font-medium gap-2">
+            <span class="truncate">Total Hitungan Gaji:</span>
+            <span id="pv-rekap-otomatis" class="text-slate-900 font-bold tracking-tighter shrink-0 text-right">Rp 0</span>
+        </div>
 
-                </div> </div>
+        <!-- 2. Pembulatan / Bonus Khusus -->
+        <div class="flex justify-between items-center text-slate-600 font-medium gap-2">
+            <span class="truncate">Pembulatan / Bonus Khusus:</span>
+            <span id="pv-rekap-pembulatan" class="text-slate-900 font-bold tracking-tighter shrink-0 text-right">Rp 0</span>
+        </div>
+        
+        
+        
+       <!-- Highlight Box 2-Baris: Gaji Bersih Diterima (Seragam dengan Total Akumulasi) -->
+<div class="w-full bg-emerald-900 rounded-xl p-2.5 sm:p-3 block box-border border border-emerald-800 my-2 shadow-md">
+    <div class="flex flex-col gap-1 w-full">
+        <!-- Baris 1: Judul Rata Kiri -->
+        <div class="text-left font-extrabold text-xs sm:text-sm uppercase tracking-wide text-amber-300 drop-shadow-sm">
+            Gaji Bersih Diterima:
+        </div>
+        <!-- Baris 2: Nominal Rata Kanan -->
+        <div class="text-right">
+            <span id="pv-rekap-final" class="font-extrabold text-base sm:text-lg tracking-tight text-white inline-block">
+                Rp 0
+            </span>
+        </div>
+    </div>
+</div>
+		
+		<!-- 3. Tunjangan Makan (Format Dibuat Seragam Dengan Baris Di Atas) -->
+        <div class="flex justify-between items-center text-slate-600 font-medium gap-2">
+            <span class="truncate">Tunjangan Makan (20.000 × <span id="pv-hari-masuk-makan">0</span> Hari)*:</span>
+            <span id="pv-total-uang-makan" class="text-slate-900 font-bold tracking-tighter shrink-0 text-right">Rp 0</span>
+        </div>
+        
+        <!-- Catatan Tunjangan Makan -->
+        <p class="text-[10px] text-slate-400 italic px-1 leading-tight">
+            *Catatan: Tunjangan makan harian telah diambil/diberikan secara harian langsung.
+        </p>
+
+        <!-- Highlight Box 2-Baris: Total Akumulasi Pendapatan (Aman dari Mleber di Mobile) -->
+        <div class="w-full bg-blue-50/80 rounded-xl p-2.5 sm:p-3 block box-border border-2 border-dashed border-blue-500 backdrop-blur-[1px] mt-2">
+            <div class="flex flex-col gap-1 w-full">
+                <!-- Baris 1: Judul Rata Kiri -->
+                <div class="text-left font-bold text-xs sm:text-sm tracking-wide text-blue-900">
+                    Total Akumulasi Pendapatan:
+                </div>
+                <!-- Baris 2: Nominal Rata Kanan -->
+                <div class="text-right">
+                    <span id="pv-total-akumulasi" class="font-extrabold text-base sm:text-lg tracking-tight text-blue-700 inline-block">
+                        Rp 0
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Catatan Owner -->
+    <div id="pv-box-catatan-render" class="mt-2 bg-slate-50/90 border border-dashed border-slate-300 p-2 rounded-lg box-border hidden">
+        <span class="font-bold text-emerald-800 uppercase block text-[8px] tracking-wider mb-0.5">Catatan Penting dari Owner:</span>
+        <p id="pv-text-catatan-owner" class="italic font-medium text-slate-700 text-[9px] leading-tight m-0"></p>
+    </div>
+    
+    <!-- Tanda Tangan & Tanggal Cetak -->
+    <div class="w-full flex justify-between items-end text-[9px] sm:text-[10px] text-slate-400 mt-6 sm:mt-8 tracking-wider font-normal">
+        <div class="text-left text-slate-600 whitespace-nowrap">
+            Tgl Cetak: <span id="pv-tanggal-cetak" class="text-slate-800 font-bold">3 Juni 2026</span>
+        </div>
+        <div id="pv-penandatangan-gaji" class="text-center border-t-2 border-slate-400 pt-2 w-36 sm:w-44 text-slate-800 normal-case tracking-normal font-bold whitespace-nowrap">
+            apt. Siti Nurjanah, S.Farm.
+        </div>
+    </div>
+</div>
+
+                </div> 
+            </div>
         </div>
 
         <div class="p-3 bg-white border-t border-slate-200 flex flex-col gap-2 flex-shrink-0">
@@ -7334,7 +7397,7 @@ document.addEventListener("DOMContentLoaded", function() {
     dataPresensiHitung = { hariJadwal2: 0, hariJadwal1: 0, hariLibur: 0, hariAbsenLain: 0 };
 }
 
-  // =========================================================================
+ // =========================================================================
 // 5. INTERAKSI MODAL POPUP & SINKRONISASI DATA PREVIEW SLIP GAJI
 // =========================================================================
 const modalPreviewSlip = document.getElementById("modal-preview-slip");
@@ -7367,6 +7430,11 @@ const pvRekapPembulatan = document.getElementById("pv-rekap-pembulatan");
 const pvRekapFinal      = document.getElementById("pv-rekap-final");
 const pvTanggalCetak    = document.getElementById("pv-tanggal-cetak");
 const urIndikatorAbsen = document.getElementById("sg-ur-indikator-absen");
+
+// --- TAMBAHAN BARU: ELEMEN TUNJANGAN MAKAN & AKUMULASI PENDAPATAN ---
+const pvHariMasukMakan = document.getElementById("pv-hari-masuk-makan");
+const pvTotalUangMakan  = document.getElementById("pv-total-uang-makan");
+const pvTotalAkumulasi  = document.getElementById("pv-total-akumulasi");
 
 // Elemen Render Catatan (Box & Text)
 const pvBoxCatatanRender = document.getElementById("pv-box-catatan-render");
@@ -7402,15 +7470,14 @@ if (btnGenerateSlip) {
         }
 
         if (pvHariJ1 && typeof dataPresensiHitung !== 'undefined') pvHariJ1.innerText = dataPresensiHitung.hariJadwal1 + " Hari";
-if (pvRateJ1) {
-    const vRateJ1 = typeof inRateJadwal1 !== 'undefined' && inRateJadwal1.value ? bersihkanAngkaMurni(inRateJadwal1.value) : 0;
-    pvRateJ1.innerText = vRateJ1.toLocaleString("id-ID");
-}
-if (pvTotalJ1) {
-    // ✔ SEKARANG SUDAH FIX: Mengambil data dari outTotalJadwal1
-    const vTotalJ1 = typeof outTotalJadwal1 !== 'undefined' ? bersihkanAngkaMurni(outTotalJadwal1.innerText) : 0;
-    pvTotalJ1.innerText = vTotalJ1.toLocaleString("id-ID");
-}
+        if (pvRateJ1) {
+            const vRateJ1 = typeof inRateJadwal1 !== 'undefined' && inRateJadwal1.value ? bersihkanAngkaMurni(inRateJadwal1.value) : 0;
+            pvRateJ1.innerText = vRateJ1.toLocaleString("id-ID");
+        }
+        if (pvTotalJ1) {
+            const vTotalJ1 = typeof outTotalJadwal1 !== 'undefined' ? bersihkanAngkaMurni(outTotalJadwal1.innerText) : 0;
+            pvTotalJ1.innerText = vTotalJ1.toLocaleString("id-ID");
+        }
 
         if (pvHariLibur && typeof dataPresensiHitung !== 'undefined') pvHariLibur.innerText = dataPresensiHitung.hariLibur + " Hari";
         if (pvHariAbsen && typeof dataPresensiHitung !== 'undefined') pvHariAbsen.innerText = dataPresensiHitung.hariAbsenLain + " Hari";
@@ -7472,6 +7539,24 @@ if (pvTotalJ1) {
         const pembulatanValue = typeof inPembulatan !== 'undefined' && inPembulatan.value ? bersihkanAngkaMurni(inPembulatan.value) : 0;
         if (pvRekapPembulatan) pvRekapPembulatan.innerText = "Rp " + pembulatanValue.toLocaleString("id-ID");
         if (pvRekapFinal) pvRekapFinal.innerText = typeof outFinalGaji !== 'undefined' ? outFinalGaji.innerText : "Rp 0";
+
+        // --- HITUNG LOGIKA BARU: TUNJANGAN MAKAN & AKUMULASI PENDAPATAN ---
+        let totalHariMasuk = 0;
+        if (typeof dataPresensiHitung !== 'undefined') {
+            const hJ2 = dataPresensiHitung.hariJadwal2 || 0;
+            const hJ1 = dataPresensiHitung.hariJadwal1 || 0;
+            totalHariMasuk = hJ2 + hJ1;
+        }
+
+        const totalUangMakan = totalHariMasuk * 20000;
+        const nilaiGajiRiil = typeof outFinalGaji !== 'undefined' ? bersihkanAngkaMurni(outFinalGaji.innerText) : 0;
+        const totalAkumulasi = nilaiGajiRiil + totalUangMakan;
+
+       if (pvHariMasukMakan) pvHariMasukMakan.innerText = totalHariMasuk;
+       if (pvTotalUangMakan) pvTotalUangMakan.innerText = "Rp " + totalUangMakan.toLocaleString("id-ID");
+       if (pvTotalAkumulasi) pvTotalAkumulasi.innerText = "Rp " + totalAkumulasi.toLocaleString("id-ID"); 
+
+
 
         // 7. Mengisi Tanggal Hari Ini Secara Otomatis
         const hariIni = new Date();
@@ -7571,7 +7656,7 @@ if (btnKirimWaReal) {
         this.disabled = true;
 
         // D. Susun Pesan Teks Pendamping
-let teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja bulan ini untuk Nurjaya Abadi Photocopy, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
+        let teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja bulan ini untuk Nurjaya Abadi Photocopy, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
 
         // E. Eksekusi Render Skala 2x Anti-Blur Dinamis Fit-Screen
         setTimeout(async () => {
