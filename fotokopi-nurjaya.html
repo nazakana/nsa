@@ -6443,41 +6443,56 @@ function tutupModalBK_Wrapper() {
             
             <div class="w-full max-w-full flex justify-start sm:justify-center items-start overflow-x-auto p-2">
 
-                <!-- ELEMEN LEMBAR SLIP GAJI DENGAN WATERMARK JELAS & BERWARNA -->
-                <div id="elemen-slip-gaji-render" class="relative overflow-hidden lembar-slip-gaji-cetak shadow-xl rounded-xl border-2 border-emerald-800 text-slate-800 bg-white p-4 sm:p-6 flex flex-col gap-4 box-border w-full max-w-[500px]" style="height: auto; font-family: sans-serif;">
+                <!-- ELEMEN LEMBAR SLIP GAJI (SAFE RENDER & AKURAT) -->
+                <div id="elemen-slip-gaji-render" class="relative overflow-hidden lembar-slip-gaji-cetak shadow-xl rounded-xl border-2 border-emerald-800 text-slate-800 bg-white p-4 sm:p-6 flex flex-col gap-4 box-border w-full max-w-[500px]" style="height: auto; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
                     
                     <!-- ========================================================= -->
-                    <!-- WATERMARK KEUANGAN (BENTUK JELAS, BERWARNA & ELEGAN) -->
-                    <!-- ========================================================= -->
-                    <!-- 1. Pojok Kiri Atas: Uang Kertas Emerald & Koin Emas -->
-                    <div class="absolute top-2 left-2 text-emerald-600/20 pointer-events-none select-none z-0 transform -rotate-12">
-                        <i class="fa-solid fa-money-bill-wave text-5xl sm:text-6xl"></i>
-                    </div>
-                    <div class="absolute top-12 left-14 text-amber-500/25 pointer-events-none select-none z-0 transform rotate-12">
-                        <i class="fa-solid fa-coins text-3xl sm:text-4xl"></i>
-                    </div>
+<!-- WATERMARK KEUANGAN (SVG INLINE - VEKTOR FIX ANTI-KOTAK)   -->
+<!-- ========================================================= -->
 
-                    <!-- 2. Pojok Kanan Bawah: Kantong Uang & Koin Emas -->
-                    <div class="absolute bottom-10 right-14 text-emerald-600/20 pointer-events-none select-none z-0 transform -rotate-12">
-                        <i class="fa-solid fa-sack-dollar text-4xl sm:text-5xl"></i>
-                    </div>
-                    <div class="absolute bottom-2 right-2 text-amber-500/25 pointer-events-none select-none z-0 transform rotate-12">
-                        <i class="fa-solid fa-coins text-5xl sm:text-6xl"></i>
-                    </div>
-                    <!-- ========================================================= -->
+<!-- 1. Pojok Kiri Atas: Uang Kertas Emerald & Koin Emas -->
+<div class="absolute top-2 left-2 text-emerald-600/20 pointer-events-none select-none z-0 transform -rotate-12">
+    <svg class="w-12 h-12 sm:w-14 sm:h-14 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" preserveAspectRatio="xMidYMid meet">
+        <!-- Vektor Uang Dolar Kertas Transparan -->
+        <path d="M64 64C28.7 64 0 92.7 0 128v256c0 35.3 28.7 64 64 64h448c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H64zm64 64h320c0 35.3 28.7 64 64 64v128c-35.3 0-64 28.7-64 64H128c0-35.3-28.7-64-64-64V256c35.3 0 64-28.7 64-64zM288 192c-35.3 0-64 28.7-64 64s28.7 64 64 64 64-28.7 64-64-28.7-64-64-64z"/>
+    </svg>
+</div>
+
+<div class="absolute top-12 left-14 text-amber-500/30 pointer-events-none select-none z-0 transform rotate-12">
+    <svg class="w-8 h-8 sm:w-9 sm:h-9 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+        <!-- Vektor Koin Emas Tumpuk -->
+        <path d="M512 80c0 44.2-114.6 80-256 80S0 124.2 0 80 114.6 0 256 0s256 35.8 256 80zM0 176c0 44.2 114.6 80 256 80s256-35.8 256-80v48c0 44.2-114.6 80-256 80S0 268.2 0 224v-48zm0 144c0 44.2 114.6 80 256 80s256-35.8 256-80v48c0 44.2-114.6 80-256 80S0 412.2 0 368v-48z"/>
+    </svg>
+</div>
+
+<!-- 2. Pojok Kanan Bawah: Kantong Uang & Koin Emas -->
+<div class="absolute bottom-10 right-14 text-emerald-600/20 pointer-events-none select-none z-0 transform -rotate-12">
+    <svg class="w-10 h-10 sm:w-12 sm:h-12 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+        <!-- Vektor Kantong Uang / Dolar -->
+        <path d="M256 0c-17.7 0-32 14.3-32 32v32h-64c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32h192c17.7 0 32-14.3 32-32V96c0-17.7-14.3-32-32-32h-64V32c0-17.7-14.3-32-32-32zm-96 224c-35.3 0-64 28.7-64 64v128c0 53 43 96 96 96h128c53 0 96-43 96-96V288c0-35.3-28.7-64-64-64H160zm96 64c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48z"/>
+    </svg>
+</div>
+
+<div class="absolute bottom-2 right-2 text-amber-500/30 pointer-events-none select-none z-0 transform rotate-12">
+    <svg class="w-12 h-12 sm:w-14 sm:h-14 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+        <!-- Vektor Koin Emas Tumpuk -->
+        <path d="M512 80c0 44.2-114.6 80-256 80S0 124.2 0 80 114.6 0 256 0s256 35.8 256 80zM0 176c0 44.2 114.6 80 256 80s256-35.8 256-80v48c0 44.2-114.6 80-256 80S0 268.2 0 224v-48zm0 144c0 44.2 114.6 80 256 80s256-35.8 256-80v48c0 44.2-114.6 80-256 80S0 412.2 0 368v-48z"/>
+    </svg>
+</div>
+<!-- ========================================================= -->
 
                     <!-- KONTEN UTAMA SLIP GAJI -->
                     <div class="w-full block relative z-10">
-                        <div class="flex justify-center items-center pb-2 border-b-4 border-emerald-700 mb-3">
-                            <img src="https://lh3.googleusercontent.com/d/1Ab9sh5DMI9OP9CdZ46p1wS1m_US6wmJj" alt="Logo Nurjaya Abadi" class="h-12 sm:h-14 object-contain">
-                        </div>
+                        <div class="flex justify-center items-center pb-3 border-b-4 border-emerald-700 mb-3">
+    <img src="https://lh3.googleusercontent.com/d/1Ab9sh5DMI9OP9CdZ46p1wS1m_US6wmJj" alt="Logo Nurjaya Abadi" class="h-20 sm:h-24 max-w-full object-contain drop-shadow-sm">
+</div>
                         
                         <div class="text-center mb-3">
                             <h2 class="text-sm sm:text-base font-bold uppercase tracking-widest text-emerald-800 leading-normal">Slip Gaji Karyawan</h2>
                             <div class="w-12 sm:w-16 h-1 bg-amber-500 mx-auto mt-0.5 rounded-full"></div>
                         </div>
 
-                        <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 bg-emerald-50/90 border border-emerald-200 p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs text-slate-800 backdrop-blur-[1px]">
+                        <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 bg-emerald-50 border border-emerald-200 p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs text-slate-800">
                             <div class="tracking-wider text-emerald-800 font-bold w-[95px] sm:w-[110px] shrink-0 whitespace-nowrap">Nama Karyawan</div>
                             <div class="font-bold text-slate-900 whitespace-nowrap">: <span id="pv-nama-karyawan" class="ml-1">-</span></div>
                             
@@ -6498,7 +6513,7 @@ function tutupModalBK_Wrapper() {
                             <div class="font-bold text-slate-900 text-[11px] sm:text-xs whitespace-nowrap">: <span id="pv-periode-kerja" class="ml-1">-</span></div>
                         </div>
 
-                        <div class="mt-3 w-full border border-slate-300 rounded-lg overflow-hidden bg-white/90 backdrop-blur-[1px]">
+                        <div class="mt-3 w-full border border-slate-300 rounded-lg overflow-hidden bg-white">
                             <table class="w-full text-left border-collapse table-fixed text-[10px] sm:text-xs">
                                 <thead>
                                     <tr class="border-b border-slate-800 text-[9px] font-bold uppercase text-slate-700 tracking-wider bg-slate-100">
@@ -6564,84 +6579,79 @@ function tutupModalBK_Wrapper() {
                         </div>
                     </div>
 
+                    <!-- REKAPITULASI RAPI ANTI-CRASH -->
                     <div class="w-full block text-[11px] sm:text-xs relative z-10">
-    <div class="border-t-2 border-slate-800 pt-2 w-full block space-y-1.5">
-        
-        <!-- 1. Total Hitungan Gaji -->
-        <div class="flex justify-between items-center text-slate-600 font-medium gap-2">
-            <span class="truncate">Total Hitungan Gaji:</span>
-            <span id="pv-rekap-otomatis" class="text-slate-900 font-bold tracking-tighter shrink-0 text-right">Rp 0</span>
-        </div>
+                        <div class="border-t-2 border-slate-800 pt-2 w-full block space-y-1.5">
+                            
+                            <!-- 1. Total Hitungan Gaji -->
+                            <div class="flex justify-between items-center text-slate-600 font-medium gap-2 w-full">
+                                <span class="whitespace-nowrap">Total Hitungan Gaji:</span>
+                                <span id="pv-rekap-otomatis" class="text-slate-900 font-bold tracking-tighter text-right whitespace-nowrap">Rp 0</span>
+                            </div>
 
-        <!-- 2. Pembulatan / Bonus Khusus -->
-        <div class="flex justify-between items-center text-slate-600 font-medium gap-2">
-            <span class="truncate">Pembulatan / Bonus Khusus:</span>
-            <span id="pv-rekap-pembulatan" class="text-slate-900 font-bold tracking-tighter shrink-0 text-right">Rp 0</span>
-        </div>
-        
-        
-        
-       <!-- Highlight Box 2-Baris: Gaji Bersih Diterima (Seragam dengan Total Akumulasi) -->
-<div class="w-full bg-emerald-900 rounded-xl p-2.5 sm:p-3 block box-border border border-emerald-800 my-2 shadow-md">
-    <div class="flex flex-col gap-1 w-full">
-        <!-- Baris 1: Judul Rata Kiri -->
-        <div class="text-left font-extrabold text-xs sm:text-sm uppercase tracking-wide text-amber-300 drop-shadow-sm">
-            Gaji Bersih Diterima:
-        </div>
-        <!-- Baris 2: Nominal Rata Kanan -->
-        <div class="text-right">
-            <span id="pv-rekap-final" class="font-extrabold text-base sm:text-lg tracking-tight text-white inline-block">
-                Rp 0
-            </span>
-        </div>
-    </div>
-</div>
-		
-		<!-- 3. Tunjangan Makan (Format Dibuat Seragam Dengan Baris Di Atas) -->
-        <div class="flex justify-between items-center text-slate-600 font-medium gap-2">
-            <span class="truncate">Tunjangan Makan (20.000 × <span id="pv-hari-masuk-makan">0</span> Hari)*:</span>
-            <span id="pv-total-uang-makan" class="text-slate-900 font-bold tracking-tighter shrink-0 text-right">Rp 0</span>
-        </div>
-        
-        <!-- Catatan Tunjangan Makan -->
-        <p class="text-[10px] text-slate-400 italic px-1 leading-tight">
-            *Catatan: Tunjangan makan harian telah diambil/diberikan secara harian langsung.
-        </p>
+                            <!-- 2. Pembulatan / Bonus Khusus -->
+                            <div class="flex justify-between items-center text-slate-600 font-medium gap-2 w-full">
+                                <span class="whitespace-nowrap">Pembulatan / Bonus Khusus:</span>
+                                <span id="pv-rekap-pembulatan" class="text-slate-900 font-bold tracking-tighter text-right whitespace-nowrap">Rp 0</span>
+                            </div>
+                            
+                            <!-- Highlight Box 2-Baris: Gaji Bersih Diterima -->
+                            <div class="w-full bg-emerald-900 rounded-xl p-2.5 sm:p-3 block box-border border border-emerald-800 my-2 shadow-md">
+                                <div class="flex flex-col gap-1 w-full">
+                                    <div class="text-left font-extrabold text-xs sm:text-sm uppercase tracking-wide text-amber-300">
+                                        Gaji Bersih Diterima:
+                                    </div>
+                                    <div class="text-right">
+                                        <span id="pv-rekap-final" class="font-extrabold text-base sm:text-lg tracking-tight text-white inline-block">
+                                            Rp 0
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 3. Tunjangan Makan -->
+                            <div class="flex justify-between items-center text-slate-600 font-medium gap-2 w-full">
+                                <span class="whitespace-nowrap">Tunjangan Makan (20.000 × <span id="pv-hari-masuk-makan">0</span> Hari)*:</span>
+                                <span id="pv-total-uang-makan" class="text-slate-900 font-bold tracking-tighter text-right whitespace-nowrap">Rp 0</span>
+                            </div>
+                            
+                            <!-- Catatan Tunjangan Makan -->
+                            <p class="text-[10px] text-slate-400 italic px-1 leading-tight">
+                                *Catatan: Tunjangan makan harian telah diambil/diberikan secara harian langsung.
+                            </p>
 
-        <!-- Highlight Box 2-Baris: Total Akumulasi Pendapatan (Aman dari Mleber di Mobile) -->
-        <div class="w-full bg-blue-50/80 rounded-xl p-2.5 sm:p-3 block box-border border-2 border-dashed border-blue-500 backdrop-blur-[1px] mt-2">
-            <div class="flex flex-col gap-1 w-full">
-                <!-- Baris 1: Judul Rata Kiri -->
-                <div class="text-left font-bold text-xs sm:text-sm tracking-wide text-blue-900">
-                    Total Akumulasi Pendapatan:
-                </div>
-                <!-- Baris 2: Nominal Rata Kanan -->
-                <div class="text-right">
-                    <span id="pv-total-akumulasi" class="font-extrabold text-base sm:text-lg tracking-tight text-blue-700 inline-block">
-                        Rp 0
-                    </span>
-                </div>
-            </div>
-        </div>
+                            <!-- Highlight Box 2-Baris: Total Akumulasi Pendapatan -->
+                            <div class="w-full bg-blue-50 rounded-xl p-2.5 sm:p-3 block box-border border-2 border-dashed border-blue-500 mt-2">
+                                <div class="flex flex-col gap-1 w-full">
+                                    <div class="text-left font-bold text-xs sm:text-sm tracking-wide text-blue-900">
+                                        Total Akumulasi Pendapatan:
+                                    </div>
+                                    <div class="text-right">
+                                        <span id="pv-total-akumulasi" class="font-extrabold text-base sm:text-lg tracking-tight text-blue-700 inline-block">
+                                            Rp 0
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 
-    </div>
-    
-    <!-- Catatan Owner -->
-    <div id="pv-box-catatan-render" class="mt-2 bg-slate-50/90 border border-dashed border-slate-300 p-2 rounded-lg box-border hidden">
-        <span class="font-bold text-emerald-800 uppercase block text-[8px] tracking-wider mb-0.5">Catatan Penting dari Owner:</span>
-        <p id="pv-text-catatan-owner" class="italic font-medium text-slate-700 text-[9px] leading-tight m-0"></p>
-    </div>
-    
-    <!-- Tanda Tangan & Tanggal Cetak -->
-    <div class="w-full flex justify-between items-end text-[9px] sm:text-[10px] text-slate-400 mt-6 sm:mt-8 tracking-wider font-normal">
-        <div class="text-left text-slate-600 whitespace-nowrap">
-            Tgl Cetak: <span id="pv-tanggal-cetak" class="text-slate-800 font-bold">3 Juni 2026</span>
-        </div>
-        <div id="pv-penandatangan-gaji" class="text-center border-t-2 border-slate-400 pt-2 w-36 sm:w-44 text-slate-800 normal-case tracking-normal font-bold whitespace-nowrap">
-            apt. Siti Nurjanah, S.Farm.
-        </div>
-    </div>
-</div>
+                        </div>
+                        
+                        <!-- Catatan Owner -->
+                        <div id="pv-box-catatan-render" class="mt-2 bg-slate-50 border border-dashed border-slate-300 p-2 rounded-lg box-border hidden">
+                            <span class="font-bold text-emerald-800 uppercase block text-[8px] tracking-wider mb-0.5">Catatan Penting dari Owner:</span>
+                            <p id="pv-text-catatan-owner" class="italic font-medium text-slate-700 text-[9px] leading-tight m-0"></p>
+                        </div>
+                        
+                        <!-- Tanda Tangan & Tanggal Cetak -->
+                        <div class="w-full flex justify-between items-end text-[9px] sm:text-[10px] text-slate-400 mt-6 sm:mt-8 tracking-wider font-normal">
+                            <div class="text-left text-slate-600 whitespace-nowrap">
+                                Tgl Cetak: <span id="pv-tanggal-cetak" class="text-slate-800 font-bold">3 Juni 2026</span>
+                            </div>
+                            <div id="pv-penandatangan-gaji" class="text-center border-t-2 border-slate-400 pt-2 w-36 sm:w-44 text-slate-800 normal-case tracking-normal font-bold whitespace-nowrap">
+                                apt. Siti Nurjanah, S.Farm.
+                            </div>
+                        </div>
+                    </div>
 
                 </div> 
             </div>
@@ -6655,6 +6665,8 @@ function tutupModalBK_Wrapper() {
 
     </div>
 </div>
+
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -7658,63 +7670,74 @@ if (btnKirimWaReal) {
         // D. Susun Pesan Teks Pendamping
         let teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja bulan ini untuk Nurjaya Abadi Photocopy, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
 
-        // E. Eksekusi Render Skala 2x Anti-Blur Dinamis Fit-Screen
+        // E. Eksekusi Render High-Res HD (Presisi & Anti-Glitch Font) - FIXED VERSION
         setTimeout(async () => {
-            if (typeof domtoimage !== 'undefined') {
-                const skalaSkor = 2;
-                const lebarTargetGambar = 500; // Mengunci target gambar ke lebar 500px otomatis
+            try {
+                if (typeof domtoimage === 'undefined') {
+                    alert("Library domtoimage belum terpasang/gagal dimuat!");
+                    btnKirimWaReal.innerHTML = textAwalTombol;
+                    btnKirimWaReal.disabled = false;
+                    return;
+                }
 
-                if (document.fonts) await document.fonts.ready;
+                // Tunggu font siap dengan batas waktu (safety)
+                if (document.fonts) {
+                    try {
+                        await document.fonts.ready;
+                    } catch (fontErr) {
+                        console.warn("Font loading timeout/error, melanjutkan render...", fontErr);
+                    }
+                }
 
                 const namaFileJpg = `Slip_Gaji_${namaLengkapKaryawan.replace(/\s+/g, '_')}_${periodeGaji.replace(/\s+/g, '_')}.jpg`;
 
-                domtoimage.toJpeg(targetRenderImage, {
+                // Evaluasi ukuran: Jika 0, gunakan fallback default agar tidak crash
+                const originalWidth = targetRenderImage.offsetWidth || 500;
+                const originalHeight = targetRenderImage.offsetHeight || 700;
+                const scaleFactor = 2; // 2x HD
+
+                const dataUrl = await domtoimage.toJpeg(targetRenderImage, {
                     quality: 0.98,
                     bgcolor: '#ffffff',
-                    width: lebarTargetGambar * skalaSkor,
-                    height: targetRenderImage.offsetHeight * (lebarTargetGambar / targetRenderImage.offsetWidth) * skalaSkor,
+                    width: originalWidth * scaleFactor,
+                    height: originalHeight * scaleFactor,
                     style: {
-                        transform: `scale(${skalaSkor * (lebarTargetGambar / targetRenderImage.offsetWidth)})`,
-                        transformOrigin: 'top left',
-                        width: targetRenderImage.offsetWidth + "px",
-                        height: targetRenderImage.offsetHeight + "px",
+                        'transform': `scale(${scaleFactor})`,
+                        'transform-origin': 'top left',
+                        'width': originalWidth + 'px',
+                        'height': originalHeight + 'px',
                         'backdrop-filter': 'none',
                         '-webkit-backdrop-filter': 'none'
                     }
-                })
-                .then(async function (dataUrl) {
-                    try {
-                        // 3. PROSES SHARE
-                        const responBlob = await fetch(dataUrl);
-                        const blobGambar = await responBlob.blob();
-                        const fileGambar = new File([blobGambar], namaFileJpg, { type: "image/jpeg" });
-
-                        if (navigator.canShare && navigator.canShare({ files: [fileGambar] })) {
-                            await navigator.share({
-                                files: [fileGambar],
-                                title: `Slip Gaji ${namaLengkapKaryawan}`,
-                                text: teksSapaan
-                            });
-                        } else {
-                            jalankanMetodeLamaFallback(dataUrl, namaFileJpg, nomorWa, teksSapaan);
-                        }
-                    } catch (shareError) {
-                        if (shareError.name !== "AbortError") {
-                            jalankanMetodeLamaFallback(dataUrl, namaFileJpg, nomorWa, teksSapaan);
-                        }
-                    }
-
-                    btnKirimWaReal.innerHTML = textAwalTombol;
-                    btnKirimWaReal.disabled = false;
-                })
-                .catch(function (error) {
-                    console.error('Gagal konversi gambar HD:', error);
-                    alert("Gagal me-render slip gaji.");
-                    btnKirimWaReal.innerHTML = textAwalTombol;
-                    btnKirimWaReal.disabled = false;
                 });
+
+                // PROSES SHARE / DOWNLOAD
+                const responBlob = await fetch(dataUrl);
+                const blobGambar = await responBlob.blob();
+                const fileGambar = new File([blobGambar], namaFileJpg, { type: "image/jpeg" });
+
+                if (navigator.canShare && navigator.canShare({ files: [fileGambar] })) {
+                    await navigator.share({
+                        files: [fileGambar],
+                        title: `Slip Gaji ${namaLengkapKaryawan}`,
+                        text: teksSapaan
+                    });
+                } else {
+                    jalankanMetodeLamaFallback(dataUrl, namaFileJpg, nomorWa, teksSapaan);
+                }
+
+            } catch (error) {
+                console.error('Gagal konversi gambar HD:', error);
+                // Jika user membatalkan share, jangan tampilkan alert error
+                if (error.name !== "AbortError") {
+                    alert("Gagal me-render slip gaji. Mencoba metode alternatif...");
+                }
+            } finally {
+                // Selalu kembalikan status tombol ke semula
+                btnKirimWaReal.innerHTML = textAwalTombol;
+                btnKirimWaReal.disabled = false;
             }
-        }, 800);
+        }, 500);
     });
 }
 
