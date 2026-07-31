@@ -595,7 +595,7 @@ document.addEventListener('keydown', function(event) {
         <div class="p-3 md:p-5 border-b border-green-100 flex justify-between items-center bg-gradient-to-r from-white to-green-50/30">
             <h2 class="text-xs md:text-sm font-medium text-gray-900 m-0 leading-tight">
                 <span class="text-green-600 text-[10px] font-black uppercase tracking-wider">PROGRES BULANAN</span><br>
-                <strong>Januari - Juni 2026</strong>
+                <strong>Januari - Juli 2026</strong>
             </h2>
             <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-0.5 rounded-full">
                 <span class="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span>
@@ -762,7 +762,7 @@ document.addEventListener('keydown', function(event) {
         </div>
         
         <p class="text-gray-700 text-sm md:text-lg leading-relaxed font-bold pr-4">
-            Laporan Penutupan Pembukuan untuk periode JUNI 2026 telah terbit. Informasi rinci dapat dicek di tab ARSIP LAPORAN.
+            Laporan Penutupan Pembukuan untuk periode JULI 2026 telah terbit. Informasi rinci dapat dicek di tab ARSIP LAPORAN.
         </p>
     </div>
 </div>
@@ -1096,6 +1096,10 @@ document.addEventListener('keydown', function(event) {
 <button data-search="juni 2026" onclick="loadDrive('1yUK-mveT_CrK7mEWDA8yqGEQUBpQpaQG', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
     <i class="fa-solid fa-file-pdf text-green-500"></i>
     <span>Juni 2026</span>
+</button>
+<button data-search="juli 2026" onclick="loadDrive('18vHRYrRyH8CJqBa2ua0G5sR_-9cqcoGf', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
+    <i class="fa-solid fa-file-pdf text-green-500"></i>
+    <span>Juli 2026</span>
 </button>
 
 
@@ -1793,12 +1797,12 @@ document.addEventListener('keydown', function(event) {
         gradientBatang.addColorStop(0, '#2ecc71'); 
         gradientBatang.addColorStop(1, '#27ae60'); 
 
-        const dataPendapatan = [13214500, 10560500, 11715000, 15283500, 14690700, 17806000];
+        const dataPendapatan = [13214500, 10560500, 11715000, 15283500, 14690700, 17806000, 21263500];
 
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni'],
+                labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli'],
                 datasets: [{
                     label: 'Pendapatan',
                     data: dataPendapatan, 
