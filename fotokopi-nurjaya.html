@@ -1118,6 +1118,7 @@ document.addEventListener('keydown', function(event) {
             </div>
         </div>
 
+
         <!-- KONTEN TAB: PRESENSI STAF -->
       <div id="tab-presensi" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
     
@@ -1182,6 +1183,7 @@ document.addEventListener('keydown', function(event) {
                             <option value="" disabled selected hidden>-- Pilih Nama --</option>
                             <option value="Cahya">Muhammad Cahya Ardiansyah</option>
                             <option value="Dadan">Dadan Nurfaizal</option>
+							<option value="Syamsi">Syamsi Nurhakim</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-green-600">
                             <i class="fa-solid fa-chevron-down text-[10px]"></i>
@@ -4196,6 +4198,7 @@ function tutupAlertCloud() {
 
 
 
+
 			
 <script>
 // GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
@@ -4912,7 +4915,12 @@ document.addEventListener("DOMContentLoaded", function() {
     // =========================================================================
     function pemicuBukaModal() {
         const karyawanTerpilih = selectKaryawan ? selectKaryawan.value : "";
-        const pemetaanNamaLengkap = { "Cahya": "Muhammad Cahya Ardiansyah", "Dadan": "Dadan Nurfaizal" };
+// --- REVISI BARU ---
+const pemetaanNamaLengkap = { 
+    "Cahya": "Muhammad Cahya Ardiansyah", 
+    "Dadan": "Dadan Nurfaizal",
+    "Syamsi": "Syamsi Nurhakim"
+};
         if (!karyawanTerpilih) {
             alert("Pilih nama staf karyawan terlebih dahulu di form utama!");
             if (selectKaryawan) selectKaryawan.focus();
@@ -6135,11 +6143,12 @@ function tutupModalBK_Wrapper() {
         <div class="p-5 overflow-y-auto flex-1 bg-slate-50 flex flex-col gap-5">
             <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex flex-col gap-2">
                 <label for="gaji-pilih-karyawan" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Karyawan:</label>
-                <select id="gaji-pilih-karyawan" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-green-600 focus:ring-1 focus:ring-green-600 focus:outline-none transition-all cursor-pointer shadow-inner">
-                    <option value="" disabled selected>-- Pilih Karyawan --</option>
-                    <option value="Dadan">Dadan Nurfaizal</option>
-                    <option value="Cahya">M. Cahya Ardiansyah</option>
-                </select>
+               <select id="gaji-pilih-karyawan" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-green-600 focus:ring-1 focus:ring-green-600 focus:outline-none transition-all cursor-pointer shadow-inner">
+    <option value="" disabled selected>-- Pilih Karyawan --</option>
+    <option value="Dadan">Dadan Nurfaizal</option>
+    <option value="Cahya">M. Cahya Ardiansyah</option>
+    <option value="Syamsi">Syamsi Nurhakim</option> <!-- Tambahan opsi baru -->
+</select>
             </div>
 
             <div class="flex flex-col gap-2">
