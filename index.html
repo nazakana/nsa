@@ -506,6 +506,188 @@
         background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
         box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.3);
     }
+	
+	/* ========================================================================= */
+    /* STYLING TOMBOL AKSES CEPAT & MODAL POP-UP                                */
+    /* ========================================================================= */
+    .btn-akses-cepat {
+        background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+        box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Modal Overlay & Card */
+    .nsa-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nsa-modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .nsa-modal-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 24px;
+        padding: 22px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nsa-modal-overlay.active .nsa-modal-card {
+        transform: scale(1) translateY(0);
+    }
+
+    /* Header Modal */
+    .nsa-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 16px;
+    }
+
+    .nsa-modal-title-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .nsa-modal-icon {
+        width: 38px;
+        height: 38px;
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: #ffffff;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        box-shadow: 0 6px 15px -4px rgba(46, 204, 113, 0.4);
+    }
+
+    .nsa-modal-title {
+        font-size: 14px;
+        font-weight: 900;
+        color: #0f172a;
+        line-height: 1.2;
+    }
+
+    .nsa-modal-subtitle {
+        font-size: 10px;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .nsa-modal-close {
+        background: #f1f5f9;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        color: #64748b;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .nsa-modal-close:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    /* Sub-Menu Tombol di Dalam Modal */
+    .nsa-modal-body {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-modal-sub {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 12px 14px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        color: #0f172a;
+        text-decoration: none;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: left;
+    }
+
+    .btn-modal-sub:hover {
+        background: #ffffff;
+        border-color: #2ecc71;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px -4px rgba(46, 204, 113, 0.2);
+    }
+
+    .sub-icon-wrapper {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+        color: #ffffff;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    .btn-sub-qris .sub-icon-wrapper {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    }
+
+    .sub-btn-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sub-btn-text {
+        font-size: 11px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .sub-btn-desc {
+        font-size: 9px;
+        font-weight: 600;
+        color: #64748b;
+        margin-top: 1px;
+    }
+
+    .sub-chevron {
+        margin-left: auto;
+        font-size: 11px;
+        color: #94a3b8;
+    }
     </style>
 </head>
 <body>
@@ -567,24 +749,24 @@
             </button>
         </div>
 		
-		<!-- Tombol Katalog Barang -->
-            <a href="https://nazakana.github.io/Katalog-Nurjaya/index.html" class="btn-unit btn-katalog">
-                <div class="icon-wrapper">
-                    <i class="fas fa-boxes-stacked style-icon"></i>
-                </div>
-                <div class="btn-content">
-                    <span class="btn-text">AKSES CEPAT</span>
-                    <span class="btn-desc">Katalog Barang Nurjaya Abadi Photocopy</span>
-                </div>
-                <i class="fas fa-chevron-right chevron-right"></i>
-            </a>
+		<!-- Tombol Akses Cepat (Menu Tambahan Terpisah) -->
+        <button onclick="bukaModalAksesCepat()" class="btn-unit btn-akses-cepat" style="margin-top: 10px;">
+            <div class="icon-wrapper">
+                <i class="fas fa-bolt style-icon"></i>
+            </div>
+            <div class="btn-content">
+                <span class="btn-text">AKSES CEPAT</span>
+                <span class="btn-desc">Buka fitur pilihan dengan efisien</span>
+            </div>
+            <i class="fas fa-chevron-right chevron-right"></i>
+        </button>
         
         <!-- Ornamen Cloud Chip -->
         <div class="nsa-cloud-embed">
             <i class="fas fa-cloud embed-cloud-icon"></i>
             <div class="embed-cloud-details">
                 <span class="embed-cloud-title">SISTEM NSA CLOUD</span>
-                <p class="embed-cloud-text">Arsip digital dan data operasional harian disinkronkan secara aman ke dalam pusat data terpadu, dengan 2 mode ekosistem yang sepenuhnya terintegrasi dengan layanan <strong>NSA CLOUD<strong>.</p>
+                <p class="embed-cloud-text">Arsip digital dan data operasional harian disinkronkan secara aman ke dalam pusat data terpadu, dengan 2 mode ekosistem yang sepenuhnya terintegrasi dengan layanan <strong>NSA CLOUD</strong>.</p>
             </div>
         </div>
         
@@ -689,6 +871,66 @@ window.addEventListener('pageshow', function(event) {
         .catch(err => console.error('Gagal daftar Service Worker:', err));
     });
   }
+  
+  // =========================================================================
+// FUNGSI MODAL AKSES CEPAT & KIRIM QRIS WHATSAPP
+// =========================================================================
+
+function bukaModalAksesCepat() {
+    const modal = document.getElementById('modal-akses-cepat');
+    if (modal) modal.classList.add('active');
+}
+
+function tutupModalAksesCepatDirect() {
+    const modal = document.getElementById('modal-akses-cepat');
+    if (modal) modal.classList.remove('active');
+}
+
+function tutupModalAksesCepat(event) {
+    // Tutup jika area luar kartu modal diklik
+    if (event.target.id === 'modal-akses-cepat') {
+        tutupModalAksesCepatDirect();
+    }
+}
+
+async function kirimQRISWhatsApp() {
+    const teksPesan = "Silakan lakukan pembayaran ke QRIS berikut. Pastikan nominal sudah sesuai dengan yang telah disebutkan oleh Admin Nurjaya Abadi Photocopy.\n\n*saran: Kami sangat mengapresiasi jika anda mengirimkan tangkapan layar/bukti transaksi kepada kami, terima kasih.";
+    const urlGambar = 'nurjaya_qris.jpg';
+
+    try {
+        // 1. Salin teks pesan ke clipboard secara otomatis sebagai cadangan utama
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(teksPesan);
+        }
+
+        // 2. Ambil file gambar nurjaya_qris.jpg
+        const response = await fetch(urlGambar);
+        const blob = await response.blob();
+        const fileGambar = new File([blob], 'nurjaya_qris.jpg', { type: blob.type || 'image/jpeg' });
+
+        // 3. Cek dukungan Web Share API
+        if (navigator.canShare && navigator.canShare({ files: [fileGambar] })) {
+            // Pada beberapa versi WA, menyertakan 'text' bersama 'files' membuat salah satunya gugur.
+            // Maka kita fokus bagikan file gambar, dan teks sudah aman tersalin di clipboard.
+            await navigator.share({
+                files: [fileGambar],
+                title: 'QRIS Nurjaya Abadi Photocopy',
+                text: teksPesan
+            });
+        } else {
+            fallbackWhatsApp(teksPesan);
+        }
+    } catch (error) {
+        console.error("Gagal membagikan QRIS:", error);
+        fallbackWhatsApp(teksPesan);
+    }
+}
+
+// Fungsi cadangan jika fitur Share File tidak didukung
+function fallbackWhatsApp(pesan) {
+    const urlWA = "https://api.whatsapp.com/send?text=" + encodeURIComponent(pesan);
+    window.open(urlWA, '_blank');
+}
 </script>
 
 <!-- Struktur Elemen Transisi Premium (Booting OS Style) -->
@@ -709,6 +951,52 @@ window.addEventListener('pageshow', function(event) {
     </div>
 </div>
 
+
+<!-- Modal Pop-Up Akses Cepat -->
+<div id="modal-akses-cepat" class="nsa-modal-overlay" onclick="tutupModalAksesCepat(event)">
+    <div class="nsa-modal-card">
+        <!-- Header Modal -->
+        <div class="nsa-modal-header">
+            <div class="nsa-modal-title-group">
+                <div class="nsa-modal-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div>
+                    <h3 class="nsa-modal-title">AKSES CEPAT</h3>
+                    <p class="nsa-modal-subtitle">Menu Layanan Kilat</p>
+                </div>
+            </div>
+            <button class="nsa-modal-close" onclick="tutupModalAksesCepatDirect()">&times;</button>
+        </div>
+
+        <!-- Body Modal (2 Menu Pilihan) -->
+        <div class="nsa-modal-body">
+            <!-- 1. Katalog Barang -->
+            <a href="https://nazakana.github.io/Katalog-Nurjaya/index.html" class="btn-modal-sub">
+                <div class="sub-icon-wrapper">
+                    <i class="fas fa-boxes-stacked"></i>
+                </div>
+                <div class="sub-btn-content">
+                    <span class="sub-btn-text">KATALOG BARANG</span>
+                    <span class="sub-btn-desc">Daftar Harga Barang Nurjaya Abadi Photocopy</span>
+                </div>
+                <i class="fas fa-chevron-right sub-chevron"></i>
+            </a>
+
+            <!-- 2. Kirim Nurjaya QRIS -->
+            <button onclick="kirimQRISWhatsApp()" class="btn-modal-sub btn-sub-qris">
+                <div class="sub-icon-wrapper">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="sub-btn-content">
+                    <span class="sub-btn-text">KIRIM NURJAYA QRIS</span>
+                    <span class="sub-btn-desc">Kirim Gambar QRIS ke Konsumen</span>
+                </div>
+                <i class="fas fa-paper-plane sub-chevron"></i>
+            </button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
