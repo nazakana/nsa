@@ -485,7 +485,7 @@ document.addEventListener('keydown', function(event) {
             class="nav-link flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="daily input"
             style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
             <i class="fa-solid fa-pen-to-square text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Input</span>
+            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Database</span>
         </button>
 
         <button onclick="showTab('archive')" id="btn-archive" 
@@ -699,49 +699,7 @@ document.addEventListener('keydown', function(event) {
 </div>
 
 <!-- SUB JUDUL: BUKU REKAP -->
-<div class="glass-element p-6 md:p-8 mb-6 rounded-[28px] border-4 border-green-400 bg-white shadow-[0_12px_40px_rgba(34,197,94,0.15)] relative overflow-hidden">
-    
-    <div class="absolute top-0 right-0 px-4 py-1 bg-green-600 text-white text-[10px] font-black rounded-bl-[20px] uppercase tracking-widest shadow-lg">
-        BUKU REKAP
-    </div>
 
-    <h4 class="text-xl md:text-2xl font-black text-gray-900 mb-6 uppercase leading-tight pr-24">
-    BUKU REKAP TERBARU <br> 
-    <span id="rekap_tanggal" class="text-green-700 font-bold text-lg md:text-xl">Memuat tanggal...</span>
-</h4>
-
-<div class="space-y-4 text-gray-700 text-sm md:text-lg leading-relaxed font-medium">
-    <div class="flex gap-4 items-center">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-        <p>Buku Penjualan Meterai : <span id="rekap_penjualan_meterai" class="font-bold text-gray-950">Rp 0</span></p>
-    </div>
-    
-    <div class="flex gap-4 items-center">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-        <p>Buku Laba Meterai : <span id="rekap_laba_meterai" class="font-bold text-gray-950">Rp 0</span></p>
-    </div>
-    
-    <div class="flex gap-4 items-center">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-        <p>Buku Tabungan (A) : <span id="rekap_tabungan_a" class="font-bold text-gray-950">Rp 0</span></p>
-    </div>
-    
-    <div class="flex gap-4 items-center">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-        <p>Buku Tabungan (B) : <span id="rekap_tabungan_b" class="font-bold text-gray-950">Rp 0</span></p>
-    </div>
-    
-    <div class="flex gap-4 items-center">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-        <p>Buku Sisa Akhir : <span id="rekap_sisa_akhir" class="font-bold text-gray-950">Rp 0</span></p>
-    </div>
-
-    <div class="flex gap-4 items-center pt-2 border-t-2 border-green-100 mt-2">
-        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
-        <p>QRIS Bulan Ini : <span id="rekap_qris" class="font-bold text-gray-950">Rp 0</span></p>
-    </div>
-</div>
-    </div>
 
 
 				
@@ -880,7 +838,7 @@ document.addEventListener('keydown', function(event) {
             <div class="flex items-center gap-3">
                 <div class="w-2 h-8 bg-green-500 rounded-full"></div>
                 <div>
-                    <h3 class="text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight">Daily Input</h3>
+                    <h3 class="text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight">Sinkronisasi Data</h3>
                     <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Nurjaya Abadi Photocopy</p>
                 </div>
             </div>
@@ -920,146 +878,29 @@ document.addEventListener('keydown', function(event) {
                 </div>
 
                 <!-- Status Validasi Cloud Indicator -->
+				
                 <div>
                     <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-cloud text-green-600"></i> Sinkronisasi Cloud
+                        <i class="fa-solid fa-cloud text-green-600"></i> Sinkronisasi NSA Kasir
                     </label>
-                    <div id="box_status_cloud" class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-300 rounded-[14px] text-xs text-gray-500 font-black tracking-wide flex items-center gap-2 transition-all duration-300">
-                        <i id="icon_status_cloud" class="fa-solid fa-circle-question"></i>
-                        <span id="label_status_cloud">Tentukan bulan kerja dahulu...</span>
+                    <div class="flex gap-2">
+                        
+                        <button type="button" 
+                            onclick="pemicuTombolSinkronasi()"
+                            class="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs rounded-[14px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center gap-2 shrink-0">
+                            <i class="fa-solid fa-rotate"></i> sinkronkan
+                        </button>
                     </div>
                 </div>
+				
+				
             </div>
         </div>
 
-        <!-- Form Utama (Dibungkus container penanda blur jika dikunci) -->
-        <div id="wrapper_form_kerja" class="transition-all duration-300 pointer-events-none opacity-40 blur-[1px]">
-            <form id="form-daily-fotokopi" class="p-6 md:p-8 space-y-6 text-gray-700">
-                
-                <!-- Input Tanggal Utama -->
-                <div class="space-y-1.5 max-w-md">
-                    <label class="block text-xs md:text-sm font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-day text-green-600"></i> Pilih Tanggal Operasional
-                    </label>
-                    <input type="date" id="input_tanggal" required
-                        class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-gray-800 transition-colors duration-200">
-                </div>
-
-                <hr class="border-dashed border-green-100">
-
-                <!-- Grid Input Nilai Keuangan dan Barang -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-cash-register text-green-600"></i> Pendapatan Kotor
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="input_pendapatan_kotor" placeholder="0" required
-                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
-                        </div>
-                        <p id="hint_pendapatan_kotor" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-qrcode text-green-600"></i> Pendapatan QRIS
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="input_pendapatan_qris" placeholder="0" required
-                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
-                        </div>
-                        <p id="hint_pendapatan_qris" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-stamp text-green-600"></i> Meterai Terjual (Fisik)
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="input_meterai_terjual" placeholder="0" required
-                                class="w-full pr-14 pl-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                            <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-gray-400 text-xs uppercase">PCS</span>
-                        </div>
-                        <p id="hint_meterai_terjual" class="text-[11px] text-green-600 font-bold px-1">0 PCS</p>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-stamp text-green-600"></i> Meterai Terjual (QRIS)
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="input_meterai_terjual_qris" placeholder="0" required
-                                class="w-full pr-14 pl-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                            <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-gray-400 text-xs uppercase">PCS</span>
-                        </div>
-                        <p id="hint_meterai_terjual_qris" class="text-[11px] text-green-600 font-bold px-1">0 PCS</p>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-utensils text-green-600"></i> Uang Makan Karyawan
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="input_uang_makan" placeholder="0" required
-                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
-                        </div>
-                        <p id="hint_uang_makan" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-basket-shopping text-green-600"></i> Pengeluaran Kasir
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="input_pengeluaran_kasir" placeholder="0" required
-                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
-                        </div>
-                        <p id="hint_pengeluaran_kasir" class="text-[11px] text-green-600 font-bold px-1">Rp 0</p>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-vault text-green-600"></i> Tabungan Harian (A)
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="input_tabungan_a" placeholder="45.000" required
-                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
-                        </div>
-                        <p id="hint_tabungan_a" class="text-[11px] text-green-600 font-bold px-1">Rp 45.000</p>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-vault text-green-600"></i> Tabungan Harian (B)
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="input_tabungan_b" placeholder="255.000" required
-                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-gray-800 transition-colors duration-200">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400 text-sm">Rp</span>
-                        </div>
-                        <p id="hint_tabungan_b" class="text-[11px] text-green-600 font-bold px-1">Rp 255.000</p>
-                    </div>
-
-                </div>
-                
-                <!-- Sektor Tombol Pengiriman -->
-                <div class="pt-4 border-t border-gray-100 flex justify-end">
-                    <button type="submit" form="form-daily-fotokopi" 
-                        class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200">
-                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> KIRIM DATA KE NSA CLOUD
-                    </button>
-                </div>
-            </form>
-        </div>
-
+        
     </div>
 </div>
+
 
 
 
@@ -2287,11 +2128,7 @@ function toggleGatePass() {
         </div>
 
         <div class="p-6 space-y-3 flex-1">
-            <button onclick="bukaModalRekap()" class="flex items-center gap-4 w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-green-600/10">
-                <div class="w-8 flex justify-center"><i class="fas fa-database fa-lg"></i></div>
-                <span class="font-black text-sm tracking-tight">Update Buku Rekap</span>
-                <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
-            </button>
+            
 
             <button onclick="openGateKatalog()" class="flex items-center gap-4 w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-green-600/10">
                 <div class="w-8 flex justify-center"><i class="fas fa-boxes-stacked fa-lg"></i></div>
@@ -3540,7 +3377,124 @@ function siarkanNotifikasiLangsung() {
 
 <script>
 // URL Web App All-In-One Fotokopi resmi milik Zero
-const API_URL_FOTOKOPI = "https://script.google.com/macros/s/AKfycbxS5Ly5fEBsZqIKCj1BAIQW5ns5AyQ87NgPN2hINvSsqGf3GOo7bwXAW3yfVIS1nxkKbQ/exec";
+const API_URL_FOTOKOPI = "https://script.google.com/macros/s/AKfycbysOqOqetjMttC9qyCLkOia9G4oor44nzyrlRN1TddAe7L0dJEMqHArXs0JQOLd6uKK/exec";
+const API_URL_SPREADSHEET_B = "https://script.google.com/macros/s/AKfycbwsB1-Pg5rewhEC_uAgoE52wqrDNWsTbMaj2t0QkqrY6-8UGqmGkeH0A9vOgdFtXP8z/exec";
+
+// Fungsi Sinkronisasi Full Sheet dari Spreadsheet B ke Spreadsheet A
+// Fungsi Sinkronisasi Full Sheet dari Spreadsheet B ke Spreadsheet A (Dengan Progress Bar Real-Time)
+async function sinkronkanFullSheetBKeA(namaBulanTarget) {
+    const modalProgress = document.getElementById("modal_progress_sinkron");
+    const barProgress = document.getElementById("bar_progress_sinkron");
+    const persenProgress = document.getElementById("persen_progress");
+    const teksDetail = document.getElementById("teks_detail_progress");
+    const angkaBaris = document.getElementById("angka_progress_baris");
+
+    try {
+        // Tampilkan Modal Loading Progress
+        if (modalProgress) {
+            barProgress.style.width = "0%";
+            persenProgress.innerText = "0%";
+            teksDetail.innerText = "Membaca data rekap dari Kasir B...";
+            angkaBaris.innerText = "0 / 0";
+            modalProgress.classList.remove("hidden");
+        }
+
+        // 1. Tarik seluruh rekap data bulan terbaru dari Spreadsheet B
+        const responseB = await fetch(`${API_URL_SPREADSHEET_B}?bulan=${encodeURIComponent(namaBulanTarget)}`);
+        const resultB = await responseB.json();
+
+        if (resultB.status !== "success" || !resultB.data || resultB.data.length === 0) {
+            if (modalProgress) modalProgress.classList.add("hidden");
+            bukaAlertFotokopi("error", "Gagal Sinkronisasi", "Data rekap dari Spreadsheet B tidak ditemukan!");
+            return;
+        }
+
+        const dataKoleksiB = resultB.data;
+        const totalBaris = dataKoleksiB.length;
+        let totalSukses = 0;
+
+        // 2. Iterasi & hitung ulang setiap baris data dari Spreadsheet B
+        for (let i = 0; i < totalBaris; i++) {
+            const item = dataKoleksiB[i];
+
+            const lembar = Number(item.total_lembar_kasir) || 0;
+            const koin = Number(item.total_koin_kasir) || 0;
+            const pengeluaran = Number(item.pengeluaran_kasir) || 0;
+            const karyawan = Number(item.karyawan_masuk) || 1;
+            const meteraiPagi = Number(item.stok_meterai_pagi) || 0;
+            const meteraiMalam = Number(item.stok_meterai_malam) || 0;
+
+            const tglVal = item.hari_tanggal; // Tetap simpan tglVal asli agar payload ke GAS tidak error!
+            
+            // Format Tanggal Rapih (DD.MM.YYYY) KHUSUS TAMPILAN MODAL
+            let tglTampil = tglVal;
+            if (tglVal) {
+                if (typeof tglVal === 'string' && tglVal.includes('/')) {
+                    tglTampil = tglVal.replace(/\//g, '.');
+                } else {
+                    const dObj = new Date(tglVal);
+                    if (!isNaN(dObj.getTime())) {
+                        const d = String(dObj.getDate()).padStart(2, '0');
+                        const m = String(dObj.getMonth() + 1).padStart(2, '0');
+                        const y = dObj.getFullYear();
+                        tglTampil = `${d}.${m}.${y}`;
+                    }
+                }
+            }
+
+            const pendapatanKotorVal = lembar + koin + pengeluaran + (20000 * karyawan) - 170000;
+            const meteraiTerjualVal = meteraiPagi - meteraiMalam;
+            const meteraiQrisVal = Number(item.meterai_terjual_qris) || 0;
+            const pendapatanQrisVal = Number(item.pendapatan_qris) || 0;
+            const uangMakanVal = 20000 * karyawan;
+            const pengeluaranKasirVal = pengeluaran;
+            const tabunganAVal = Number(item.tabungan_a) || 0;
+            const tabunganBVal = Number(item.tabungan_b) || 0;
+
+            // UPDATE UI PROGRESS BARIS
+            const persentase = Math.round(((i + 1) / totalBaris) * 100);
+            if (modalProgress) {
+                barProgress.style.width = `${persentase}%`;
+                persenProgress.innerText = `${persentase}%`;
+                teksDetail.innerText = `Menyimpan Tanggal: ${tglTampil}...`;
+                angkaBaris.innerText = `${i + 1} / ${totalBaris}`;
+            }
+
+            const payloadData = new URLSearchParams();
+            payloadData.append("tanggal", tglVal);
+            payloadData.append("bulan_target", namaBulanTarget.replace(/\s+/g, ''));
+            payloadData.append("pendapatan_kotor", pendapatanKotorVal);
+            payloadData.append("meterai_terjual", meteraiTerjualVal);
+            payloadData.append("meterai_terjual_qris", meteraiQrisVal);
+            payloadData.append("pendapatan_qris", pendapatanQrisVal);
+            payloadData.append("uang_makan", uangMakanVal);
+            payloadData.append("pengeluaran_kasir", pengeluaranKasirVal);
+            payloadData.append("tabungan_a", tabunganAVal);
+            payloadData.append("tabungan_b", tabunganBVal);
+
+            // 3. Kirim hasil kalkulasi ke Spreadsheet A
+            await fetch(API_URL_FOTOKOPI, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: payloadData.toString()
+            });
+
+            totalSukses++;
+        }
+
+        // Sembunyikan Modal saat selesai
+        if (modalProgress) modalProgress.classList.add("hidden");
+
+        bukaAlertFotokopi("sukses", "Sinkronisasi Berhasil", `Berhasil memproses & menyinkronkan ${totalSukses} baris data sheet [${namaBulanTarget}] dari Kasir B ke Spreadsheet A.`);
+        setTimeout(() => { location.reload(); }, 2000);
+
+    } catch (err) {
+        if (modalProgress) modalProgress.classList.add("hidden");
+        console.error("Gagal melakukan sinkronisasi:", err);
+        bukaAlertFotokopi("error", "Gangguan Sistem", "Terjadi kesalahan koneksi saat memproses sinkronisasi data.");
+    }
+}
 
 // Fungsi Utama: Memuat data spreadsheet dan mengisinya ke tabel & grafik
 // Fungsi Utama: Memuat data spreadsheet dan mengisinya ke tabel & grafik
@@ -4165,6 +4119,20 @@ function tutupAlertCloud() {
         setTimeout(() => {
             modal.classList.add("hidden");
         }, 300);
+    }
+}
+function pemicuTombolSinkronasi() {
+    const selectBulan = document.getElementById("select_bulan_operasional");
+    if (!selectBulan || !selectBulan.value) {
+        bukaAlertFotokopi("error", "Pilih Periode", "Silakan pilih bulan operasional pada dropdown terlebih dahulu!");
+        return;
+    }
+    
+    // Ambil label teks bulan (contoh: "Agustus 2026")
+    const teksBulan = selectBulan.options[selectBulan.selectedIndex].text;
+    
+    if (confirm(`Apakah Anda yakin ingin menghitung & menyinkronkan seluruh data bulan [${teksBulan}] dari Program Kasir ke Database NSA?`)) {
+        sinkronkanFullSheetBKeA(teksBulan);
     }
 }
 </script>
@@ -5930,7 +5898,35 @@ function kembaliKeInputBK() {
 // Fungsi eksekusi download berantai untuk semua halaman gambar yang ada di memori
 async function eksekusiUnduhSemuaJPG() {
     if (listDataGambarPreview.length === 0) return;
-    
+
+    // 1. Ambil data inputan dari Form
+    const inputElements = document.querySelectorAll('.input-jumlah-belanja');
+    const dataUpdateSheets = [];
+
+    inputElements.forEach(input => {
+        const nama = input.getAttribute('data-barang');
+        const jumlah = input.value.trim();
+        
+        const inputCatatan = document.querySelector(`[data-barang-catatan="${nama}"]`);
+        const catatan = inputCatatan ? inputCatatan.value.trim() : "";
+
+        dataUpdateSheets.push({ nama: nama, jumlah: jumlah, catatan: catatan });
+    });
+
+    // 2. Kirim/Simpan Data ke Google Sheets
+    try {
+        await fetch(API_BARANG_KOSONG, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ barang: dataUpdateSheets })
+        });
+        console.log("Data berhasil disimpan ke Spreadsheet saat unduh JPG.");
+    } catch (error) {
+        console.error("Gagal menyimpan data ke Spreadsheet:", error);
+    }
+
+    // 3. Eksekusi Unduh Seluruh Gambar JPG
     const strTanggal = document.getElementById('txtTanggalBK')?.innerText || "";
     const formatTanggal = strTanggal.replace(/[^a-zA-Z0-9]/g, "_");
 
@@ -5943,8 +5939,6 @@ async function eksekusiUnduhSemuaJPG() {
                 linkDownload.download = `Struk_Checklist_Hal_${item.pageNumber}_NURJAYA_${formatTanggal}.jpg`;
                 linkDownload.href = item.dataUrl;
                 linkDownload.click();
-                
-                // Jeda 350ms agar browser tidak mendeteksi sebagai spam pop-up download
                 setTimeout(resolve, 350);
             } catch (e) {
                 console.error(e);
@@ -8154,7 +8148,34 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
         </div>
     </div>
 </div>
+<!-- MODAL LOADING PROGRESS SINKRONISASI -->
+<div id="modal_progress_sinkron" class="fixed inset-0 bg-black/70 backdrop-blur-md z-[30000] flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-[28px] border-4 border-blue-500 p-6 shadow-2xl flex flex-col items-center text-center space-y-4 my-auto">
+        
+        <!-- Icon Spinner & Title -->
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-2xl font-black shadow-inner">
+            <i class="fa-solid fa-arrows-rotate animate-spin"></i>
+        </div>
+        
+        <div>
+            <h4 class="text-lg font-black text-gray-900 uppercase tracking-tight">Proses Sinkronisasi</h4>
+            <p id="teks_detail_progress" class="text-xs font-bold text-gray-500 mt-1">Membaca data rekap dari Kasir B...</p>
+        </div>
 
+        <!-- Progress Bar Container -->
+        <div class="w-full bg-gray-100 border border-gray-200 rounded-full h-5 p-1 overflow-hidden shadow-inner">
+            <div id="bar_progress_sinkron" class="bg-gradient-to-r from-blue-500 to-green-500 h-full rounded-full transition-all duration-200 w-0 flex items-center justify-end pr-2">
+                <span id="persen_progress" class="text-[9px] font-black text-white leading-none">0%</span>
+            </div>
+        </div>
+
+        <!-- Indicator Angka Real-Time -->
+        <div class="w-full flex justify-between items-center text-[11px] font-black text-gray-600 px-1 border-t pt-3 border-gray-100">
+            <span>Progress Baris:</span>
+            <span id="angka_progress_baris" class="text-blue-600 font-bold">0 / 0</span>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
