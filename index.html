@@ -173,29 +173,29 @@
         margin-bottom: 10px;
     }
 
-    .menu-grid {
+.menu-grid {
         display: flex;
         flex-direction: column;
-        gap: 12px; 
+        gap: 8px; /* Diperketat agar 4 tombol pas & ramping di HP */
     }
 
     .btn-unit {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 12px;
         width: 100%;
-        padding: 14px 18px; 
+        padding: 8px 16px; /* Padding atas-bawah diperkecil dari 14px ke 8px */
         border: none;
         color: white;
-        border-radius: 18px;
+        border-radius: 50px; /* Rounded Full agar melengkung lonjong rapi di HP */
         cursor: pointer;
         font-family: inherit;
         text-decoration: none;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .btn-unit:hover {
+   .btn-unit:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
     }
 
     .btn-fotokopi {
@@ -207,17 +207,29 @@
         box-shadow: 0 8px 20px -6px rgba(251, 24, 168, 0.3);
     }
 
-    .icon-wrapper {
-        width: 34px;
-        height: 34px;
+   .icon-wrapper {
+        width: 30px; /* Ukuran diperkecil dari 34px ke 30px */
+        height: 30px;
         background: rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
+        border-radius: 50%; /* Dibuat bulat penuh melingkar */
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
     }
-    .style-icon { font-size: 14px; }
+    .style-icon { font-size: 12px; }
+	
+	.btn-semua-app {
+        background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
+        color: #ffffff !important;
+        box-shadow: 0 6px 16px -4px rgba(153, 27, 27, 0.4);
+    }
+	
+	.btn-semua-app .btn-text,
+    .btn-semua-app .btn-desc,
+    .btn-semua-app .chevron-right {
+        color: #ffffff !important;
+    }
 
     .btn-content {
         display: flex;
@@ -688,6 +700,205 @@
         font-size: 11px;
         color: #94a3b8;
     }
+	
+	.btn-semua-app {
+        background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
+        color: #ffffff !important;
+        box-shadow: 0 8px 20px -6px rgba(153, 27, 27, 0.4);
+    }
+    
+    .btn-semua-app .btn-text,
+    .btn-semua-app .btn-desc,
+    .btn-semua-app .chevron-right {
+        color: #ffffff !important;
+    }
+	
+	/* ========================================================================= */
+/* MODAL POPUP SEMUA APP NJA (MATERIAL GREEN & SCROLLABLE LIST)              */
+/* ========================================================================= */
+.nsa-modal-large {
+    max-width: 680px !important; /* Ukuran proporsional/agak lebar */
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important; /* Padding diatur internal agar header & body rapi */
+    overflow: hidden;
+}
+
+.nsa-modal-large .nsa-modal-header {
+    padding: 18px 24px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e2e8f0;
+    background: #ffffff;
+    flex-shrink: 0;
+}
+
+/* Container Scrollable untuk Daftar Aplikasi */
+.nsa-app-list-container {
+    padding: 20px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Card Tiap Aplikasi */
+.nsa-app-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.25s ease;
+}
+
+.nsa-app-card:hover {
+    border-color: #2ecc71;
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.12);
+    transform: translateY(-2px);
+}
+
+/* Header Card: Nomor & Nama App */
+.nsa-app-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nsa-app-badge {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nsa-app-name {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.2px;
+}
+
+/* ========================================================================= */
+/* REVISI FRAME SNAPSHOT: MENJAGA RASIO ASLI & TIDAK TERPOTONG               */
+/* ========================================================================= */
+.nsa-app-snapshot-frame {
+    width: 100%;
+    height: auto; /* Biarkan tinggi menyesuaikan rasio asli gambar */
+    max-height: none; /* Hapus batasan tinggi kaku */
+    border-radius: 16px; /* Tetap pertahankan iOS rounded style */
+    overflow: hidden;
+    background: #f1f5f9;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nsa-app-snapshot-frame img {
+    width: 100%;
+    height: auto; /* Memastikan gambar selalu tampil utuh sesuai rasio */
+    display: block;
+    object-fit: contain; /* Mengunci agar seluruh detail foto terlihat tanpa ter-crop */
+}
+
+/* Teks Deskripsi */
+.nsa-app-desc {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ========================================================================= */
+/* MODAL POPUP BANNER: ADA YANG BARU!                                        */
+/* ========================================================================= */
+.nsa-modal-announcement {
+    max-width: 360px !important;
+    text-align: center;
+    padding: 28px 24px !important;
+    border-radius: 28px !important;
+    position: relative;
+}
+
+.nsa-announcement-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(46, 204, 113, 0.12);
+    color: #16a34a;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+}
+
+.nsa-announcement-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #ffffff;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin: 0 auto 16px auto;
+    box-shadow: 0 10px 25px -5px rgba(46, 204, 113, 0.4);
+}
+
+.nsa-announcement-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.nsa-announcement-desc {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.btn-announcement-action {
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -4px rgba(22, 163, 74, 0.4);
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-announcement-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.5);
+}
     </style>
 </head>
 <body>
@@ -720,37 +931,37 @@
     </div>
     
     <!-- PANEL BAWAH/KANAN: MENU SELEKSI & DATA INTEGRASI -->
-    <div class="nsa-right-panel">
-        <p class="panel-section-title">Silakan Pilih Unit Kerja</p>
-        
-        <div class="menu-grid">
-            <!-- Tombol Fotokopi -->
-            <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-fotokopi">
-                <div class="icon-wrapper">
-                    <i class="fas fa-print style-icon"></i>
-                </div>
-                <div class="btn-content">
-                    <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
-                    <span class="btn-desc">Kelola Data Operasional Harian & Arsip Digital</span>
-                </div>
-                <i class="fas fa-chevron-right chevron-right"></i>
-            </button>
+<div class="nsa-right-panel">
+    <p class="panel-section-title">Silakan Pilih Unit Kerja</p>
+    
+    <!-- KUMPULAN 4 TOMBOL DALAM 1 DIV KESATUAN -->
+    <div class="menu-grid">
+        <!-- 1. Tombol Fotokopi -->
+        <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-fotokopi">
+            <div class="icon-wrapper">
+                <i class="fas fa-print style-icon"></i>
+            </div>
+            <div class="btn-content">
+                <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
+                <span class="btn-desc">Kelola Data Operasional Harian & Arsip Digital</span>
+            </div>
+            <i class="fas fa-chevron-right chevron-right"></i>
+        </button>
 
-            <!-- Tombol Apotek -->
-            <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-apotek">
-                <div class="icon-wrapper">
-                    <i class="fas fa-flask style-icon"></i>
-                </div>
-                <div class="btn-content">
-                    <span class="btn-text">APOTEK NURJAYA</span>
-                    <span class="btn-desc">Kelola Data Operasional Harian & Tutup Buku</span>
-                </div>
-                <i class="fas fa-chevron-right chevron-right"></i>
-            </button>
-        </div>
-		
-		<!-- Tombol Akses Cepat (Menu Tambahan Terpisah) -->
-        <button onclick="bukaModalAksesCepat()" class="btn-unit btn-akses-cepat" style="margin-top: 10px;">
+        <!-- 2. Tombol Apotek -->
+        <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-apotek">
+            <div class="icon-wrapper">
+                <i class="fas fa-flask style-icon"></i>
+            </div>
+            <div class="btn-content">
+                <span class="btn-text">APOTEK NURJAYA</span>
+                <span class="btn-desc">Kelola Data Operasional Harian & Tutup Buku</span>
+            </div>
+            <i class="fas fa-chevron-right chevron-right"></i>
+        </button>
+
+        <!-- 3. Tombol Akses Cepat -->
+        <button onclick="bukaModalAksesCepat()" class="btn-unit btn-akses-cepat">
             <div class="icon-wrapper">
                 <i class="fas fa-bolt style-icon"></i>
             </div>
@@ -760,21 +971,25 @@
             </div>
             <i class="fas fa-chevron-right chevron-right"></i>
         </button>
-        
-        <!-- Ornamen Cloud Chip -->
-        <div class="nsa-cloud-embed">
-            <i class="fas fa-cloud embed-cloud-icon"></i>
-            <div class="embed-cloud-details">
-                <span class="embed-cloud-title">SISTEM NSA CLOUD</span>
-                <p class="embed-cloud-text">Arsip digital dan data operasional harian disinkronkan secara aman ke dalam pusat data terpadu, dengan 2 mode ekosistem yang sepenuhnya terintegrasi dengan layanan <strong>NSA CLOUD</strong>.</p>
-            </div>
-        </div>
-        
-        <!-- Footer Penutup -->
-        <div class="panel-footer">
-            <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
-        </div>
+
+       <!-- 4. Tombol Semua App NJA -->
+<button onclick="bukaModalSemuaApp()" class="btn-unit btn-semua-app">
+    <div class="icon-wrapper">
+        <i class="fas fa-th-large style-icon"></i>
     </div>
+    <div class="btn-content">
+        <span class="btn-text">SEMUA APP NJA</span>
+        <span class="btn-desc">Akses seluruh ekosistem aplikasi & data Nurjaya</span>
+    </div>
+    <i class="fas fa-chevron-right chevron-right"></i>
+</button>
+    </div>
+    
+    <!-- Footer Penutup -->
+    <div class="panel-footer">
+        <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
+    </div>
+</div>
 
 </div>
 
@@ -931,6 +1146,59 @@ function fallbackWhatsApp(pesan) {
     const urlWA = "https://api.whatsapp.com/send?text=" + encodeURIComponent(pesan);
     window.open(urlWA, '_blank');
 }
+
+// =========================================================================
+// FUNGSI KONTROL MODAL SEMUA APP NJA
+// =========================================================================
+function bukaModalSemuaApp() {
+    const modal = document.getElementById('modal-semua-app');
+    if (modal) modal.classList.add('active');
+}
+
+function tutupModalSemuaApp() {
+    const modal = document.getElementById('modal-semua-app');
+    if (modal) modal.classList.remove('active');
+}
+
+// =========================================================================
+// LOGIK BANNER POP-UP "ADA YANG BARU!" (CUMA MUNCUL 1 KALI FIRST-TIME)
+// =========================================================================
+
+// Cek dan tampilkan otomatis saat index.html pertama kali dibuka
+window.addEventListener('DOMContentLoaded', () => {
+    const sudahLihat = localStorage.getItem('nsa_seen_new_app_feature');
+    
+    // Jika belum pernah lihat, tampilkan modalnya setelah delay halus 800ms
+    if (!sudahLihat) {
+        setTimeout(() => {
+            const modal = document.getElementById('modal-ada-yang-baru');
+            if (modal) modal.classList.add('active');
+        }, 800);
+    }
+});
+
+// Fungsi saat tombol "Lihat Semua App" diklik
+function aksiLihatFiturBaru() {
+    // 1. Catat flag di localStorage agar tidak muncul lagi
+    localStorage.setItem('nsa_seen_new_app_feature', 'true');
+    
+    // 2. Tutup modal banner
+    tutupModalAdaYangBaru();
+    
+    // 3. Buka modal daftar Semua App NJA
+    setTimeout(() => {
+        bukaModalSemuaApp();
+    }, 200);
+}
+
+// Fungsi jika pengguna memilih menutup via tombol X
+function tutupModalAdaYangBaru() {
+    // Tetap tandai sudah dilihat agar tidak mengganggu di kemudian hari
+    localStorage.setItem('nsa_seen_new_app_feature', 'true');
+    
+    const modal = document.getElementById('modal-ada-yang-baru');
+    if (modal) modal.classList.remove('active');
+}
 </script>
 
 <!-- Struktur Elemen Transisi Premium (Booting OS Style) -->
@@ -998,5 +1266,152 @@ function fallbackWhatsApp(pesan) {
     </div>
 </div>
 
+<!-- Modal Pop-Up Semua App NJA -->
+<div id="modal-semua-app" class="nsa-modal-overlay">
+    <div class="nsa-modal-card nsa-modal-large">
+        
+        <!-- Header Modal (Pengunci Tombol X) -->
+        <div class="nsa-modal-header">
+            <div class="nsa-modal-title-group">
+                <div class="nsa-modal-icon">
+                    <i class="fas fa-cubes"></i>
+                </div>
+                <div>
+                    <h3 class="nsa-modal-title">EKOSISTEM APLIKASI NURJAYA</h3>
+                    <p class="nsa-modal-subtitle">Sistem Operasional & Administrasi</p>
+                </div>
+            </div>
+            <!-- Hanya tombol X ini yang bisa menutup modal -->
+            <button class="nsa-modal-close" onclick="tutupModalSemuaApp()">&times;</button>
+        </div>
+
+        <!-- Body Modal: Daftar Aplikasi Scrollable -->
+        <div class="nsa-app-list-container">
+            
+            <!-- 1. Hitung Kasir Nurjaya -->
+            <div class="nsa-app-card">
+                <div class="nsa-app-title-group">
+                    <span class="nsa-app-badge">1</span>
+                    <h4 class="nsa-app-name">Hitung Kasir Nurjaya</h4>
+                </div>
+                <div class="nsa-app-snapshot-frame">
+                    <img src="https://lh3.googleusercontent.com/d/1ItUHTvQqy_MQg-Om-G0MHkkk7hIyFT5D" alt="Hitung Kasir Nurjaya">
+                </div>
+                <p class="nsa-app-desc">
+                    Era Ms. Excel telah berakhir (per 10 Agustus 2026), kini hitung kasir menggunakan program standalone dengan efisiensi pencatatan dan waktu yang tinggi, menjamin keakuratan hitungan, dan terintegrasi langsung dengan NSA Cloud.
+                </p>
+            </div>
+
+            <!-- 2. Nurjaya Shop -->
+            <div class="nsa-app-card">
+                <div class="nsa-app-title-group">
+                    <span class="nsa-app-badge">2</span>
+                    <h4 class="nsa-app-name">Nurjaya Shop</h4>
+                </div>
+                <div class="nsa-app-snapshot-frame">
+                    <img src="https://lh3.googleusercontent.com/d/17nblmYh2vllxNWtM6a4haPPdYVfwjOiW" alt="Nurjaya Shop">
+                </div>
+                <p class="nsa-app-desc">
+                    Nota manual tetap berlaku & bisa digunakan, namun kini telah tersedia program khusus untuk cetak nota/struk yang telah disempurnakan sesuai kebutuhan bidang Fotokopi, integrasi Katalog Nurjaya, fitur data Nama Pelanggan, diskon, dan menjamin keakuratan penghitungan total belanja hingga 100%. Format struk yang lebih paten/profesional menjadi nilai positif penilaian dari sudut pandang Pelanggan.
+                </p>
+            </div>
+
+            <!-- 3. Katalog Nurjaya -->
+            <div class="nsa-app-card">
+                <div class="nsa-app-title-group">
+                    <span class="nsa-app-badge">3</span>
+                    <h4 class="nsa-app-name">Katalog Nurjaya</h4>
+                </div>
+                <div class="nsa-app-snapshot-frame">
+                    <img src="https://lh3.googleusercontent.com/d/1AsVTELmqpoi720yNF5z4j_y_-MsLAN1b" alt="Katalog Nurjaya">
+                </div>
+                <p class="nsa-app-desc">
+                    Merupakan program/app katalog barang atau ATK yang berisi seluruh database barang yang dijual di Nurjaya Abadi Photocopy. Versi standalone yang ringan, cepat diakses, dengan fitur lengkap untuk kebutuhan pencarian data barang dengan efisiensi tinggi.
+                </p>
+            </div>
+
+            <!-- 4. Kalkulator Print Nurjaya -->
+            <div class="nsa-app-card">
+                <div class="nsa-app-title-group">
+                    <span class="nsa-app-badge">4</span>
+                    <h4 class="nsa-app-name">Kalkulator Print Nurjaya</h4>
+                </div>
+                <div class="nsa-app-snapshot-frame">
+                    <img src="https://lh3.googleusercontent.com/d/1TjpCkIl910cbgNVUfqOUEdiRwG3G3qSF" alt="Kalkulator Print Nurjaya">
+                </div>
+                <p class="nsa-app-desc">
+                    Program orisinal Nurjaya sebagai asisten kalkulasi harga print dengan algoritma deteksi harga berbasis intensitas warna dan tinta pada kertas. Harga cetak yang konsisten dan akurat menambah kredibilitas kepercayaan Pelanggan.
+                </p>
+            </div>
+
+            <!-- 5. Cetak Kartu Nurjaya -->
+            <div class="nsa-app-card">
+                <div class="nsa-app-title-group">
+                    <span class="nsa-app-badge">5</span>
+                    <h4 class="nsa-app-name">Cetak Kartu Nurjaya</h4>
+                </div>
+                <div class="nsa-app-snapshot-frame">
+                    <img src="https://lh3.googleusercontent.com/d/10_bXZ-BHfzV2i3ia7cUarcyc7IAz82GX" alt="Cetak Kartu Nurjaya">
+                </div>
+                <p class="nsa-app-desc">
+                    Program temporary (sementara) di kala tidak tersedianya mesin fotokopi utama yang mempunyai fitur image repeat (penggandaan/grid), dengan fungsi utama mengefisiensi pemakaian kertas dengan hasil cetak kartu yang setara.
+                </p>
+            </div>
+
+            <!-- 6. Nurjaya Print Assistant -->
+            <div class="nsa-app-card">
+                <div class="nsa-app-title-group">
+                    <span class="nsa-app-badge">6</span>
+                    <h4 class="nsa-app-name">Nurjaya Print Assistant</h4>
+                </div>
+                <div class="nsa-app-snapshot-frame">
+                    <img src="https://lh3.googleusercontent.com/d/163hcCIhb2GBcqyn_E7LX9wCjv7NyPUkU" alt="Nurjaya Print Assistant">
+                </div>
+                <p class="nsa-app-desc">
+                    Program asisten/alat bantu pemrosesan print gambar (fitur menyerupai PhotoScape), fitur grid/penggabungan beberapa foto dalam 1 halaman, dikemas dalam versi ringan yang tidak memerlukan proses grafis/RAM tinggi.
+                </p>
+            </div>
+
+            <!-- 7. Nurjaya Photo Print -->
+            <div class="nsa-app-card">
+                <div class="nsa-app-title-group">
+                    <span class="nsa-app-badge">7</span>
+                    <h4 class="nsa-app-name">Nurjaya Photo Print</h4>
+                </div>
+                <div class="nsa-app-snapshot-frame">
+                    <img src="https://lh3.googleusercontent.com/d/1PodhMWSUgvA-QorQwVMHhlAx0p7fU4H1" alt="Nurjaya Photo Print">
+                </div>
+                <p class="nsa-app-desc">
+                    Asisten serbaguna kebutuhan cetak foto di Nurjaya Abadi Photocopy. Menggantikan metode manual Ms. Word dengan algoritma layout foto otomatis pada kertas yang sangat efisien untuk mempersingkat waktu pencetakan.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal Pop-Up Pengenalan "Ada yang Baru!" -->
+<div id="modal-ada-yang-baru" class="nsa-modal-overlay">
+    <div class="nsa-modal-card nsa-modal-announcement">
+
+        <span class="nsa-announcement-badge">
+            <i class="fas fa-sparkles"></i> FITUR BARU
+        </span>
+
+        <div class="nsa-announcement-icon">
+            <i class="fas fa-cubes"></i>
+        </div>
+
+        <h3 class="nsa-announcement-title">Ada yang baru!</h3>
+        <p class="nsa-announcement-desc">
+            Kini telah hadir daftar ekosistem lengkap aplikasi & data operasional di Nurjaya Abadi.
+        </p>
+
+        <button onclick="aksiLihatFiturBaru()" class="btn-announcement-action">
+            <span>Lihat Semua App</span>
+            <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
 </body>
 </html>
