@@ -13,333 +13,356 @@
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    :root {
+        --bg-base: #F8F9F5;
+        --mint-pastel: #A7D7C5;
+        --mint-deep: #8FBFA8;
+        --yellow-pastel: #F9E5AF;
+        --whatsapp-green: #25D366;
+        --ios-glass: rgba(255, 255, 255, 0.85);
+        --ios-border: rgba(255, 255, 255, 0.4);
+    }
 
-        :root {
-            --bg-base: #F8F9F5;
-            --mint-pastel: #A7D7C5;
-            --mint-deep: #8FBFA8;
-            --yellow-pastel: #F9E5AF;
-            --whatsapp-green: #25D366;
-            --ios-glass: rgba(255, 255, 255, 0.85);
-            --ios-border: rgba(255, 255, 255, 0.4);
-        }
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-base);
+        color: #2D3436;
+        overflow: hidden; /* Lock scroll during login */
+        height: 100vh;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+    }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-base);
-            color: #2D3436;
-            overflow: hidden; /* Lock scroll during login */
-            height: 100vh;
-        }
+    /* LOGIN SCREEN STYLES */
+    #login-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: linear-gradient(135deg, #f0f4f1 0%, #e0ece6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        /* LOGIN SCREEN STYLES */
-        #login-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: linear-gradient(135deg, #f0f4f1 0%, #e0ece6 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    .login-card {
+        width: 100%;
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 40px;
+        padding: 40px;
+        border: 1px solid white;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        text-align: center;
+        transform: scale(1);
+        transition: transform 0.3s ease;
+    }
 
-        .login-card {
-            width: 100%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 40px;
-            padding: 40px;
-            border: 1px solid white;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
-            text-align: center;
-            transform: scale(1);
-            transition: transform 0.3s ease;
-        }
+    .login-input-container {
+        position: relative;
+        width: 100%;
+    }
 
-        .login-input-container {
-            position: relative;
-            width: 100%;
-        }
+    .login-input {
+        width: 100%;
+        padding: 18px 50px 18px 25px;
+        border-radius: 20px;
+        border: 2px solid transparent;
+        background: white;
+        font-size: 16px;
+        font-weight: 600;
+        color: #3B4D45;
+        transition: all 0.3s ease;
+        outline: none;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
 
-        .login-input {
-            width: 100%;
-            padding: 18px 50px 18px 25px;
-            border-radius: 20px;
-            border: 2px solid transparent;
-            background: white;
-            font-size: 16px;
-            font-weight: 600;
-            color: #3B4D45;
-            transition: all 0.3s ease;
-            outline: none;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
+    .login-input:focus {
+        border-color: var(--mint-pastel);
+        box-shadow: 0 8px 20px rgba(167, 215, 197, 0.2);
+    }
 
-        .login-input:focus {
-            border-color: var(--mint-pastel);
-            box-shadow: 0 8px 20px rgba(167, 215, 197, 0.2);
-        }
+    .toggle-password {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #A7D7C5;
+        transition: color 0.3s ease;
+        padding: 5px;
+    }
 
-        .toggle-password {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #A7D7C5;
-            transition: color 0.3s ease;
-            padding: 5px;
-        }
+    .toggle-password:hover {
+        color: var(--mint-deep);
+    }
 
-        .toggle-password:hover {
-            color: var(--mint-deep);
-        }
+    .login-btn {
+        width: 100%;
+        margin-top: 20px;
+        padding: 18px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, var(--mint-pastel) 0%, var(--mint-deep) 100%);
+        color: white;
+        font-weight: 800;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 10px 25px rgba(143, 191, 168, 0.3);
+        transition: all 0.3s ease;
+    }
 
-        .login-btn {
-            width: 100%;
-            margin-top: 20px;
-            padding: 18px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, var(--mint-pastel) 0%, var(--mint-deep) 100%);
-            color: white;
-            font-weight: 800;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 25px rgba(143, 191, 168, 0.3);
-            transition: all 0.3s ease;
-        }
+    .login-btn:active {
+        transform: scale(0.95);
+    }
 
-        .login-btn:active {
-            transform: scale(0.95);
-        }
+    /* ANIMATIONS & EFFECTS */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+    .shake { animation: shake 0.4s ease-in-out; border-color: #ff7675 !important; }
 
-        /* ANIMATIONS */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
+    .login-exit {
+        opacity: 0;
+        transform: scale(1.2);
+        pointer-events: none;
+    }
 
-        .shake { animation: shake 0.4s ease-in-out; border-color: #ff7675 !important; }
+    .glass-element {
+        background: var(--ios-glass);
+        backdrop-filter: blur(10px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid var(--ios-border);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.03);
+    }
 
-        .login-exit {
-            opacity: 0;
-            transform: scale(1.2);
-            pointer-events: none;
-        }
+    .header-banner {
+        width: 100%;
+        height: 340px;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, var(--bg-base) 100%),
+                    url('https://lh3.googleusercontent.com/d/1jOnARlmFMuKn3dxJDQh1YSJN-u52dTCT') center/cover;
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        padding: 0 3rem 4.5rem;
+    }
 
-        /* MAIN UI STYLES */
-        .glass-element {
-            background: var(--ios-glass);
-            backdrop-filter: blur(10px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid var(--ios-border);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.03);
-        }
+    /* FIX BOTNAV ITEM & FLOATING CAPSULE TRANSPARENCY */
+    /* FIX BOTNAV ITEM & FLOATING CAPSULE TRANSPARENCY */
+aside {
+    background: transparent !important;
+    background-color: transparent !important;
+}
 
+.nav-link {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #576574;
+    font-weight: 600;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Aktifkan kembali chip hijau di tombol aktif */
+.nav-link.active .nav-pill {
+    display: block !important;
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    background-color: rgba(16, 185, 129, 0.18) !important; /* Hijau emerald soft */
+}
+
+
+    .main-content {
+        flex: 1;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        transform: translateZ(0);
+        will-change: scroll-position;
+        backface-visibility: hidden;
+        padding-bottom: 140px !important; /* Memberikan ruang napas agar konten dapat di-scroll melintasi area belakang kapsul */
+    }
+
+    .viewer-container {
+        width: 100%;
+        height: calc(100vh - 280px);
+        border-radius: 25px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+        border: 2px solid white;
+    }
+
+    iframe {
+        width: 100% !important;
+        height: 100% !important;
+        border: none;
+    }
+
+    .month-btn.active, .sub-tab-btn.active {
+        background-color: var(--mint-deep) !important;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(143, 191, 168, 0.4);
+    }
+
+    /* DYNAMIC ISLAND & ANIMATIONS */
+    .dynamic-island-transition {
+        transition: all 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.1) !important;
+        max-height: 48px;
+    }
+
+    .fade-in-text { animation: fadeInTeksSistem 0.4s ease-out forwards; }
+    @keyframes fadeInTeksSistem {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pop-in {
+        0% { opacity: 0; transform: scale(0.9); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+    .animate-pop-in { animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    @keyframes iosZoom {
+        0% { opacity: 0; transform: scale(1.1); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+    .modal-animate-in { animation: iosZoom 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
+    
+    .overlay-animate-in { animation: fadeIn 0.3s ease forwards; }
+
+    .my-button { padding: 10px 20px; cursor: pointer; }
+    .my-button:hover .fa-rotate { transform: rotate(360deg); }
+    .fa-rotate { transition: transform 0.6s ease; }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] { -moz-appearance: textfield; }
+
+    .item-katalog {
+        animation: slideUp 0.3s ease-out forwards;
+        background: white;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    #listKatalog::-webkit-scrollbar { width: 4px; }
+    #listKatalog::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+    .no-scroll { overflow: hidden; }
+    #modalBarangKosongBK::-webkit-scrollbar { width: 4px; }
+    #modalBarangKosongBK::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
+
+    /* MOBILE RESPONSIVE STABILIZER (FLOATING DOCK VERSION) */
+    @media (max-width: 768px) {
         .sidebar {
-            background: rgba(167, 215, 197, 0.15);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-right: 1px solid rgba(167, 215, 197, 0.2);
-            z-index: 50;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
 
-        .header-banner {
-            width: 100%;
-            height: 340px;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, var(--bg-base) 100%),
-                        url('https://lh3.googleusercontent.com/d/1jOnARlmFMuKn3dxJDQh1YSJN-u52dTCT') center/cover;
-            position: relative;
-            display: flex;
-            align-items: flex-end;
-            padding: 0 3rem 4.5rem;
+        .sidebar-logo, .sidebar-footer { 
+            display: none; 
+        }
+        
+        .header-banner { 
+            height: 260px; 
+            padding: 0 1.5rem 3.5rem; 
+        }
+        
+        #page-title { 
+            font-size: 1.6rem !important; 
+            line-height: 1.2; 
+        }
+        #page-subtitle { 
+            font-size: 0.85rem !important; 
+            margin-top: 0.4rem !important; 
         }
 
-        .nav-link.active {
-            background: linear-gradient(135deg, var(--mint-pastel) 0%, var(--mint-deep) 100%);
-            color: white !important;
-            box-shadow: 0 8px 20px rgba(143, 191, 168, 0.3);
-            transform: scale(1.02);
+        .viewer-container { 
+            height: 65vh; 
+            border-radius: 20px; 
+        }
+        .tab-content { 
+            padding: 1.25rem !important; 
         }
 
-        .nav-link {
-            border-radius: 18px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 8px;
-            color: #576574;
-            font-weight: 600;
+        #owner-name { 
+            font-size: 1.5rem !important; 
+            line-height: 1.3; 
         }
+    }
 
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
+    /* LAYAR DESKTOP */
+    @media (min-width: 769px) {
+        #wrapper-viewport-cetak {
+            display: block !important;
+            width: 780px !important; 
+            max-width: 100% !important;
+            padding: 12px !important;
+            overflow: visible !important;
+            box-sizing: border-box !important;
         }
-		
-		.main-content {
-    flex: 1;
-    overflow-y: auto;
-    
-    /* 1. Mengaktifkan scrolling halus di perangkat iOS */
-    -webkit-overflow-scrolling: touch;
-    
-    /* 2. Memaksa Browser menggunakan akselerasi GPU */
-    transform: translateZ(0);
-    will-change: scroll-position;
-    
-    /* 3. Menghilangkan lag saat rendering */
-    backface-visibility: hidden;
-}
-
-        .viewer-container {
-            width: 100%;
-            height: calc(100vh - 280px);
-            border-radius: 25px;
-            overflow: hidden;
-            background: white;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.06);
-            border: 2px solid white;
+        
+        #area-cetak-pdf {
+            transform: none !important;
+            margin-bottom: 0 !important;
+            margin-image: 0 !important;
+            position: relative !important;
+            contain: layout style !important; 
         }
+    }
 
-        iframe {
-            width: 100% !important;
-            height: 100% !important;
-            border: none;
-        }
+    /* Proteksi global anti geser horizontal untuk area scroll modal */
+    .modal-scroll-container {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
 
-        .month-btn.active, .sub-tab-btn.active {
-            background-color: var(--mint-deep) !important;
-            color: white !important;
-            box-shadow: 0 4px 15px rgba(143, 191, 168, 0.4);
-        }
+    #photo-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(15px);
+        z-index: 1000;
+        cursor: zoom-out;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
 
-        /* MOBILE STABILIZER */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                bottom: 0; 
-                left: 0;
-                right: 0;
-                height: auto; 
-                display: grid !important;
-                grid-template-columns: repeat(6, 1fr); /* Diubah ke 6 kolom untuk menampung tab baru */
-                background: #FFFFFF !important;
-                border-top: 1px solid #EEEEEE;
-                border-right: none;
-                border-radius: 0;
-                padding-top: 10px;
-                padding-bottom: env(safe-area-inset-bottom, 25px); 
-                box-shadow: 0 -5px 25px rgba(0,0,0,0.12);
-                backdrop-filter: none;
-                -webkit-backdrop-filter: none;
-                z-index: 100;
-            }
-            
-            .sidebar-logo, .sidebar-footer { display: none; }
-            
-            .nav-link { 
-                margin-bottom: 0; 
-                flex-direction: column; 
-                font-size: 11px; 
-                padding: 5px 0;
-                min-width: 0;
-                border-radius: 0;
-                background: transparent !important;
-                box-shadow: none !important;
-                justify-content: center;
-                align-items: center;
-                gap: 4px;
-            }
-            
-            .nav-link.active { 
-                color: var(--mint-deep) !important; 
-                transform: none; 
-            }
-            
-            .nav-link i { 
-                font-size: 20px; 
-                margin-bottom: 0; 
-            }
-            
-            .main-content { padding-bottom: 120px; } 
-            
-            .header-banner { height: 260px; padding: 0 1.5rem 3.5rem; }
-            
-            #page-title { font-size: 1.6rem !important; line-height: 1.2; }
-            #page-subtitle { font-size: 0.85rem !important; margin-top: 0.4rem !important; }
+    .card-accent {
+        border-left: 8px solid var(--mint-pastel);
+        background: linear-gradient(90deg, rgba(167, 215, 197, 0.08) 0%, rgba(255, 255, 255, 0.9) 100%);
+    }
 
-            .viewer-container { height: 65vh; border-radius: 20px; }
-            .tab-content { padding: 1.25rem !important; }
+    .btn-yellow { background-color: var(--yellow-pastel); color: #7B6221; }
+    .btn-whatsapp { background-color: var(--whatsapp-green); color: white !important; }
 
-            #owner-name { font-size: 1.5rem !important; line-height: 1.3; }
-        }
-
-        #photo-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            z-index: 1000;
-            cursor: zoom-out;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .card-accent {
-            border-left: 8px solid var(--mint-pastel);
-            background: linear-gradient(90deg, rgba(167, 215, 197, 0.08) 0%, rgba(255, 255, 255, 0.9) 100%);
-        }
-
-        .btn-yellow { background-color: var(--yellow-pastel); color: #7B6221; }
-        .btn-whatsapp { background-color: var(--whatsapp-green); color: white !important; }
-
-        .fade-in { animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
-	<style>
-<style>
-.dynamic-island-transition {
-  /* cubic-bezier ini memberikan efek kenyal (bouncy) khas iOS saat melebar */
-  transition: all 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.1) !important;
-  max-height: 48px; /* Mengunci tinggi awal (setara h-12) */
-}
-
-.fade-in-text {
-  animation: fadeInTeksSistem 0.4s ease-out forwards;
-}
-
-@keyframes fadeInTeksSistem {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 
-<style>
-@keyframes pop-in {
-  0% { opacity: 0; transform: scale(0.9); }
-  100% { opacity: 1; transform: scale(1); }
-}
-.animate-pop-in {
-  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-</style>
-	
-	<script>
+<script>
 window.intipFotoKaryawan = function(sumberGambar) {
-    // Ambil elemen secara langsung saat diklik
     var elemenWadah = document.getElementById('wadahPreviewFotoKaryawan');
     var elemenGambar = document.getElementById('tagGambarTargetPreview');
     
@@ -358,110 +381,12 @@ window.tutupIntipFoto = function() {
     }
 };
 
-// Shortcut ESC keyboard
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape' || event.keyCode === 27) {
         window.tutupIntipFoto();
     }
 });
 </script>
-	
-	<style>
-    /* Animasi Zoom Membal (Bouncy Zoom) */
-    @keyframes iosZoom {
-        0% { opacity: 0; transform: scale(1.1); }
-        100% { opacity: 1; transform: scale(1); }
-    }
-
-    /* Animasi Fade untuk Overlay */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    /* Class pemicu animasi */
-    .modal-animate-in {
-        animation: iosZoom 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-    }
-    
-    .overlay-animate-in {
-        animation: fadeIn 0.3s ease forwards;
-    }
-</style>
-
-<style>
-  .my-button {
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-
-  /* Ikon akan berputar saat .my-button di-hover */
-  .my-button:hover .fa-rotate {
-    transform: rotate(360deg);
-  }
-
-  .fa-rotate {
-    transition: transform 0.6s ease;
-  }
-</style>
-
-
-<style>
-    @keyframes ios-zoom {
-        from { opacity: 0; transform: scale(1.1); }
-        to { opacity: 1; transform: scale(1); }
-    }
-    .animate-ios {
-        animation: ios-zoom 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-    }
-</style>
-
-<style>
-    /* Menghilangkan panah atas bawah di Chrome, Safari, Edge, dan Opera */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* Menghilangkan panah atas bawah di Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
-    }
-</style>
-
-<style>
-/* Efek List Barang muncul pelan-pelan */
-.item-katalog {
-    animation: slideUp 0.3s ease-out forwards;
-    background: white;
-    border: 1px solid rgba(0,0,0,0.05);
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Scrollbar halus untuk area list */
-#listKatalog::-webkit-scrollbar {
-    width: 4px;
-}
-#listKatalog::-webkit-scrollbar-thumb {
-    background: #e2e8f0;
-    border-radius: 10px;
-}
-</style>
-
-<style>
-    body {
-      /* Mencegah pull-to-refresh tapi tetap mempertahankan efek pantul (bounce) */
-      overscroll-behavior-y: contain;
-      
-      /* Memberikan sensasi scroll yang halus dan membal di perangkat mobile */
-      -webkit-overflow-scrolling: touch;
-    }
-  </style>
 
 </head>
 
@@ -469,51 +394,68 @@ document.addEventListener('keydown', function(event) {
  <!-- MAIN CONTENT (ALL) -->
 <body class="flex flex-col md:flex-row">
 
-		 <!-- BOTTOM NAV -->
-  <aside style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background: #ffffff; border-top: 1px solid #e5e7eb; z-index: 50; box-shadow: 0 -5px 25px rgba(0,0,0,0.08); display: block;">
-   
-   <div class="w-full max-w-6xl mx-auto flex flex-row items-center justify-between px-2 pt-2.5 pb-5 md:pb-3.5" style="display: flex !important; flex-direction: row !important; width: 100% !important;">
-   
+<!-- FLOATING LIQUID GLASS BOTTOM NAV (iOS DOCK STYLE) -->
+<aside class="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-transparent p-0 m-0 border-none shadow-none outline-none">
+    
+    <!-- Main Liquid Glass Capsule Container (Transparan & Blur Lebih Kuat) -->
+    <div class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden">
+        
+        <!-- Glossy Specular Light Reflection (Pantulan Kaca Soft) -->
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent rounded-t-full"></div>
+
+        <!-- Home Button -->
         <button onclick="showTab('dashboard')" id="btn-dashboard" 
-            class="nav-link active flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
-            <i class="fa-solid fa-house-user text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Home</span>
+            class="nav-link active group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90">
+            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+            
+            <i class="fa-solid fa-house-user text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Home</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
         </button>
 
+        <!-- Database Button -->
         <button onclick="showTab('dailyinput')" id="btn-dailyinput" 
-            class="nav-link flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="daily input"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
-            <i class="fa-solid fa-pen-to-square text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Database</span>
+            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90" data-search="daily input">
+            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+            
+            <i class="fa-solid fa-pen-to-square text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Database</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
         </button>
 
+        <!-- Arsip Button -->
         <button onclick="showTab('archive')" id="btn-archive" 
-            class="nav-link flex flex-col items-center justify-center text-center focus:outline-none transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="arsip laporan"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
-            <i class="fa-solid fa-folder-open text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Arsip</span>
+            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 focus:outline-none" data-search="arsip laporan">
+            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+            
+            <i class="fa-solid fa-folder-open text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Arsip</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
         </button>
 
+        <!-- Presensi Button -->
         <button onclick="showTab('presensi')" id="btn-presensi" 
-            class="nav-link flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="presensi absensi jadwal kerja"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
-            <i class="fa-solid fa-id-badge text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Presensi</span>
+            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90" data-search="presensi absensi jadwal kerja">
+            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+            
+            <i class="fa-solid fa-id-badge text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Presensi</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
         </button>
 
-        <button onclick="showTab('calendar')" id="btn-calendar" 
-            class="nav-link flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="jadwal staf kalender kerja"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
-            <i class="fa-solid fa-clock text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Jadwal</span>
-        </button>
-
+        <!-- Profil Button -->
         <button onclick="showTab('about')" id="btn-about" 
-            class="nav-link flex flex-col items-center justify-center text-center transition-all duration-150 active:scale-95 active:bg-gray-100 rounded-xl" data-search="profil nurjaya tentang about"
-            style="flex: 1 1 0% !important; min-w: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; min-height: 56px !important; height: auto !important;">
-            <i class="fa-solid fa-info-circle text-xl mb-1 block"></i>
-            <span class="text-[9px] sm:text-[10px] md:text-xs font-bold tracking-normal leading-normal block w-full truncate px-0.5 py-0.5">Profil</span>
+            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90" data-search="profil nurjaya tentang about">
+            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+            
+            <i class="fa-solid fa-info-circle text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Profil</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
         </button>
 
     </div>
@@ -810,9 +752,10 @@ document.addEventListener('keydown', function(event) {
 </div>
 		
 
-        <!-- KONTEN TAB: DAILY INPUT -->
+<!-- KONTEN TAB: DAILY INPUT -->
 <div id="tab-dailyinput" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
     
+    <!-- BOX 1: SINKRONISASI DATA -->
     <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
         
         <!-- Header Modal -->
@@ -821,17 +764,17 @@ document.addEventListener('keydown', function(event) {
                 <div class="w-2 h-8 bg-green-500 rounded-full"></div>
                 <div>
                     <h3 class="text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight">Sinkronisasi Data</h3>
-                    <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Nurjaya Abadi Photocopy</p>
+                    <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Update Data Kasir Harian</p>
                 </div>
             </div>
             <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-1 rounded-full whitespace-nowrap flex-nowrap">
-    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></span>
-    <small class="text-green-700 text-[10px] font-black uppercase tracking-wider block whitespace-nowrap">Form Siap</small>
-</div>
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></span>
+                <small class="text-green-700 text-[10px] font-black uppercase tracking-wider block whitespace-nowrap">Form Siap</small>
+            </div>
         </div>
 
         <!-- Banner Informasi Riwayat Data & Fitur Seleksi Bulan -->
-        <div class="px-6 md:px-8 pt-6 space-y-4">
+        <div class="px-6 md:px-8 pt-6 pb-6 space-y-4">
             <!-- Riwayat Entri Terakhir dari Cloud -->
             <div id="banner_last_entry" class="w-full px-4 py-3 bg-blue-50 border-2 border-blue-200 rounded-[18px] text-xs md:text-sm text-blue-800 font-bold flex items-center gap-3 transition-all duration-300">
                 <i class="fa-solid fa-clock-rotate-left text-blue-600 text-base animate-pulse"></i>
@@ -847,7 +790,6 @@ document.addEventListener('keydown', function(event) {
                     <select id="select_bulan_operasional" required
                         class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-xs">
                         <option value="" disabled selected>-- Pilih Bulan Buku Kerja --</option>
-                       
                         <option value="Mei2026">Mei 2026</option>
                         <option value="Juni2026">Juni 2026</option>
                         <option value="Juli2026">Juli 2026</option>
@@ -860,13 +802,11 @@ document.addEventListener('keydown', function(event) {
                 </div>
 
                 <!-- Status Validasi Cloud Indicator -->
-				
                 <div>
                     <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                         <i class="fa-solid fa-cloud text-green-600"></i> Sinkronisasi NSA Kasir
                     </label>
                     <div class="flex gap-2">
-                        
                         <button type="button" 
                             onclick="pemicuTombolSinkronasi()"
                             class="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs rounded-[14px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center gap-2 shrink-0">
@@ -874,79 +814,450 @@ document.addEventListener('keydown', function(event) {
                         </button>
                     </div>
                 </div>
-				
-				
+            </div>
+        </div>
+    </div>
+
+    <!-- BOX 2: UPLOAD LAPORAN PDF BULANAN (DIBAWAH SINKRONISASI DATA) -->
+    <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
+        
+        <!-- Header Modal -->
+        <div class="p-5 border-b border-green-100 bg-gradient-to-r from-white to-green-50/30 flex justify-between items-center flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-8 bg-green-500 rounded-full"></div>
+                <div>
+                    <h3 class="text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight">Upload Laporan Tutup Buku</h3>
+                    <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Integrasi NSA Cloud</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-1 rounded-full whitespace-nowrap flex-nowrap">
+                <i class="fa-solid fa-file-pdf text-green-700 text-xs"></i>
+                <small class="text-green-700 text-[10px] font-black uppercase tracking-wider block whitespace-nowrap">Format PDF</small>
             </div>
         </div>
 
+        <!-- Form Body Upload -->
+        <div class="p-6 md:p-8 space-y-5">
+            
+            <!-- Grid Pilihan Bulan & Tahun -->
+            <div class="p-4 bg-gray-50 border-2 border-gray-200 rounded-[22px] grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-green-600"></i> Pilih Bulan Laporan
+                    </label>
+                    <select id="upload_pdf_bulan" onchange="perbaruiPratinjauNamaFile()"
+                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-xs">
+                        <option value="Januari">Januari</option>
+                        <option value="Februari">Februari</option>
+                        <option value="Maret">Maret</option>
+                        <option value="April">April</option>
+                        <option value="Mei">Mei</option>
+                        <option value="Juni">Juni</option>
+                        <option value="Juli">Juli</option>
+                        <option value="Agustus" selected>Agustus</option>
+                        <option value="September">September</option>
+                        <option value="Oktober">Oktober</option>
+                        <option value="November">November</option>
+                        <option value="Desember">Desember</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-clock text-green-600"></i> Pilih Tahun Laporan
+                    </label>
+                    <select id="upload_pdf_tahun" onchange="perbaruiPratinjauNamaFile()"
+                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-xs">
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                    </select>
+                </div>
+            </div>
+
+ 
+
+           <!-- Area Upload / Drag & Drop -->
+<div id="drop_zone_pdf" 
+    class="relative border-2 border-dashed border-emerald-400 hover:border-emerald-600 bg-gradient-to-b from-emerald-50/40 to-white hover:bg-emerald-50/80 rounded-[22px] p-6 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[160px] shadow-sm hover:shadow-md group">
+    
+    <input type="file" id="input_file_pdf" accept="application/pdf" onchange="tanganiSeleksiFilePdf(this)"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+    
+    <!-- Placeholder Kosong -->
+    <div id="placeholder_upload_pdf" class="space-y-3 pointer-events-none flex flex-col items-center">
+        <!-- Ikon Awan Utama dengan Ring Kontras -->
+        <div class="w-14 h-14 bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white rounded-2xl flex items-center justify-center text-2xl transition-all duration-200 shadow-sm">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+        </div>
         
+        <div class="space-y-1">
+            <p class="text-xs md:text-sm font-black text-emerald-950 uppercase tracking-wide">
+                Seret & Lepas Berkas PDF ke Sini
+            </p>
+            <p class="text-[10px] text-emerald-600/80 font-bold">
+                Atau klik area ini untuk menjelajah berkas
+            </p>
+        </div>
+
+        <!-- Tombol Visual Bantuan -->
+        <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-600 group-hover:bg-emerald-700 text-white rounded-xl text-xs font-black shadow-sm transition-all duration-150">
+            <i class="fa-solid fa-folder-open text-xs"></i>
+            Pilih Berkas PDF
+        </span>
+
+        <p class="text-[10px] text-gray-400 font-semibold pt-1">
+            Maksimal ukuran file: <span class="font-bold text-gray-600">15 MB</span>
+        </p>
     </div>
+
+    <!-- Indikator Berkas Terpilih -->
+    <div id="indikator_file_terpilih" class="hidden flex items-center gap-3 bg-white px-4 py-3 rounded-2xl border-2 border-emerald-500 shadow-md z-20 transition-all">
+        <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center text-lg shrink-0">
+            <i class="fa-solid fa-file-pdf"></i>
+        </div>
+        <div class="text-left min-w-0">
+            <p id="nama_file_terpilih" class="text-xs font-black text-gray-800 truncate max-w-[180px] sm:max-w-[240px]">laporan.pdf</p>
+            <p id="ukuran_file_terpilih" class="text-[10px] font-bold text-emerald-600">0 KB</p>
+        </div>
+        <button type="button" onclick="batalSeleksiFilePdf(event)" 
+            class="ml-2 text-gray-400 hover:text-red-600 text-base font-black p-1.5 hover:bg-red-50 rounded-lg transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+
+            <!-- Tombol Kirim ke Drive -->
+            <button type="button" id="tombol_kirim_pdf" onclick="prosesUnggahLaporanPdf()"
+                class="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white font-black text-xs md:text-sm rounded-[16px] uppercase tracking-wider shadow-lg shadow-green-600/20 transition-all duration-200 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Unggah Laporan Ke NSA Cloud</span>
+            </button>
+
+            <!-- Status Banner Respons Upload -->
+            <div id="banner_status_upload" class="hidden text-center p-3.5 rounded-[16px] text-xs font-black transition-all"></div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Const URL khusus untuk endpoint upload doPost ke Apps Script
+const URL_APPS_SCRIPT_UPLOAD = "https://script.google.com/macros/s/AKfycbxguP0YRWlZnap1GwqLTFnGxZfdCp4fSpR2l64TS5IgKaFat-9TfkWmnn97PNw68-e5/exec";
+
+// Update Label Nama File Otomatis Sesuai Dropdown Bulan & Tahun
+function perbaruiPratinjauNamaFile() {
+    const bulan = document.getElementById("upload_pdf_bulan").value;
+    const tahun = document.getElementById("upload_pdf_tahun").value;
+    const previewEl = document.getElementById("label_preview_nama_file");
+    
+    if (previewEl) {
+        previewEl.textContent = `Penutupan Pembukuan - ${bulan} ${tahun}.pdf`;
+    }
+}
+
+// Menampilkan nama file yang dipilih di UI
+function tanganiSeleksiFilePdf(input) {
+    const placeholder = document.getElementById("placeholder_upload_pdf");
+    const indikator = document.getElementById("indikator_file_terpilih");
+    const namaEl = document.getElementById("nama_file_terpilih");
+    const ukuranEl = document.getElementById("ukuran_file_terpilih");
+
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        namaEl.textContent = file.name;
+        ukuranEl.textContent = (file.size / 1024).toFixed(1) + " KB";
+
+        placeholder.classList.add("hidden");
+        indikator.classList.remove("hidden");
+    }
+}
+
+// Batalkan pilihan file PDF
+function batalSeleksiFilePdf(e) {
+    e.stopPropagation();
+    const input = document.getElementById("input_file_pdf");
+    const placeholder = document.getElementById("placeholder_upload_pdf");
+    const indikator = document.getElementById("indikator_file_terpilih");
+
+    input.value = "";
+    placeholder.classList.remove("hidden");
+    indikator.classList.add("hidden");
+}
+
+// Proses Kirim Data File PDF via doPost
+async function prosesUnggahLaporanPdf() {
+    const fileInput = document.getElementById("input_file_pdf");
+    const bulan = document.getElementById("upload_pdf_bulan").value;
+    const tahun = document.getElementById("upload_pdf_tahun").value;
+    const btnSubmit = document.getElementById("tombol_kirim_pdf");
+    const bannerStatus = document.getElementById("banner_status_upload");
+
+    if (!fileInput.files || !fileInput.files[0]) {
+        alert("Silakan pilih berkas PDF terlebih dahulu!");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const namaFileTarget = `Penutupan Pembukuan - ${bulan} ${tahun}.pdf`;
+
+    // Visual State Loading
+    btnSubmit.disabled = true;
+    btnSubmit.classList.add("opacity-50", "cursor-not-allowed");
+    bannerStatus.className = "text-center p-3.5 rounded-[16px] text-xs font-black bg-amber-50 text-amber-800 border-2 border-amber-200 block";
+    bannerStatus.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-2"></i> Mengunggah "${namaFileTarget}" ke Google Drive...`;
+
+    try {
+        // Konversi File ke String Base64
+        const base64Data = await konversiFileKeBase64(file);
+
+        const payload = {
+            fileName: namaFileTarget,
+            fileData: base64Data,
+            mimeType: "application/pdf"
+        };
+
+        // Kirim HTTP POST ke Google Apps Script URL khusus Upload
+        const response = await fetch(URL_APPS_SCRIPT_UPLOAD, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+            bannerStatus.className = "text-center p-3.5 rounded-[16px] text-xs font-black bg-green-50 text-green-800 border-2 border-green-300 block";
+            bannerStatus.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-2"></i> Berhasil! Berkas tersimpan sebagai: <b>${result.fileName}</b>`;
+
+            // Reset Input File
+            batalSeleksiFilePdf(new Event('click'));
+
+            // Opsi: Panggil ulang pemuatan arsip jika fungsi ini ada di JS Anda
+            if (typeof fetchArchiveData === "function") {
+                fetchArchiveData();
+            }
+        } else {
+            throw new Error(result.message || "Gagal menyimpan berkas");
+        }
+
+    } catch (error) {
+        console.error("Gagal Upload:", error);
+        bannerStatus.className = "text-center p-3.5 rounded-[16px] text-xs font-black bg-red-50 text-red-800 border-2 border-red-200 block";
+        bannerStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-600 mr-2"></i> Error: ${error.message}`;
+    } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.classList.remove("opacity-50", "cursor-not-allowed");
+    }
+}
+
+// Helper Promise FileReader Base64
+function konversiFileKeBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (err) => reject(err);
+    });
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- KONTEN TAB: ARSIP LAPORAN -->
+<div id="tab-archive" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
+    
+    <!-- Header & Controls -->
+    <div class="glass-element p-6 sm:p-8 rounded-[24px] mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border border-emerald-100 shadow-xl bg-white/80">
+        <div>
+            <h3 class="text-xl md:text-2xl font-black text-slate-800 flex items-center gap-3">
+                <i class="fa-solid fa-folder-open text-emerald-600"></i>
+                Arsip Laporan Bulanan
+            </h3>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">Pilih periode laporan untuk menampilkan dokumen PDF secara langsung.</p>
+        </div>
+
+        <!-- Dynamic Dropdown Selector -->
+        <div class="relative min-w-[240px]">
+            <select id="archive-month-select" onchange="handleArchiveSelect(this)" 
+                class="w-full appearance-none px-5 py-3.5 pr-12 rounded-xl text-sm md:text-base font-bold text-slate-800 bg-slate-50 border border-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 cursor-pointer transition-all shadow-sm">
+                <option value="" disabled selected class="bg-white text-slate-400">⏳ Memuat daftar laporan...</option>
+                <!-- Option otomatis diisi oleh JS dari Google Drive API -->
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-emerald-600">
+                <i class="fa-solid fa-chevron-down text-sm"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State Container -->
+    <div class="bg-white/90 rounded-[24px] p-12 text-center border border-slate-100 shadow-sm flex flex-col items-center justify-center min-h-[300px]">
+        <div class="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mb-4 border border-emerald-100">
+            <i class="fa-solid fa-file-invoice text-4xl text-emerald-600/60"></i>
+        </div>
+        <h4 class="font-bold text-lg text-slate-800">Belum Ada Laporan Dipilih</h4>
+        <p class="text-xs md:text-sm text-slate-500 max-w-sm mt-1">Pilih salah satu bulan pada menu dropdown di atas untuk membuka laporan PDF dalam mode popup.</p>
+    </div>
+
 </div>
 
 
 
+<script>
+// 1. Endpoint Google Apps Script Database Arsip
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxguP0YRWlZnap1GwqLTFnGxZfdCp4fSpR2l64TS5IgKaFat-9TfkWmnn97PNw68-e5/exec";
 
+let archiveData = [];
+let currentZoomScale = 1;
 
+// 2. Load Data Otomatis dari Google Drive via Apps Script Saat Halaman Dimuat
+document.addEventListener("DOMContentLoaded", () => {
+    fetchArchiveData();
+});
 
+async function fetchArchiveData() {
+    const selectEl = document.getElementById("archive-month-select");
+    if (!selectEl) return;
 
+    selectEl.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">⏳ Memuat daftar laporan...</option>`;
 
+    try {
+        const response = await fetch(APPS_SCRIPT_URL);
+        const result = await response.json();
 
-
-
-        <!-- KONTEN TAB: ARSIP LAPORAN -->
-        <div id="tab-archive" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
-            <div class="flex flex-wrap gap-3 md:gap-5 mb-8 md:mb-12">
-                <button data-search="januari 2026" onclick="loadDrive('1Bd1Dh_RkNXEtCHXI9D6nqQvYwplwIocC', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
-                    <i class="fa-solid fa-file-pdf text-green-500"></i>
-                    <span>Januari 2026</span>
-                </button>
-                <button data-search="februari 2026" onclick="loadDrive('1T1Wi-kNxj28kALm25LMVZHqW6Qy8Gu0h', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
-                    <i class="fa-solid fa-file-pdf text-green-500"></i>
-                    <span>Februari 2026</span>
-                </button>
-                <button data-search="maret 2026" onclick="loadDrive('1AJZondElG07YmLE45huqgOH99LL015ce', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
-                    <i class="fa-solid fa-file-pdf text-green-500"></i>
-                    <span>Maret 2026</span>
-                </button>
-                <button data-search="april 2026" onclick="loadDrive('1g2YILv2OMYo8y2uQSi1Z8aVZIm4Eou8G', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
-                    <i class="fa-solid fa-file-pdf text-green-500"></i>
-                    <span>April 2026</span>
-                </button>
-				<button data-search="mei 2026" onclick="loadDrive('1aITRVa_E2qtaMO6LRX5aDKKFEQNZZ9wH', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
-    <i class="fa-solid fa-file-pdf text-green-500"></i>
-    <span>Mei 2026</span>
-</button>
-<button data-search="juni 2026" onclick="loadDrive('1yUK-mveT_CrK7mEWDA8yqGEQUBpQpaQG', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
-    <i class="fa-solid fa-file-pdf text-green-500"></i>
-    <span>Juni 2026</span>
-</button>
-<button data-search="juli 2026" onclick="loadDrive('18vHRYrRyH8CJqBa2ua0G5sR_-9cqcoGf', this)" class="month-btn glass-element px-6 py-4 md:px-10 md:py-5 rounded-[20px] text-sm md:text-base font-bold flex items-center gap-3 transition-all duration-200">
-    <i class="fa-solid fa-file-pdf text-green-500"></i>
-    <span>Juli 2026</span>
-</button>
-
-
-			
-			
-			
-			
-			
-						</div>
+        if (result.status === "success" && result.data && result.data.length > 0) {
+            archiveData = result.data;
             
-						<div id="viewer-container-archive" class="viewer-container">
-						<div class="flex flex-col items-center justify-center h-full text-gray-300 p-10 text-center">
-						<i class="fa-solid fa-layer-group text-6xl opacity-10 mb-6"></i>
-                    <p class="font-black text-lg md:text-2xl text-gray-400">Pilih Laporan untuk diperiksa</p>
-                </div>
-            </div>
+            // Clear & re-populate dropdown options
+            selectEl.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">-- Pilih Bulan Laporan --</option>`;
+
+            archiveData.forEach((item, index) => {
+                const opt = document.createElement("option");
+                opt.value = index;
+                opt.textContent = item.label; // Menampilkan nama bulan & tahun (contoh: "April 2026")
+                opt.className = "bg-white text-slate-800 py-1";
+                selectEl.appendChild(opt);
+            });
+        } else {
+            selectEl.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">Belum ada laporan ditemukan</option>`;
+        }
+    } catch (error) {
+        console.error("Gagal memuat arsip laporan:", error);
+        selectEl.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">⚠️ Gagal memuat data laporan</option>`;
+    }
+}
+
+// 3. Handler Dropdown Select
+function handleArchiveSelect(selectEl) {
+    const selectedIndex = selectEl.value;
+    if (selectedIndex === "") return;
+
+    const data = archiveData[selectedIndex];
+    openPdfModal(data.label, data.driveId);
+    
+    selectEl.value = "";
+}
+
+// 4. Buka Modal PDF Viewer
+function openPdfModal(title, driveId) {
+    const modal = document.getElementById("pdf-modal");
+    const modalTitle = document.getElementById("modal-report-title");
+    const iframeContainer = document.getElementById("modal-iframe-container");
+    const externalLink = document.getElementById("modal-external-link");
+
+    const driveUrl = `https://drive.google.com/file/d/${driveId}/preview`;
+    const directViewUrl = `https://drive.google.com/file/d/${driveId}/view?usp=sharing`;
+
+    modalTitle.textContent = `Laporan ${title}`;
+    externalLink.href = directViewUrl;
+    
+    currentZoomScale = 1;
+    updateZoomIndicator();
+
+    // Pastikan container memiliki overflow auto untuk scroll alami
+    iframeContainer.className = "flex-1 w-full h-full bg-slate-100 overflow-auto relative p-2 sm:p-4";
+
+    // Render Iframe dengan Wrapper Dimensi Dinamis
+    iframeContainer.innerHTML = `
+        <div id="pdf-scale-wrapper" style="width: 100%; height: 100%; min-height: 100%; margin: 0 auto; transition: width 0.2s ease, height 0.2s ease;">
+            <iframe src="${driveUrl}" 
+                    class="w-full h-full border-0 rounded-2xl bg-white shadow-md" 
+                    allow="autoplay; fullscreen">
+            </iframe>
         </div>
+    `;
+
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden"; // Kunci scroll background web
+}
+
+// 5. Kontrol Zoom PDF (Skala Dimensi Riil)
+function zoomPdf(factor) {
+    const scaleWrapper = document.getElementById("pdf-scale-wrapper");
+    if (!scaleWrapper) return;
+
+    const newScale = currentZoomScale * factor;
+    
+    // Batasi zoom antara 100% (1.0) sampai 250% (2.5)
+    if (newScale >= 1.0 && newScale <= 2.5) {
+        currentZoomScale = newScale;
+        
+        // Ubah dimensi fisik wrapper agar container utama memicu scroll native
+        const percentage = currentZoomScale * 100;
+        scaleWrapper.style.width = `${percentage}%`;
+        scaleWrapper.style.height = `${percentage}%`;
+        
+        updateZoomIndicator();
+    }
+}
+
+// 6. Reset Zoom Ke 100%
+function resetPdfZoom() {
+    const scaleWrapper = document.getElementById("pdf-scale-wrapper");
+    if (!scaleWrapper) return;
+    
+    currentZoomScale = 1;
+    scaleWrapper.style.width = "100%";
+    scaleWrapper.style.height = "100%";
+    
+    updateZoomIndicator();
+}
+
+// 7. Update Text Persentase Zoom
+function updateZoomIndicator() {
+    const indicator = document.getElementById("zoom-level-indicator");
+    if (indicator) {
+        indicator.textContent = `${Math.round(currentZoomScale * 100)}%`;
+    }
+}
+
+// 8. Tutup Modal PDF
+function closePdfModal() {
+    const modal = document.getElementById("pdf-modal");
+    const iframeContainer = document.getElementById("modal-iframe-container");
+
+    modal.classList.add("hidden");
+    iframeContainer.innerHTML = "";
+    document.body.style.overflow = "";
+}
+</script>
 
 
-        <!-- KONTEN TAB: PRESENSI STAF -->
-      <div id="tab-presensi" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
+<!-- KONTEN TAB: PRESENSI STAF -->
+<div id="tab-presensi" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
     
     <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
         
+        <!-- HEADER TAB -->
         <div class="p-5 border-b border-green-100 bg-gradient-to-r from-white to-green-50/30 flex justify-between items-center flex-shrink-0">
             <div class="flex items-center gap-3">
                 <div class="w-2 h-8 bg-green-500 rounded-full"></div>
@@ -963,38 +1274,43 @@ document.addEventListener('keydown', function(event) {
             </div>
         </div>
 
-        <div class="px-6 md:px-8 pt-6 space-y-4">
-            
+        <!-- MENU UTAMA / NAVIGASI AWAL -->
+        <div class="px-6 md:px-8 pt-6 pb-6 space-y-4">
             <div class="p-4 bg-gray-50 border-2 border-gray-200 rounded-[22px] flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div class="text-center sm:text-left">
                     <p class="text-xs font-black text-gray-800 uppercase tracking-wider">FORM PRESENSI KARYAWAN</p>
                     <p class="text-[11px] text-gray-500 font-bold">Menu untuk isi presensi karyawan setiap hari, dan opsi pembuatan slip gaji (Khusus Owner Nurjaya)</p>
                 </div>
-				
-               <div class="grid grid-cols-2 gap-3 w-full sm:w-auto min-w-[280px] sm:min-w-[380px]">
-    <button type="button" class="group relative px-3 py-3.5 sm:px-4 sm:py-3 rounded-2xl bg-gradient-to-br from-emerald-600 to-green-700 hover:from-emerald-500 hover:to-green-600 text-white shadow-md hover:shadow-xl flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden">
-        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
-            <i class="fa-solid fa-address-card text-sm sm:text-base"></i>
-        </div>
-        <div class="flex flex-col min-w-0 w-full">
-            <span class="font-black text-[11px] sm:text-[13px] tracking-wide truncate w-full">Kartu Presensi</span>
-            <span class="text-[8px] sm:text-[10px] font-medium text-green-100/75 tracking-wider uppercase mt-0.5 block truncate">Untuk Karyawan</span>
-        </div>
-    </button>
-    
-    <button type="button" id="btn-buka-modal-gaji" class="group relative px-3 py-3.5 sm:px-4 sm:py-3 rounded-2xl bg-gradient-to-br from-rose-700 to-red-800 hover:from-rose-600 hover:to-red-700 text-white shadow-md hover:shadow-xl flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden dynamic-btn">
-        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
-            <i class="fa-solid fa-file-invoice-dollar text-sm sm:text-base"></i>
-        </div>
-        <div class="flex flex-col min-w-0 w-full">
-            <span class="font-black text-[11px] sm:text-[13px] tracking-wide truncate w-full">Buat Slip Gaji</span>
-            <span class="text-[8px] sm:text-[10px] font-medium text-rose-200/75 tracking-wider uppercase mt-0.5 block truncate">Untuk Owner</span>
-        </div>
-    </button>
-</div>
-
+                
+                <div class="grid grid-cols-2 gap-3 w-full sm:w-auto min-w-[280px] sm:min-w-[380px]">
+                    <!-- Tombol Kartu Presensi (Ditambahkan ID btn-buka-form-presensi) -->
+                    <button type="button" id="btn-buka-form-presensi" class="group relative px-3 py-3.5 sm:px-4 sm:py-3 rounded-2xl bg-gradient-to-br from-emerald-600 to-green-700 hover:from-emerald-500 hover:to-green-600 text-white shadow-md hover:shadow-xl flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden">
+                        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa-solid fa-address-card text-sm sm:text-base"></i>
+                        </div>
+                        <div class="flex flex-col min-w-0 w-full">
+                            <span class="font-black text-[11px] sm:text-[13px] tracking-wide truncate w-full">Kartu Presensi</span>
+                            <span class="text-[8px] sm:text-[10px] font-medium text-green-100/75 tracking-wider uppercase mt-0.5 block truncate">Untuk Karyawan</span>
+                        </div>
+                    </button>
+                    
+                    <button type="button" id="btn-buka-modal-gaji" class="group relative px-3 py-3.5 sm:px-4 sm:py-3 rounded-2xl bg-gradient-to-br from-rose-700 to-red-800 hover:from-rose-600 hover:to-red-700 text-white shadow-md hover:shadow-xl flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden dynamic-btn">
+                        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa-solid fa-file-invoice-dollar text-sm sm:text-base"></i>
+                        </div>
+                        <div class="flex flex-col min-w-0 w-full">
+                            <span class="font-black text-[11px] sm:text-[13px] tracking-wide truncate w-full">Buat Slip Gaji</span>
+                            <span class="text-[8px] sm:text-[10px] font-medium text-rose-200/75 tracking-wider uppercase mt-0.5 block truncate">Untuk Owner</span>
+                        </div>
+                    </button>
+                </div>
             </div>
+        </div>
 
+        <!-- CONTAINER FORM PRESENSI (Secara default tersembunyi dengan class hidden & fade-in) -->
+        <div id="wrapper_form_presensi" class="p-6 md:px-8 md:pb-8 space-y-6 text-gray-700 hidden fade-in border-t border-gray-100">
+            
+            <!-- BLOK SELECT NAMA & TARGET PERIODE -->
             <div class="p-4 bg-slate-50 border-2 border-slate-200 rounded-[22px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                 <div class="space-y-1">
                     <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -1006,7 +1322,7 @@ document.addEventListener('keydown', function(event) {
                             <option value="" disabled selected hidden>-- Pilih Nama --</option>
                             <option value="Cahya">Muhammad Cahya Ardiansyah</option>
                             <option value="Dadan">Dadan Nurfaizal</option>
-							<option value="Syamsi">Syamsi Nurhakim</option>
+                            <option value="Syamsi">Syamsi Nurhakim</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-green-600">
                             <i class="fa-solid fa-chevron-down text-[10px]"></i>
@@ -1025,130 +1341,116 @@ document.addEventListener('keydown', function(event) {
                 </div>
             </div>
 
-        </div>
-
-        <div id="wrapper_form_presensi" class="p-6 md:px-8 md:pb-8 space-y-6 text-gray-700">
             <form id="form-presensi-nsa" class="space-y-6">
-                
-                
-                    
- <div class="p-4 sm:p-5 bg-emerald-50 rounded-[24px] border border-emerald-200/80 shadow-md mt-6 mb-4 space-y-5">
- <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div class="space-y-1.5">
-                        <label for="presensi-tanggal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-calendar-day text-green-600"></i> Hari / Tanggal Kerja
-                        </label>
-                        <input type="date" id="presensi-tanggal" required 
-                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
+                <!-- DETAIL PRESENSI (TANGGAL, HADIR, JADWAL) -->
+                <div class="p-4 sm:p-5 bg-emerald-50 rounded-[24px] border border-emerald-200/80 shadow-md space-y-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
+                            <label for="presensi-tanggal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-day text-green-600"></i> Hari / Tanggal Kerja
+                            </label>
+                            <input type="date" id="presensi-tanggal" required 
+                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-green-600"></i> Status Kehadiran
+                            </label>
+                            <div class="relative">
+                                <select id="presensi-kehadiran" required 
+                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                                    <option value="YA">YA (Hadir Kerja)</option>
+                                    <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
- 
-    
-    <div class="space-y-1.5">
-        <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-            <i class="fa-solid fa-circle-check text-green-600"></i> Status Kehadiran
-        </label>
-        <div class="relative">
-            <select id="presensi-kehadiran" required 
-                class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                <option value="YA">YA (Hadir Kerja)</option>
-                <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                <i class="fa-solid fa-chevron-down text-[10px]"></i>
-            </div>
-        </div>
-    </div>
 
-    <hr class="border-dashed border-emerald-200/60 my-2">
+                    <hr class="border-dashed border-emerald-200/60 my-2">
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div class="space-y-1.5">
-            <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
-            </label>
-            <div class="relative">
-                <select id="presensi-jadwal" required 
-                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                    <option value="2">2 Karyawan (Full Team)</option>
-                    <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
+                            <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
+                            </label>
+                            <div class="relative">
+                                <select id="presensi-jadwal" required 
+                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                                    <option value="2">2 Karyawan (Full Team)</option>
+                                    <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
+                            <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus 1 Karyawan/Lembur)</span>
+                            </label>
+                            <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
+                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        </div>
+                    </div>
+
+                    <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
+                        <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-exclamation text-green-600"></i> Alasan Tidak Hadir <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus jika TIDAK HADIR)</span>
+                        </label>
+                        <input type="text" id="presensi-alasan-absen" placeholder="Contoh: jatah libur, izin, sakit" disabled 
+                            class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                    </div>
                 </div>
-            </div>
-        </div>
-        
-        <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
-            <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus 1 Karyawan/Lembur)</span>
-            </label>
-            <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
-                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-        </div>
-    </div>
 
-    <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
-        <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-            <i class="fa-solid fa-circle-exclamation text-green-600"></i> Alasan Tidak Hadir <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus jika TIDAK HADIR)</span>
-        </label>
-        <input type="text" id="presensi-alasan-absen" placeholder="Contoh: jatah libur, izin, sakit" disabled 
-            class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-    </div>
+                <!-- POTONGAN JAM KERJA -->
+                <div class="p-4 sm:p-5 bg-orange-500 rounded-[24px] border border-orange-600 shadow-md space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
+                            <label for="presensi-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-business-time text-orange-100"></i> Potongan Jam Kerja <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
+                            </label>
+                            <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00 (jam.menit)(pakai titik)" 
+                                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        </div>
+                        
+                        <div class="space-y-1.5">
+                            <label for="presensi-alasan-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-comment-dots text-orange-100"></i> Alasan Potongan Jam <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
+                            </label>
+                            <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk pagi hari" 
+                                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        </div>
+                    </div>
+                </div>
 
-</div>
+                <!-- TAMBAHAN JAM KERJA -->
+                <div class="p-4 sm:p-5 bg-blue-500 rounded-[24px] border border-blue-600 shadow-md space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
+                            <label for="presensi-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-clock text-blue-100"></i> Tambahan Jam / Overtime <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
+                            </label>
+                            <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00 (jam.menit)(pakai titik)" 
+                                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                            <small class="text-[10px] text-blue-100 font-bold italic block pl-1">Lebihan waktu di luar batas wajar</small>
+                        </div>
+                        
+                        <div class="space-y-1.5">
+                            <label for="presensi-alasan-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-signature text-blue-100"></i> Alasan Tambahan Jam <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
+                            </label>
+                            <input type="text" id="presensi-alasan-tambahan" placeholder="Contoh: tutup toko jam 20.45" 
+                                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        </div>
+                    </div>
+                </div>
 
-                <hr class="border-dashed border-green-100">
-
-
-</div>
-
-
-            <div class="p-4 sm:p-5 bg-orange-500 rounded-[24px] border border-orange-600 shadow-md mt-6 mb-5 space-y-4">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div class="space-y-1.5">
-            <label for="presensi-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-business-time text-orange-100"></i> Potongan Jam Kerja <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
-            </label>
-            <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00 (jam.menit)(pakai titik)" 
-                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-        </div>
-        
-        <div class="space-y-1.5">
-            <label for="presensi-alasan-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-comment-dots text-orange-100"></i> Alasan Potongan Jam <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
-            </label>
-            <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk pagi hari" 
-                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-        </div>
-    </div>
-</div>
-
-<div class="p-4 sm:p-5 bg-blue-500 rounded-[24px] border border-blue-600 shadow-md mt-6 mb-4 space-y-4">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div class="space-y-1.5">
-            <label for="presensi-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-user-clock text-blue-100"></i> Tambahan Jam / Overtime <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
-            </label>
-            <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00 (jam.menit)(pakai titik)" 
-                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-            <small class="text-[10px] text-blue-100 font-bold italic block pl-1">Lebihan waktu di luar batas wajar</small>
-        </div>
-        
-        <div class="space-y-1.5">
-            <label for="presensi-alasan-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-file-signature text-blue-100"></i> Alasan Tambahan Jam <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
-            </label>
-            <input type="text" id="presensi-alasan-tambahan" placeholder="Contoh: tutup toko jam 20.45" 
-                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
+                <!-- TOMBOL SUBMIT FORM -->
                 <div class="pt-4 border-t border-gray-100 flex justify-end">
                     <button type="submit" id="btn-submit-presensi"
                         class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
@@ -1156,6 +1458,7 @@ document.addEventListener('keydown', function(event) {
                     </button>
                 </div>
                 
+                <!-- CHECK RIWAYAT PRESENSI -->
                 <div class="pt-2 border-t border-dashed border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
                     <div class="text-center sm:text-left">
                         <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Pengecekan Riwayat Pengisian</p>
@@ -1166,12 +1469,10 @@ document.addEventListener('keydown', function(event) {
                         <i class="fa-solid fa-address-card text-sm"></i> Tampilkan Presensi Bulan Ini
                     </button>
                 </div>
-
             </form>
         </div>
 
-    
-</div>
+    </div>
 </div>
 
        <!-- KONTEN TAB: JADWAL STAF -->
@@ -4651,6 +4952,23 @@ document.addEventListener("DOMContentLoaded", function() {
     if (inputTanggal) {
         inputTanggal.value = new Date().toISOString().split('T')[0];
     }
+	
+	// Mengambil elemen tombol dan wrapper form
+const btnBukaForm = document.getElementById('btn-buka-form-presensi');
+const wrapperForm = document.getElementById('wrapper_form_presensi');
+
+// Jalankan event click
+if (btnBukaForm && wrapperForm) {
+    btnBukaForm.addEventListener('click', function() {
+        // Toggle class 'hidden' (Buka / Tutup)
+        wrapperForm.classList.toggle('hidden');
+        
+        // Scroll halus ke form jika sedang dibuka (opsional)
+        if (!wrapperForm.classList.contains('hidden')) {
+            wrapperForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+}
 
     // =========================================================================
     // FUNGSI RESPONSIVE AUTO-FIT SCALE (REVISI AMAN: TANPA MERUSAK RENDER PDF)
@@ -7854,65 +8172,7 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
     </div>
 </div>
 
-<style>
-    .no-scroll { overflow: hidden; }
-    #modalBarangKosongBK::-webkit-scrollbar { width: 4px; }
-    #modalBarangKosongBK::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
-</style>
 
-
-
-<style>
-    /* 1. KHUSUS UNTUK LAYAR MOBILE & TABLET (Ukurannya di-scale agar muat) */
-    @media (max-width: 768px) {
-        #wrapper-viewport-cetak {
-            display: block !important;
-            width: 100% !important;
-            overflow: hidden !important; 
-            position: relative !important;
-            flex-shrink: 0 !important; 
-        }
-        
-        #area-cetak-pdf {
-            transform-origin: top left !important;
-            transform: scale(calc((100vw - 48px) / 756)) !important; 
-            margin-bottom: calc((756px - (100vw - 48px)) * -1) !important;
-            left: 0 !important;
-            top: 0 !important;
-            position: relative !important;
-            contain: none !important;
-        }
-    }
-
-    /* 2. KHUSUS UNTUK LAYAR DESKTOP (Akar masalah bug scroll typing Anda) */
-    @media (min-width: 769px) {
-        #wrapper-viewport-cetak {
-            display: block !important;
-            /* Berikan ruang napas extra agar browser desktop tidak mendeteksi element "overflow" saat mengetik */
-            width: 780px !important; 
-            max-width: 100% !important;
-            padding: 12px !important;
-            overflow: visible !important;
-            box-sizing: border-box !important;
-        }
-        
-        #area-cetak-pdf {
-            transform: none !important;
-            margin-bottom: 0 !important;
-            margin-image: 0 !important;
-            position: relative !important;
-            
-            /* KUNCI UTAMA DESKTOP: Isolasi element agar browser tidak bisa menggeser koordinat x/y parent saat typing */
-            contain: layout style !important; 
-        }
-    }
-
-    /* Proteksi global anti geser horizontal untuk area scroll modal */
-    .modal-scroll-container {
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-    }
-</style>
 
 <!-- MODAL PREVIEW KARTU PRESENSI PDF -->
 <div id="modal-kartu-presensi" class="fixed inset-0 bg-emerald-950/60 backdrop-blur-md z-[13000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
@@ -8160,5 +8420,65 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
     </div>
 </div>
 
+
+<!-- MODAL POPUP PDF VIEWER (Fixed Screen Zoom + Embedded PDF Zoom Controls) -->
+<div id="pdf-modal" class="fixed inset-0 z-[30000] hidden flex items-center justify-center p-2 sm:p-6 md:p-8 bg-slate-900/70 backdrop-blur-md fade-in" style="z-index: 9999; touch-action: none;">
+    <div class="relative w-full max-w-6xl h-[92vh] md:h-[90vh] bg-white rounded-[24px] border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
+        
+        <!-- Modal Header (Controls & PDF Zoom Bar) -->
+        <div class="flex flex-wrap items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-slate-100 bg-slate-50 shrink-0 gap-2">
+            
+            <!-- Information Tag -->
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 border border-emerald-200 shrink-0">
+                    <i class="fa-solid fa-file-pdf text-base md:text-lg"></i>
+                </div>
+                <div>
+                    <h4 id="modal-report-title" class="font-bold text-xs sm:text-sm md:text-lg text-slate-800 line-clamp-1">Laporan PDF</h4>
+                    <span class="text-[10px] md:text-xs text-emerald-600 font-semibold flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Modul Dokumen NJA
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Action Tools: Zoom Controls & Close -->
+            <div class="flex items-center gap-1.5 sm:gap-2 ml-auto">
+                
+                <!-- Zoom Controls Group -->
+                <div class="flex items-center bg-white border border-slate-200 rounded-xl p-1 shadow-sm gap-1">
+                    <button onclick="zoomPdf(0.8)" title="Perkecil" class="w-7 h-7 md:w-8 md:h-8 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-minus text-xs"></i>
+                    </button>
+                    <span id="zoom-level-indicator" class="text-[11px] md:text-xs font-bold text-slate-700 px-1 min-w-[38px] text-center select-none">100%</span>
+                    <button onclick="zoomPdf(1.2)" title="Perbesar" class="w-7 h-7 md:w-8 md:h-8 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                    </button>
+                    <button onclick="resetPdfZoom()" title="Reset Zoom" class="w-7 h-7 md:w-8 md:h-8 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-all border-l border-slate-100">
+                        <i class="fa-solid fa-rotate-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Buka Tab Baru -->
+                <a id="modal-external-link" href="#" target="_blank" rel="noopener noreferrer" 
+                   title="Buka Tab Baru"
+                   class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50 transition-all shadow-sm">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs md:text-sm"></i>
+                </a>
+
+                <!-- Close Button -->
+                <button onclick="closePdfModal()" 
+                        class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-all shadow-sm">
+                    <i class="fa-solid fa-xmark text-base md:text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal Body Container (PDF Scalable Viewport) -->
+        <div id="modal-iframe-container" class="flex-1 w-full h-full bg-slate-100 overflow-auto relative flex justify-center items-start p-2">
+            <!-- Dynamic PDF iframe rendered inside transformable wrapper -->
+        </div>
+    </div>
+</div>
 </body>
 </html>
