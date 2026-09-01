@@ -359,6 +359,21 @@ aside {
 
     .fade-in { animation: fadeIn 0.5s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+	
+	/* Container pembungkus grafik luar */
+#container-canvas {
+    width: 100% !important;
+    overflow-x: auto !important; /* Wajib: Aktifkan scroll horizontal */
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch; /* Biar scroll di HP lancar/smooth */
+}
+
+/* Kunci elemen di dalamnya agar bisa melebar melampaui layar HP */
+#wrapper-chart-inner {
+    display: block !important;
+    position: relative !important;
+    height: 220px !important; /* Sesuaikan tinggi grafik */
+}
 </style>
 
 <script>
@@ -574,13 +589,15 @@ document.addEventListener('keydown', function(event) {
    
    
    
-   
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-7">
+   <!-- GRAFIK PROGRES BULANAN -->
+<!-- GRAFIK PROGRES BULANAN -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-7">
 
+    <!-- BOX GRAFIK HARIAN -->
     <div class="n-box-grafik bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)] relative flex flex-col justify-between">
         
         <div id="loading-layer-harian" class="absolute top-0 left-0 w-full h-full bg-white/90 z-50 flex flex-col justify-center items-center transition-opacity duration-300">
-            <div class="spinner-putar w-8 h-8 border-4 border-green-100 border-top-4 border-green-500 rounded-full animate-spin"></div>
+            <div class="spinner-putar w-8 h-8 border-4 border-green-100 border-t-4 border-green-500 rounded-full animate-spin"></div>
             <span class="text-[10px] text-green-600 font-bold mt-2 tracking-wide">Memuat Data Keuangan...</span>
         </div>
 
@@ -616,12 +633,19 @@ document.addEventListener('keydown', function(event) {
         </div>
     </div>
 
-    <div id="sesi-grafik" class="searchable-content bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)] flex flex-col justify-between">
+    <!-- BOX GRAFIK BULANAN (DINAMIS SPREADSHEET & SCROLLABLE) -->
+    <div id="sesi-grafik" class="searchable-content bg-white border-4 border-green-400 rounded-[28px] overflow-hidden shadow-[0_12px_40px_rgba(34,197,94,0.15)] flex flex-col justify-between relative">
         
-        <div class="p-3 md:p-5 border-b border-green-100 flex justify-between items-center bg-gradient-to-r from-white to-green-50/30">
+        <!-- Loading Layer khusus Grafik Bulanan -->
+        <div id="loading-grafik-bulanan" class="absolute top-0 left-0 w-full h-full bg-white/90 z-40 flex flex-col justify-center items-center transition-opacity duration-300">
+            <div class="spinner-putar w-8 h-8 border-4 border-green-100 border-t-4 border-green-500 rounded-full animate-spin"></div>
+            <span class="text-[10px] text-green-600 font-bold mt-2 tracking-wide">Mengambil Data Spreadsheet...</span>
+        </div>
+
+        <div class="p-3 md:p-5 border-b border-green-100 flex justify-between items-center bg-gradient-to-r from-white to-green-50/30 z-10">
             <h2 class="text-xs md:text-sm font-medium text-gray-900 m-0 leading-tight">
                 <span class="text-green-600 text-[10px] font-black uppercase tracking-wider">PROGRES BULANAN</span><br>
-                <strong>Januari - Juli 2026</strong>
+                <strong id="judul-rentang-bulan">Memuat Rentang Bulan...</strong>
             </h2>
             <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-0.5 rounded-full">
                 <span class="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span>
@@ -629,13 +653,15 @@ document.addEventListener('keydown', function(event) {
             </div>
         </div>
 
-        <div id="wadah-grafik" class="flex flex-nowrap h-[170px] md:h-[240px] overflow-hidden flex-grow">
-            <div id="container-canvas" class="flex-grow p-3 md:p-4 bg-white flex items-center">
-                <div class="w-full h-[135px] md:h-[190px] relative">
-                    <canvas id="grafikPendapatan"></canvas>
-                </div>
-            </div>
+        <!-- Wadah Canvas dengan Overflow Horizontal (Scrollable) -->
+        <!-- Wadah Canvas dengan Overflow Horizontal (Scrollable) -->
+<div id="wadah-grafik" class="w-full bg-white relative">
+    <div id="container-canvas" class="w-full p-3 md:p-4 overflow-x-auto overflow-y-hidden" style="-webkit-overflow-scrolling: touch;">
+        <div id="wrapper-chart-inner" class="h-[210px] md:h-[230px] relative">
+            <canvas id="grafikPendapatan"></canvas>
         </div>
+    </div>
+</div>
     </div>
 
 </div>
@@ -1667,6 +1693,32 @@ function closePdfModal() {
                 </div>
             </div>
         </div>
+		
+		<div class="bg-[#E8F1EC] p-5 rounded-[35px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 sm:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full max-w-md mx-auto md:mx-0">
+    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ')">
+        <img src="https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ" 
+             class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+        <div class="absolute bottom-0 right-0 bg-emerald-600 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] sm:text-[9px]">
+            <i class="fa-solid fa-magnifying-glass-plus"></i>
+        </div>
+    </div>
+    
+    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Syamsi Nurhakim</h5>
+        
+        <div class="flex items-center gap-1.5 mt-2.5">
+            <a href="https://wa.me/6282126333381" target="_blank"
+               class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+               title="Hubungi WhatsApp">
+                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+            </a>
+            
+            <span class="inline-flex items-center h-7 text-[10px] sm:text-xs font-black text-emerald-800 uppercase tracking-widest bg-white border border-[#B3D3C4] px-3 rounded-xl shadow-xs">
+                Staf / Operator
+            </span>
+        </div>
+    </div>
+</div>
 
     </div>
 </div>
@@ -1908,126 +1960,189 @@ function closePdfModal() {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    function renderChart() {
+    const API_URL_BULANAN = 'https://script.google.com/macros/s/AKfycbzjeAbDnG-4OS0L09i2NziXoi1JL40ORe7t8g3NMaEBM5twdtxyhA6njD9FJxUWXbG6/exec';
+
+    async function fetchAndRenderChart() {
         const container = document.getElementById('container-canvas');
+        const loadingLayer = document.getElementById('loading-grafik-bulanan');
+        const judulRentang = document.getElementById('judul-rentang-bulan');
+        
         if (!container) return;
 
-        // Hard reset canvas agar memori tablet segar dan bersih
-        container.innerHTML = '<canvas id="grafikPendapatan"></canvas>';
-        
-        const canvas = document.getElementById('grafikPendapatan');
-        const ctx = canvas.getContext('2d');
+        try {
+            // 1. Ambil data dari Apps Script Web App
+            const response = await fetch(API_URL_BULANAN);
+            const result = await response.json();
 
-        // Gradasi warna hijau modern untuk batang
-        const gradientBatang = ctx.createLinearGradient(0, 0, 0, 160);
-        gradientBatang.addColorStop(0, '#2ecc71'); 
-        gradientBatang.addColorStop(1, '#27ae60'); 
+            if (result.status !== 'success' || !result.data || result.data.length === 0) {
+                if (judulRentang) judulRentang.innerText = "Data Tidak Tersedia";
+                return;
+            }
 
-        const dataPendapatan = [13214500, 10560500, 11715000, 15283500, 14690700, 17806000, 21263500];
+            const rawData = result.data;
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli'],
-                datasets: [{
-                    label: 'Pendapatan',
-                    data: dataPendapatan, 
-                    barPercentage: 0.6,       // Batang tebal kokoh
-                    categoryPercentage: 0.7, 
-                    backgroundColor: gradientBatang, 
-                    borderColor: '#27ae60',
-                    borderWidth: 1,
-                    borderRadius: 6,         
-                    borderSkipped: 'bottom'  
+            // Extract label bulan dan data pendapatan
+            const labels = rawData.map(item => item.bulan);
+            const dataPendapatan = rawData.map(item => Number(item.pendapatan));
+
+            // 2. Tentukan Judul Rentang Bulan (misal: Januari - Juli 2026)
+            if (judulRentang && rawData.length > 0) {
+                const bulanAwal = rawData[0].bulan;
+                const bulanAkhir = rawData[rawData.length - 1].bulan;
+                const tahunAkhir = rawData[rawData.length - 1].tahun;
+                
+                if (rawData.length === 1) {
+                    judulRentang.innerText = `${bulanAwal} ${tahunAkhir}`;
+                } else {
+                    judulRentang.innerText = `${bulanAwal} - ${bulanAkhir} ${tahunAkhir}`;
+                }
+            }
+
+            // 3. Atur lebar dinamis agar bisa di-scroll jika bulan bertambah banyak
+            // Tentukan lebar per batang agar renggang & nyaman di-scroll di HP
+const minWidthPerBar = 75; // Nilai 75px membuat 8 bulan lebar total ~600px
+const totalCalculatedWidth = labels.length * minWidthPerBar;
+
+const wrapperInner = document.getElementById('wrapper-chart-inner');
+
+if (wrapperInner) {
+    // Kunci lebar elemen inner agar memaksa scrollbar muncul
+    wrapperInner.style.width = totalCalculatedWidth + 'px';
+    wrapperInner.style.minWidth = totalCalculatedWidth + 'px';
+}
+
+            // 4. Reset Canvas
+            wrapperInner.innerHTML = '<canvas id="grafikPendapatan"></canvas>';
+            const canvas = document.getElementById('grafikPendapatan');
+            const ctx = canvas.getContext('2d');
+
+            // Gradasi warna hijau
+            const gradientBatang = ctx.createLinearGradient(0, 0, 0, 160);
+            gradientBatang.addColorStop(0, '#2ecc71'); 
+            gradientBatang.addColorStop(1, '#27ae60'); 
+
+            // 5. Inisialisasi Chart.js
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pendapatan',
+                        data: dataPendapatan, 
+                        barPercentage: 0.55,       
+                        categoryPercentage: 0.7, 
+                        backgroundColor: gradientBatang, 
+                        borderColor: '#27ae60',
+                        borderWidth: 1,
+                        borderRadius: 6,         
+                        borderSkipped: 'bottom'  
+                    }]
+                },
+                options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: false, 
+    layout: {
+        padding: {
+            top: 25,
+            bottom: 25, // Ditambah dari 5 ke 25 agar teks bulan tidak terpotong bawah
+            left: 5,
+            right: 15
+        }
+    },
+    plugins: {
+        tooltip: { 
+            enabled: true,
+            backgroundColor: 'rgba(39, 174, 96, 0.9)', 
+            titleFont: { weight: 'bold', family: 'system-ui' },
+            bodyFont: { family: 'system-ui' },
+            callbacks: {
+                label: function(context) {
+                    let label = context.dataset.label || '';
+                    if (label) label += ': ';
+                    if (context.parsed.y !== null) {
+                        label += 'Rp ' + context.parsed.y.toLocaleString('id-ID');
+                    }
+                    return label;
+                }
+            }
+        },
+        legend: { display: false }
+    },
+    scales: {
+        y: { 
+            beginAtZero: true, 
+            grace: '20%', // Turunkan dari 40% ke 20% agar grafik tidak terdorong terlalu ke bawah
+            grid: { color: '#f4fbf6' }, 
+            ticks: {
+                color: '#a0aec0',
+                font: { size: 9, family: 'system-ui' },
+                callback: function(value) {
+                    return value >= 1000000 ? (value / 1000000) + 'jt' : value;
+                }
+            }
+        },
+        x: {
+            grid: { display: false }, 
+            ticks: {
+                color: '#718096',
+                font: { size: 10, weight: 'bold', family: 'system-ui' },
+                padding: 5,
+                maxRotation: 45, // Miringkan label jika area terasa sempit
+                minRotation: 0
+            }
+        }
+    }
+},
+                plugins: [{
+                    id: 'customDataLabels',
+                    afterDatasetsDraw(chart) {
+                        const { ctx, data } = chart;
+                        
+                        ctx.save();
+                        ctx.font = 'bold 10px system-ui, sans-serif';
+                        ctx.fillStyle = '#27ae60'; 
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+
+                        chart.getDatasetMeta(0).data.forEach((bar, index) => {
+                            const nilaiMurni = data.datasets[0].data[index];
+                            const teksNominal = 'Rp ' + (nilaiMurni / 1000000).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' jt';
+                            
+                            const posisiX = bar.x;
+                            const posisiY = bar.y - 12; 
+                            
+                            ctx.fillText(teksNominal, posisiX, posisiY);
+                        });
+                        ctx.restore();
+                    }
                 }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: false, // Wajib false agar posisi koordinat teks manual presisi
-                layout: {
-                    padding: {
-                        top: 30, // Ruang kosong di atas grafik agar teks bebas mengambang
-                        bottom: 5
-                    }
-                },
-                plugins: {
-                    // --- REVISI: HIDUPKAN KEMBALI TOOLTIP SAAT MOUSE DIARAHKAN ---
-                    tooltip: { 
-                        enabled: true, // AKTIF!
-                        backgroundColor: 'rgba(39, 174, 96, 0.9)', // Warna hijau tua transparan biar senada tema
-                        titleFont: { weight: 'bold', family: 'system-ui' },
-                        bodyFont: { family: 'system-ui' },
-                        callbacks: {
-                            // Format angka di dalam kotak keterangan agar rapi (Rp 15.283.500)
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += 'Rp ' + context.parsed.y.toLocaleString('id-ID');
-                                }
-                                return label;
-                            }
-                        }
-                    },
-                    legend: { display: false }
-                },
-                scales: {
-                    y: { 
-                        beginAtZero: true, 
-                        grace: '40%', // Plafon sumbu Y longgar agar langit grafik luas
-                        grid: { color: '#f4fbf6' }, 
-                        ticks: {
-                            color: '#a0aec0',
-                            font: { size: 9, family: 'system-ui' },
-                            callback: function(value) {
-                                return value >= 1000000 ? (value / 1000000) + 'jt' : value;
-                            }
-                        }
-                    },
-                    x: {
-                        grid: { display: false }, 
-                        ticks: {
-                            color: '#718096',
-                            font: { size: 10, weight: 'bold', family: 'system-ui' }
-                        }
-                    }
-                }
-            },
-            // --- KUNCI GAMBAR TEKS MANUAL NYA TETAP DIJAGA DI SINI ---
-            plugins: [{
-                id: 'customDataLabels',
-                afterDatasetsDraw(chart) {
-                    const { ctx, data } = chart;
-                    
-                    ctx.save();
-                    ctx.font = 'bold 10px system-ui, sans-serif';
-                    ctx.fillStyle = '#27ae60'; 
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'bottom';
+            });
 
-                    chart.getDatasetMeta(0).data.forEach((bar, index) => {
-                        const nilaiMurni = data.datasets[0].data[index];
-                        const teksNominal = 'Rp ' + (nilaiMurni / 1000000).toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' jt';
-                        
-                        const posisiX = bar.x;
-                        const posisiY = bar.y - 12; // Tetap mengambang 12px di atas batang
-                        
-                        ctx.fillText(teksNominal, posisiX, posisiY);
-                    });
-                    ctx.restore();
-                }
-            }]
-        });
+            // Auto-scroll ke posisi kanan (bulan terbaru)
+            setTimeout(() => {
+                container.scrollLeft = container.scrollWidth;
+            }, 100);
+
+        } catch (error) {
+            console.error('Gagal memuat data grafik bulanan:', error);
+            if (judulRentang) judulRentang.innerText = "Gagal Memuat Data";
+        } finally {
+            // Sembunyikan layer loading
+            if (loadingLayer) {
+                loadingLayer.style.opacity = '0';
+                setTimeout(() => {
+                    loadingLayer.style.display = 'none';
+                }, 300);
+            }
+        }
     }
 
     function forceRender() {
-        setTimeout(renderChart, 350);
+        setTimeout(fetchAndRenderChart, 350);
     }
 
-    document.addEventListener('DOMContentLoaded', renderChart);
+    document.addEventListener('DOMContentLoaded', fetchAndRenderChart);
 </script>
 
 
