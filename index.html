@@ -943,7 +943,7 @@
             </div>
             <div class="btn-content">
                 <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
-                <span class="btn-desc">Kelola Data Operasional Harian & Arsip Digital</span>
+                <span class="btn-desc">Data Operasional & Arsip Digital</span>
             </div>
             <i class="fas fa-chevron-right chevron-right"></i>
         </button>
@@ -955,7 +955,7 @@
             </div>
             <div class="btn-content">
                 <span class="btn-text">APOTEK NURJAYA</span>
-                <span class="btn-desc">Kelola Data Operasional Harian & Tutup Buku</span>
+                <span class="btn-desc">Data Operasional & Arsip Digital</span>
             </div>
             <i class="fas fa-chevron-right chevron-right"></i>
         </button>
@@ -979,7 +979,7 @@
     </div>
     <div class="btn-content">
         <span class="btn-text">SEMUA APP NJA</span>
-        <span class="btn-desc">Akses seluruh ekosistem aplikasi & data Nurjaya</span>
+        <span class="btn-desc">Ekosistem aplikasi Nurjaya</span>
     </div>
     <i class="fas fa-chevron-right chevron-right"></i>
 </button>
@@ -1237,32 +1237,46 @@ function tutupModalAdaYangBaru() {
             <button class="nsa-modal-close" onclick="tutupModalAksesCepatDirect()">&times;</button>
         </div>
 
-        <!-- Body Modal (2 Menu Pilihan) -->
-        <div class="nsa-modal-body">
-            <!-- 1. Katalog Barang -->
-            <a href="https://nazakana.github.io/Katalog-Nurjaya/index.html" class="btn-modal-sub">
-                <div class="sub-icon-wrapper">
-                    <i class="fas fa-boxes-stacked"></i>
-                </div>
-                <div class="sub-btn-content">
-                    <span class="sub-btn-text">KATALOG BARANG</span>
-                    <span class="sub-btn-desc">Daftar Harga Barang Nurjaya Abadi Photocopy</span>
-                </div>
-                <i class="fas fa-chevron-right sub-chevron"></i>
-            </a>
+        <!-- Body Modal (3 Menu Pilihan) -->
+<div class="nsa-modal-body">
+    
+    <!-- 1. Alat Bantu Belanja Barang (BARU - Ditaruh Paling Atas) -->
+   <button type="button" onclick="bukaModalBelanjaBarang()" class="btn-modal-sub">
+    <div class="sub-icon-wrapper" style="background: #e11d48;">
+        <i class="fas fa-shopping-basket" style="color: #ffffff;"></i>
+    </div>
+    <div class="sub-btn-content">
+        <span class="sub-btn-text">ASISTEN BELANJA</span>
+        <span class="sub-btn-desc">Checklist Saat Berbelanja Barang</span>
+    </div>
+    <i class="fas fa-chevron-right sub-chevron"></i>
+</button>
 
-            <!-- 2. Kirim Nurjaya QRIS -->
-            <button onclick="kirimQRISWhatsApp()" class="btn-modal-sub btn-sub-qris">
-                <div class="sub-icon-wrapper">
-                    <i class="fas fa-qrcode"></i>
-                </div>
-                <div class="sub-btn-content">
-                    <span class="sub-btn-text">KIRIM NURJAYA QRIS</span>
-                    <span class="sub-btn-desc">Kirim Gambar QRIS ke Konsumen</span>
-                </div>
-                <i class="fas fa-paper-plane sub-chevron"></i>
-            </button>
+    <!-- 2. Katalog Barang -->
+    <a href="https://nazakana.github.io/Katalog-Nurjaya/index.html" class="btn-modal-sub">
+        <div class="sub-icon-wrapper">
+            <i class="fas fa-boxes-stacked"></i>
         </div>
+        <div class="sub-btn-content">
+            <span class="sub-btn-text">KATALOG BARANG</span>
+            <span class="sub-btn-desc">Daftar Harga Barang Nurjaya Abadi Photocopy</span>
+        </div>
+        <i class="fas fa-chevron-right sub-chevron"></i>
+    </a>
+
+    <!-- 3. Kirim Nurjaya QRIS -->
+    <button onclick="kirimQRISWhatsApp()" class="btn-modal-sub btn-sub-qris">
+        <div class="sub-icon-wrapper">
+            <i class="fas fa-qrcode"></i>
+        </div>
+        <div class="sub-btn-content">
+            <span class="sub-btn-text">KIRIM NURJAYA QRIS</span>
+            <span class="sub-btn-desc">Kirim Gambar QRIS ke Konsumen</span>
+        </div>
+        <i class="fas fa-paper-plane sub-chevron"></i>
+    </button>
+
+</div>
     </div>
 </div>
 
@@ -1413,5 +1427,416 @@ function tutupModalAdaYangBaru() {
         </button>
     </div>
 </div>
+
+
+
+<script>
+// ====================================================================
+// CONFIG & SISTEM ALAT BANTU BELANJA (FIXED ISOLATED CHIP UI)
+// ====================================================================
+const API_BELANJA_BARANG = "https://script.google.com/macros/s/AKfycbxEOZBmgmXeFeG_lkkCY5OOUESufebQ2Pj9Y9NiaNcpLde-bPUQshXrlVnzDtf3s1-wfQ/exec";
+const NO_WA_TUJUAN_BELANJA = "6285211029598"; 
+
+let listDataBelanja = [];
+let activeFilterBelanja = 'all';
+
+function escapeHtmlAttr(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+async function bukaModalBelanjaBarang() {
+    const modal = document.getElementById('modalBelanjaBarang');
+    if (!modal) return;
+    
+    modal.classList.add('active');
+    
+    const elTgl = document.getElementById('txtTanggalBelanja');
+    if (elTgl) {
+        const tgl = new Date();
+        const daftarHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        elTgl.innerText = `${daftarHari[tgl.getDay()]}, ${tgl.getDate()} ${daftarBulan[tgl.getMonth()]} ${tgl.getFullYear()}`;
+    }
+
+    await muatDataListBelanja();
+}
+
+function tutupModalBelanjaBarang() {
+    const modal = document.getElementById('modalBelanjaBarang');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+async function muatDataListBelanja() {
+    const container = document.getElementById('bodyListBelanja');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div style="text-align: center; padding: 40px 10px; color: #059669;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 28px; margin-bottom: 10px;"></i>
+            <p style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Mengambil Daftar Belanjaan...</p>
+        </div>
+    `;
+
+    try {
+        const response = await fetch(API_BELANJA_BARANG);
+        if (!response.ok) throw new Error("Gagal mengambil data dari Google Sheets");
+        const result = await response.json();
+
+        if (result.status === "success" && Array.isArray(result.data)) {
+            const rawItems = result.data.filter(item => {
+                const qty = (item["Harus Belanja"] || "").toString().trim();
+                return qty !== "" && qty !== "0";
+            });
+
+            if (rawItems.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 10px; color: #94a3b8;">
+                        <i class="fas fa-box-open" style="font-size: 36px; margin-bottom: 8px; color: #cbd5e1;"></i>
+                        <p style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #475569;">Tidak Ada Item Belanjaan Aktif</p>
+                    </div>
+                `;
+                updateProgressBelanja();
+                return;
+            }
+
+            const cachedStatus = JSON.parse(localStorage.getItem('status_belanja_cache') || '{}');
+
+            listDataBelanja = rawItems.map((item, idx) => {
+                const namaBarang = item["Nama Barang"] || "-";
+                return {
+                    id: idx.toString(),
+                    no: idx + 1,
+                    nama: namaBarang,
+                    qty: item["Harus Belanja"] || "-",
+                    catatan: item["Catatan"] || "",
+                    status: cachedStatus[namaBarang] || 'pending'
+                };
+            });
+
+            renderListBelanja();
+        } else {
+            throw new Error(result.message || "Format data sheet salah.");
+        }
+    } catch (err) {
+        console.error("Error Belanja:", err);
+        container.innerHTML = `
+            <div style="text-align: center; padding: 30px 10px; color: #e11d48;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 32px; margin-bottom: 8px;"></i>
+                <p style="font-size: 12px; font-weight: 800; text-transform: uppercase;">Gagal Memuat Laporan</p>
+                <p style="font-size: 10px; color: #94a3b8; margin-top: 4px;">${err.message}</p>
+            </div>
+        `;
+    }
+}
+
+function renderListBelanja() {
+    const container = document.getElementById('bodyListBelanja');
+    if (!container) return;
+
+    const filteredData = listDataBelanja.filter(item => {
+        if (activeFilterBelanja === 'all') return true;
+        return item.status === activeFilterBelanja;
+    });
+
+    if (filteredData.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 30px 10px; color: #94a3b8;">
+                <i class="fas fa-filter" style="font-size: 24px; margin-bottom: 6px; opacity: 0.5;"></i>
+                <p style="font-size: 11px; font-weight: 800; text-transform: uppercase;">Tidak ada barang di kategori ini</p>
+            </div>
+        `;
+        updateProgressBelanja();
+        return;
+    }
+
+    container.innerHTML = "";
+
+    filteredData.forEach(item => {
+        const isDone = item.status === 'done';
+        const isEmpty = item.status === 'empty';
+
+        // Dynamic Styling
+        let cardBg = "#ffffff";
+        let cardBorder = "#e2e8f0";
+        let titleColor = "#0f172a";
+        
+        let noBg = "#f1f5f9";
+        let noColor = "#475569";
+        
+        let badgeBg = "#fef3c7";
+        let badgeColor = "#92400e";
+        let badgeBorder = "#fcd34d";
+
+        let btnAdaStyle = "background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;";
+        let btnKosongStyle = "background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;";
+
+        if (isDone) {
+            cardBg = "#dcfce7"; 
+            cardBorder = "#86efac";
+            titleColor = "#14532d";
+            
+            noBg = "#bbf7d0";
+            noColor = "#15803d";
+            
+            badgeBg = "#86efac";
+            badgeColor = "#14532d";
+            badgeBorder = "#4ade80";
+
+            btnAdaStyle = "background: #16a34a; color: #ffffff; border: 1px solid #15803d; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3); font-weight: 900;";
+        } else if (isEmpty) {
+            cardBg = "#ffe4e6"; 
+            cardBorder = "#fca5a5";
+            titleColor = "#881337";
+
+            noBg = "#fecdd3";
+            noColor = "#be123c";
+
+            badgeBg = "#fca5a5";
+            badgeColor = "#881337";
+            badgeBorder = "#f87171";
+
+            btnKosongStyle = "background: #e11d48; color: #ffffff; border: 1px solid #be123c; box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3); font-weight: 900;";
+        }
+
+        const safeId = escapeHtmlAttr(item.id);
+
+        const cardHTML = `
+            <div class="nsa-belanja-chip" style="background: ${cardBg}; border: 1.5px solid ${cardBorder}; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all 0.25s ease; display: flex; align-items: stretch; height: auto; min-height: max-content; width: 100%; box-sizing: border-box;">
+                
+                <!-- NOMOR SIDEBAR KIRI (FULL HEIGHT) -->
+                <div style="background: ${noBg}; color: ${noColor}; min-width: 48px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; border-right: 1.5px solid ${cardBorder}; padding: 0 4px; flex-shrink: 0;">
+                    ${item.no}
+                </div>
+
+                <!-- KONTEN CHIP (NAMA, HARUS BELI, TOMBOL) -->
+                <div style="flex: 1; padding: 12px 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; min-width: 0;">
+                    
+                    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;">
+                        <div style="flex: 1; min-width: 0;">
+                            <h4 style="font-size: 13px; font-weight: 800; color: ${titleColor}; line-height: 1.3; margin: 0; word-break: break-word;">
+                                ${item.nama}
+                            </h4>
+                            ${item.catatan ? `
+                                <p style="font-size: 10px; font-weight: 600; font-style: italic; color: #64748b; margin-top: 3px; display: flex; align-items: center; gap: 4px;">
+                                    <i class="fas fa-sticky-note" style="font-size: 9px; opacity: 0.7;"></i> ${item.catatan}
+                                </p>
+                            ` : ''}
+                        </div>
+
+                        <div style="background: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder}; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 10px; flex-shrink: 0; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                            Harus Beli: <span style="font-size: 11px; font-weight: 900;">${item.qty}</span>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button type="button" 
+                                onclick="setStatusBelanja('${safeId}', 'done')"
+                                style="${btnAdaStyle} padding: 9px 0; border-radius: 12px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                            <i class="fas fa-check-circle"></i> TERSEDIA
+                        </button>
+
+                        <button type="button" 
+                                onclick="setStatusBelanja('${safeId}', 'empty')"
+                                style="${btnKosongStyle} padding: 9px 0; border-radius: 12px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                            <i class="fas fa-times-circle"></i> KOSONG
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', cardHTML);
+    });
+
+    updateProgressBelanja();
+}
+
+function setStatusBelanja(id, statusTujuan) {
+    const item = listDataBelanja.find(i => i.id === id);
+    if (!item) return;
+
+    if (item.status === statusTujuan) {
+        item.status = 'pending';
+    } else {
+        item.status = statusTujuan;
+    }
+
+    simpanCacheBelanja();
+    renderListBelanja();
+}
+
+function simpanCacheBelanja() {
+    const cacheMap = {};
+    listDataBelanja.forEach(i => {
+        cacheMap[i.nama] = i.status;
+    });
+    localStorage.setItem('status_belanja_cache', JSON.stringify(cacheMap));
+}
+
+function resetStatusBelanjaan() {
+    if (listDataBelanja.length === 0) return;
+    if (confirm("Reset semua centang status belanjaan?")) {
+        listDataBelanja.forEach(i => i.status = 'pending');
+        localStorage.removeItem('status_belanja_cache');
+        renderListBelanja();
+    }
+}
+
+function filterStatusBelanja(statusFilter) {
+    activeFilterBelanja = statusFilter;
+    
+    document.querySelectorAll('.tab-filter-btn').forEach(btn => {
+        btn.style.background = 'transparent';
+        btn.style.color = '#64748b';
+        btn.style.boxShadow = 'none';
+    });
+
+    const activeBtn = document.getElementById(`tabFilter-${statusFilter}`);
+    if (activeBtn) {
+        activeBtn.style.background = '#ffffff';
+        activeBtn.style.color = '#047857';
+        activeBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.08)';
+    }
+
+    renderListBelanja();
+}
+
+function updateProgressBelanja() {
+    const total = listDataBelanja.length;
+    const selesai = listDataBelanja.filter(i => i.status === 'done' || i.status === 'empty').length;
+    const persen = total > 0 ? Math.round((selesai / total) * 100) : 0;
+
+    const txtCounter = document.getElementById('txtProgressBelanjaCount');
+    const bar = document.getElementById('barProgressBelanja');
+
+    if (txtCounter) txtCounter.innerText = `${selesai} / ${total} (${persen}%)`;
+    if (bar) bar.style.width = `${persen}%`;
+}
+
+function kirimRingkasanBelanjaWA() {
+    if (listDataBelanja.length === 0) {
+        alert("Daftar belanjaan masih kosong!");
+        return;
+    }
+
+    const tglStr = document.getElementById('txtTanggalBelanja')?.innerText || "";
+    const terbeli = listDataBelanja.filter(i => i.status === 'done');
+    const tidakAda = listDataBelanja.filter(i => i.status === 'empty');
+    const lumDicheck = listDataBelanja.filter(i => i.status === 'pending');
+
+    let pesan = `*HASIL CATATAN BELANJA TOKO*\n*NURJAYA ABADI PHOTOCOPY*\n`;
+    if (tglStr) pesan += `_Tanggal: ${tglStr}_\n\n`;
+
+    if (terbeli.length > 0) {
+        pesan += `✅ *BARANG BERHASIL DIBELI (${terbeli.length}):*\n`;
+        terbeli.forEach(i => {
+            pesan += `• ${i.nama} ➔ _${i.qty}_\n`;
+        });
+        pesan += `\n`;
+    }
+
+    if (tidakAda.length > 0) {
+        pesan += `❌ *STOK KOSONG DI TOKO (${tidakAda.length}):*\n`;
+        tidakAda.forEach(i => {
+            pesan += `• ${i.nama} _(Toko Kosong)_\n`;
+        });
+        pesan += `\n`;
+    }
+
+    if (lumDicheck.length > 0) {
+        pesan += `⚠️ *BELUM TERBELI / TERTUNDA (${lumDicheck.length}):*\n`;
+        lumDicheck.forEach(i => {
+            pesan += `• ${i.nama} ➔ _${i.qty}_\n`;
+        });
+        pesan += `\n`;
+    }
+
+    pesan += `----------------------------------\n`;
+    pesan += `_Laporan dikirim langsung dari Alat Bantu Belanja NSA._`;
+
+    window.open(`https://api.whatsapp.com/send?phone=${NO_WA_TUJUAN_BELANJA}&text=${encodeURIComponent(pesan)}`, '_blank');
+}
+</script>
+
+<!-- MODAL ALAT BANTU BELANJA (MATERIAL UI ROUNDY CHIP) -->
+<div id="modalBelanjaBarang" class="nsa-modal-overlay">
+    <div class="nsa-modal-card nsa-modal-large" style="border-radius: 32px; overflow: hidden; border: none; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);">
+        
+        <!-- HEADER MODAL -->
+        <div class="nsa-modal-header" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 20px 24px; margin: 0; border: none;">
+            <div class="nsa-modal-title-group">
+                <div class="nsa-modal-icon" style="background: rgba(255,255,255,0.2); color: #fff; box-shadow: none; border-radius: 16px;">
+                    <i class="fas fa-shopping-basket"></i>
+                </div>
+                <div>
+                    <h3 class="nsa-modal-title" style="color: #ffffff; font-size: 16px; font-weight: 900; letter-spacing: 0.5px;">ASISTEN BELANJA</h3>
+                    <p class="nsa-modal-subtitle" id="txtTanggalBelanja" style="color: #a7f3d0; font-size: 10px; font-weight: 700; margin-top: 2px;"></p>
+                </div>
+            </div>
+            <button class="nsa-modal-close" onclick="tutupModalBelanjaBarang()" style="background: rgba(255,255,255,0.2); color: #fff; border-radius: 12px; width: 36px; height: 36px; font-size: 18px;">&times;</button>
+        </div>
+
+        <!-- PROGRESS BAR BELANJA -->
+        <div style="background: #064e3b; padding: 14px 24px; color: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">
+                <span style="color: #6ee7b7; display: flex; align-items: center; gap: 6px; tracking-wide">
+                    <i class="fas fa-tasks"></i> Progress Belanjaan
+                </span>
+                <span id="txtProgressBelanjaCount" style="background: #047857; padding: 3px 12px; border-radius: 50px; border: 1px solid #059669; font-size: 10px;">0 / 0</span>
+            </div>
+            <div style="width: 100%; background: #022c22; height: 10px; border-radius: 50px; overflow: hidden; padding: 2px;">
+                <div id="barProgressBelanja" style="background: linear-gradient(90deg, #34d399, #10b981); height: 100%; width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 50px;"></div>
+            </div>
+        </div>
+
+        <!-- FILTER TAB & RESET (REVISI CENTERED & FULL WIDTH) -->
+        <div style="background: #f8fafc; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+            
+            <!-- WRAPPER TAB FILTER (CENTERED & RATA TENGAH) -->
+            <div style="display: flex; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 16px; width: 100%; justify-content: center;">
+                <button onclick="filterStatusBelanja('all')" id="tabFilter-all" class="tab-filter-btn" style="flex: 1; padding: 7px 0; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; background: #fff; color: #047857; box-shadow: 0 2px 4px rgba(0,0,0,0.08); text-align: center;">Semua</button>
+                <button onclick="filterStatusBelanja('pending')" id="tabFilter-pending" class="tab-filter-btn" style="flex: 1; padding: 7px 0; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; background: transparent; color: #64748b; text-align: center;">Sisa</button>
+                <button onclick="filterStatusBelanja('done')" id="tabFilter-done" class="tab-filter-btn" style="flex: 1; padding: 7px 0; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; background: transparent; color: #64748b; text-align: center;">Ada</button>
+                <button onclick="filterStatusBelanja('empty')" id="tabFilter-empty" class="tab-filter-btn" style="flex: 1; padding: 7px 0; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; background: transparent; color: #64748b; text-align: center;">Kosong</button>
+            </div>
+
+            <!-- TOMBOL RESET (CENTERED DI BAWAH TAB) -->
+            <button onclick="resetStatusBelanjaan()" style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #64748b; background: #fff; border: 1px solid #cbd5e1; padding: 5px 16px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                <i class="fas fa-undo-alt" style="font-size: 8px;"></i> Reset Status
+            </button>
+        </div>
+
+        <!-- LIST ITEMS CONTAINER -->
+        <div id="bodyListBelanja" class="nsa-app-list-container" style="background: #f1f5f9; padding: 16px; display: flex; flex-direction: column; gap: 12px; max-height: 55vh; overflow-y: auto;">
+            <!-- Dynamic Material Chip Content via JS -->
+        </div>
+
+        <!-- FOOTER / AKSI SELESAI (REVISI CENTERED & FULL WIDTH) -->
+        <div style="background: #ffffff; border-top: 1px solid #e2e8f0; padding: 14px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
+            <div style="font-size: 10px; color: #64748b; font-weight: 700; text-align: center;">
+                Tandai barang <strong style="color: #059669;">TERSEDIA</strong> atau <strong style="color: #e11d48;">KOSONG</strong>
+            </div>
+            
+            <button type="button" 
+                    onclick="kirimRingkasanBelanjaWA()"
+                    style="width: 100%; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; font-weight: 800; padding: 12px 20px; border-radius: 50px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);">
+                <i class="fab fa-whatsapp" style="font-size: 15px;"></i>
+                <span>Kirim Ringkasan WA</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
 </body>
 </html>
