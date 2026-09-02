@@ -5887,46 +5887,30 @@ async function muatDataBarangKosong() {
 }
 
 // 4. Fungsi Kirim Laporan ke Google Sheets & WhatsApp (Include Data Catatan)
-async function simpanDataDanKirimWA() {
+// 4. Fungsi Simpan Laporan Langsung ke Google Sheets (Tanpa WA)
+async function simpanKeAsistenBelanja() {
     const btnSimpan = document.getElementById('btnSimpanBK');
-    const txtUangSisa = document.getElementById('txtUangSisaBK')?.innerText || "Rp 0";
-    const txtUangTabungan = document.getElementById('txtUangTabunganBK')?.innerText || "Rp 0";
-    const strTanggal = document.getElementById('txtTanggalBK')?.innerText || "";
-    
+    const iconSimpan = document.getElementById('iconSimpanBK');
     const inputElements = document.querySelectorAll('.input-jumlah-belanja');
+    
     if (inputElements.length === 0) return;
 
     const dataUpdateSheets = [];
-    let teksLaporanWA = `*LAPORAN BELANJA BARANG KOSONG*\n*NURJAYA ABADI PHOTOCOPY*\n`;
-    if(strTanggal) teksLaporanWA += `_Per Hari/Tanggal: ${strTanggal}_\n\n`;
-    
-    let adaBarangDibelanja = false;
 
     inputElements.forEach(input => {
         const nama = input.getAttribute('data-barang');
         const jumlah = input.value.trim();
         
-        // Cari input catatan pendamping yang memiliki nama barang sama
+        // Cari input catatan pendamping
         const inputCatatan = document.querySelector(`[data-barang-catatan="${nama}"]`);
         const catatan = inputCatatan ? inputCatatan.value.trim() : "";
 
         dataUpdateSheets.push({ nama: nama, jumlah: jumlah, catatan: catatan });
-
-        if (jumlah !== "" && jumlah !== "0") {
-            teksLaporanWA += `• *${nama}* ➔ _${jumlah}_`;
-            if (catatan) teksLaporanWA += `\n  (Ket: ${catatan})`;
-            teksLaporanWA += `\n`;
-            adaBarangDibelanja = true;
-        }
     });
 
-    if (!adaBarangDibelanja) teksLaporanWA += "_(Semua kebutuhan barang masih terpenuhi/kosong)_\n";
-
-    teksLaporanWA += `\n----------------------------------\n`;
-    teksLaporanWA += `*Uang Sisa Akhir:* ${txtUangSisa}\n`;
-    teksLaporanWA += `*Uang Tabungan B:* ${txtUangTabungan}`;
-
+    // Indikator Loading pada Tombol
     btnSimpan.disabled = true;
+    if (iconSimpan) iconSimpan.className = "fas fa-spinner fa-spin text-sm";
 
     try {
         const response = await fetch(API_BARANG_KOSONG, {
@@ -5935,17 +5919,18 @@ async function simpanDataDanKirimWA() {
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({ barang: dataUpdateSheets })
         });
+        
         const result = await response.json();
-        if (result.status !== "success") throw new Error(result.message);
+        if (result.status !== "success") throw new Error(result.message || "Gagal menyimpan data.");
 
-        await navigator.clipboard.writeText(teksLaporanWA);
-        window.open(`https://api.whatsapp.com/send?phone=${NO_WA_TUJUAN}&text=${encodeURIComponent(teksLaporanWA)}`, '_blank');
+        alert("Data belanjaan berhasil dikirim ke Asisten Belanja!");
         tutupModalBK();
     } catch (error) {
-        alert("Sinkronisasi database tertunda, langsung mengalihkan format ke WhatsApp.");
-        window.open(`https://api.whatsapp.com/send?phone=${NO_WA_TUJUAN}&text=${encodeURIComponent(teksLaporanWA)}`, '_blank');
+        console.error("Error Simpan:", error);
+        alert("Gagal menyimpan data ke cloud. Periksa koneksi internet Anda.");
     } finally {
         btnSimpan.disabled = false;
+        if (iconSimpan) iconSimpan.className = "fas fa-paper-plane text-sm";
     }
 }
 
@@ -8238,21 +8223,22 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+				<button type="button"
+        id="btnSimpanBK"
+        onclick="simpanKeAsistenBelanja()"
+        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+    <i id="iconSimpanBK" class="fas fa-paper-plane text-sm"></i>
+    <span>Kirim ke Asisten Belanja</span>
+</button>
                     <button type="button"
                             id="btnCetakBK"
                             onclick="buatFormatCetakJPG()"
                             class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
                         <i id="iconCetakBK" class="fas fa-image text-sm"></i>
-                        <span>Generate List Belanja</span>
+                        <span>List Belanja Format Cetak</span>
                     </button>
 
-                    <button type="button"
-                            id="btnSimpanBK"
-                            onclick="simpanDataDanKirimWA()"
-                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
-                        <i id="iconSimpanBK" class="fab fa-whatsapp text-sm"></i>
-                        <span>Simpan & Kirim ke WA</span>
-                    </button>
+                    
                 </div>
             </div>
         </div>
