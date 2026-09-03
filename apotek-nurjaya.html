@@ -574,7 +574,7 @@ document.addEventListener('keydown', function(e) {
             </div>
             <div>
                 <p>Catatan Sinkronisasi Cloud:</p>
-                <p class="text-gray-500 font-normal mt-0.5">Data terakhir di Google Sheet terisi sampai <span id="label-tgl-terakhir" class="font-bold text-amber-700">Memuat data...</span></p>
+                <p class="text-gray-500 font-normal mt-0.5">Data terakhir di NSA Cloud <span id="label-tgl-terakhir" class="font-bold text-amber-700">Memuat data...</span></p>
             </div>
         </div>
 
@@ -732,27 +732,80 @@ document.addEventListener('keydown', function(e) {
                     </div>
                 </div>
 
+
+
                 <!-- ROW 5: DIINPUT OLEH (BARU) -->
-                <div>
-                    <label for="input-diinput-oleh" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                        Diinput Oleh <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-teal-500 pointer-events-none">
-                            <i class="fas fa-user-check"></i>
-                        </span>
-                        <select id="input-diinput-oleh" disabled required
-                            class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 focus:outline-none focus:border-teal-500 focus:bg-white transition-all appearance-none disabled:cursor-not-allowed">
-                            <option value="" disabled selected>-- Pilih Asisten Apoteker --</option>
-                            <option value="Dea Nove Asyari">Dea Nove Asyari</option>
-                            <option value="Eka Ainun Nisa">Eka Ainun Nisa</option>
-                            <option value="Fadilla Nailul Wafa">Fadilla Nailul Wafa</option>
-                        </select>
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-teal-400 pointer-events-none text-xs">
-                            <i class="fas fa-chevron-down"></i>
-                        </span>
-                    </div>
+               <div class="relative w-full" id="custom-select-container">
+    <label for="input-diinput-oleh" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+        Diinput Oleh <span class="text-red-500">*</span>
+    </label>
+
+    <input type="hidden" id="input-diinput-oleh" name="diinput_oleh" required>
+
+    <button type="button" id="select-button" onclick="toggleDropdown()"
+        class="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 hover:bg-white hover:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all duration-200">
+        
+        <div class="flex items-center gap-3 overflow-hidden">
+            <div id="selected-avatar-container" class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 flex-shrink-0 overflow-hidden border border-teal-200">
+                <i class="fas fa-user-check text-xs"></i>
+            </div>
+            <span id="selected-text" class="text-gray-400 font-normal truncate">
+                -- Pilih Asisten Apoteker --
+            </span>
+        </div>
+
+        <span class="text-teal-500 text-xs transition-transform duration-200" id="dropdown-arrow">
+            <i class="fas fa-chevron-down"></i>
+        </span>
+    </button>
+
+    <div id="dropdown-menu" 
+        class="hidden absolute z-50 left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden backdrop-blur-lg transition-all duration-200">
+        
+        <div class="p-1.5 space-y-1 max-h-60 overflow-y-auto custom-scrollbar">
+            
+            <div onclick="selectOption('Dea Nove Asyari', 'https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500')"
+                class="option-item flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-teal-50/80 cursor-pointer transition-colors duration-150 group">
+                <img src="https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500" 
+                     alt="Dea Nove Asyari" 
+                     class="w-9 h-9 rounded-full object-cover border-2 border-transparent group-hover:border-teal-400 transition-all">
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold text-gray-700 group-hover:text-teal-700">Dea Nove Asyari</span>
+                    <span class="text-[10px] text-gray-400">Asisten Apoteker</span>
                 </div>
+            </div>
+
+            <div onclick="selectOption('Eka Ainun Nisa', 'https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500')"
+                class="option-item flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-teal-50/80 cursor-pointer transition-colors duration-150 group">
+                <img src="https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500" 
+                     alt="Eka Ainun Nisa" 
+                     class="w-9 h-9 rounded-full object-cover border-2 border-transparent group-hover:border-teal-400 transition-all">
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold text-gray-700 group-hover:text-teal-700">Eka Ainun Nisa</span>
+                    <span class="text-[10px] text-gray-400">Asisten Apoteker</span>
+                </div>
+            </div>
+
+            <div onclick="selectOption('Fadilla Nailul Wafa', 'https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500')"
+                class="option-item flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-teal-50/80 cursor-pointer transition-colors duration-150 group">
+                <img src="https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500" 
+                     alt="Fadilla Nailul Wafa" 
+                     class="w-9 h-9 rounded-full object-cover border-2 border-transparent group-hover:border-teal-400 transition-all">
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold text-gray-700 group-hover:text-teal-700">Fadilla Nailul Wafa</span>
+                    <span class="text-[10px] text-gray-400">Asisten Apoteker</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 
                 <div class="pt-2 flex space-x-3">
                     <button type="reset" onclick="lockFormKembali()"
@@ -762,7 +815,7 @@ document.addEventListener('keydown', function(e) {
                     <button type="submit" id="btn-simpan-apotek"
                         class="w-2/3 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-2xl text-sm font-bold tracking-wide shadow-md shadow-pink-100 hover:brightness-110 transition-all active:scale-95 flex items-center justify-center space-x-2">
                         <i class="fas fa-save"></i>
-                        <span>UPLOAD DATA KE CLOUD</span>
+                        <span>UPLOAD</span>
                     </button>
                 </div>
                 
@@ -4091,6 +4144,44 @@ function tutupAlertKustom() {
         modal.classList.add('hidden');
     }, 300);
 }
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown-menu');
+        const arrow = document.getElementById('dropdown-arrow');
+        
+        menu.classList.toggle('hidden');
+        arrow.classList.toggle('rotate-180');
+    }
+
+    function selectOption(name, avatarUrl) {
+        // 1. Simpan nilai ke hidden input
+        document.getElementById('input-diinput-oleh').value = name;
+
+        // 2. Update teks di tombol
+        const textElement = document.getElementById('selected-text');
+        textElement.innerText = name;
+        textElement.classList.remove('text-gray-400', 'font-normal');
+        textElement.classList.add('text-gray-700', 'font-semibold');
+
+        // 3. Update foto di tombol
+        const avatarContainer = document.getElementById('selected-avatar-container');
+        avatarContainer.innerHTML = `<img src="${avatarUrl}" alt="${name}" class="w-full h-full object-cover">`;
+
+        // 4. Tutup dropdown
+        toggleDropdown();
+    }
+
+    // Menutup dropdown jika mengklik di luar area dropdown
+    window.addEventListener('click', function(e) {
+        const container = document.getElementById('custom-select-container');
+        const menu = document.getElementById('dropdown-menu');
+        const arrow = document.getElementById('dropdown-arrow');
+        
+        if (!container.contains(e.target) && !menu.classList.contains('hidden')) {
+            menu.classList.add('hidden');
+            arrow.classList.remove('rotate-180');
+        }
+    });
 </script>
 
 
