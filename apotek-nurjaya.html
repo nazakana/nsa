@@ -643,7 +643,7 @@ document.addEventListener('keydown', function(e) {
 
                 <!-- ROW 2: TRANSAKSI VIA QRIS & PENDAPATAN KOTOR -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-				<div>
+                    <div>
                         <label for="input-kotor" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                             Pendapatan Kotor
                         </label>
@@ -669,8 +669,6 @@ document.addEventListener('keydown', function(e) {
                                 class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-purple-500 focus:bg-white transition-all text-purple-700 disabled:cursor-not-allowed">
                         </div>
                     </div>
-
-                    
                 </div>
 
                 <!-- ROW 3: TABUNGAN & PENGELUARAN -->
@@ -731,6 +729,28 @@ document.addEventListener('keydown', function(e) {
                             <input type="text" id="input-sisa" placeholder="0" required inputmode="numeric" readonly
                                 class="w-full pl-12 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none text-blue-700 cursor-not-allowed">
                         </div>
+                    </div>
+                </div>
+
+                <!-- ROW 5: DIINPUT OLEH (BARU) -->
+                <div>
+                    <label for="input-diinput-oleh" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                        Diinput Oleh <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-teal-500 pointer-events-none">
+                            <i class="fas fa-user-check"></i>
+                        </span>
+                        <select id="input-diinput-oleh" disabled required
+                            class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 focus:outline-none focus:border-teal-500 focus:bg-white transition-all appearance-none disabled:cursor-not-allowed">
+                            <option value="" disabled selected>-- Pilih Asisten Apoteker --</option>
+                            <option value="Dea Nove Asyari">Dea Nove Asyari</option>
+                            <option value="Eka Ainun Nisa">Eka Ainun Nisa</option>
+                            <option value="Fadilla Nailul Wafa">Fadilla Nailul Wafa</option>
+                        </select>
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-teal-400 pointer-events-none text-xs">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
                     </div>
                 </div>
 
@@ -833,7 +853,7 @@ document.addEventListener('keydown', function(e) {
         </div>
 
         <div class="flex-1 bg-slate-50 relative overflow-x-auto p-2 md:p-6">
-            <div class="w-full bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden min-w-[700px]">
+            <div class="w-full bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden min-w-[800px]">
                 
                 <table class="w-full table-auto divide-y divide-gray-200 text-left text-[11px] md:text-xs">
                     <thead class="bg-gray-50 text-gray-500 normal-case tracking-wider font-bold text-[10px] md:text-xs">
@@ -846,11 +866,12 @@ document.addEventListener('keydown', function(e) {
                             <th class="px-2 py-3.5 border-b border-gray-100 text-right text-red-600">Pengeluaran</th>
                             <th class="px-2 py-3.5 border-b border-gray-100 text-right text-orange-600">Uang Makan</th>
                             <th class="px-2 py-3.5 border-b border-gray-100 text-right text-blue-600">Sisa (Rp)</th>
+                            <th class="px-2 py-3.5 border-b border-gray-100 text-center text-teal-600">Diinput Oleh</th>
                         </tr>
                     </thead>
                     <tbody id="body-tabel-apotek-manual" class="divide-y divide-gray-100 text-gray-700 font-medium break-words">
                         <tr>
-                            <td colspan="8" class="p-12 text-center text-gray-400 font-medium bg-white">
+                            <td colspan="9" class="p-12 text-center text-gray-400 font-medium bg-white">
                                 <i class="fa-solid fa-arrow-up animate-bounce mr-1 text-pink-500"></i> 
                                 Silakan tentukan opsi bulan di atas terlebih dahulu untuk memuat data.
                             </td>
@@ -1759,7 +1780,7 @@ const formApotek = document.getElementById('form-input-apotek');
 const btnSimpan = document.getElementById('btn-simpan-apotek');
 const selectBulan = document.getElementById('input-bulan-target');
 
-// Elemen Input untuk Perhitungan Otomatis
+// Elemen Input untuk Perhitungan Otomatis & Data Field
 const inputFaktur = document.getElementById('input-faktur');
 const inputQris = document.getElementById('input-qris');
 const inputKotor = document.getElementById('input-kotor');
@@ -1767,6 +1788,7 @@ const inputTabungan = document.getElementById('input-tabungan');
 const inputPengeluaran = document.getElementById('input-pengeluaran');
 const inputUangMakan = document.getElementById('input-uang-makan');
 const inputSisa = document.getElementById('input-sisa');
+const selectDiinputOleh = document.getElementById('input-diinput-oleh'); // FIELD BARU
 
 // Elemen Baru untuk Info Sinkronisasi Tanggal
 const bannerInfoTanggal = document.getElementById('info-tanggal-terakhir');
@@ -1793,7 +1815,7 @@ function handlePilihanBulan(selectElement) {
     const nilaiBulan = selectElement.value;
     const wrapper = document.getElementById('wrapper-input-data');
     const alertTeks = document.getElementById('alert-pilih-bulan');
-    const seluruhInput = wrapper.querySelectorAll('input, button');
+    const seluruhInput = wrapper.querySelectorAll('input, select, button');
 
     if (nilaiBulan) {
         // 1. Jalankan pengecekan database cloud
@@ -1819,7 +1841,7 @@ function handlePilihanBulan(selectElement) {
 function lockFormKembali() {
     const wrapper = document.getElementById('wrapper-input-data');
     const alertTeks = document.getElementById('alert-pilih-bulan');
-    const seluruhInput = wrapper.querySelectorAll('input, button');
+    const seluruhInput = wrapper.querySelectorAll('input, select, button');
     
     selectBulan.value = ""; 
     wrapper.classList.add('opacity-40', 'blur-[1px]', 'pointer-events-none');
@@ -1922,6 +1944,12 @@ formApotek.addEventListener('submit', function(event) {
         selectBulan.focus();
         return;
     }
+
+    if (!selectDiinputOleh.value) {
+        alert("Silakan pilih petugas (Diinput Oleh) terlebih dahulu!");
+        selectDiinputOleh.focus();
+        return;
+    }
     
     const textAwalTombol = btnSimpan.innerHTML;
     btnSimpan.disabled = true;
@@ -1939,7 +1967,8 @@ formApotek.addEventListener('submit', function(event) {
         tabungan: hilangkanTitik(inputTabungan.value),
         pengeluaran: hilangkanTitik(inputPengeluaran.value),
         uangmakankaryawan: hilangkanTitik(inputUangMakan.value),
-        sisa: hilangkanTitik(inputSisa.value)
+        sisa: hilangkanTitik(inputSisa.value),
+        diinputoleh: selectDiinputOleh.value // DARI DROPDOWN BARU
     };
 
     fetch(urlWebAppApotek, {
@@ -2855,11 +2884,11 @@ function bukaModalSpreadsheet() {
         if (loading) { loading.classList.remove('flex'); loading.classList.add('hidden'); }
         if (kosong) { kosong.classList.add('hidden'); }
         
-        // Bersihkan isi tabel secara mutlak ke petunjuk awal
+        // Bersihkan isi tabel secara mutlak ke petunjuk awal (colspan 9)
         if (tbody) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="8" class="p-12 text-center text-gray-400 font-medium bg-white">
+                    <td colspan="9" class="p-12 text-center text-gray-400 font-medium bg-white">
                         <i class="fa-solid fa-arrow-up animate-bounce mr-1 text-pink-500"></i> 
                         Silakan tentukan opsi bulan di atas terlebih dahulu untuk memuat data.
                     </td>
@@ -2918,6 +2947,7 @@ function muatDataTinjauanModal(bulanTerpilih) {
                     
                     const nilaiSisa = Number(item.sisa) || 0;
                     const kelasWarnaSisa = nilaiSisa < 0 ? "text-red-600 font-bold" : "text-blue-700 font-bold";
+                    const teksPenginput = item.diinputoleh ? item.diinputoleh : "-";
 
                     row.innerHTML = `
                         <td class="px-3 py-3 text-center font-bold text-gray-500 bg-gray-50/40">Tgl ${item.tanggal}</td>
@@ -2928,6 +2958,7 @@ function muatDataTinjauanModal(bulanTerpilih) {
                         <td class="px-3 py-3 text-right text-red-700">${formatRupiahLokal(item.pengeluaran)}</td>
                         <td class="px-3 py-3 text-right text-orange-700">${formatRupiahLokal(item.uangmakankaryawan)}</td>
                         <td class="px-3 py-3 text-right ${kelasWarnaSisa}">${formatRupiahLokal(nilaiSisa)}</td>
+                        <td class="px-3 py-3 text-center font-semibold text-teal-700">${teksPenginput}</td>
                     `;
                     if (tbody) tbody.appendChild(row);
                 });
@@ -2938,7 +2969,7 @@ function muatDataTinjauanModal(bulanTerpilih) {
         .catch(error => {
             console.error("Gagal memuat database tabel:", error);
             if (loading) { loading.classList.remove('flex'); loading.classList.add('hidden'); }
-            if (tbody) tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center font-bold text-red-500"><i class="fas fa-triangle-exclamation mr-1"></i> Gagal memuat data dari cloud.</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="9" class="p-6 text-center font-bold text-red-500"><i class="fas fa-triangle-exclamation mr-1"></i> Gagal memuat data dari cloud.</td></tr>`;
         });
 }
 
