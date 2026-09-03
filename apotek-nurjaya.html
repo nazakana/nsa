@@ -643,6 +643,19 @@ document.addEventListener('keydown', function(e) {
 
                 <!-- ROW 2: TRANSAKSI VIA QRIS & PENDAPATAN KOTOR -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+				<div>
+                        <label for="input-kotor" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Pendapatan Kotor
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-emerald-600 pointer-events-none">
+                                Rp
+                            </span>
+                            <input type="text" id="input-kotor" placeholder="0" disabled required inputmode="numeric"
+                                oninput="formatRupiahElemen(this)"
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white transition-all text-emerald-700 disabled:cursor-not-allowed">
+                        </div>
+                    </div>
                     <div>
                         <label for="input-qris" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                             Transaksi via QRIS
@@ -657,19 +670,7 @@ document.addEventListener('keydown', function(e) {
                         </div>
                     </div>
 
-                    <div>
-                        <label for="input-kotor" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                            Pendapatan Kotor
-                        </label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-emerald-600 pointer-events-none">
-                                Rp
-                            </span>
-                            <input type="text" id="input-kotor" placeholder="0" disabled required inputmode="numeric"
-                                oninput="formatRupiahElemen(this)"
-                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white transition-all text-emerald-700 disabled:cursor-not-allowed">
-                        </div>
-                    </div>
+                    
                 </div>
 
                 <!-- ROW 3: TABUNGAN & PENGELUARAN -->
