@@ -4565,7 +4565,6 @@ function pemicuTombolSinkronasi() {
 
 
 
-
 			
 <script>
 // GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
@@ -6283,6 +6282,81 @@ async function eksekusiUnduhSemuaJPG() {
                 resolve();
             }
         });
+    }
+}
+
+// ====================================================================
+// FUNGSI TAMBAHAN: TAMBAH BARANG BELANJAAN MANUAL
+// ====================================================================
+
+// Buka Modal Tambah Barang
+// Buka Modal Tambah Barang
+function bukaModalTambahBarang() {
+    const modal = document.getElementById('modalTambahBarangBK');
+    if (!modal) return;
+    
+    // Reset Form Input
+    document.getElementById('inputNamaBarangBaruBK').value = '';
+    document.getElementById('inputJumlahBarangBaruBK').value = '';
+    document.getElementById('inputCatatanBarangBaruBK').value = '';
+    
+    modal.classList.remove('hidden');
+}
+
+// Tutup Modal Tambah Barang
+function tutupModalTambahBarang() {
+    const modal = document.getElementById('modalTambahBarangBK');
+    if (modal) modal.classList.add('hidden');
+}
+
+// Kirim Barang Baru ke Google Sheets
+async function simpanBarangBaruKeSheets(event) {
+    event.preventDefault();
+    
+    const namaBarang = document.getElementById('inputNamaBarangBaruBK').value.trim();
+    const jumlah = document.getElementById('inputJumlahBarangBaruBK').value.trim();
+    const catatan = document.getElementById('inputCatatanBarangBaruBK').value.trim();
+    
+    if (!namaBarang) {
+        alert("Nama barang tidak boleh kosong!");
+        return;
+    }
+
+    const btnSubmit = document.getElementById('btnSubmitBarangBaruBK');
+    const iconSubmit = document.getElementById('iconSubmitBarangBaruBK');
+    
+    btnSubmit.disabled = true;
+    if (iconSubmit) iconSubmit.className = "fas fa-spinner fa-spin text-xs";
+
+    try {
+        const response = await fetch(API_BARANG_KOSONG, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+                action: "tambah_barang",
+                nama: namaBarang,
+                jumlah: jumlah,
+                catatan: catatan
+            })
+        });
+
+        const result = await response.json();
+        
+        if (result.status === "success") {
+            alert(`Barang "${namaBarang}" berhasil ditambahkan!`);
+            tutupModalTambahBarang();
+            // Otomatis refresh list modal barang kosong
+            muatDataBarangKosong();
+        } else {
+            throw new Error(result.message || "Gagal menambahkan barang.");
+        }
+    } catch (error) {
+        console.error("Error Tambah Barang:", error);
+        alert("Gagal menambahkan barang ke Google Sheets. Periksa koneksi internet Anda.");
+    } finally {
+        btnSubmit.disabled = false;
+        if (iconSubmit) iconSubmit.className = "fas fa-plus-circle text-xs";
     }
 }
 </script>
@@ -8174,6 +8248,7 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
     
     <div class="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-green-200">
         
+        <!-- HEADER MODAL -->
         <div class="bg-gradient-to-r from-green-600 to-emerald-700 p-5 flex items-center justify-between text-white shadow-lg">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -8196,53 +8271,77 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
         </div>
 
         <div id="viewInputBK" class="flex flex-col flex-1 overflow-hidden">
-            <div class="bg-green-50/80 px-5 py-3 border-b border-green-100 flex items-center gap-2.5 text-green-800">
-                <i class="fas fa-info-circle text-xs text-green-600 flex-shrink-0"></i>
-                <span class="text-[11px] font-bold uppercase tracking-wider">Petunjuk: Isi dengan angka <span class="bg-green-200 px-1.5 py-0.5 rounded text-green-900 font-black">0</span> jika barang tidak perlu dibeli.</span>
+            <div class="bg-green-50/80 px-5 py-2.5 border-b border-green-100 flex items-center justify-between text-green-800">
+                <div class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider">
+                    <i class="fas fa-info-circle text-xs text-green-600 flex-shrink-0"></i>
+                    <span>Petunjuk: Isi <span class="bg-green-200 px-1.5 py-0.5 rounded text-green-900 font-black">0</span> jika tidak dibeli.</span>
+                </div>
+                
+                <!-- TOMBOL REFRESH LIST & TAMBAH BARANG -->
+                <div class="flex items-center gap-1.5">
+                    <button type="button" 
+                            onclick="muatDataBarangKosong()" 
+                            title="Refresh List"
+                            class="bg-white hover:bg-green-100 text-green-700 border border-green-200 px-2.5 py-1 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all flex items-center gap-1 shadow-sm active:scale-95">
+                        <i class="fas fa-sync-alt text-xs"></i>
+                        <span class="hidden sm:inline">Refresh</span>
+                    </button>
+                    
+                    <button type="button" 
+                            onclick="bukaModalTambahBarang()" 
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-md shadow-emerald-600/20 active:scale-95">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m3-3H9"></path>
+                        </svg>
+                        <span>+ Tambah Barang</span>
+                    </button>
+                </div>
             </div>
 
+            <!-- BODY LIST BARANG -->
             <div id="bodyListBK" class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50/50">
                 <div id="wrapperItemBK" class="space-y-4"></div>
             </div>
 
-            <div class="bg-emerald-50 border-t border-green-100 p-5 space-y-3">
-                <h5 class="text-[11px] font-black text-emerald-800 uppercase tracking-widest flex items-center gap-2">
-                    <i class="fas fa-wallet text-sm"></i> Rincian Uang Tersedia
-                </h5>
+            <!-- FOOTER COMPACT: RINCIAN UANG & ACTION BUTTONS -->
+            <div class="bg-emerald-50 border-t border-green-100 p-3 sm:p-4 space-y-2.5">
                 
-                <div class="grid grid-cols-1 gap-2">
-                    <div class="flex justify-between items-center bg-white p-3 rounded-2xl border border-green-100 shadow-sm">
-                        <span class="text-[11px] font-bold text-gray-500 uppercase">Uang Sisa Akhir</span>
-                        <span id="txtUangSisaBK" class="text-sm font-black text-emerald-700 tracking-tight">Rp 0</span>
+                <!-- RINCIAN UANG RINGKAS (SIDE BY SIDE / KIRI-KANAN) -->
+                <div class="bg-white p-2.5 rounded-2xl border border-green-100 shadow-sm flex items-center justify-between divide-x divide-green-100">
+                    <div class="flex-1 px-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2">
+                        <span class="text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-tight">Sisa Akhir</span>
+                        <span id="txtUangSisaBK" class="text-xs sm:text-sm font-black text-emerald-700 tracking-tight">Rp 0</span>
                     </div>
                     
-                    <div class="flex justify-between items-center bg-white p-3 rounded-2xl border border-green-100 shadow-sm">
-                        <span class="text-[11px] font-bold text-gray-500 uppercase">Uang Tabungan B</span>
-                        <span id="txtUangTabunganBK" class="text-sm font-black text-emerald-700 tracking-tight">Rp 0</span>
+                    <div class="flex-1 px-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2 pl-3">
+                        <span class="text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-tight">Tabungan B</span>
+                        <span id="txtUangTabunganBK" class="text-xs sm:text-sm font-black text-emerald-700 tracking-tight">Rp 0</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
-				<button type="button"
-        id="btnSimpanBK"
-        onclick="simpanKeAsistenBelanja()"
-        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
-    <i id="iconSimpanBK" class="fas fa-paper-plane text-sm"></i>
-    <span>Kirim ke Asisten Belanja</span>
-</button>
+                <!-- ACTION BUTTONS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button type="button"
+                            id="btnSimpanBK"
+                            onclick="simpanKeAsistenBelanja()"
+                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+                        <i id="iconSimpanBK" class="fas fa-paper-plane text-sm"></i>
+                        <span>Kirim ke Asisten Belanja</span>
+                    </button>
+
                     <button type="button"
                             id="btnCetakBK"
                             onclick="buatFormatCetakJPG()"
-                            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
                         <i id="iconCetakBK" class="fas fa-image text-sm"></i>
                         <span>List Belanja Format Cetak</span>
                     </button>
-
-                    
                 </div>
             </div>
         </div>
 
+        <!-- VIEW PREVIEW CETAK STRUK -->
         <div id="viewPreviewBK" class="flex flex-col flex-1 overflow-hidden hidden">
             <div class="bg-amber-50 px-5 py-3 border-b border-amber-100 flex items-center gap-2.5 text-amber-900">
                 <i class="fas fa-eye text-xs text-amber-600 flex-shrink-0"></i>
@@ -8273,6 +8372,66 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
     </div>
 </div>
 
+<!-- MODAL POPUP TAMBAH BARANG BELANJAAN BARU -->
+<div id="modalTambahBarangBK" 
+     class="fixed inset-0 bg-black/80 backdrop-blur-md z-[10001] hidden flex items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-emerald-200 animate-in fade-in zoom-in-95 duration-200">
+        
+        <div class="bg-gradient-to-r from-emerald-600 to-green-700 p-4 flex items-center justify-between text-white">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-cart-plus text-amber-300 text-sm"></i>
+                </div>
+                <h4 class="text-sm font-bold uppercase tracking-wide">Tambah Barang Belanjaan</h4>
+            </div>
+            <button onclick="tutupModalTambahBarang()" class="text-white/80 hover:text-white p-1 focus:outline-none">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+
+        <form onsubmit="simpanBarangBaruKeSheets(event)" class="p-5 space-y-4">
+            <div>
+                <label class="text-[10px] font-black text-gray-600 uppercase tracking-wider block mb-1.5">Nama Barang Baru <span class="text-rose-500">*</span></label>
+                <input type="text" 
+                       id="inputNamaBarangBaruBK" 
+                       required 
+                       placeholder="Contoh: Kertas A4 70gr Sidu" 
+                       class="w-full bg-gray-50 border-2 border-gray-200 focus:border-emerald-500 focus:bg-white rounded-2xl px-4 py-2.5 text-xs font-semibold outline-none transition-all text-gray-800">
+            </div>
+
+            <div>
+                <label class="text-[10px] font-black text-gray-600 uppercase tracking-wider block mb-1.5">Jumlah Yang Harus Dibeli (Opsional)</label>
+                <input type="text" 
+                       id="inputJumlahBarangBaruBK" 
+                       placeholder="Contoh: 1 dus / 5 pcs" 
+                       class="w-full bg-gray-50 border-2 border-gray-200 focus:border-emerald-500 focus:bg-white rounded-2xl px-4 py-2.5 text-xs font-semibold outline-none transition-all text-gray-800">
+            </div>
+
+            <div>
+                <label class="text-[10px] font-black text-gray-600 uppercase tracking-wider block mb-1.5">Catatan Tambahan (Opsional)</label>
+                <input type="text" 
+                       id="inputCatatanBarangBaruBK" 
+                       placeholder="Contoh: Tanya dulu varian/merek" 
+                       class="w-full bg-gray-50 border-2 border-gray-200 focus:border-emerald-500 focus:bg-white rounded-2xl px-4 py-2.5 text-xs font-semibold outline-none transition-all text-gray-800">
+            </div>
+
+            <div class="pt-2 flex items-center justify-end gap-2">
+                <button type="button" 
+                        onclick="tutupModalTambahBarang()" 
+                        class="px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs uppercase tracking-wider transition-all active:scale-95">
+                    Batal
+                </button>
+                <button type="submit" 
+                        id="btnSubmitBarangBaruBK"
+                        class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-emerald-600/30 transition-all flex items-center gap-2 active:scale-95">
+                    <i id="iconSubmitBarangBaruBK" class="fas fa-plus-circle text-xs"></i>
+                    <span>Simpan Barang</span>
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
 
 
 <!-- MODAL PREVIEW KARTU PRESENSI PDF -->
