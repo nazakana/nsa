@@ -595,10 +595,10 @@ document.addEventListener('keydown', function(e) {
                         <option value="Juni2026">Juni 2026</option>
                         <option value="Juli2026">Juli 2026</option>
                         <option value="Agustus2026">Agustus 2026</option>
-						<option value="September2026">September 2026</option>
-						<option value="Oktober2026">Oktober 2026</option>
-						<option value="November2026">November 2026</option>
-						<option value="Desember2026">Desember 2026</option>
+                        <option value="September2026">September 2026</option>
+                        <option value="Oktober2026">Oktober 2026</option>
+                        <option value="November2026">November 2026</option>
+                        <option value="Desember2026">Desember 2026</option>
                     </select>
                     <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-pink-400 pointer-events-none text-xs">
                         <i class="fas fa-chevron-down"></i>
@@ -611,6 +611,7 @@ document.addEventListener('keydown', function(e) {
 
             <div id="wrapper-input-data" class="space-y-5 opacity-40 blur-[1px] pointer-events-none transition-all duration-500">
                 
+                <!-- ROW 1: TANGGAL & LOG PEMBAYARAN FAKTUR -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label for="input-tgl" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
@@ -624,9 +625,38 @@ document.addEventListener('keydown', function(e) {
                                 class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-700 disabled:cursor-not-allowed">
                         </div>
                     </div>
+
+                    <div>
+                        <label for="input-faktur" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Log Pembayaran Faktur
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-amber-600 pointer-events-none">
+                                Rp
+                            </span>
+                            <input type="text" id="input-faktur" placeholder="0" disabled required inputmode="numeric"
+                                oninput="formatRupiahElemen(this)"
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-amber-500 focus:bg-white transition-all text-amber-700 disabled:cursor-not-allowed">
+                        </div>
+                    </div>
                 </div>
 
+                <!-- ROW 2: TRANSAKSI VIA QRIS & PENDAPATAN KOTOR -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label for="input-qris" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Transaksi via QRIS
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-purple-600 pointer-events-none">
+                                Rp
+                            </span>
+                            <input type="text" id="input-qris" placeholder="0" disabled required inputmode="numeric"
+                                oninput="formatRupiahElemen(this)"
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-purple-500 focus:bg-white transition-all text-purple-700 disabled:cursor-not-allowed">
+                        </div>
+                    </div>
+
                     <div>
                         <label for="input-kotor" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                             Pendapatan Kotor
@@ -640,18 +670,21 @@ document.addEventListener('keydown', function(e) {
                                 class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:bg-white transition-all text-emerald-700 disabled:cursor-not-allowed">
                         </div>
                     </div>
+                </div>
 
+                <!-- ROW 3: TABUNGAN & PENGELUARAN -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label for="input-faktur" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                            Pembayaran Faktur
+                        <label for="input-tabungan" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Tabungan
                         </label>
                         <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-amber-600 pointer-events-none">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-indigo-600 pointer-events-none">
                                 Rp
                             </span>
-                            <input type="text" id="input-faktur" placeholder="0" disabled required inputmode="numeric"
+                            <input type="text" id="input-tabungan" placeholder="0" disabled required inputmode="numeric"
                                 oninput="formatRupiahElemen(this)"
-                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-amber-500 focus:bg-white transition-all text-amber-700 disabled:cursor-not-allowed">
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-indigo-500 focus:bg-white transition-all text-indigo-700 disabled:cursor-not-allowed">
                         </div>
                     </div>
 
@@ -668,16 +701,33 @@ document.addEventListener('keydown', function(e) {
                                 class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-red-500 focus:bg-white transition-all text-red-700 disabled:cursor-not-allowed">
                         </div>
                     </div>
+                </div>
+
+                <!-- ROW 4: UANG MAKAN KARYAWAN & SISA -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label for="input-uang-makan" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Uang Makan Karyawan
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-orange-600 pointer-events-none">
+                                Rp
+                            </span>
+                            <input type="text" id="input-uang-makan" placeholder="0" disabled required inputmode="numeric"
+                                oninput="formatRupiahElemen(this)"
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-orange-500 focus:bg-white transition-all text-orange-700 disabled:cursor-not-allowed">
+                        </div>
+                    </div>
 
                     <div>
-                        <label for="input-bersih" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                            Pendapatan Bersih (Otomatis)
+                        <label for="input-sisa" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Sisa (Otomatis)
                         </label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-sm text-blue-600 pointer-events-none">
                                 Rp
                             </span>
-                            <input type="text" id="input-bersih" placeholder="0" required inputmode="numeric" readonly
+                            <input type="text" id="input-sisa" placeholder="0" required inputmode="numeric" readonly
                                 class="w-full pl-12 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none text-blue-700 cursor-not-allowed">
                         </div>
                     </div>
@@ -695,7 +745,8 @@ document.addEventListener('keydown', function(e) {
                     </button>
                 </div>
                 
-            </div> </form>
+            </div>
+        </form>
     </div>
 
 
@@ -736,7 +787,7 @@ document.addEventListener('keydown', function(e) {
 <div id="modalSheetApotek" style="display:none;" class="fixed inset-0 z-[10005] flex items-center justify-center p-3 md:p-6">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="tutupModalSpreadsheet()"></div>
 
-    <div class="relative bg-white w-full max-w-5xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col h-[85vh] border border-pink-100/30">
+    <div class="relative bg-white w-full max-w-6xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col h-[85vh] border border-pink-100/30">
         
         <div class="bg-pink-600 p-4 text-white flex justify-between items-center shadow-sm">
             <div class="flex items-center gap-3">
@@ -780,28 +831,31 @@ document.addEventListener('keydown', function(e) {
             </div>
         </div>
 
-     <div class="flex-1 bg-slate-50 relative overflow-x-auto p-2 md:p-6">
-    <div class="w-full bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
-        
-        <table class="w-full table-fixed divide-y divide-gray-200 text-left text-[11px] md:text-sm">
-            <thead class="bg-gray-50 text-gray-500 normal-case tracking-wider font-bold text-[10px] md:text-xs">
-                <tr>
-                    <th class="w-[18%] px-2 py-3.5 border-b border-gray-100 text-center">Tanggal</th>
-                    <th class="w-[21%] px-2 py-3.5 border-b border-gray-100 text-right text-emerald-600">Kotor (Rp)</th>
-                    <th class="w-[21%] px-2 py-3.5 border-b border-gray-100 text-right text-amber-600">Faktur (Rp)</th>
-                    <th class="w-[20%] px-2 py-3.5 border-b border-gray-100 text-right text-red-600">Pengeluaran</th>
-                    <th class="w-[20%] px-2 py-3.5 border-b border-gray-100 text-right text-blue-600">Bersih (Rp)</th>
-                </tr>
-            </thead>
-            <tbody id="body-tabel-apotek-manual" class="divide-y divide-gray-100 text-gray-700 font-medium break-words">
-                <tr>
-                    <td colspan="5" class="p-12 text-center text-gray-400 font-medium bg-white">
-                        <i class="fa-solid fa-arrow-up animate-bounce mr-1 text-pink-500"></i> 
-                        Silakan tentukan opsi bulan di atas terlebih dahulu untuk memuat data.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="flex-1 bg-slate-50 relative overflow-x-auto p-2 md:p-6">
+            <div class="w-full bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden min-w-[700px]">
+                
+                <table class="w-full table-auto divide-y divide-gray-200 text-left text-[11px] md:text-xs">
+                    <thead class="bg-gray-50 text-gray-500 normal-case tracking-wider font-bold text-[10px] md:text-xs">
+                        <tr>
+                            <th class="px-2 py-3.5 border-b border-gray-100 text-center">Tanggal</th>
+                            <th class="px-2 py-3.5 border-b border-gray-100 text-right text-amber-600">Log Faktur (Rp)</th>
+                            <th class="px-2 py-3.5 border-b border-gray-100 text-right text-purple-600">Via QRIS (Rp)</th>
+                            <th class="px-2 py-3.5 border-b border-gray-100 text-right text-emerald-600">Kotor (Rp)</th>
+                            <th class="px-2 py-3.5 border-b border-gray-100 text-right text-indigo-600">Tabungan (Rp)</th>
+                            <th class="px-2 py-3.5 border-b border-gray-100 text-right text-red-600">Pengeluaran</th>
+                            <th class="px-2 py-3.5 border-b border-gray-100 text-right text-orange-600">Uang Makan</th>
+                            <th class="px-2 py-3.5 border-b border-gray-100 text-right text-blue-600">Sisa (Rp)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-tabel-apotek-manual" class="divide-y divide-gray-100 text-gray-700 font-medium break-words">
+                        <tr>
+                            <td colspan="8" class="p-12 text-center text-gray-400 font-medium bg-white">
+                                <i class="fa-solid fa-arrow-up animate-bounce mr-1 text-pink-500"></i> 
+                                Silakan tentukan opsi bulan di atas terlebih dahulu untuk memuat data.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 
                 <div id="loading-tabel-apotek-manual" class="hidden p-8 flex flex-col items-center justify-center space-y-2 text-gray-400 bg-white">
                     <i class="fas fa-spinner animate-spin text-2xl text-pink-500"></i>
@@ -924,28 +978,27 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 
-		 <!-- ================= TAB 4: ASISTEN TUTUP BUKU ================= -->
-       <div id="tab-closing" class="tab-content space-y-5">
-    
+
+
+<!-- ================= TAB 4: ASISTEN TUTUP BUKU ================= -->
+<div id="tab-closing" class="tab-content space-y-5">
+
     <div class="group bg-white rounded-[2rem] p-5 sm:p-6 shadow-sm border border-pink-100/50 hover:border-pink-200 transition-all duration-500">
-    <div class="flex items-center space-x-4 sm:space-x-6">
-        
-        <div class="relative flex-shrink-0">
-            <div class="absolute inset-0 bg-pink-400 blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+        <div class="flex items-center space-x-4 sm:space-x-6">
+            <div class="relative flex-shrink-0">
+                <div class="absolute inset-0 bg-pink-400 blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                <div class="relative w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-2xl flex items-center justify-center shadow-md shadow-pink-200/50 transform group-hover:scale-105 group-hover:rotate-3 transition-all duration-500">
+                    <i class="fas fa-calculator text-xl sm:text-2xl"></i>
+                </div>
+            </div>
             
-            <div class="relative w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-2xl flex items-center justify-center shadow-md shadow-pink-200/50 transform group-hover:scale-105 group-hover:rotate-3 transition-all duration-500">
-                <i class="fas fa-calculator text-xl sm:text-2xl"></i>
+            <div class="flex-1">
+                <p class="text-[11px] sm:text-xs md:text-sm font-medium text-gray-500 leading-relaxed md:leading-loose tracking-wide">
+                    Media bantu <span class="text-pink-600 font-bold">Tutup Buku Apotek Nurjaya</span> Didukung dengan opsi pemuatan <span class="italic">Kesimpulan Otomatis</span> ataupun <span class="italic">Manual</span>.
+                </p>
             </div>
         </div>
-        
-        <div class="flex-1">
-            <p class="text-[11px] sm:text-xs md:text-sm font-medium text-gray-500 leading-relaxed md:leading-loose tracking-wide">
-                Media bantu <span class="text-pink-600 font-bold">Tutup Buku Apotek Nurjaya</span> Didukung dengan opsi pemuatan <span class="italic">Kesimpulan Otomatis</span> ataupun <span class="italic">Manual</span>.
-            </p>
-        </div>
-        
     </div>
-</div>
 
     <div class="bg-white rounded-[32px] p-6 shadow-sm border border-pink-100/50 space-y-5">
         
@@ -961,17 +1014,17 @@ document.addEventListener('keydown', function(e) {
                     class="w-full pl-11 pr-4 py-3 bg-white border border-pink-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 transition-all text-gray-700 appearance-none font-bold shadow-xs">
                     <option value="" disabled selected>-- Pilih Periode Buku Akhir Bulan --</option>
                     <option value="Januari2026">Januari 2026</option>
-					<option value="Februari2026">Februari 2026</option>
-					<option value="Maret2026">Maret 2026</option>
-					<option value="April2026">April 2026</option>
-					<option value="Mei2026">Mei 2026</option>
+                    <option value="Februari2026">Februari 2026</option>
+                    <option value="Maret2026">Maret 2026</option>
+                    <option value="April2026">April 2026</option>
+                    <option value="Mei2026">Mei 2026</option>
                     <option value="Juni2026">Juni 2026</option>
                     <option value="Juli2026">Juli 2026</option>
                     <option value="Agustus2026">Agustus 2026</option>
-					<option value="September2026">September 2026</option>
-					<option value="Oktober2026">Oktober 2026</option>
-					<option value="November2026">November 2026</option>
-					<option value="Desember2026">Desember 2026</option>
+                    <option value="September2026">September 2026</option>
+                    <option value="Oktober2026">Oktober 2026</option>
+                    <option value="November2026">November 2026</option>
+                    <option value="Desember2026">Desember 2026</option>
                 </select>
                 <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-pink-500 pointer-events-none text-xs">
                     <i class="fas fa-chevron-down"></i>
@@ -979,18 +1032,18 @@ document.addEventListener('keydown', function(e) {
             </div>
         </div>
 		
-		<div id="loading-verifikasi-cloud" class="hidden bg-white/80 border border-pink-100 rounded-[32px] p-8 text-center flex-col items-center justify-center space-y-3 backdrop-blur-xs transition-all duration-300">
-    <div class="relative w-14 h-14 flex items-center justify-center">
-        <div class="absolute inset-0 rounded-full border-4 border-pink-100 animate-ping opacity-75"></div>
-        <div class="relative w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-full flex items-center justify-center shadow-md">
-            <i class="fas fa-circle-notch animate-spin text-lg"></i>
+        <div id="loading-verifikasi-cloud" class="hidden bg-white/80 border border-pink-100 rounded-[32px] p-8 text-center flex-col items-center justify-center space-y-3 backdrop-blur-xs transition-all duration-300">
+            <div class="relative w-14 h-14 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full border-4 border-pink-100 animate-ping opacity-75"></div>
+                <div class="relative w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-full flex items-center justify-center shadow-md">
+                    <i class="fas fa-circle-notch animate-spin text-lg"></i>
+                </div>
+            </div>
+            <div class="space-y-1">
+                <h4 class="text-xs font-black text-gray-800 uppercase tracking-wider">MENGHUBUNGKAN KE<br> NSA CLOUD...</h4>
+                <p class="text-[10px] font-bold text-gray-400">Memverifikasi kelengkapan data Apotek bulan ini...</p>
+            </div>
         </div>
-    </div>
-    <div class="space-y-1">
-        <h4 class="text-xs font-black text-gray-800 uppercase tracking-wider">MENGHUBUNGKAN KE<br> NSA CLOUD...</h4>
-        <p class="text-[10px] font-bold text-gray-400">Memverifikasi kelengkapan data Apotek bulan ini...</p>
-    </div>
-</div>
 	
         <div id="wrapper-closing-content" class="space-y-5 opacity-40 blur-[1px] pointer-events-none transition-all duration-500">
             
@@ -999,7 +1052,16 @@ document.addEventListener('keydown', function(e) {
                     <i class="fa-solid fa-cloud-arrow-down text-xs"></i> Uraian Rekapitulasi Data Dari Cloud
                 </span>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- PERBAIKAN URUTAN GRID: LOG FAKTUR -> QRIS -> KOTOR -> TABUNGAN -> PENGELUARAN -> UANG MAKAN -> SISA -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Log Bayar Faktur</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-amber-600">Rp</span>
+                            <input type="text" id="closing-faktur" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-amber-700 shadow-2xs cursor-not-allowed">
+                        </div>
+                    </div>
+                    
                     <div>
                         <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Pendapatan Kotor</label>
                         <div class="relative">
@@ -1007,11 +1069,20 @@ document.addEventListener('keydown', function(e) {
                             <input type="text" id="closing-kotor" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-emerald-700 shadow-2xs cursor-not-allowed">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Pembayaran Faktur</label>
+					
+					<div>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Transaksi Via QRIS</label>
                         <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-amber-600">Rp</span>
-                            <input type="text" id="closing-faktur" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-amber-700 shadow-2xs cursor-not-allowed">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-purple-600">Rp</span>
+                            <input type="text" id="closing-qris" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-purple-700 shadow-2xs cursor-not-allowed">
+                        </div>
+                    </div>
+					
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tabungan</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-indigo-600">Rp</span>
+                            <input type="text" id="closing-tabungan" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-indigo-700 shadow-2xs cursor-not-allowed">
                         </div>
                     </div>
                     <div>
@@ -1022,10 +1093,17 @@ document.addEventListener('keydown', function(e) {
                         </div>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Pendapatan Bersih</label>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Uang Makan Karyawan</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-orange-600">Rp</span>
+                            <input type="text" id="closing-uang-makan" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-orange-700 shadow-2xs cursor-not-allowed">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Sisa Akhir</label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-bold text-xs text-blue-600">Rp</span>
-                            <input type="text" id="closing-bersih" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-blue-700 shadow-2xs cursor-not-allowed">
+                            <input type="text" id="closing-sisa" value="0" readonly class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-blue-700 shadow-2xs cursor-not-allowed">
                         </div>
                     </div>
                 </div>
@@ -1044,8 +1122,6 @@ document.addEventListener('keydown', function(e) {
                         class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-bold focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-700">
                 </div>
             </div>
-			
-			
 
             <div class="space-y-3">
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider text-center">
@@ -1073,14 +1149,12 @@ document.addEventListener('keydown', function(e) {
                     </span>
                 </div>
                 
-				
-     
-    <div id="wrapper-btn-generate" class="block">
-        <button type="button" id="btn-trigger-generate" onclick="triggerGenerateNarasi()"
-            class="w-full py-3 bg-gradient-to-r from-pink-500 to-pink-600 hover:brightness-105 active:scale-[0.99] text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Kesimpulan Otomatis
-        </button>
-    </div>
+                <div id="wrapper-btn-generate" class="block">
+                    <button type="button" id="btn-trigger-generate" onclick="triggerGenerateNarasi()"
+                        class="w-full py-3 bg-gradient-to-r from-pink-500 to-pink-600 hover:brightness-105 active:scale-[0.99] text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Kesimpulan Otomatis
+                    </button>
+                </div>
 				
                 <div class="relative">
                     <textarea id="textarea-kesimpulan" rows="10" readonly
@@ -1095,107 +1169,108 @@ document.addEventListener('keydown', function(e) {
             </div>
 
         </div>
-		</div>
+    </div>
 		
-		<!-- ================= TOMBOL BUAT LAPORAN ================= -->
-		<div class="mt-6 pt-4 border-t border-dashed border-pink-100 flex justify-end">
+    <!-- ================= TOMBOL BUAT LAPORAN ================= -->
+    <div class="mt-6 pt-4 border-t border-dashed border-pink-100 flex justify-end">
         <button type="button" onclick="bukaModalCetakA4()"
             class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-pink-600 to-pink-700 hover:brightness-105 active:scale-[0.98] text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md shadow-pink-100 transition-all flex items-center justify-center gap-2">
             <i class="fa-solid fa-file-invoice text-sm"></i> Buat Laporan
         </button>
     </div>
 
-<div id="modal-preview-laporan" class="fixed inset-0 z-[999999] hidden grid place-items-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-all duration-300 overflow-y-auto">
-    
-	
-	<!-- ================= BOX PREVIEW LAPORAN PDF ================= -->
-    <div id="box-preview-laporan" class="bg-slate-100 rounded-[2rem] sm:rounded-[2.5rem] w-full max-w-5xl p-3 sm:p-6 shadow-2xl border border-white/40 transform scale-95 opacity-0 transition-all duration-300 space-y-4 my-4 sm:my-8 mx-auto">
-    
-    <div class="flex flex-col sm:flex-row justify-between items-center gap-3 border-b border-gray-200 pb-4">
-        <div class="text-center sm:text-left">
-            <h3 class="text-xs sm:text-sm font-black text-gray-900 uppercase tracking-wider">Laporan Berhasil Dibuat</h3>
-            <p class="text-[10px] sm:text-[11px] font-semibold text-gray-500">Periksa kembali data laporan sebelum diupload ke NSA CLOUD!</p>
-        </div>
+    <div id="modal-preview-laporan" class="fixed inset-0 z-[999999] hidden grid place-items-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-all duration-300 overflow-y-auto">
         
-        <div class="flex flex-wrap items-center justify-center gap-2 w-full sm:w-auto">
-			<button type="button" onclick="prosesEksporKeDrive()"
-                class="flex-1 sm:flex-none px-3 py-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white text-[11px] font-bold uppercase rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.001 2.002c-.347 0-.692.086-.999.256l-7.001 4c-.615.352-.998 1.011-.998 1.716v8.056c0 .705.383 1.365.998 1.716l7.001 4c.613.35.138.256.999.256s.386-.094.999-.256l7.001-4c.615-.352.998-1.011.998-1.716V8.274c0-.705-.383-1.365-.998-1.716l-7.001-4c-.307-.17-.652-.256-.999-.256zm0 2.298l5.5 3.143-2.5 1.428-5.5-3.142 2.5-1.429zm-6.5 4.858l4.5 2.571v5.143l-4.5-2.572V9.158zm8.5 2.571l4.5-2.571v5.142l-4.5 2.572v-5.143z"/></svg>
-                Kirim ke NSA CLOUD
-            </button>
-			
-			
+        <!-- ================= BOX PREVIEW LAPORAN PDF ================= -->
+        <div id="box-preview-laporan" class="bg-slate-100 rounded-[2rem] sm:rounded-[2.5rem] w-full max-w-6xl p-3 sm:p-6 shadow-2xl border border-white/40 transform scale-95 opacity-0 transition-all duration-300 space-y-4 my-4 sm:my-8 mx-auto">
         
-            
-            
-            <button type="button" onclick="tutupModalCetakA4()"
-                class="w-full sm:w-auto px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-[11px] font-bold rounded-xl transition-all text-center">
-                Keluar
-            </button>
-        </div>
-    </div>
-
-    <div class="w-full bg-gray-200/50 rounded-2xl sm:rounded-3xl border border-gray-300/40 inner-shadow p-2 sm:p-4 overflow-hidden flex justify-center items-start">
-        
-        <div class="wrapper-skala-a4 w-full flex justify-center">
-            
-            <div id="lembar-cetak-a4" class="w-[794px] h-auto bg-white p-[30px] sm:p-[40px] text-gray-800 font-sans relative flex flex-col justify-between shadow-sm shrink-0">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 border-b border-gray-200 pb-4">
+                <div class="text-center sm:text-left">
+                    <h3 class="text-xs sm:text-sm font-black text-gray-900 uppercase tracking-wider">Laporan Berhasil Dibuat</h3>
+                    <p class="text-[10px] sm:text-[11px] font-semibold text-gray-500">Periksa kembali data laporan sebelum diupload ke NSA CLOUD!</p>
+                </div>
                 
-                <div>
-                    <div class="text-center border-b-2 border-gray-800 pb-4 mb-6">
-                        <h1 class="text-lg sm:text-xl font-black tracking-wide text-gray-900 uppercase">Penutupan Pembukuan</h1>
-                        <h2 class="text-base sm:text-lg font-extrabold tracking-wider text-pink-600 uppercase mt-0.5">Apotek Nurjaya</h2>
-                        <p class="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">
-                            Periode Laporan: <span id="pdf-nama-bulan" class="text-gray-800">--</span>
-                        </p>
-                    </div>
+                <div class="flex flex-wrap items-center justify-center gap-2 w-full sm:w-auto">
+                    <button type="button" onclick="prosesEksporKeDrive()"
+                        class="flex-1 sm:flex-none px-3 py-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white text-[11px] font-bold uppercase rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.001 2.002c-.347 0-.692.086-.999.256l-7.001 4c-.615.352-.998 1.011-.998 1.716v8.056c0 .705.383 1.365.998 1.716l7.001 4c.613.35.138.256.999.256s.386-.094.999-.256l7.001-4c.615-.352.998-1.011.998-1.716V8.274c0-.705-.383-1.365-.998-1.716l-7.001-4c-.307-.17-.652-.256-.999-.256zm0 2.298l5.5 3.143-2.5 1.428-5.5-3.142 2.5-1.429zm-6.5 4.858l4.5 2.571v5.143l-4.5-2.572V9.158zm8.5 2.571l4.5-2.571v5.142l-4.5 2.572v-5.143z"/></svg>
+                        Kirim ke NSA CLOUD
+                    </button>
+                    
+                    <button type="button" onclick="tutupModalCetakA4()"
+                        class="w-full sm:w-auto px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-[11px] font-bold rounded-xl transition-all text-center">
+                        Keluar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- ================= Lembar Cetak A4 ================= -->
+            <div class="w-full bg-gray-200/50 rounded-2xl sm:rounded-3xl border border-gray-300/40 inner-shadow p-2 sm:p-4 overflow-hidden flex justify-center items-start">
+                
+                <div class="wrapper-skala-a4 w-full flex justify-center">
+                    
+                    <div id="lembar-cetak-a4" class="w-[794px] h-auto bg-white p-[30px] sm:p-[40px] text-gray-800 font-sans relative flex flex-col justify-between shadow-sm shrink-0">
+                        
+                        <div>
+                            <div class="text-center border-b-2 border-gray-800 pb-4 mb-6">
+                                <h1 class="text-lg sm:text-xl font-black tracking-wide text-gray-900 uppercase">Penutupan Pembukuan</h1>
+                                <h2 class="text-base sm:text-lg font-extrabold tracking-wider text-pink-600 uppercase mt-0.5">Apotek Nurjaya</h2>
+                                <p class="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">
+                                    Periode Laporan: <span id="pdf-nama-bulan" class="text-gray-800">--</span>
+                                </p>
+                            </div>
 
-                    <div class="space-y-2 overflow-x-auto">
-                        <table class="w-full text-left border-collapse border border-gray-300 text-[11px]">
-                            <thead>
-                                <tr class="bg-slate-800 text-white font-bold uppercase tracking-wider text-center">
-                                    <th class="border border-gray-300 px-2 py-2 w-[10%]">Tgl</th>
-                                    <th class="border border-gray-300 px-2 py-2 bg-emerald-700 w-[22.5%]">Pendapatan Kotor</th>
-                                    <th class="border border-gray-300 px-2 py-2 bg-amber-700 w-[22.5%]">Bayar Faktur</th>
-                                    <th class="border border-gray-300 px-2 py-2 bg-red-700 w-[22.5%]">Pengeluaran</th>
-                                    <th class="border border-gray-300 px-2 py-2 bg-blue-700 w-[22.5%]">Pendapatan Bersih</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-pdf-tabel-cloud"></tbody>
-                            <tfoot>
-                                <tr class="font-black uppercase bg-gray-100 text-gray-900 text-right">
-                                    <td class="border border-gray-300 px-2 py-2 text-center">Total</td>
-                                    <td id="total-pdf-kotor" class="border border-gray-300 px-2 py-2 text-gray-900 bg-emerald-50/40">Rp 0</td>
-                                    <td id="total-pdf-faktur" class="border border-gray-300 px-2 py-2 text-gray-900 bg-amber-50/40">Rp 0</td>
-                                    <td id="total-pdf-pengeluaran" class="border border-gray-300 px-2 py-2 text-gray-900 bg-red-50/40">Rp 0</td>
-                                    <td id="total-pdf-bersih" class="border border-gray-300 px-2 py-2 text-gray-900 bg-blue-50/40">Rp 0</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                            <!-- PERBAIKAN URUTAN HEADER TABEL A4: LOG FAKTUR -> VIA QRIS -> KOTOR -> TABUNGAN -> PENGELUARAN -> UANG MAKAN -> SISA -->
+                            <div class="space-y-2 overflow-x-auto">
+                                <table class="w-full text-left border-collapse border border-gray-300 text-[9px] sm:text-[10px]">
+                                    <thead>
+                                        <tr class="bg-slate-800 text-white font-bold uppercase tracking-wider text-center">
+                                            <th class="border border-gray-300 px-1 py-1.5 w-[6%]">Tgl</th>
+                                            <th class="border border-gray-300 px-1 py-1.5 bg-amber-700 w-[13.4%]">Log Faktur</th>
+											<th class="border border-gray-300 px-1 py-1.5 bg-emerald-700 w-[13.4%]">Kotor</th>
+                                            <th class="border border-gray-300 px-1 py-1.5 bg-purple-700 w-[13.4%]">Via QRIS</th>
+                                            <th class="border border-gray-300 px-1 py-1.5 bg-indigo-700 w-[13.4%]">Tabungan</th>
+                                            <th class="border border-gray-300 px-1 py-1.5 bg-red-700 w-[13.4%]">Pengeluaran</th>
+                                            <th class="border border-gray-300 px-1 py-1.5 bg-orange-700 w-[13.4%]">Uang Makan</th>
+                                            <th class="border border-gray-300 px-1 py-1.5 bg-blue-700 w-[13.4%]">Sisa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-pdf-tabel-cloud"></tbody>
+                                    <tfoot>
+                                        <tr class="font-black uppercase bg-gray-100 text-gray-900 text-right">
+                                            <td class="border border-gray-300 px-1 py-2 text-center">Total</td>
+                                            <td id="total-pdf-faktur" class="border border-gray-300 px-1 py-2 text-gray-900 bg-amber-50/40">Rp 0</td>
+											<td id="total-pdf-kotor" class="border border-gray-300 px-1 py-2 text-gray-900 bg-emerald-50/40">Rp 0</td>
+                                            <td id="total-pdf-qris" class="border border-gray-300 px-1 py-2 text-gray-900 bg-purple-50/40">Rp 0</td>
+                                            <td id="total-pdf-tabungan" class="border border-gray-300 px-1 py-2 text-gray-900 bg-indigo-50/40">Rp 0</td>
+                                            <td id="total-pdf-pengeluaran" class="border border-gray-300 px-1 py-2 text-gray-900 bg-red-50/40">Rp 0</td>
+                                            <td id="total-pdf-uang-makan" class="border border-gray-300 px-1 py-2 text-gray-900 bg-orange-50/40">Rp 0</td>
+                                            <td id="total-pdf-sisa" class="border border-gray-300 px-1 py-2 text-gray-900 bg-blue-50/40">Rp 0</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
 
-                    <div class="mt-6 sm:mt-8 space-y-2">
-                        <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider block">
-                            * Analisis & Kesimpulan
-                        </span>
-                        <div id="pdf-narasi-kesimpulan" class="p-4 sm:p-5 bg-gray-50 border border-gray-200 rounded-xl text-[11px] text-gray-700 leading-relaxed text-justify whitespace-pre-wrap font-medium"></div>
+                            <div class="mt-6 sm:mt-8 space-y-2">
+                                <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider block">
+                                    * Analisis & Kesimpulan
+                                </span>
+                                <div id="pdf-narasi-kesimpulan" class="p-4 sm:p-5 bg-gray-50 border border-gray-200 rounded-xl text-[11px] text-gray-700 leading-relaxed text-justify whitespace-pre-wrap font-medium"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-10 sm:mt-12 pt-4 border-t border-gray-200 flex justify-between items-center text-[8px] sm:text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                            <span>Generated by NURJAYA SMART ARCHIVE</span>
+                            <span id="pdf-timestamp-cetak">--</span>
+                        </div>
+
                     </div>
                 </div>
+            </div>
 
-                <div class="mt-10 sm:mt-12 pt-4 border-t border-gray-200 flex justify-between items-center text-[8px] sm:text-[9px] font-bold text-gray-400 uppercase tracking-widest">
-                    <span>Generated by NURJAYA SMART ARCHIVE</span>
-                    <span id="pdf-timestamp-cetak">--</span>
-                </div>
-
-            </div> </div>
+        </div>
     </div>
 
-</div>
-
-
-	
-	
-</div>
 </div>
 
 
@@ -1673,6 +1748,10 @@ document.addEventListener('keydown', function(e) {
     </script>
 	
 	
+	
+	
+	
+	
 <script>
 // Elemen Form & Tombol Utama
 const formApotek = document.getElementById('form-input-apotek');
@@ -1680,9 +1759,13 @@ const btnSimpan = document.getElementById('btn-simpan-apotek');
 const selectBulan = document.getElementById('input-bulan-target');
 
 // Elemen Input untuk Perhitungan Otomatis
+const inputFaktur = document.getElementById('input-faktur');
+const inputQris = document.getElementById('input-qris');
 const inputKotor = document.getElementById('input-kotor');
+const inputTabungan = document.getElementById('input-tabungan');
 const inputPengeluaran = document.getElementById('input-pengeluaran');
-const inputBersih = document.getElementById('input-bersih');
+const inputUangMakan = document.getElementById('input-uang-makan');
+const inputSisa = document.getElementById('input-sisa');
 
 // Elemen Baru untuk Info Sinkronisasi Tanggal
 const bannerInfoTanggal = document.getElementById('info-tanggal-terakhir');
@@ -1720,7 +1803,7 @@ function handlePilihanBulan(selectElement) {
         alertTeks.classList.add('hidden');
         
         seluruhInput.forEach(el => {
-            if(el.id !== 'input-bersih') { 
+            if(el.id !== 'input-sisa') { 
                 el.removeAttribute('disabled');
             }
         });
@@ -1771,18 +1854,13 @@ function perbaruiInfoTanggalTerakhir(bulan) {
             }
 
             // FILTER: Ambil hanya data yang 'pendapatankotor' nya ada isinya (> 0)
-            // Kita ubah string jadi angka dulu untuk memastikan perbandingannya akurat
             const dataTerisi = arrayData.filter(item => {
                 const kotor = parseFloat(item.pendapatankotor) || 0;
                 return kotor > 0;
             });
 
             if (dataTerisi && dataTerisi.length > 0) {
-                // Ambil elemen terakhir dari array yang sudah difilter
                 const dataTerakhir = dataTerisi[dataTerisi.length - 1];
-                
-                // Cari tahu baris aslinya di spreadsheet berdasarkan tanggalnya
-                // (Ini opsional, kalau mau lebih akurat tinggal ambil dari dataTerakhir)
                 labelTglTerakhir.innerHTML = `Tanggal ${dataTerakhir.tanggal} (Data terakhir yang terisi)`;
             } else {
                 labelTglTerakhir.innerText = "Belum ada transaksi di bulan ini.";
@@ -1804,23 +1882,32 @@ function formatRupiahElemen(elemen) {
     } else {
         elemen.value = '';
     }
-    hitungPendapatanBersih();
+    hitungSisa();
 }
 
 function hilangkanTitik(nilaiString) {
+    if (!nilaiString) return "0";
     return nilaiString.replace(/\./g, '') || "0";
 }
 
-function hitungPendapatanBersih() {
+/**
+ * Kalkulasi Sisa:
+ * Pendapatan Kotor - Transaksi via QRIS - Tabungan - Pengeluaran - Uang Makan Karyawan
+ */
+function hitungSisa() {
     const kotor = parseInt(hilangkanTitik(inputKotor.value)) || 0;
+    const qris = parseInt(hilangkanTitik(inputQris.value)) || 0;
+    const tabungan = parseInt(hilangkanTitik(inputTabungan.value)) || 0;
     const pengeluaran = parseInt(hilangkanTitik(inputPengeluaran.value)) || 0;
-    const bersih = kotor - pengeluaran;
+    const uangMakan = parseInt(hilangkanTitik(inputUangMakan.value)) || 0;
+
+    const sisa = kotor - qris - tabungan - pengeluaran - uangMakan;
     
-    if (bersih >= 0) {
-        inputBersih.value = bersih.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    if (sisa >= 0) {
+        inputSisa.value = sisa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     } else {
-        const nilaiPositif = Math.abs(bersih).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        inputBersih.value = "-" + nilaiPositif;
+        const nilaiPositif = Math.abs(sisa).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        inputSisa.value = "-" + nilaiPositif;
     }
 }
 
@@ -1845,10 +1932,13 @@ formApotek.addEventListener('submit', function(event) {
     const dataForm = {
         bulan: bulanTerpilih,
         tanggal: angkaTanggalSaja,
+        logpembayaranfaktur: hilangkanTitik(inputFaktur.value),
+        transaksiqris: hilangkanTitik(inputQris.value),
         pendapatankotor: hilangkanTitik(inputKotor.value),
-        pembayaranfaktur: hilangkanTitik(document.getElementById('input-faktur').value),
+        tabungan: hilangkanTitik(inputTabungan.value),
         pengeluaran: hilangkanTitik(inputPengeluaran.value),
-        pendapatanbersih: hilangkanTitik(inputBersih.value)
+        uangmakankaryawan: hilangkanTitik(inputUangMakan.value),
+        sisa: hilangkanTitik(inputSisa.value)
     };
 
     fetch(urlWebAppApotek, {
@@ -2729,14 +2819,17 @@ document.addEventListener('click', function(e) {
 </div>
 
 
+
+
+
+
 <script>
 /**
  * FUNGSI HELPER INTERNAL: Mengubah angka murni menjadi format Rupiah (Rp xx.xxx)
  * Mencegah error "formatRupiahTeks is not defined" dari script luar
  */
 function formatRupiahLokal(angka) {
-    if (angka === undefined || null || isNaN(angka)) return "0";
-    // Menghilangkan string "Rp " agar murni angka bertitik saja (Contoh: 1.500.000)
+    if (angka === undefined || angka === null || isNaN(angka)) return "0";
     return parseFloat(angka).toLocaleString("id-ID");
 }
 
@@ -2765,7 +2858,7 @@ function bukaModalSpreadsheet() {
         if (tbody) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="p-12 text-center text-gray-400 font-medium bg-white">
+                    <td colspan="8" class="p-12 text-center text-gray-400 font-medium bg-white">
                         <i class="fa-solid fa-arrow-up animate-bounce mr-1 text-pink-500"></i> 
                         Silakan tentukan opsi bulan di atas terlebih dahulu untuk memuat data.
                     </td>
@@ -2810,12 +2903,11 @@ function muatDataTinjauanModal(bulanTerpilih) {
 
     fetch(`${urlWebAppApotek}?bulan=${bulanTerpilih}`)
         .then(response => response.json())
-        .then(res => { // Mengubah variabel 'data' menjadi 'res' (response) agar tidak rancu
+        .then(res => {
             if (loading) { loading.classList.remove('flex'); loading.classList.add('hidden'); }
 
             if (!dropdownModal || dropdownModal.value !== bulanTerpilih) return;
 
-            // Pengecekan disesuaikan: ambil properti 'data' di dalam 'res'
             if (res && res.status === "success" && res.data && res.data.length > 0) {
                 if (tbody) tbody.innerHTML = ""; 
                 
@@ -2823,30 +2915,33 @@ function muatDataTinjauanModal(bulanTerpilih) {
                     const row = document.createElement('tr');
                     row.className = "hover:bg-slate-50/80 transition-colors";
                     
-                    const kelasWarnaBersih = item.pendapatanbersih < 0 ? "text-red-600 font-bold" : "text-blue-700 font-bold";
+                    const nilaiSisa = Number(item.sisa) || 0;
+                    const kelasWarnaSisa = nilaiSisa < 0 ? "text-red-600 font-bold" : "text-blue-700 font-bold";
 
                     row.innerHTML = `
-                        <td class="px-4 py-3 text-center font-bold text-gray-500 bg-gray-50/40">Tgl ${item.tanggal}</td>
-                        <td class="px-4 py-3 text-right text-emerald-700 font-semibold">${formatRupiahLokal(item.pendapatankotor)}</td>
-                        <td class="px-4 py-3 text-right text-amber-700">${formatRupiahLokal(item.pembayaranfaktur)}</td>
-                        <td class="px-4 py-3 text-right text-red-700">${formatRupiahLokal(item.pengeluaran)}</td>
-                        <td class="px-4 py-3 text-right ${kelasWarnaBersih}">${formatRupiahLokal(item.pendapatanbersih)}</td>
+                        <td class="px-3 py-3 text-center font-bold text-gray-500 bg-gray-50/40">Tgl ${item.tanggal}</td>
+                        <td class="px-3 py-3 text-right text-amber-700">${formatRupiahLokal(item.logpembayaranfaktur)}</td>
+                        <td class="px-3 py-3 text-right text-purple-700">${formatRupiahLokal(item.transaksiqris)}</td>
+                        <td class="px-3 py-3 text-right text-emerald-700 font-semibold">${formatRupiahLokal(item.pendapatankotor)}</td>
+                        <td class="px-3 py-3 text-right text-indigo-700">${formatRupiahLokal(item.tabungan)}</td>
+                        <td class="px-3 py-3 text-right text-red-700">${formatRupiahLokal(item.pengeluaran)}</td>
+                        <td class="px-3 py-3 text-right text-orange-700">${formatRupiahLokal(item.uangmakankaryawan)}</td>
+                        <td class="px-3 py-3 text-right ${kelasWarnaSisa}">${formatRupiahLokal(nilaiSisa)}</td>
                     `;
                     if (tbody) tbody.appendChild(row);
                 });
             } else {
-                // Berjalan jika status "empty" atau array 'res.data' kosong
                 if (kosong) kosong.classList.remove('hidden');
             }
         })
         .catch(error => {
             console.error("Gagal memuat database tabel:", error);
             if (loading) { loading.classList.remove('flex'); loading.classList.add('hidden'); }
-            if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center font-bold text-red-500"><i class="fas fa-triangle-exclamation mr-1"></i> Gagal memuat data dari cloud.</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center font-bold text-red-500"><i class="fas fa-triangle-exclamation mr-1"></i> Gagal memuat data dari cloud.</td></tr>`;
         });
 }
 
-// Fungsi pembantu alias agar jika ada baris kode lama manggil nama ini tetap aman berjalan
+// Fungsi pembantu alias
 function gantiBulanTinjauanManual(val) {
     muatDataTinjauanModal(val);
 }
@@ -2856,7 +2951,7 @@ function gantiBulanTinjauanManual(val) {
 <!-- SCRIPT INTI PROGRAM TUTUP BUKU -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
-// ==================== URL AKSES WEB APP SPREADSHEET (NAMA BARU JAMINAN AMAN) ====================
+// ==================== URL AKSES WEB APP SPREADSHEET ====================
 const urlKhususTutupBuku = "https://script.google.com/macros/s/AKfycbxbV9cqDZg5J5pRnWFPUNCV8rk6mkNoim739KTELNi1SJhsbVW8jxAq2vsLYlSR0dDFXA/exec";
 
 // ==================== GLOBAL VARIABEL & STATE ASISTEN TUTUP BUKU ====================
@@ -2872,10 +2967,18 @@ const mapHariTerakhir2026 = {
 };
 
 const mapNamaBulanIndo = {
+    "Januari2026": "Januari 2026",
+    "Februari2026": "Februari 2026",
+    "Maret2026": "Maret 2026",
+    "April2026": "April 2026",
     "Mei2026": "Mei 2026", 
     "Juni2026": "Juni 2026", 
     "Juli2026": "Juli 2026", 
-    "Agustus2026": "Agustus 2026"
+    "Agustus2026": "Agustus 2026",
+    "September2026": "September 2026",
+    "Oktober2026": "Oktober 2026",
+    "November2026": "November 2026",
+    "Desember2026": "Desember 2026"
 };
 
 /**
@@ -2885,9 +2988,7 @@ function validasiTutupBukuBulan(selectElement) {
     const keyBulan = selectElement.value;
     const inputLalu = document.getElementById('input-kotor-sebelumnya');
     const txtArea = document.getElementById('textarea-kesimpulan');
-    const loadingRingkasan = document.getElementById('loading-narasi');
     
-    // Elemen Loading Overlay Baru
     const loadingVerifikasi = document.getElementById('loading-verifikasi-cloud');
     const wrapperContent = document.getElementById('wrapper-closing-content');
     
@@ -2899,7 +3000,6 @@ function validasiTutupBukuBulan(selectElement) {
     if (inputLalu) inputLalu.value = "";
     if (txtArea) txtArea.value = "";
     
-    // Sembunyikan form rekap, tampilkan animasi loading verifikasi cloud
     if (wrapperContent) wrapperContent.classList.add('hidden');
     if (loadingVerifikasi) {
         loadingVerifikasi.classList.remove('hidden');
@@ -2913,16 +3013,13 @@ function validasiTutupBukuBulan(selectElement) {
             if (!response.ok) throw new Error("Respon server Google Apps Script tidak OK.");
             return response.json();
         })
-        .then(res => { // Menggunakan variabel 'res' agar konsisten dengan struktur objek cloud
-            // Berikan jeda waktu (800ms) agar transisi animasi mulus dan memanjakan mata
+        .then(res => {
             setTimeout(() => {
-                // Sembunyikan loading verifikasi
                 if (loadingVerifikasi) {
                     loadingVerifikasi.classList.remove('flex');
                     loadingVerifikasi.classList.add('hidden');
                 }
 
-                // FIX DI SINI: Deteksi struktur baru { status: "success", data: [...] }
                 if (res && res.status === "success" && res.data && res.data.length > 0) {
                     const arrayDataHarian = res.data;
                     const tanggalTerakhirDiCloud = parseInt(arrayDataHarian[arrayDataHarian.length - 1].tanggal) || 0;
@@ -2930,26 +3027,23 @@ function validasiTutupBukuBulan(selectElement) {
 
                     console.log(`Tanggal terakhir di cloud: ${tanggalTerakhirDiCloud}, Batas target: ${batasHariMaksimum}`);
 
-                    // Jalankan aturan ketat penutupan akhir bulan
                     if (tanggalTerakhirDiCloud >= batasHariMaksimum) { 
                         if (wrapperContent) wrapperContent.classList.remove('hidden');
-                        globalDataClosing = arrayDataHarian; // Simpan array mentahnya ke global data
+                        globalDataClosing = arrayDataHarian; 
                         bukaWrapperClosing();     
                         kalkulasiDanIsiFormClosing(arrayDataHarian); 
                     } 
                     else {
-                        // Gagal: Tampilkan kembali wrapper ter-blur, lalu tembak modal error
                         if (wrapperContent) wrapperContent.classList.remove('hidden');
-                        lockWrapperClosing();      
+                        lockWrapperClosing();     
                         bukaModalClosingInvalid(); 
                     }
                 } else {
-                    // Masuk ke sini jika status "empty" atau data kosong / tidak ditemukan
                     if (wrapperContent) wrapperContent.classList.remove('hidden');
                     lockWrapperClosing();
                     bukaModalClosingInvalid();
                 }
-            }, 800); // 800 milidetik jeda animasi halus
+            }, 800);
         })
         .catch(error => {
             if (loadingVerifikasi) {
@@ -2969,53 +3063,74 @@ function validasiTutupBukuBulan(selectElement) {
 function kalkulasiDanIsiFormClosing(arrayData) {
     if (!arrayData || arrayData.length === 0) return;
 
-    const totalKotor = arrayData.reduce((sum, item) => sum + (item.pendapatankotor || 0), 0);
-    const totalFaktur = arrayData.reduce((sum, item) => sum + (item.pembayaranfaktur || 0), 0);
+    // Reduksi Akumulasi 8 Kolom
+    const totalFaktur      = arrayData.reduce((sum, item) => sum + (item.logpembayaranfaktur || item.pembayaranfaktur || 0), 0);
+    const totalQris        = arrayData.reduce((sum, item) => sum + (item.transaksiqris || 0), 0);
+    const totalKotor       = arrayData.reduce((sum, item) => sum + (item.pendapatankotor || item.pendapatan || 0), 0);
+    const totalTabungan    = arrayData.reduce((sum, item) => sum + (item.tabungan || 0), 0);
     const totalPengeluaran = arrayData.reduce((sum, item) => sum + (item.pengeluaran || 0), 0);
-    const totalBersih = arrayData.reduce((sum, item) => sum + (item.pendapatanbersih || 0), 0);
+    const totalUangMakan   = arrayData.reduce((sum, item) => sum + (item.uangmakankaryawan || 0), 0);
+    const totalSisa        = arrayData.reduce((sum, item) => sum + (item.sisa !== undefined ? item.sisa : (item.pendapatanbersih || 0)), 0);
 
-    const elemKotor = document.getElementById('closing-kotor');
-    const elemFaktur = document.getElementById('closing-faktur');
+    // Populate UI Web Form Closing
+    const elemFaktur      = document.getElementById('closing-faktur');
+    const elemQris        = document.getElementById('closing-qris');
+    const elemKotor       = document.getElementById('closing-kotor');
+    const elemTabungan    = document.getElementById('closing-tabungan');
     const elemPengeluaran = document.getElementById('closing-pengeluaran');
-    const elemBersih = document.getElementById('closing-bersih');
+    const elemUangMakan   = document.getElementById('closing-uang-makan');
+    const elemSisa        = document.getElementById('closing-sisa');
 
-    if (elemKotor) elemKotor.value = formatAngkaKeRupiahString(totalKotor);
-    if (elemFaktur) elemFaktur.value = formatAngkaKeRupiahString(totalFaktur);
+    if (elemFaktur) elemFaktur.value           = formatAngkaKeRupiahString(totalFaktur);
+    if (elemQris) elemQris.value               = formatAngkaKeRupiahString(totalQris);
+    if (elemKotor) elemKotor.value             = formatAngkaKeRupiahString(totalKotor);
+    if (elemTabungan) elemTabungan.value       = formatAngkaKeRupiahString(totalTabungan);
     if (elemPengeluaran) elemPengeluaran.value = formatAngkaKeRupiahString(totalPengeluaran);
-    if (elemBersih) elemBersih.value = formatAngkaKeRupiahString(totalBersih);
+    if (elemUangMakan) elemUangMakan.value     = formatAngkaKeRupiahString(totalUangMakan);
+    if (elemSisa) elemSisa.value               = formatAngkaKeRupiahString(totalSisa);
 
-   // ─── PREPARASI INJEKSI DATA KE TABEL MODAL A4 ───
-    
-    // PERBAIKAN DI SINI: Bersihkan teks dan sisipkan spasi otomatis jika huruf & angka berdempetan
-    let bulanTahunBersih = globalNamaBulanTeks.trim();
-    bulanTahunBersih = bulanTahunBersih.replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
+    // ─── PREPARASI INJEKSI DATA KE TABEL MODAL A4 ───
+    let bulanTahunBersih = globalNamaBulanTeks.trim().replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
     
     document.getElementById('pdf-nama-bulan').innerText = bulanTahunBersih;
     
-    document.getElementById('total-pdf-kotor').innerText = "Rp " + formatAngkaKeRupiahString(totalKotor);
-    document.getElementById('total-pdf-faktur').innerText = "Rp " + formatAngkaKeRupiahString(totalFaktur);
+    document.getElementById('total-pdf-faktur').innerText      = "Rp " + formatAngkaKeRupiahString(totalFaktur);
+    document.getElementById('total-pdf-qris').innerText        = "Rp " + formatAngkaKeRupiahString(totalQris);
+    document.getElementById('total-pdf-kotor').innerText       = "Rp " + formatAngkaKeRupiahString(totalKotor);
+    document.getElementById('total-pdf-tabungan').innerText    = "Rp " + formatAngkaKeRupiahString(totalTabungan);
     document.getElementById('total-pdf-pengeluaran').innerText = "Rp " + formatAngkaKeRupiahString(totalPengeluaran);
-    document.getElementById('total-pdf-bersih').innerText = "Rp " + formatAngkaKeRupiahString(totalBersih);
+    document.getElementById('total-pdf-uang-makan').innerText  = "Rp " + formatAngkaKeRupiahString(totalUangMakan);
+    document.getElementById('total-pdf-sisa').innerText        = "Rp " + formatAngkaKeRupiahString(totalSisa);
 
     const tbody = document.getElementById('tbody-pdf-tabel-cloud');
-if (tbody) {
-    tbody.innerHTML = "";
-    arrayData.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        // Selang-seling baris putih dan abu-abu tipis agar tetap mudah dibaca horisontal
-        tr.className = index % 2 === 0 ? "bg-white text-gray-900" : "bg-gray-50/80 text-gray-900";
-        
-        // KUNCI REVISI: Menggunakan class text-gray-900 (Hitam Jelas) untuk semua angka nominal
-        tr.innerHTML = `
-            <td class="border border-gray-200 px-2 py-1.5 text-center font-bold text-gray-900">${item.tanggal || (index + 1)}</td>
-            <td class="border border-gray-200 px-2 py-1.5 text-right text-gray-900 bg-emerald-50/10 font-medium">Rp ${formatAngkaKeRupiahString(item.pendapatankotor || 0)}</td>
-            <td class="border border-gray-200 px-2 py-1.5 text-right text-gray-900 bg-amber-50/10 font-medium">Rp ${formatAngkaKeRupiahString(item.pembayaranfaktur || 0)}</td>
-            <td class="border border-gray-200 px-2 py-1.5 text-right text-gray-900 bg-red-50/10 font-medium">Rp ${formatAngkaKeRupiahString(item.pengeluaran || 0)}</td>
-            <td class="border border-gray-200 px-2 py-1.5 text-right text-gray-900 bg-blue-50/10 font-black">Rp ${formatAngkaKeRupiahString(item.pendapatanbersih || 0)}</td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
+    if (tbody) {
+        tbody.innerHTML = "";
+        arrayData.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            tr.className = index % 2 === 0 ? "bg-white text-gray-900" : "bg-gray-50/80 text-gray-900";
+            
+            const logFaktur = item.logpembayaranfaktur || item.pembayaranfaktur || 0;
+            const qris      = item.transaksiqris || 0;
+            const kotor     = item.pendapatankotor || item.pendapatan || 0;
+            const tabungan  = item.tabungan || 0;
+            const keluar    = item.pengeluaran || 0;
+            const makan     = item.uangmakankaryawan || 0;
+            const sisa      = item.sisa !== undefined ? item.sisa : (item.pendapatanbersih || 0);
+
+            // PERBAIKAN URUTAN TD: LOG FAKTUR -> QRIS -> KOTOR -> TABUNGAN -> PENGELUARAN -> UANG MAKAN -> SISA
+            tr.innerHTML = `
+                <td class="border border-gray-200 px-1 py-1 text-center font-bold text-gray-900">${item.tanggal || (index + 1)}</td>
+                <td class="border border-gray-200 px-1 py-1 text-right text-gray-900 bg-amber-50/10 font-medium">Rp ${formatAngkaKeRupiahString(logFaktur)}</td>
+				<td class="border border-gray-200 px-1 py-1 text-right text-gray-900 bg-emerald-50/10 font-medium">Rp ${formatAngkaKeRupiahString(kotor)}</td>
+                <td class="border border-gray-200 px-1 py-1 text-right text-gray-900 bg-purple-50/10 font-medium">Rp ${formatAngkaKeRupiahString(qris)}</td>
+                <td class="border border-gray-200 px-1 py-1 text-right text-gray-900 bg-indigo-50/10 font-medium">Rp ${formatAngkaKeRupiahString(tabungan)}</td>
+                <td class="border border-gray-200 px-1 py-1 text-right text-gray-900 bg-red-50/10 font-medium">Rp ${formatAngkaKeRupiahString(keluar)}</td>
+                <td class="border border-gray-200 px-1 py-1 text-right text-gray-900 bg-orange-50/10 font-medium">Rp ${formatAngkaKeRupiahString(makan)}</td>
+                <td class="border border-gray-200 px-1 py-1 text-right text-gray-900 bg-blue-50/10 font-black">Rp ${formatAngkaKeRupiahString(sisa)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
 
     setOpsiKesimpulan('otomatis');
 }
@@ -3042,60 +3157,63 @@ function hitungPersentaseEvaluasi() {
 
     if (metodeKesimpulanAktif === "manual") return; 
 
-    const kotorBulanIni = globalDataClosing.reduce((sum, item) => sum + (item.pendapatankotor || 0), 0);
+    // Kalkulasi Variabel Evaluasi
+    const kotorBulanIni    = globalDataClosing.reduce((sum, item) => sum + (item.pendapatankotor || item.pendapatan || 0), 0);
+    const totalFaktur      = globalDataClosing.reduce((sum, item) => sum + (item.logpembayaranfaktur || item.pembayaranfaktur || 0), 0);
+    const totalQris        = globalDataClosing.reduce((sum, item) => sum + (item.transaksiqris || 0), 0);
+    const totalTabungan    = globalDataClosing.reduce((sum, item) => sum + (item.tabungan || 0), 0);
     const totalPengeluaran = globalDataClosing.reduce((sum, item) => sum + (item.pengeluaran || 0), 0);
-    const totalFaktur = globalDataClosing.reduce((sum, item) => sum + (item.pembayaranfaktur || 0), 0);
+    const totalUangMakan   = globalDataClosing.reduce((sum, item) => sum + (item.uangmakankaryawan || 0), 0);
+    const totalSisa        = globalDataClosing.reduce((sum, item) => sum + (item.sisa !== undefined ? item.sisa : (item.pendapatanbersih || 0)), 0);
 
     const selisih = kotorBulanIni - kotorBulanLalu;
-let statusTren = "PENURUNAN";
-let persentase = 0;
+    let statusTren = "PENURUNAN";
+    let persentase = 0;
 
-if (selisih >= 0) {
-    statusTren = "KENAIKAN";
-    persentase = kotorBulanLalu > 0 ? (selisih / kotorBulanLalu) * 100 : 0;
-} else {
-    statusTren = "PENURUNAN";
-    persentase = kotorBulanLalu > 0 ? (Math.abs(selisih) / kotorBulanLalu) * 100 : 0;
-}
-
-const selectElement = document.getElementById('closing-bulan-target');
-let namaBulanLaluTeks = "Bulan Sebelumnya";
-if (selectElement) {
-    const indeksPilihan = selectElement.selectedIndex;
-    if (indeksPilihan > 1) {
-        namaBulanLaluTeks = selectElement.options[indeksPilihan - 1].text;
+    if (selisih >= 0) {
+        statusTren = "KENAIKAN";
+        persentase = kotorBulanLalu > 0 ? (selisih / kotorBulanLalu) * 100 : 0;
+    } else {
+        statusTren = "PENURUNAN";
+        persentase = kotorBulanLalu > 0 ? (Math.abs(selisih) / kotorBulanLalu) * 100 : 0;
     }
-}
 
-// ─── BLOK VARIABEL KONDISIONAL DINAMIS ───
-let kalimatAnalisis = "";
-let kalimatPenutupStrategis = "";
+    const selectElement = document.getElementById('closing-bulan-target');
+    let namaBulanLaluTeks = "Bulan Sebelumnya";
+    if (selectElement) {
+        const indeksPilihan = selectElement.selectedIndex;
+        if (indeksPilihan > 1) {
+            namaBulanLaluTeks = selectElement.options[indeksPilihan - 1].text;
+        }
+    }
 
-if (statusTren === "KENAIKAN") {
-    kalimatAnalisis = `Pencapaian positif ini dipengaruhi oleh peningkatan volume kunjungan konsumen serta stabilitas permintaan obat dan layanan kesehatan di Apotek kita sepanjang bulan berjalan.`;
-    kalimatPenutupStrategis = `Melihat tren yang sedang baik ini, mari kita jadikan momentum untuk terus mempertahankan kualitas pelayanan. Alhamdulillah, semoga pencapaian ini menjadi pemacu semangat bagi seluruh tim.`;
-} else {
-    kalimatAnalisis = `Penyesuaian ini terjadi karena adanya fluktuasi kebutuhan obat di masyarakat serta pergeseran transaksi harian jika dibandingkan dengan periode bulan sebelumnya.`;
-    kalimatPenutupStrategis = `Menghadapi tantangan karena tren turun ini, mari kita jadikan bahan evaluasi berharga untuk tetap menjaga kekompakan, mengoptimalkan peluang transaksi, dan meningkatkan kinerja di bulan berikutnya dengan lebih maksimal.`;
-}
+    // ─── BLOK VARIABEL KONDISIONAL DINAMIS ───
+    let kalimatAnalisis = "";
+    let kalimatPenutupStrategis = "";
 
-// ─── GABUNGAN TEMPLATE NARASI AKHIR ───
+    if (statusTren === "KENAIKAN") {
+        kalimatAnalisis = `Pencapaian positif ini dipengaruhi oleh peningkatan volume kunjungan konsumen serta stabilitas permintaan obat dan layanan kesehatan di Apotek kita sepanjang bulan berjalan.`;
+        kalimatPenutupStrategis = `Melihat tren yang sedang baik ini, mari kita jadikan momentum untuk terus mempertahankan kualitas pelayanan. Alhamdulillah, semoga pencapaian ini menjadi pemacu semangat bagi seluruh tim.`;
+    } else {
+        kalimatAnalisis = `Penyesuaian ini terjadi karena adanya fluktuasi kebutuhan obat di masyarakat serta pergeseran transaksi harian jika dibandingkan dengan periode bulan sebelumnya.`;
+        kalimatPenutupStrategis = `Menghadapi tantangan karena tren turun ini, mari kita jadikan bahan evaluasi berharga untuk tetap menjaga kekompakan, mengoptimalkan peluang transaksi, dan meningkatkan kinerja di bulan berikutnya dengan lebih maksimal.`;
+    }
 
-// PERBAIKAN: Buat versi bersih yang otomatis menyisipkan spasi jika huruf & angka berdempetan
-const bulanIniBersih = globalNamaBulanTeks.trim().replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
-const bulanLaluBersih = namaBulanLaluTeks.trim().replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
+    // ─── GABUNGAN TEMPLATE NARASI AKHIR ───
+    const bulanIniBersih = globalNamaBulanTeks.trim().replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
+    const bulanLaluBersih = namaBulanLaluTeks.trim().replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
 
-const templateNarasi = `Rangkuman pembukuan pembukuan Apotek Nurjaya pada bulan ${bulanIniBersih} mencatat pendapatan kotor sebesar Rp ${formatAngkaKeRupiahString(kotorBulanIni)}. Hasil ini menunjukkan adanya ${statusTren.toLowerCase()} sebesar ${persentase.toFixed(1)}% dari pencapaian bulan ${bulanLaluBersih} yang berada di angka Rp ${formatAngkaKeRupiahString(kotorBulanLalu)}.
+    const templateNarasi = `Rangkuman pembukuan Apotek Nurjaya pada bulan ${bulanIniBersih} mencatat pendapatan kotor sebesar Rp ${formatAngkaKeRupiahString(kotorBulanIni)}. Hasil ini menunjukkan adanya ${statusTren.toLowerCase()} sebesar ${persentase.toFixed(1)}% dari pencapaian bulan ${bulanLaluBersih} yang berada di angka Rp ${formatAngkaKeRupiahString(kotorBulanLalu)}.
 
 ${kalimatAnalisis}
 
-Di sisi operasional, total pengeluaran yang dikeluarkan bulan ini tercatat sebesar Rp ${formatAngkaKeRupiahString(totalPengeluaran)}, dengan alokasi penyelesaian pembayaran faktur obat mencapai Rp ${formatAngkaKeRupiahString(totalFaktur)}. Pengendalian stok obat tetap kita jaga pada batas aman demi memastikan kebutuhan pasien selalu terpenuhi dengan baik.
+Di sisi operasional, total pengeluaran operasional bulan ini tercatat sebesar Rp ${formatAngkaKeRupiahString(totalPengeluaran)}, transaksi nontunai via QRIS tercatat Rp ${formatAngkaKeRupiahString(totalQris)}, alokasi tabungan sebesar Rp ${formatAngkaKeRupiahString(totalTabungan)}, serta pemenuhan uang makan karyawan sebesar Rp ${formatAngkaKeRupiahString(totalUangMakan)}. Sementara itu, pencatatan log pembayaran faktur obat mencapai Rp ${formatAngkaKeRupiahString(totalFaktur)}. Dari seluruh perhitungannya, diperoleh sisa bersih pembukuan sebesar Rp ${formatAngkaKeRupiahString(totalSisa)}.
 
 ${kalimatPenutupStrategis}
 
 Semoga laporan evaluasi ini membantu kita dalam merumuskan strategi keuangan yang lebih tepat sasaran guna mencapai target yang lebih baik ke depan. Semoga usaha kita senantiasa membawa kemajuan dan keberkahan bagi semua. Aamiin.`;
 
-txtArea.value = templateNarasi;
+    txtArea.value = templateNarasi;
 }
 
 /**
@@ -3107,8 +3225,6 @@ function setOpsiKesimpulan(mode) {
     const btnManual = document.getElementById('btn-opsi-manual');
     const badgeMetode = document.getElementById('badge-metode');
     const txtArea = document.getElementById('textarea-kesimpulan');
-    
-    // Ambil elemen pembungkus tombol 'Generate' baru yang dipasang di HTML
     const wrapperBtnGenerate = document.getElementById('wrapper-btn-generate'); 
 
     if (!btnOtomatis || !btnManual || !txtArea) return;
@@ -3122,14 +3238,10 @@ function setOpsiKesimpulan(mode) {
             badgeMetode.className = "text-[9px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md border border-emerald-200";
         }
         
-        // 1. TAMPILKAN TOMBOL GENERATE karena sedang di mode otomatis
         if (wrapperBtnGenerate) wrapperBtnGenerate.classList.remove('hidden'); 
         
         txtArea.setAttribute('readonly', 'true');
         txtArea.classList.add('bg-gray-50', 'cursor-not-allowed');
-        
-        // 2. JINAKKAN DI SINI: Kode lama langsung memanggil hitungPersentaseEvaluasi();
-        // Sekarang kita ganti dengan teks panduan, agar user mengklik tombol terlebih dahulu.
         txtArea.value = "Silakan klik tombol 'Generate Kesimpulan Otomatis' di atas untuk menyusun analisis pembukuan.";
 
     } else {
@@ -3141,13 +3253,11 @@ function setOpsiKesimpulan(mode) {
             badgeMetode.className = "text-[9px] font-black uppercase tracking-widest bg-amber-50 text-amber-600 px-2 py-0.5 rounded-md border border-amber-200";
         }
         
-        // 3. SEMBUNYIKAN TOMBOL GENERATE karena user ingin mengetik sendiri (manual)
         if (wrapperBtnGenerate) wrapperBtnGenerate.classList.add('hidden'); 
         
         txtArea.removeAttribute('readonly');
         txtArea.classList.remove('bg-gray-50', 'cursor-not-allowed');
         
-        // Bersihkan area teks jika isinya masih berupa template otomatis atau teks panduan
         if (txtArea.value.includes("Apotek Nurjaya mencatat pendapatan") || txtArea.value.includes("Silakan klik tombol")) {
             txtArea.value = "";
         }
@@ -3194,9 +3304,7 @@ function tutupModalClosingInvalid() {
     if (drop) drop.value = ""; 
     lockWrapperClosing();
 }
-/**
- * UTILITY BARU: Membuka Modal Alert Khusus Narasi/Laporan
- */
+
 function bukaAlertNarasi(judul, deskripsi) {
     const modal = document.getElementById('modal-alert-narasi');
     const box = document.getElementById('narasi-box-content');
@@ -3205,23 +3313,17 @@ function bukaAlertNarasi(judul, deskripsi) {
     
     if (!modal || !box || !judulElem || !deskripsiElem) return;
 
-    // Setel teks dinamis sesuai parameter trigger
     judulElem.innerHTML = judul;
     deskripsiElem.innerHTML = deskripsi;
 
-    // Aktifkan layout grid bawaan Tailwind
     modal.classList.remove('hidden');
     
-    // Efek transisi smooth pop-up
     setTimeout(() => {
         box.classList.remove('scale-95', 'opacity-0');
         box.classList.add('scale-100', 'opacity-100');
     }, 50);
 }
 
-/**
- * UTILITY BARU: Menutup Modal Alert Khusus Narasi/Laporan
- */
 function tutupAlertNarasi() {
     const modal = document.getElementById('modal-alert-narasi');
     const box = document.getElementById('narasi-box-content');
@@ -3236,11 +3338,6 @@ function tutupAlertNarasi() {
     }, 300);
 }
 
-/**
- * =========================================================================
- * IMPLEMENTASI PADA FUNGSI UTAMA (Ganti pemicunya ke bukaAlertNarasi)
- * =========================================================================
- */
 function triggerGenerateNarasi() {
     const inputLaluElem = document.getElementById('input-kotor-sebelumnya');
     const loadingRingkasan = document.getElementById('loading-narasi');
@@ -3315,9 +3412,7 @@ function bukaModalCetakA4() {
         }, 50);
     }
 }
-/**
- * FUNGSI CONTROL: Menutup Modal Popup Laporan A4
- */
+
 function tutupModalCetakA4() {
     const modal = document.getElementById('modal-preview-laporan');
     const box = document.getElementById('box-preview-laporan');
@@ -3329,25 +3424,17 @@ function tutupModalCetakA4() {
         setTimeout(() => {
             modal.classList.remove('grid');
             modal.classList.add('hidden');
-        }, 300); // Sinkron dengan durasi transition Tailwind (duration-300)
+        }, 300);
     }
 }
 
-/**
- * FUNGSI EKSPOR: Mengonversi Dokumen Menjadi 1 Halaman Utuh (GARANSI ANTI BLANK PAGE 2)
- */
 function unduhLaporanPDF() {
     const elemenSumber = document.getElementById('lembar-cetak-a4');
     if (!elemenSumber) return;
 
-    // 1. Hitung tinggi asli elemen saat ini
     const tinggiAsliPixel = elemenSumber.scrollHeight;
-
-    // 2. Tambahkan toleransi +10px pada tinggi kertas PDF untuk mencegah pixel overflow 
-    //    yang memicu lahirnya halaman kedua kosong (blank page 2).
     const tinggiKertasAman = tinggiAsliPixel + 10;
 
-    // 3. Set konfigurasi super ketat khusus single-page
     const opsiSettingPDF = {
         margin:       0, 
         filename:     `Laporan_Tutup_Buku_Apotek_Nurjaya_${globalNamaBulanTeks.replace(/\s+/g, '_')}.pdf`,
@@ -3357,43 +3444,33 @@ function unduhLaporanPDF() {
             useCORS: true, 
             logging: false,
             scrollY: 0,
-            windowHeight: tinggiAsliPixel // Mengunci tinggi jendela canvas sesuai tinggi elemen
+            windowHeight: tinggiAsliPixel
         }, 
-        // Menggunakan tinggi aman yang sudah diberi ruang napas
         jsPDF:        { unit: 'px', format: [794, tinggiKertasAman], orientation: 'portrait' },
-        
-        // FORCE MODE: Matikan sistem pencarian potongan halaman bawaan library
         pagebreak:    { mode: [] } 
     };
 
-    // 4. Eksekusi download berkas
     html2pdf().set(opsiSettingPDF).from(elemenSumber).save().then(() => {
         console.log("File PDF All-Fit 1 Halaman Berhasil Diunduh. Page 2 diblokir.");
     });
 }
-/**
- * FUNGSI UTAMA: Mengonversi Dokumen Jadi PDF All-Fit & Kirim ke Apps Script Google Drive
- */
+
 function prosesEksporKeDrive() {
     const elemenSumber = document.getElementById('lembar-cetak-a4');
     if (!elemenSumber) return alert("Elemen lembar cetak laporan tidak ditemukan!");
 
-    // 1. Ambil nama bulan dan bersihkan spasi
-    let namaBulanTahun = globalNamaBulanTeks.trim();
-    namaBulanTahun = namaBulanTahun.replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
+    let namaBulanTahun = globalNamaBulanTeks.trim().replace(/([a-zA-Z]+)(\d+)/, '$1 $2');
     const namaFileSesuaiRequest = `${namaBulanTahun}.pdf`;
 
-    // 2. TAMPILKAN MODAL CUSTOM (Khas Pink Loading)
     const modal = document.getElementById('modal-proses-drive');
     const boksLoading = document.getElementById('drive-loading-icon');
     const boksSukses = document.getElementById('drive-success-icon');
     const teksSukses = document.getElementById('drive-success-text');
 
-    boksLoading.classList.remove('hidden'); // Munculkan loading pink
-    boksSukses.classList.add('hidden');     // Sembunyikan ikon sukses dulu
-    modal.classList.remove('hidden');       // Buka tirai modal utama
+    if (boksLoading) boksLoading.classList.remove('hidden');
+    if (boksSukses) boksSukses.classList.add('hidden');
+    if (modal) modal.classList.remove('hidden');
 
-    // Kalkulasi tinggi fleksibel (Long Page)
     const tinggiAsliPixel = elemenSumber.scrollHeight;
     const tinggiKertasAman = tinggiAsliPixel + 10;
 
@@ -3406,7 +3483,6 @@ function prosesEksporKeDrive() {
         pagebreak:    { mode: [] } 
     };
 
-    // 3. Proses html2pdf
     html2pdf().set(opsiSettingPDF).from(elemenSumber).outputPdf('blob').then((pdfBlob) => {
         const pembacaFile = new FileReader();
         pembacaFile.readAsDataURL(pdfBlob);
@@ -3419,7 +3495,6 @@ function prosesEksporKeDrive() {
             parameterForm.append("filename", namaFileSesuaiRequest);
             parameterForm.append("base64", dataBase64Mentah);
 
-            // 4. Kirim ke Google Drive
             fetch(urlAppsScriptMas, {
                 method: "POST",
                 body: parameterForm.toString(),
@@ -3428,32 +3503,29 @@ function prosesEksporKeDrive() {
             .then(respon => respon.json())
             .then(hasil => {
                 if (hasil.success) {
-                    // 5. UBAH MODAL MENJADI STATUS SUKSES (Centang Hijau)
-                    boksLoading.classList.add('hidden'); // Matikan loading pink
-                    boksSukses.classList.remove('hidden'); // Hidupkan sukses hijau
-                    teksSukses.innerText = `Berkas Laporan "${namaFileSesuaiRequest}" telah tersimpan di NSA CLOUD. Kini anda dapat mengeceknya di Tab Arsip Summary.`;
+                    if (boksLoading) boksLoading.classList.add('hidden');
+                    if (boksSukses) boksSukses.classList.remove('hidden');
+                    if (teksSukses) teksSukses.innerText = `Berkas Laporan "${namaFileSesuaiRequest}" telah tersimpan di NSA CLOUD. Kini anda dapat mengeceknya di Tab Arsip Summary.`;
 
                     if (typeof muatUlangDaftarArsipDrive === "function") {
                         muatUlangDaftarArsipDrive();
                     }
                 } else {
-                    modal.classList.add('hidden'); // Sembunyikan modal jika error
+                    if (modal) modal.classList.add('hidden');
                     alert("Gagal menyimpan ke Drive: " + hasil.error);
                 }
             })
             .catch(error => {
-                modal.classList.add('hidden'); // Sembunyikan modal jika error jaringan
+                if (modal) modal.classList.add('hidden');
                 alert("Terjadi gangguan koneksi: " + error);
             });
         };
     });
 }
 
-/**
- * FUNGSI TAMBAHAN: Untuk Menutup Modal Saat Klik Tombol Selesai
- */
 function tutupModalDriveCustom() {
-    document.getElementById('modal-proses-drive').classList.add('hidden');
+    const modal = document.getElementById('modal-proses-drive');
+    if (modal) modal.classList.add('hidden');
 }
 </script>
 
