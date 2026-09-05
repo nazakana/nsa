@@ -12,8 +12,10 @@
 	<link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+	
     
-   <style>
+  <style>
     /* ========================================================================= */
     /* LOCK TOTAL 1 SCREEN (GLOBAL & MOBILE DEFAULT)                            */
     /* ========================================================================= */
@@ -173,10 +175,10 @@
         margin-bottom: 10px;
     }
 
-.menu-grid {
+    .menu-grid {
         display: flex;
         flex-direction: column;
-        gap: 8px; /* Diperketat agar 4 tombol pas & ramping di HP */
+        gap: 8px; /* Diperketat agar 5 tombol pas & ramping di HP */
     }
 
     .btn-unit {
@@ -193,7 +195,7 @@
         text-decoration: none;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-   .btn-unit:hover {
+    .btn-unit:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
     }
@@ -207,7 +209,7 @@
         box-shadow: 0 8px 20px -6px rgba(251, 24, 168, 0.3);
     }
 
-   .icon-wrapper {
+    .icon-wrapper {
         width: 30px; /* Ukuran diperkecil dari 34px ke 30px */
         height: 30px;
         background: rgba(255, 255, 255, 0.2);
@@ -219,13 +221,13 @@
     }
     .style-icon { font-size: 12px; }
 	
-	.btn-semua-app {
+    .btn-semua-app {
         background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
         color: #ffffff !important;
         box-shadow: 0 6px 16px -4px rgba(153, 27, 27, 0.4);
     }
 	
-	.btn-semua-app .btn-text,
+    .btn-semua-app .btn-text,
     .btn-semua-app .btn-desc,
     .btn-semua-app .chevron-right {
         color: #ffffff !important;
@@ -373,21 +375,35 @@
         .nsa-right-panel {
             width: 55%;
             height: 100%;        
-            padding: 50px 55px;
+            padding: 35px 45px; /* Dikecilkan dari 50px 55px agar muat 5 tombol & footer */
         }
 
         .panel-section-title {
             text-align: left;
             font-size: 11px;
+            margin-bottom: 4px;
         }
 
-        .menu-grid { gap: 16px; }
-        .btn-unit { padding: 18px 24px; border-radius: 24px; gap: 18px; }
-        .icon-wrapper { width: 38px; height: 38px; border-radius: 14px; }
-        .style-icon { font-size: 16px; }
-        .btn-text { font-size: 13px; }
-        .btn-desc { font-size: 10px; margin-top: 3px; }
-        .chevron-right { font-size: 12px; }
+        .menu-grid { 
+            gap: 10px; /* Diperketat dari 16px ke 10px agar 5 tombol muat sempurna */
+        }
+        
+        .btn-unit { 
+            padding: 11px 20px; /* Diperkecil dari 18px ke 11px agar tombol lebih slim */
+            border-radius: 18px; 
+            gap: 14px; 
+        }
+        
+        .icon-wrapper { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 12px; 
+        }
+
+        .style-icon { font-size: 14px; }
+        .btn-text { font-size: 12px; }
+        .btn-desc { font-size: 9.5px; margin-top: 2px; }
+        .chevron-right { font-size: 11px; }
         
         .nsa-cloud-embed { padding: 18px 20px; border-radius: 24px; gap: 14px; }
         .embed-cloud-icon { font-size: 24px; }
@@ -401,125 +417,125 @@
         .icon-pos-8 { display: block; bottom: 8%; right: 22%; font-size: 3.5rem; animation: floatLoopA 12s infinite; }
     }
 	
-	/* ========================================================================= */
-/* ANIMASI TRANSISI PERPINDAHAN HALAMAN PREMIUM (ALA BOOTING OS)            */
-/* ========================================================================= */
-.nsa-transition-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    display: flex;
-    flex-direction: column; /* Menyusun konten secara vertikal ke bawah */
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
+    /* ========================================================================= */
+    /* ANIMASI TRANSISI PERPINDAHAN HALAMAN PREMIUM (ALA BOOTING OS)            */
+    /* ========================================================================= */
+    .nsa-transition-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column; /* Menyusun konten secara vertikal ke bawah */
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
 
-/* Munculkan overlay utama saat fungsi dipicu */
-.nsa-transition-overlay.show-layer {
-    opacity: 1;
-    pointer-events: auto;
-}
+    /* Munculkan overlay utama saat fungsi dipicu */
+    .nsa-transition-overlay.show-layer {
+        opacity: 1;
+        pointer-events: auto;
+    }
 
-/* Lingkaran ripple yang meluas menyapu layar */
-.nsa-transition-circle {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    transform: scale(0);
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 1;
-}
+    /* Lingkaran ripple yang meluas menyapu layar */
+    .nsa-transition-circle {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 1;
+    }
 
-.nsa-transition-overlay.active-fotokopi .nsa-transition-circle {
-    background: linear-gradient(135deg, #13a83f 0%, #0a9666 100%);
-    transform: scale(35);
-}
+    .nsa-transition-overlay.active-fotokopi .nsa-transition-circle {
+        background: linear-gradient(135deg, #13a83f 0%, #0a9666 100%);
+        transform: scale(35);
+    }
 
-.nsa-transition-overlay.active-apotek .nsa-transition-circle {
-    background: linear-gradient(135deg, #e01194 0%, #be1b66 100%);
-    transform: scale(35);
-}
+    .nsa-transition-overlay.active-apotek .nsa-transition-circle {
+        background: linear-gradient(135deg, #e01194 0%, #be1b66 100%);
+        transform: scale(35);
+    }
 
-/* Wadah Konten Tengah (Ikon, Judul, Loading) */
-.nsa-transition-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 0 30px;
-}
+    /* Wadah Konten Tengah (Ikon, Judul, Loading) */
+    .nsa-transition-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 0 30px;
+    }
 
-/* Animasi Ikon Membal */
-.nsa-transition-icon-box {
-    color: #ffffff;
-    font-size: 3.5rem;
-    opacity: 0;
-    transform: scale(0.4);
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    margin-bottom: 20px;
-}
-.nsa-transition-overlay.active .nsa-transition-icon-box {
-    opacity: 1;
-    transform: scale(1) rotate(360deg);
-}
+    /* Animasi Ikon Membal */
+    .nsa-transition-icon-box {
+        color: #ffffff;
+        font-size: 3.5rem;
+        opacity: 0;
+        transform: scale(0.4);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin-bottom: 20px;
+    }
+    .nsa-transition-overlay.active .nsa-transition-icon-box {
+        opacity: 1;
+        transform: scale(1) rotate(360deg);
+    }
 
-/* Teks Judul Unit */
-.nsa-transition-title {
-    color: #ffffff;
-    font-size: 18px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.5s ease 0.2s; /* Delay sedikit setelah ikon muncul */
-    margin-bottom: 8px;
-}
-.nsa-transition-overlay.active .nsa-transition-title {
-    opacity: 1;
-    transform: translateY(0);
-}
+    /* Teks Judul Unit */
+    .nsa-transition-title {
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.5s ease 0.2s; /* Delay sedikit setelah ikon muncul */
+        margin-bottom: 8px;
+    }
+    .nsa-transition-overlay.active .nsa-transition-title {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
-/* Teks Subtitle / Loading Sistem */
-.nsa-transition-loading-text {
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.5s ease 0.4s; /* Delay muncul paling terakhir */
-    animation: nsaPulseText 1.5s infinite ease-in-out; /* Efek kedip halus */
-}
-.nsa-transition-overlay.active .nsa-transition-loading-text {
-    opacity: 1;
-    transform: translateY(0);
-}
+    /* Teks Subtitle / Loading Sistem */
+    .nsa-transition-loading-text {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.5s ease 0.4s; /* Delay muncul paling terakhir */
+        animation: nsaPulseText 1.5s infinite ease-in-out; /* Efek kedip halus */
+    }
+    .nsa-transition-overlay.active .nsa-transition-loading-text {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
-/* Efek kedip teks ala OS loading */
-@keyframes nsaPulseText {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-}
+    /* Efek kedip teks ala OS loading */
+    @keyframes nsaPulseText {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+    }
 
-/* Fade out total sebelum pindah file HTML */
-.nsa-transition-overlay.fade-out {
-    opacity: 0;
-    transition: opacity 0.4s ease-out;
-}
+    /* Fade out total sebelum pindah file HTML */
+    .nsa-transition-overlay.fade-out {
+        opacity: 0;
+        transition: opacity 0.4s ease-out;
+    }
 
-.btn-katalog {
+    .btn-katalog {
         background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
         box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.3);
     }
 	
-	/* ========================================================================= */
+    /* ========================================================================= */
     /* STYLING TOMBOL AKSES CEPAT & MODAL POP-UP                                */
     /* ========================================================================= */
     .btn-akses-cepat {
@@ -701,7 +717,7 @@
         color: #94a3b8;
     }
 	
-	.btn-semua-app {
+    .btn-semua-app {
         background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
         color: #ffffff !important;
         box-shadow: 0 8px 20px -6px rgba(153, 27, 27, 0.4);
@@ -713,193 +729,193 @@
         color: #ffffff !important;
     }
 	
-	/* ========================================================================= */
-/* MODAL POPUP SEMUA APP NJA (MATERIAL GREEN & SCROLLABLE LIST)              */
-/* ========================================================================= */
-.nsa-modal-large {
-    max-width: 680px !important; /* Ukuran proporsional/agak lebar */
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    padding: 0 !important; /* Padding diatur internal agar header & body rapi */
-    overflow: hidden;
-}
+    /* ========================================================================= */
+    /* MODAL POPUP SEMUA APP NJA (MATERIAL GREEN & SCROLLABLE LIST)              */
+    /* ========================================================================= */
+    .nsa-modal-large {
+        max-width: 680px !important; /* Ukuran proporsional/agak lebar */
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        padding: 0 !important; /* Padding diatur internal agar header & body rapi */
+        overflow: hidden;
+    }
 
-.nsa-modal-large .nsa-modal-header {
-    padding: 18px 24px;
-    margin-bottom: 0;
-    border-bottom: 1px solid #e2e8f0;
-    background: #ffffff;
-    flex-shrink: 0;
-}
+    .nsa-modal-large .nsa-modal-header {
+        padding: 18px 24px;
+        margin-bottom: 0;
+        border-bottom: 1px solid #e2e8f0;
+        background: #ffffff;
+        flex-shrink: 0;
+    }
 
-/* Container Scrollable untuk Daftar Aplikasi */
-.nsa-app-list-container {
-    padding: 20px 24px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+    /* Container Scrollable untuk Daftar Aplikasi */
+    .nsa-app-list-container {
+        padding: 20px 24px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
 
-/* Card Tiap Aplikasi */
-.nsa-app-card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 18px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: all 0.25s ease;
-}
+    /* Card Tiap Aplikasi */
+    .nsa-app-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: all 0.25s ease;
+    }
 
-.nsa-app-card:hover {
-    border-color: #2ecc71;
-    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.12);
-    transform: translateY(-2px);
-}
+    .nsa-app-card:hover {
+        border-color: #2ecc71;
+        box-shadow: 0 8px 20px rgba(46, 204, 113, 0.12);
+        transform: translateY(-2px);
+    }
 
-/* Header Card: Nomor & Nama App */
-.nsa-app-title-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+    /* Header Card: Nomor & Nama App */
+    .nsa-app-title-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-.nsa-app-badge {
-    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-    color: #ffffff;
-    font-size: 11px;
-    font-weight: 800;
-    width: 26px;
-    height: 26px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
+    .nsa-app-badge {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 800;
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
 
-.nsa-app-name {
-    font-size: 14px;
-    font-weight: 800;
-    color: #0f172a;
-    letter-spacing: -0.2px;
-}
+    .nsa-app-name {
+        font-size: 14px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.2px;
+    }
 
-/* ========================================================================= */
-/* REVISI FRAME SNAPSHOT: MENJAGA RASIO ASLI & TIDAK TERPOTONG               */
-/* ========================================================================= */
-.nsa-app-snapshot-frame {
-    width: 100%;
-    height: auto; /* Biarkan tinggi menyesuaikan rasio asli gambar */
-    max-height: none; /* Hapus batasan tinggi kaku */
-    border-radius: 16px; /* Tetap pertahankan iOS rounded style */
-    overflow: hidden;
-    background: #f1f5f9;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    /* ========================================================================= */
+    /* REVISI FRAME SNAPSHOT: MENJAGA RASIO ASLI & TIDAK TERPOTONG               */
+    /* ========================================================================= */
+    .nsa-app-snapshot-frame {
+        width: 100%;
+        height: auto; /* Biarkan tinggi menyesuaikan rasio asli gambar */
+        max-height: none; /* Hapus batasan tinggi kaku */
+        border-radius: 16px; /* Tetap pertahankan iOS rounded style */
+        overflow: hidden;
+        background: #f1f5f9;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.nsa-app-snapshot-frame img {
-    width: 100%;
-    height: auto; /* Memastikan gambar selalu tampil utuh sesuai rasio */
-    display: block;
-    object-fit: contain; /* Mengunci agar seluruh detail foto terlihat tanpa ter-crop */
-}
+    .nsa-app-snapshot-frame img {
+        width: 100%;
+        height: auto; /* Memastikan gambar selalu tampil utuh sesuai rasio */
+        display: block;
+        object-fit: contain; /* Mengunci agar seluruh detail foto terlihat tanpa ter-crop */
+    }
 
-/* Teks Deskripsi */
-.nsa-app-desc {
-    font-size: 11px;
-    font-weight: 600;
-    color: #475569;
-    line-height: 1.6;
-    margin: 0;
-}
+    /* Teks Deskripsi */
+    .nsa-app-desc {
+        font-size: 11px;
+        font-weight: 600;
+        color: #475569;
+        line-height: 1.6;
+        margin: 0;
+    }
 
-/* ========================================================================= */
-/* MODAL POPUP BANNER: ADA YANG BARU!                                        */
-/* ========================================================================= */
-.nsa-modal-announcement {
-    max-width: 360px !important;
-    text-align: center;
-    padding: 28px 24px !important;
-    border-radius: 28px !important;
-    position: relative;
-}
+    /* ========================================================================= */
+    /* MODAL POPUP BANNER: ADA YANG BARU!                                        */
+    /* ========================================================================= */
+    .nsa-modal-announcement {
+        max-width: 360px !important;
+        text-align: center;
+        padding: 28px 24px !important;
+        border-radius: 28px !important;
+        position: relative;
+    }
 
-.nsa-announcement-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(46, 204, 113, 0.12);
-    color: #16a34a;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 6px 14px;
-    border-radius: 50px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 14px;
-}
+    .nsa-announcement-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(46, 204, 113, 0.12);
+        color: #16a34a;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 6px 14px;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 14px;
+    }
 
-.nsa-announcement-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-    color: #ffffff;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 26px;
-    margin: 0 auto 16px auto;
-    box-shadow: 0 10px 25px -5px rgba(46, 204, 113, 0.4);
-}
+    .nsa-announcement-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: #ffffff;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        margin: 0 auto 16px auto;
+        box-shadow: 0 10px 25px -5px rgba(46, 204, 113, 0.4);
+    }
 
-.nsa-announcement-title {
-    font-size: 18px;
-    font-weight: 900;
-    color: #0f172a;
-    margin-bottom: 8px;
-}
+    .nsa-announcement-title {
+        font-size: 18px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
 
-.nsa-announcement-desc {
-    font-size: 11px;
-    font-weight: 600;
-    color: #64748b;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
+    .nsa-announcement-desc {
+        font-size: 11px;
+        font-weight: 600;
+        color: #64748b;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
 
-.btn-announcement-action {
-    width: 100%;
-    padding: 12px 20px;
-    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-    color: #ffffff;
-    border: none;
-    border-radius: 50px;
-    font-size: 12px;
-    font-weight: 800;
-    font-family: inherit;
-    cursor: pointer;
-    box-shadow: 0 8px 20px -4px rgba(22, 163, 74, 0.4);
-    transition: all 0.25s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
+    .btn-announcement-action {
+        width: 100%;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        color: #ffffff;
+        border: none;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 800;
+        font-family: inherit;
+        cursor: pointer;
+        box-shadow: 0 8px 20px -4px rgba(22, 163, 74, 0.4);
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
 
-.btn-announcement-action:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.5);
-}
-    </style>
+    .btn-announcement-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.5);
+    }
+</style>
 </head>
 <body>
 
@@ -931,67 +947,450 @@
     </div>
     
     <!-- PANEL BAWAH/KANAN: MENU SELEKSI & DATA INTEGRASI -->
-<div class="nsa-right-panel">
-    <p class="panel-section-title">Silakan Pilih Unit Kerja</p>
-    
-    <!-- KUMPULAN 4 TOMBOL DALAM 1 DIV KESATUAN -->
-    <div class="menu-grid">
-        <!-- 1. Tombol Fotokopi -->
-        <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-fotokopi">
-            <div class="icon-wrapper">
-                <i class="fas fa-print style-icon"></i>
-            </div>
-            <div class="btn-content">
-                <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
-                <span class="btn-desc">Data Operasional & Arsip Digital</span>
-            </div>
-            <i class="fas fa-chevron-right chevron-right"></i>
-        </button>
+    <div class="nsa-right-panel">
+        <p class="panel-section-title">Silakan Pilih Unit Kerja</p>
+        
+        <!-- KUMPULAN 5 TOMBOL DALAM 1 DIV KESATUAN -->
+        <div class="menu-grid">
+            <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-fotokopi">
+                <div class="icon-wrapper">
+                    <i class="fas fa-print style-icon"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
+                    <span class="btn-desc">Data Operasional & Arsip Digital</span>
+                </div>
+                <i class="fas fa-chevron-right chevron-right"></i>
+            </button>
 
-        <!-- 2. Tombol Apotek -->
-        <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-apotek">
-            <div class="icon-wrapper">
-                <i class="fas fa-flask style-icon"></i>
-            </div>
-            <div class="btn-content">
-                <span class="btn-text">APOTEK NURJAYA</span>
-                <span class="btn-desc">Data Operasional & Arsip Digital</span>
-            </div>
-            <i class="fas fa-chevron-right chevron-right"></i>
-        </button>
+            <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-apotek">
+                <div class="icon-wrapper">
+                    <i class="fas fa-flask style-icon"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-text">APOTEK NURJAYA</span>
+                    <span class="btn-desc">Data Operasional & Arsip Digital</span>
+                </div>
+                <i class="fas fa-chevron-right chevron-right"></i>
+            </button>
 
-        <!-- 3. Tombol Akses Cepat -->
-        <button onclick="bukaModalAksesCepat()" class="btn-unit btn-akses-cepat">
-            <div class="icon-wrapper">
-                <i class="fas fa-bolt style-icon"></i>
-            </div>
-            <div class="btn-content">
-                <span class="btn-text">AKSES CEPAT</span>
-                <span class="btn-desc">Buka fitur pilihan dengan efisien</span>
-            </div>
-            <i class="fas fa-chevron-right chevron-right"></i>
-        </button>
+            <button onclick="bukaModalFaceScanner()" class="btn-unit bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg hover:shadow-emerald-500/20">
+                <div class="icon-wrapper bg-white/20 text-white">
+                    <i class="fas fa-user-check style-icon"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-text">PRESENSI KARYAWAN</span>
+                    <span class="btn-desc">Absen Cepat via Pemindaian Wajah</span>
+                </div>
+                <i class="fas fa-camera chevron-right"></i>
+            </button>
 
-       <!-- 4. Tombol Semua App NJA -->
-<button onclick="bukaModalSemuaApp()" class="btn-unit btn-semua-app">
-    <div class="icon-wrapper">
-        <i class="fas fa-th-large style-icon"></i>
+            <button onclick="bukaModalAksesCepat()" class="btn-unit btn-akses-cepat">
+                <div class="icon-wrapper">
+                    <i class="fas fa-bolt style-icon"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-text">AKSES CEPAT</span>
+                    <span class="btn-desc">Buka fitur pilihan dengan efisien</span>
+                </div>
+                <i class="fas fa-chevron-right chevron-right"></i>
+            </button>
+
+            <button onclick="bukaModalSemuaApp()" class="btn-unit btn-semua-app">
+                <div class="icon-wrapper">
+                    <i class="fas fa-th-large style-icon"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-text">SEMUA APP NJA</span>
+                    <span class="btn-desc">Ekosistem aplikasi Nurjaya</span>
+                </div>
+                <i class="fas fa-chevron-right chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Footer Penutup -->
+        <div class="panel-footer">
+            <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
+        </div>
     </div>
-    <div class="btn-content">
-        <span class="btn-text">SEMUA APP NJA</span>
-        <span class="btn-desc">Ekosistem aplikasi Nurjaya</span>
-    </div>
-    <i class="fas fa-chevron-right chevron-right"></i>
-</button>
-    </div>
-    
-    <!-- Footer Penutup -->
-    <div class="panel-footer">
-        <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
+</div> <!-- Penutup nsa-portal-wrapper -->
+
+
+
+<!-- Modal Pengenalan Wajah -->
+<div id="modal-face-scanner" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white w-full max-w-md rounded-[28px] p-6 shadow-2xl border border-slate-100 flex flex-col items-center space-y-4 relative transform scale-95 transition-all duration-300">
+        
+        <div class="w-full flex justify-between items-center pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-face-viewfinder text-emerald-600 text-xl animate-pulse"></i>
+                <h3 class="font-black text-slate-800 text-sm uppercase tracking-wider">Pemindaian Wajah Karyawan</h3>
+            </div>
+            <button type="button" onclick="tutupModalFaceScanner()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 hover:text-rose-600 text-slate-500 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="relative w-full aspect-square bg-slate-950 rounded-[20px] overflow-hidden flex items-center justify-center shadow-inner border-2 border-slate-200">
+            <video id="face-video" autoplay muted playsinline class="w-full h-full object-cover transform -scale-x-100"></video>
+            <canvas id="face-canvas" class="absolute inset-0 w-full h-full pointer-events-none transform -scale-x-100"></canvas>
+
+            <div id="face-loading" class="absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center text-white space-y-3 z-10">
+                <i class="fa-solid fa-circle-notch animate-spin text-3xl text-emerald-400"></i>
+                <span id="face-loading-text" class="text-xs font-bold tracking-wide">Memuat Model Deteksi Wajah...</span>
+            </div>
+        </div>
+
+        <div class="w-full text-center space-y-1">
+            <p id="face-status-text" class="text-xs font-black text-emerald-600 uppercase tracking-wide">Arahkan Wajah Anda ke Kamera</p>
+            <p class="text-[11px] text-slate-400 font-medium">Sistem akan mencocokkan identitas secara otomatis</p>
+        </div>
     </div>
 </div>
 
+<div id="wrapper_form_presensi" class="p-6 md:px-8 md:pb-8 space-y-6 text-gray-700 hidden fade-in border-t border-gray-100">
+    
+    <div class="flex items-center justify-between bg-emerald-50/80 p-3.5 px-5 rounded-[20px] border border-emerald-200/60 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-md">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div>
+                <p class="text-xs font-black text-gray-800 uppercase">Presensi Digital NSA</p>
+                <p class="text-[11px] text-emerald-700 font-bold">Verifikasi Identitas via Pemindaian Wajah</p>
+            </div>
+        </div>
+        <button type="button" onclick="bukaModalFaceScanner()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-[14px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-2">
+            <i class="fa-solid fa-camera"></i> Scan Wajah
+        </button>
+    </div>
+
+    <div class="p-4 bg-slate-50 border-2 border-slate-200 rounded-[22px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+        <div class="space-y-1">
+            <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-user-tie text-green-600"></i> Nama Karyawan
+            </label>
+            <div class="relative">
+                <select id="presensi-karyawan" required 
+                    class="w-full pl-4 pr-12 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-sm appearance-none h-[48px]">
+                    <option value="" disabled selected hidden>-- Pilih Nama --</option>
+                    <option value="Dadan">Dadan Nurfaizal</option>
+                    <option value="Syamsi">Syamsi Nurhakim</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-green-600">
+                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-1">
+            <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar-week text-green-600"></i> Target Buku Periode
+            </label>
+            <div class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] text-sm text-gray-700 font-black tracking-wide flex items-center gap-2.5 min-h-[48px]">
+                <i class="fa-solid fa-clock-rotate-left text-amber-500 animate-pulse"></i>
+                <span id="label-periode-aktif" class="italic text-gray-500 font-normal">Pilih nama karyawan dahulu...</span>
+            </div>
+        </div>
+    </div>
+
+    <form id="form-presensi-nsa" class="space-y-6">
+        <div class="p-4 sm:p-5 bg-emerald-50 rounded-[24px] border border-emerald-200/80 shadow-md space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div class="space-y-1.5">
+                    <label for="presensi-tanggal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-day text-green-600"></i> Hari / Tanggal Kerja
+                    </label>
+                    <input type="date" id="presensi-tanggal" required 
+                        class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-green-600"></i> Status Kehadiran
+                    </label>
+                    <div class="relative">
+                        <select id="presensi-kehadiran" required 
+                            class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                            <option value="YA">YA (Hadir Kerja)</option>
+                            <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-dashed border-emerald-200/60 my-2">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div class="space-y-1.5">
+                    <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
+                    </label>
+                    <div class="relative">
+                        <select id="presensi-jadwal" required 
+                            class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                            <option value="2">2 Karyawan (Full Team)</option>
+                            <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
+                    <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus 1 Karyawan/Lembur)</span>
+                    </label>
+                    <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
+                        class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                </div>
+            </div>
+
+            <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
+                <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-exclamation text-green-600"></i> Alasan Tidak Hadir <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus jika TIDAK HADIR)</span>
+                </label>
+                <input type="text" id="presensi-alasan-absen" placeholder="Contoh: jatah libur, izin, sakit" disabled 
+                    class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+            </div>
+        </div>
+
+        <div class="p-4 sm:p-5 bg-orange-500 rounded-[24px] border border-orange-600 shadow-md space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div class="space-y-1.5">
+                    <label for="presensi-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-business-time text-orange-100"></i> Potongan Jam Kerja <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
+                    </label>
+                    <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00 (jam.menit)(pakai titik)" 
+                        class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                </div>
+                
+                <div class="space-y-1.5">
+                    <label for="presensi-alasan-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-comment-dots text-orange-100"></i> Alasan Potongan Jam <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
+                    </label>
+                    <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk pagi hari" 
+                        class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 sm:p-5 bg-blue-500 rounded-[24px] border border-blue-600 shadow-md space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div class="space-y-1.5">
+                    <label for="presensi-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-clock text-blue-100"></i> Tambahan Jam / Overtime <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
+                    </label>
+                    <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00 (jam.menit)(pakai titik)" 
+                        class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                    <small class="text-[10px] text-blue-100 font-bold italic block pl-1">Lebihan waktu di luar batas wajar</small>
+                </div>
+                
+                <div class="space-y-1.5">
+                    <label for="presensi-alasan-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-signature text-blue-100"></i> Alasan Tambahan Jam <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
+                    </label>
+                    <input type="text" id="presensi-alasan-tambahan" placeholder="Contoh: tutup toko jam 20.45" 
+                        class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-gray-100 flex justify-end">
+            <button type="submit" id="btn-submit-presensi"
+                class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up text-sm"></i> KIRIM PRESENSI KE NSA CLOUD
+            </button>
+        </div>
+        
+        <div class="pt-2 border-t border-dashed border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
+            <div class="text-center sm:text-left">
+                <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Pengecekan Riwayat Pengisian</p>
+                <p class="text-[12px] text-gray-600 font-black uppercase">Pratinjau Kartu Presensi</p>
+            </div>
+            <button type="button" id="btn-buka-modal" onclick="javascript:void(0)"
+                class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs rounded-[16px] uppercase tracking-wider shadow-md shadow-blue-600/10 transition-all duration-200 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-address-card text-sm"></i> Tampilkan Presensi Bulan Ini
+            </button>
+        </div>
+    </form>
 </div>
+
+</div>
+
+<script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+
+<script>
+// =========================================================================
+// LOGIKA PEMINDAIAN WAJAH VIA FACE-API (TINYFACE) REALTIME
+// =========================================================================
+
+// Vector 128 Float Karyawan Aktif
+const DATABASE_WAJAH_KARYAWAN = [
+    {
+        nama: "Dadan",
+        namaLengkap: "Dadan Nurfaizal",
+        descriptor: new Float32Array([
+            -0.11779065430164337,0.12306998670101166,0.007922072894871235,-0.07710947096347809,0.041793011128902435,-0.05309397354722023,-0.06988873332738876,-0.1683637946844101,0.13666890561580658,-0.09785641729831696,0.246070995926857,-0.010115759447216988,-0.15092168748378754,-0.17370843887329102,-0.00023576151579618454,0.18665538728237152,-0.2612951993942261,-0.19058507680892944,-0.02909032255411148,-0.053465329110622406,0.06535819917917252,-0.009028464555740356,0.05517340451478958,0.01953812502324581,-0.11114319413900375,-0.3074604868888855,-0.09886013716459274,-0.12047120928764343,0.05039301514625549,-0.024285389110445976,-0.01846861094236374,-0.043838609009981155,-0.23869453370571136,-0.009007939137518406,0.03641070798039436,0.030305011197924614,0.009764253161847591,-0.0787927582859993,0.26614901423454285,-0.015356769785284996,-0.1774108111858368,-0.007811080664396286,0.06361115723848343,0.2461562305688858,0.1537797600030899,0.008145825937390327,-0.006392539944499731,-0.1310543417930603,0.14342467486858368,-0.06433143466711044,0.05736479163169861,0.1610361635684967,0.09394557029008865,0.09148702025413513,0.014358596876263618,-0.13240565359592438,0.08235572278499603,0.08637183159589767,-0.17346951365470886,-0.011069412343204021,-0.003352307714521885,-0.09330600500106812,-0.014266862533986568,-0.05103429779410362,0.2509922683238983,0.03835640847682953,-0.09469481557607651,-0.21553155779838562,0.11694661527872086,-0.055710986256599426,-0.07983178645372391,0.05924122408032417,-0.182998925447464,-0.17523683607578278,-0.3599672019481659,0.012092219665646553,0.32249605655670166,0.06799454241991043,-0.17854058742523193,0.13289354741573334,-0.01833481341600418,-0.08397432416677475,0.12401781231164932,0.19236548244953156,-0.05648629739880562,0.09300380200147629,-0.06146438792347908,0.03235269710421562,0.20556795597076416,-0.050888873636722565,-0.09914756566286087,0.16802285611629486,-0.08163345605134964,0.06775791198015213,0.0050642285495996475,0.010131430812180042,-0.043553464114665985,0.0630258247256279,-0.10584079474210739,-0.020100638270378113,0.07101255655288696,0.006204073317348957,-0.004746286664158106,0.12910038232803345,-0.16817741096019745,0.04379816725850105,0.04991750046610832,0.007389975246042013,-0.048983134329319,0.011773188598453999,-0.0887710303068161,-0.08768858760595322,0.06147465109825134,-0.25570595264434814,0.27683380246162415,0.2007133811712265,0.06503449380397797,0.13180981576442719,0.09807693958282471,0.04640010744333267,-0.014772703871130943,0.015089833177626133,-0.19498500227928162,0.0011817687191069126,0.11574918031692505,0.05733374506235123,0.15262091159820557,0.04000850394368172
+        ])
+    },
+    {
+        nama: "Syamsi",
+        namaLengkap: "Syamsi Nurhakim",
+        descriptor: new Float32Array([
+            -0.10577306151390076,0.07945366948843002,0.012352822348475456,-0.09075901657342911,-0.0563863106071949,-0.07116706669330597,0.011789320036768913,-0.1618708074092865,0.21981939673423767,-0.16043946146965027,0.2590564489364624,-0.032140761613845825,-0.2047329694032669,-0.06972010433673859,-0.036523547023534775,0.05504155531525612,-0.1828380525112152,-0.14979326725006104,0.0000026244670152664185,-0.05725269019603729,0.09553675353527069,0.004888556897640228,-0.02071608044207096,0.05624544247984886,-0.1322370171546936,-0.2877645194530487,-0.10604914277791977,-0.12519946694374084,0.029199179261922836,-0.14132782816886902,0.02090391144156456,0.044869258999824524,-0.25586917996406555,-0.08658894896507263,-0.004890543408691883,0.08939829468727112,0.011251603253185749,-0.018237996846437454,0.20029786229133606,-0.008807193487882614,-0.16873116791248322,-0.05995276942849159,-0.0450722798705101,0.2666006088256836,0.07861055433750153,-0.005512479692697525,-0.05331404134631157,-0.10988719761371613,0.05339464545249939,-0.15400615334510803,0.03388076648116112,0.14659245312213898,0.07079905271530151,0.03251609578728676,-0.02392170950770378,-0.15651610493659973,0.04513142630457878,0.06372666358947754,-0.19140078127384186,0.009619124233722687,0.05700647085905075,-0.1522020697593689,-0.02890261821448803,0.01963037997484207,0.24110442399978638,0.031669601798057556,-0.09395629167556763,-0.11156659573316574,0.11211267113685608,-0.1392623335123062,-0.037458475679159164,0.07889600843191147,-0.10501577705144882,-0.18585070967674255,-0.26761919260025024,0.03975094109773636,0.46704044938087463,0.0871218740940094,-0.2060685157775879,0.07406890392303467,-0.15701262652873993,-0.03656256943941116,0.16098132729530334,0.09972818195819855,-0.02014581300318241,0.09309691190719604,-0.09401950240135193,0.07221155613660812,0.1765729933977127,-0.02308119460940361,-0.09501217305660248,0.17361193895339966,-0.056690748780965805,0.07320460677146912,0.08148467540740967,-0.020856134593486786,-0.05370768904685974,-0.018038051202893257,-0.10848388075828552,-0.023749835789203644,0.03492762893438339,-0.041014671325683594,-0.07085902243852615,0.15043340623378754,-0.19162847101688385,0.10391701012849808,0.062090057879686356,-0.09580329060554504,-0.020882701501250267,-0.019293339923024178,-0.09364566206932068,-0.11523500084877014,0.13153649866580963,-0.3066033124923706,0.20509576797485352,0.17906849086284637,0.018054477870464325,0.22040893137454987,0.04581082612276077,0.019165514037013054,-0.0017961682751774788,-0.04395680129528046,-0.16833773255348206,-0.024800043553113937,0.10179179161787033,0.02687317691743374,0.1273421049118042,-0.07184184342622757
+        ])
+    }
+];
+
+let streamKamera = null;
+let intervalDeteksi = null;
+let modelTerpanggil = false;
+
+// Buka Modal Scanner Wajah & Inisialisasi Kamera
+async function bukaModalFaceScanner() {
+    const modal = document.getElementById("modal-face-scanner");
+    const video = document.getElementById("face-video");
+    const loading = document.getElementById("face-loading");
+    const loadingText = document.getElementById("face-loading-text");
+    const statusText = document.getElementById("face-status-text");
+
+    modal.classList.remove("opacity-0", "pointer-events-none");
+    const innerBox = modal.querySelector(".transform");
+    if (innerBox) innerBox.classList.remove("scale-95");
+
+    loading.classList.remove("hidden");
+    statusText.textContent = "Menyiapkan Kamera & Sistem...";
+    statusText.className = "text-xs font-black text-amber-600 uppercase tracking-wide";
+
+    try {
+        streamKamera = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        video.srcObject = streamKamera;
+
+        if (!modelTerpanggil) {
+            loadingText.textContent = "Memuat Modul AI TinyFace...";
+            const MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/";
+            await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+            await faceapi.nets.faceLandmark64Net.loadFromUri(MODEL_URL);
+            await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+            modelTerpanggil = true;
+        }
+
+        loading.classList.add("hidden");
+        statusText.textContent = "Arahkan Wajah Anda ke Kamera";
+        statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide";
+
+        mulaiDeteksiWajahRealtime();
+    } catch (err) {
+        console.error("Gagal membuka kamera / modul face:", err);
+        alert("Gagal mengakses kamera atau memuat modul pemindaian wajah. Pastikan izin kamera aktif!");
+        tutupModalFaceScanner();
+    }
+}
+
+// Scanning Loop Realtime
+function mulaiDeteksiWajahRealtime() {
+    const video = document.getElementById("face-video");
+    const canvas = document.getElementById("face-canvas");
+    const statusText = document.getElementById("face-status-text");
+
+    const displaySize = { width: video.clientWidth || 320, height: video.clientHeight || 320 };
+    faceapi.matchDimensions(canvas, displaySize);
+
+    intervalDeteksi = setInterval(async () => {
+        const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 }))
+            .withFaceLandmarks()
+            .withFaceDescriptor();
+
+        if (detections) {
+            const resizedDetections = faceapi.resizeResults(detections, displaySize);
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            faceapi.draw.drawDetections(canvas, resizedDetections);
+
+            // Euclidean Distance Matching
+            let kecocokanTerbaik = null;
+            let jarakTerpendek = 0.50; // Threshold kecocokan
+
+            DATABASE_WAJAH_KARYAWAN.forEach(item => {
+                const jarak = faceapi.euclideanDistance(detections.descriptor, item.descriptor);
+                if (jarak < jarakTerpendek) {
+                    jarakTerpendek = jarak;
+                    kecocokanTerbaik = item;
+                }
+            });
+
+            if (kecocokanTerbaik) {
+                statusText.textContent = `Wajah Terdeteksi: ${kecocokanTerbaik.namaLengkap}`;
+                statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide animate-pulse";
+
+                clearInterval(intervalDeteksi);
+
+                setTimeout(() => {
+                    tutupModalFaceScanner();
+                    eksekusiPresensiOtomatis(kecocokanTerbaik.nama);
+                }, 700);
+            } else {
+                statusText.textContent = "Wajah Tidak Dikenali!";
+                statusText.className = "text-xs font-black text-rose-600 uppercase tracking-wide";
+            }
+        } else {
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            statusText.textContent = "Arahkan Wajah Anda ke Kamera";
+            statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide";
+        }
+    }, 250);
+}
+
+// Tutup Modal & Stop Stream Kamera
+function tutupModalFaceScanner() {
+    const modal = document.getElementById("modal-face-scanner");
+    const video = document.getElementById("face-video");
+    const canvas = document.getElementById("face-canvas");
+
+    if (intervalDeteksi) clearInterval(intervalDeteksi);
+    if (streamKamera) {
+        streamKamera.getTracks().forEach(track => track.stop());
+        streamKamera = null;
+    }
+
+    if (canvas) {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    if (video) video.srcObject = null;
+
+    const innerBox = modal.querySelector(".transform");
+    if (innerBox) innerBox.classList.add("scale-95");
+    setTimeout(() => {
+        modal.classList.add("opacity-0", "pointer-events-none");
+    }, 150);
+}
+
+// Auto-Select Nama Karyawan & Buka Wrapper Form
+function eksekusiPresensiOtomatis(namaKaryawan) {
+    const wrapperForm = document.getElementById("wrapper_form_presensi");
+    const selectKaryawan = document.getElementById("presensi-karyawan");
+
+    if (selectKaryawan) {
+        selectKaryawan.value = namaKaryawan;
+        // Trigger event change untuk deteksi periode otomatis
+        selectKaryawan.dispatchEvent(new Event("change"));
+    }
+
+    if (wrapperForm) {
+        wrapperForm.classList.remove("hidden");
+        wrapperForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+}
+</script>
+
 
 <script>
     function pilihUnitNSA(mode, targetUrl) {
@@ -1767,6 +2166,654 @@ function kirimRingkasanBelanjaWA() {
 }
 </script>
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+// =========================================================================
+// NSA PRESENSI JAVASCRIPT LOGIC - INTEGRASI SCAN WAJAH & FIT TO SCREEN
+// =========================================================================
+
+// Deklarasi fungsi global agar bisa dipanggil dari modul Scan Wajah
+window.eksekusiPresensiOtomatis = function(namaKaryawan) {
+    const selectKaryawan = document.getElementById("presensi-karyawan");
+    const wrapperForm = document.getElementById("wrapper_form_presensi");
+
+    if (selectKaryawan) {
+        selectKaryawan.value = namaKaryawan;
+        // Picu event change agar pencarian periode aktif berjalan
+        selectKaryawan.dispatchEvent(new Event("change"));
+    }
+
+    if (wrapperForm) {
+        wrapperForm.classList.remove("hidden");
+        wrapperForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. URL API Web App Google Apps Script
+    const API_URL_PRESENSI = "https://script.google.com/macros/s/AKfycbwyzHl2sdJAaskZR-OZNcAmcjSq4WebF8wfQk7u7He5ceMLcwyIRNPgwo1n-ZFxQyc-_A/exec";
+    const API_URL_UPLOAD_DRIVE = "https://script.google.com/macros/s/AKfycby8Z287iFeysy_R6Nstv55dQ1U0RbKK-CTNtgLp5-ch309OyH4dDfmqsf5IC6K8Xdop/exec";
+
+    // 2. Elemen DOM Form Utama
+    const selectKaryawan     = document.getElementById("presensi-karyawan");
+    const labelPeriode       = document.getElementById("label-periode-aktif");
+    const inputTanggal       = document.getElementById("presensi-tanggal");
+    const selectKehadiran     = document.getElementById("presensi-kehadiran");
+    const selectJadwal        = document.getElementById("presensi-jadwal");
+    const wrapperKetJadwal   = document.getElementById("wrapper-keterangan-jadwal");
+    const inputKetJadwal     = document.getElementById("presensi-ket-jadwal");
+    const wrapperAlasanAbsen = document.getElementById("wrapper-alasan-tidak-hadir");
+    const inputAlasanAbsen   = document.getElementById("presensi-alasan-absen");
+    const inputPotongan      = document.getElementById("presensi-potongan");
+    const inputAlasanPotong  = document.getElementById("presensi-alasan-potongan");
+    const formPresensi       = document.getElementById("form-presensi-nsa");
+    const btnSubmit          = document.getElementById("btn-submit-presensi");
+    
+    // --- ELEMEN UTAMA FORM TAMBAHAN JAM ---
+    const inputTambahanJamForm    = document.getElementById("presensi-tambahan");
+    const inputAlasanTambahanForm = document.getElementById("presensi-alasan-tambahan");
+    
+    // 3. Elemen DOM Navigasi Modal
+    const btnBukaModal       = document.getElementById("btn-buka-modal");
+    const btnBukaModalAlt    = document.getElementById("btn-buka-modal-alt");
+    const btnTutupModal      = document.getElementById("btn-tutup-modal");
+    const modalPresensi      = document.getElementById("modal-kartu-presensi");
+    const btnUnduhPdf        = document.getElementById("btn-unduh-pdf");
+    const btnUploadPresensiCloud = document.getElementById("btn-upload-presensi-cloud");
+    
+    const tabelKiriBody      = document.getElementById("tabel-kiri-body");
+    const tabelKananBody     = document.getElementById("tabel-kanan-body");
+    
+    const modalNamaKaryawan  = document.getElementById("modal-nama-karyawan");
+    const modalPeriodeKerja  = document.getElementById("modal-periode-kerja");
+    const modalTotalHariKerja = document.getElementById("modal-total-hari-kerja");
+    const modalTotalPotongan = document.getElementById("modal-total-potongan");
+    const modalTotalTambahan = document.getElementById("modal-total-tambahan");
+    
+    const rekapJadwal2       = document.getElementById("rekap-jadwal-2");
+    const rekapJadwal1       = document.getElementById("rekap-jadwal-1");
+    const rekapLibur         = document.getElementById("rekap-libur");
+    const rekapAbsen         = document.getElementById("rekap-absen");
+
+    // Elemen Input Manual & Mirroring Evaluasi Owner Dalam Modal
+    const inputAlasanCustom  = document.getElementById("modal-alasan-potongan-custom");
+    const mirrorAlasanCustom = document.getElementById("mirror-alasan-potongan-custom");
+    const inputAlasanTambahanCustom = document.getElementById("modal-alasan-tambahan-custom");
+    const mirrorAlasanTambahanCustom = document.getElementById("mirror-alasan-tambahan-custom");
+    const mirrorCatatanFinal = document.getElementById("mirror-catatan-final");
+
+    let namaPeriodeTerdeteksi = "";
+
+    if (inputTanggal) {
+        inputTanggal.value = new Date().toISOString().split('T')[0];
+    }
+	
+    // Mengambil elemen tombol dan wrapper form
+    const btnBukaForm = document.getElementById('btn-buka-form-presensi');
+    const wrapperForm = document.getElementById('wrapper_form_presensi');
+
+    // Jalankan event click untuk toggle form presensi manual
+    if (btnBukaForm && wrapperForm) {
+        btnBukaForm.addEventListener('click', function() {
+            wrapperForm.classList.toggle('hidden');
+            if (!wrapperForm.classList.contains('hidden')) {
+                wrapperForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    }
+
+    // =========================================================================
+    // FUNGSI RESPONSIVE AUTO-FIT SCALE
+    // =========================================================================
+    function paskanKartuKeLayarHP() {
+        const areaCetak = document.getElementById("area-cetak-pdf");
+        if (!areaCetak) return;
+
+        const lebarContainerModal = areaCetak.parentElement.clientWidth - 16;
+        const lebarAsliKartu = 756;
+
+        if (lebarContainerModal < lebarAsliKartu) {
+            const rasioSkala = lebarContainerModal / lebarAsliKartu;
+            areaCetak.style.transform = `scale(${rasioSkala})`;
+            areaCetak.style.transformOrigin = "top left";
+            
+            areaCetak.parentElement.style.height = `${756 * rasioSkala}px`;
+            areaCetak.parentElement.style.width = `${756 * rasioSkala}px`;
+            areaCetak.parentElement.style.margin = "0 auto";
+        } else {
+            areaCetak.style.transform = "scale(1)";
+            areaCetak.style.transformOrigin = "top center";
+            areaCetak.parentElement.style.height = "756px";
+            areaCetak.parentElement.style.width = "756px";
+        }
+    }
+
+    window.addEventListener("resize", paskanKartuKeLayarHP);
+
+    // =========================================================================
+    // FUNGSI 1: LOGIKA TOGGLE FORM UTAMA (YA/TIDAK HADIR)
+    // =========================================================================
+    function handleFormInteractivity() {
+        if (!selectKehadiran || !selectJadwal) return;
+        const isTidakHadir = selectKehadiran.value === "TIDAK";
+        const jenisJadwal  = selectJadwal.value;
+
+        if (isTidakHadir) {
+            selectJadwal.setAttribute("disabled", "disabled");
+            selectJadwal.value = "2";
+            if (selectJadwal.parentElement) selectJadwal.parentElement.classList.add("opacity-40", "pointer-events-none");
+            
+            if (wrapperKetJadwal && inputKetJadwal) {
+                wrapperKetJadwal.classList.add("opacity-40", "pointer-events-none");
+                inputKetJadwal.setAttribute("disabled", "disabled");
+                inputKetJadwal.removeAttribute("required");
+                inputKetJadwal.value = "";
+            }
+            if (wrapperAlasanAbsen && inputAlasanAbsen) {
+                wrapperAlasanAbsen.classList.remove("opacity-40", "pointer-events-none");
+                inputAlasanAbsen.removeAttribute("disabled");
+                inputAlasanAbsen.setAttribute("required", "required");
+            }
+        } else {
+            selectJadwal.removeAttribute("disabled");
+            if (selectJadwal.parentElement) selectJadwal.parentElement.classList.remove("opacity-40", "pointer-events-none");
+            
+            if (wrapperAlasanAbsen && inputAlasanAbsen) {
+                wrapperAlasanAbsen.classList.add("opacity-40", "pointer-events-none");
+                inputAlasanAbsen.setAttribute("disabled", "disabled");
+                inputAlasanAbsen.removeAttribute("required");
+                inputAlasanAbsen.value = "";
+            }
+            if (wrapperKetJadwal && inputKetJadwal) {
+                if (jenisJadwal === "1") {
+                    wrapperKetJadwal.classList.remove("opacity-40", "pointer-events-none");
+                    inputKetJadwal.removeAttribute("disabled");
+                    inputKetJadwal.setAttribute("required", "required");
+                } else {
+                    wrapperKetJadwal.classList.add("opacity-40", "pointer-events-none");
+                    inputKetJadwal.setAttribute("disabled", "disabled");
+                    inputKetJadwal.removeAttribute("required");
+                    inputKetJadwal.value = ""; 
+                }
+            }
+        }
+    }
+
+    if (selectKehadiran) selectKehadiran.addEventListener("change", handleFormInteractivity);
+    if (selectJadwal) selectJadwal.addEventListener("change", handleFormInteractivity);
+    handleFormInteractivity();
+
+    // =========================================================================
+    // FUNGSI 2: DETEKSI PERIODE BUKU AKTIF (A2 SPREADSHEET)
+    // =========================================================================
+    if (selectKaryawan) {
+        selectKaryawan.addEventListener("change", function() {
+            const karyawanTerpilih = this.value;
+            if (!karyawanTerpilih) return;
+
+            if (labelPeriode) {
+                labelPeriode.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-green-600"></i> <span class="text-xs font-medium italic text-amber-600">Mengecek buku periode...</span>`;
+                labelPeriode.className = "text-xs font-bold text-amber-600 italic flex items-center gap-1.5";
+            }
+
+            fetch(`${API_URL_PRESENSI}?karyawan=${karyawanTerpilih}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === "success" && result.periode_langsung && result.periode_langsung.toString().trim() !== "") {
+                        namaPeriodeTerdeteksi = result.periode_langsung;
+                        labelPeriode.textContent = "Periode " + result.periode_langsung;
+                        labelPeriode.className = "text-gray-800 font-black tracking-wide uppercase text-xs";
+                    } else {
+                        labelPeriode.textContent = "Periode belum diset di sel A2";
+                        labelPeriode.className = "text-xs font-bold text-amber-600 italic";
+                        namaPeriodeTerdeteksi = "";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching periode:", error);
+                    labelPeriode.textContent = "Gagal memuat info periode";
+                    labelPeriode.className = "text-xs font-bold text-red-600 italic";
+                    namaPeriodeTerdeteksi = "";
+                });
+        });
+    }
+
+    // =========================================================================
+    // FUNGSI 3: FORMATTING & PARSING REKAPITULASI DATA
+    // =========================================================================
+    function singkatanHariIndo(strTanggal) {
+        if (!strTanggal) return "-";
+        const dateObj = new Date(strTanggal);
+        if (isNaN(dateObj)) return strTanggal;
+        const tanggal = String(dateObj.getDate()).padStart(2, '0');
+        const daftarHari = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+        return `${tanggal}/${daftarHari[dateObj.getDay()]}`;
+    }
+
+    function hitungTotalPotonganMinit(dataRows) {
+        let totalMenit = 0;
+        dataRows.forEach(row => {
+            const pot = row.potonganjam || row.potongan_jam;
+            if (pot) {
+                const parts = pot.toString().replace(',', '.').split('.');
+                const jam = parseInt(parts[0]) || 0;
+                const menit = parseInt(parts[1]) || 0;
+                totalMenit += (jam * 60) + menit;
+            }
+        });
+        return `${Math.floor(totalMenit / 60)} jam ${totalMenit % 60} menit`;
+    }
+
+    function hitungTotalTambahanMinit(dataRows) {
+        let totalMenit = 0;
+        dataRows.forEach(row => {
+            const tam = row.tambahanjam || row.tambahan_jam;
+            if (tam) {
+                const parts = tam.toString().replace(',', '.').split('.');
+                const jam = parseInt(parts[0]) || 0;
+                const menit = parseInt(parts[1]) || 0;
+                totalMenit += (jam * 60) + menit;
+            }
+        });
+        return `${Math.floor(totalMenit / 60)} jam ${totalMenit % 60} menit`;
+    }
+
+    // =========================================================================
+    // FUNGSI 4: LIVE MIRRORING TERBARU (EVALUASI OWNER)
+    // =========================================================================
+    function sinkronisasiTeksKeMirror() {
+        if (inputAlasanCustom && mirrorAlasanCustom) {
+            const txtAlasan = inputAlasanCustom.value.trim();
+            mirrorAlasanCustom.innerHTML = txtAlasan === "" ? "-" : txtAlasan.toUpperCase();
+        }
+	
+        if (inputAlasanTambahanCustom && mirrorAlasanTambahanCustom) {
+            const txtAlasanTambahan = inputAlasanTambahanCustom.value.trim();
+            mirrorAlasanTambahanCustom.innerHTML = txtAlasanTambahan === "" ? "-" : txtAlasanTambahan.toUpperCase();
+        }
+
+        const listChipsInput = document.querySelectorAll('.input-catatan-chip');
+        if (mirrorCatatanFinal) {
+            let htmlListChips = "";
+            let adaIsi = false;
+
+            if (listChipsInput.length > 0) {
+                listChipsInput.forEach(input => {
+                    const isiPoin = input.value.trim();
+                    if (isiPoin !== "") {
+                        adaIsi = true;
+                        htmlListChips += `
+                            <li class="flex items-start gap-1.5 leading-tight">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1 flex-shrink-0"></span>
+                                <span class="uppercase">${isiPoin}</span>
+                            </li>
+                        `;
+                    }
+                });
+            }
+            mirrorCatatanFinal.innerHTML = adaIsi ? htmlListChips : `<li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- BELUM ADA CATATAN TAMBAHAN -</li>`;
+        }
+        paskanKartuKeLayarHP();
+    }
+
+    function inisialisasiEventCatatanChip() {
+        const listChipsInput = document.querySelectorAll('.input-catatan-chip');
+        listChipsInput.forEach(input => {
+            input.addEventListener('input', sinkronisasiTeksKeMirror);
+        });
+        if (inputAlasanCustom) {
+            inputAlasanCustom.addEventListener("input", sinkronisasiTeksKeMirror);
+        }
+        if (inputAlasanTambahanCustom) {
+            inputAlasanTambahanCustom.addEventListener("input", sinkronisasiTeksKeMirror);
+        }
+    }
+    inisialisasiEventCatatanChip();
+
+    // =========================================================================
+    // FUNGSI 5: INJEKSI DATA API & PREVIEW MODAL
+    // =========================================================================
+    function pemicuBukaModal() {
+        const karyawanTerpilih = selectKaryawan ? selectKaryawan.value : "";
+        const pemetaanNamaLengkap = { 
+            "Dadan": "Dadan Nurfaizal",
+            "Syamsi": "Syamsi Nurhakim"
+        };
+
+        if (!karyawanTerpilih) {
+            alert("Pilih nama staf karyawan terlebih dahulu di form utama!");
+            if (selectKaryawan) selectKaryawan.focus();
+            return;
+        }
+
+        if (btnUnduhPdf) {
+            btnUnduhPdf.setAttribute("disabled", "disabled");
+            btnUnduhPdf.classList.add("opacity-50", "cursor-not-allowed");
+            btnUnduhPdf.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> Memuat Data...`;
+        }
+
+        if (modalNamaKaryawan) modalNamaKaryawan.textContent = pemetaanNamaLengkap[karyawanTerpilih] || karyawanTerpilih;
+        if (modalPeriodeKerja) modalPeriodeKerja.textContent = labelPeriode ? labelPeriode.textContent.replace("Periode ", "") : "--";
+        if (modalTotalHariKerja) modalTotalHariKerja.textContent = "...";
+        if (modalPresensi) {
+            modalPresensi.classList.remove("opacity-0", "pointer-events-none");
+            const innerBox = modalPresensi.querySelector(".transform");
+            if (innerBox) innerBox.classList.remove("scale-95");
+            modalPresensi.style.overflowY = "auto";
+        }
+
+        if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
+        if (tabelKananBody) tabelKananBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
+        
+        setTimeout(paskanKartuKeLayarHP, 50);
+
+        fetch(`${API_URL_PRESENSI}?karyawan=${karyawanTerpilih}`)
+            .then(res => res.json())
+            .then(result => {
+                if (result.status !== "success" || !result.data || result.data.length === 0) {
+                    if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
+                    if (tabelKananBody) tabelKananBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
+                    if (modalTotalHariKerja) modalTotalHariKerja.textContent = "0";
+                    if (modalTotalPotongan) modalTotalPotongan.textContent = "0 jam 0 menit";
+                    if (modalTotalTambahan) modalTotalTambahan.textContent = "0 jam 0 menit";
+                    sinkronisasiTeksKeMirror();
+                    return;
+                }
+
+                if (result.periode_langsung && modalPeriodeKerja) modalPeriodeKerja.textContent = result.periode_langsung;
+                if (modalTotalHariKerja) modalTotalHariKerja.textContent = result.data.length;
+
+                let cJ2 = 0, cJ1 = 0, cLibur = 0, cAbsen = 0;
+                if (tabelKiriBody) tabelKiriBody.innerHTML = "";
+                if (tabelKananBody) tabelKananBody.innerHTML = "";
+
+                result.data.forEach((row, index) => {
+                    const hariKe = index + 1;
+                    const hadirVal = (row.kehadiran || "").toString().toUpperCase();
+                    const jadwalVal = (row.jenisjadwalkerja || row.jenis_jadwal_kerja || "").toString();
+                    const ketJadwal = row.keteranganjadwal || row.keterangan_jam || "";
+                    const alasanAbsen = row.alasantidakhadir || row.alasan_tidak_hadir || "";
+
+                    if (hadirVal === "YA") {
+                        if (jadwalVal === "2") cJ2++;
+                        else if (jadwalVal === "1") cJ1++;
+                    } else {
+                        if (alasanAbsen.toUpperCase().includes("LIBUR")) cLibur++;
+                        else cAbsen++;
+                    }
+
+                    const simbolMasuk = hadirVal === "YA" ? "✔" : "✘";
+                    const kelasSimbol = hadirVal === "YA" ? "text-emerald-700" : "text-rose-600";
+                    const teksJadwal = hadirVal === "YA" ? (jadwalVal === "1" ? "1 Karyawan" : "2 Karyawan") : "-";
+                    const kolomKeterangan = hadirVal === "YA" ? (ketJadwal || "-") : (alasanAbsen || "-");
+
+                    const trHtml = `
+                        <tr class="h-[18px] bg-white text-[9px]">
+                            <td class="border-r border-slate-500 py-0.5 text-center font-mono font-normal text-slate-500">${hariKe}</td>
+                            <td class="border-r border-slate-500 py-0.5 text-center font-semibold">${singkatanHariIndo(row.tanggal)}</td>
+                            <td class="border-r border-slate-500 py-0.5 ${kelasSimbol} text-center font-black">${simbolMasuk}</td>
+                            <td class="border-r border-slate-500 py-0.5 text-center uppercase tracking-tighter text-[8px]">${teksJadwal}</td>
+                            <td class="px-1 py-0.5 text-left uppercase text-[8px] truncate max-w-[90px]" title="${kolomKeterangan}">${kolomKeterangan}</td>
+                        </tr>
+                    `;
+
+                    if (hariKe <= 15) {
+                        if (tabelKiriBody) tabelKiriBody.insertAdjacentHTML('beforeend', trHtml);
+                    } else {
+                        if (tabelKananBody) tabelKananBody.insertAdjacentHTML('beforeend', trHtml);
+                    }
+                });
+
+                if (tabelKiriBody) {
+                    while (tabelKiriBody.children.length < 15) {
+                        tabelKiriBody.insertAdjacentHTML('beforeend', `<tr class="h-[18px]"><td class="border-r border-slate-200">&nbsp;</td><td class="border-r border-slate-200"></td><td class="border-r border-slate-200"></td><td class="border-r border-slate-200"></td><td></td></tr>`);
+                    }
+                }
+                if (tabelKananBody) {
+                    while (tabelKananBody.children.length < 16) {
+                        tabelKananBody.insertAdjacentHTML('beforeend', `<tr class="h-[18px]"><td class="border-r border-slate-200">&nbsp;</td><td class="border-r border-slate-200"></td><td class="border-r border-slate-200"></td><td class="border-r border-slate-200"></td><td></td></tr>`);
+                    }
+                }
+
+                if (rekapJadwal2) rekapJadwal2.textContent = `${cJ2} hari`;
+                if (rekapJadwal1) rekapJadwal1.textContent = `${cJ1} hari`;
+                if (rekapLibur)   rekapLibur.textContent   = `${cLibur} hari`;
+                if (rekapAbsen)   rekapAbsen.textContent   = `${cAbsen} hari`;
+                
+                if (modalTotalPotongan) modalTotalPotongan.textContent = hitungTotalPotonganMinit(result.data);
+                if (modalTotalTambahan) modalTotalTambahan.textContent = hitungTotalTambahanMinit(result.data);
+
+                sinkronisasiTeksKeMirror();
+                if (btnUnduhPdf) {
+                    btnUnduhPdf.removeAttribute("disabled");
+                    btnUnduhPdf.classList.remove("opacity-50", "cursor-not-allowed");
+                    btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
+                }
+            })
+            .catch(err => {
+                console.error("Gagal memuat riwayat:", err);
+                if (btnUnduhPdf) {
+                    btnUnduhPdf.setAttribute("disabled", "disabled");
+                    btnUnduhPdf.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Gagal Memuat Data`;
+                }
+            });
+    }
+
+    if (btnBukaModal) btnBukaModal.addEventListener("click", pemicuBukaModal);
+    if (btnBukaModalAlt) btnBukaModalAlt.addEventListener("click", pemicuBukaModal);
+    if (btnTutupModal && modalPresensi) {
+        btnTutupModal.addEventListener("click", function() {
+            const innerBox = modalPresensi.querySelector(".transform");
+            if (innerBox) innerBox.classList.add("scale-95");
+            setTimeout(() => {
+                modalPresensi.classList.add("opacity-0", "pointer-events-none");
+            }, 150);
+        });
+    }
+
+    // =========================================================================
+    // FUNGSI 6: DOWNLOAD PDF LOKAL
+    // =========================================================================
+    if (btnUnduhPdf) {
+        btnUnduhPdf.addEventListener("click", function() {
+            const elementTarget = document.getElementById("area-cetak-pdf");
+            if (!elementTarget) return alert("Elemen area cetak tidak ditemukan!");
+
+            if (elementTarget.innerText.includes("Memuat data...")) {
+                return alert("Mohon tunggu, data riwayat presensi sedang dimuat!");
+            }
+
+            sinkronisasiTeksKeMirror();
+
+            const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
+            const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
+            const namaFile = `Presensi_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.pdf`;
+            btnUnduhPdf.setAttribute("disabled", "disabled");
+            btnUnduhPdf.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> Merender PDF...`;
+
+            const styleAsli = elementTarget.getAttribute("style") || "";
+            elementTarget.style.setProperty("transform", "none", "important");
+            elementTarget.style.setProperty("margin-bottom", "0px", "important");
+
+            const opsiSetelan = {
+                margin:       0,
+                filename:     namaFile,
+                image:        { type: 'jpeg', quality: 1.0 },
+                html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
+                jsPDF:        { unit: 'cm', format: [20, 20], orientation: 'portrait' }, 
+                pagebreak:    { mode: ['css', 'legacy'] }
+            };
+
+            html2pdf().set(opsiSetelan).from(elementTarget).save().then(() => {
+                elementTarget.setAttribute("style", styleAsli);
+                btnUnduhPdf.removeAttribute("disabled");
+                btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
+            }).catch(err => {
+                console.error(err);
+                elementTarget.setAttribute("style", styleAsli);
+                btnUnduhPdf.removeAttribute("disabled");
+                btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
+            });
+        });
+    }
+
+    // =========================================================================
+    // FUNGSI 7: ARSIP KARTU PRESENSI KE GOOGLE DRIVE
+    // =========================================================================
+    if (btnUploadPresensiCloud) {
+        btnUploadPresensiCloud.addEventListener("click", function() {
+            const elementTarget = document.getElementById("area-cetak-pdf");
+            if (!elementTarget) return;
+
+            if (elementTarget.innerText.includes("Memuat data...")) {
+                return alert("Mohon tunggu, data riwayat presensi belum selesai dimuat!");
+            }
+
+            sinkronisasiTeksKeMirror();
+
+            const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
+            const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
+            
+            const namaFile = `Presensi_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.jpg`;
+            
+            btnUploadPresensiCloud.setAttribute("disabled", "disabled");
+            btnUploadPresensiCloud.classList.add("opacity-50", "cursor-not-allowed");
+            btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Merender Gambar...`;
+
+            const styleAsli = elementTarget.getAttribute("style") || "";
+            elementTarget.style.setProperty("transform", "none", "important");
+            elementTarget.style.setProperty("margin-bottom", "0px", "important");
+
+            const opsiSetelan = {
+                margin:       0,
+                filename:     namaFile,
+                image:        { type: 'jpeg', quality: 1.0 },
+                html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
+                jsPDF:        { unit: 'cm', format: [20, 20], orientation: 'portrait' }, 
+                pagebreak:    { mode: ['css', 'legacy'] }
+            };
+
+            html2pdf().set(opsiSetelan).from(elementTarget).outputImg('dataurl').then(function(dataUri) {
+                elementTarget.setAttribute("style", styleAsli);
+                
+                const base64String = dataUri.split(',')[1];
+                
+                if (!base64String || base64String.trim() === "") {
+                    throw new Error("Gagal mengambil data gambar presensi.");
+                }
+                
+                btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Mengupload Gambar...`;
+                
+                return kirimKeAppsScript(base64String, namaFile);
+            })
+            .catch(err => {
+                console.error("Error ekspor/upload gambar:", err);
+                elementTarget.setAttribute("style", styleAsli);
+                alert("Gagal merender/mengirim Gambar: " + err.message);
+                resetStatusTombolUpload();
+            });
+        });
+    }
+
+    function kirimKeAppsScript(base64Data, namaFile) {
+        const payloadCloud = { action: "generateServerJPG", filename: namaFile, image_blob: base64Data };
+        fetch(API_URL_UPLOAD_DRIVE, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+            body: JSON.stringify(payloadCloud)
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Server merespon dengan status " + response.status);
+            return response.json();
+        })
+        .then(result => {
+            alert(result.status === "success" ? result.message : "Gagal memproses di Cloud: " + result.message);
+        })
+        .catch(err => {
+            console.error("Fetch Error:", err);
+            alert("Terjadi gangguan komunikasi dengan server upload: " + err.message);
+        })
+        .finally(() => { resetStatusTombolUpload(); });
+    }
+
+    function transformToScaleNormal() {
+        if (btnUploadPresensiCloud) {
+            btnUploadPresensiCloud.removeAttribute("disabled");
+            btnUploadPresensiCloud.classList.remove("opacity-50", "cursor-not-allowed");
+            btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive`;
+        }
+    }
+    const resetStatusTombolUpload = transformToScaleNormal;
+
+    // =========================================================================
+    // FUNGSI 8: SUBMIT DATA FORM UTAMA KE CLOUD SPREADSHEET
+    // =========================================================================
+    if (formPresensi) {
+        formPresensi.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const karyawanTerpilih = selectKaryawan ? selectKaryawan.value : "";
+            if (!karyawanTerpilih) return alert("Silakan pilih nama staff karyawan terlebih dahulu!");
+
+            btnSubmit.setAttribute("disabled", "disabled");
+            btnSubmit.className = "w-full md:w-auto px-8 py-4 bg-gray-400 text-white font-black text-xs rounded-[18px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed";
+            btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-sm"></i> MEMPROSES DATA KE CLOUD...`;
+
+            const dataPayload = {
+                action: "addPresensi",
+                karyawan: karyawanTerpilih,
+                nama_periode: namaPeriodeTerdeteksi,
+                tanggal: inputTanggal.value,
+                kehadiran: selectKehadiran.value,
+                jenis_jadwal_kerja: parseInt(selectJadwal.value) || 2,
+                keterangan_jadwal: inputKetJadwal ? inputKetJadwal.value : "",
+                alasan_tidak_hadir: inputAlasanAbsen ? inputAlasanAbsen.value : "",
+                potongan_jam: inputPotongan ? inputPotongan.value : "",
+                alasan_potongan_jam: inputAlasanPotong ? inputAlasanPotong.value : "",
+                
+                tambahan_jam: inputTambahanJamForm ? inputTambahanJamForm.value : "",
+                alasan_tambahan_jam: inputAlasanTambahanForm ? inputAlasanTambahanForm.value : ""
+            };
+
+            fetch(API_URL_PRESENSI, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(dataPayload)
+            })
+            .then(res => {
+                alert(`Presensi harian ${karyawanTerpilih} sukses dikirim ke NSA Cloud!`);
+                
+                if (inputKetJadwal) inputKetJadwal.value = "";
+                if (inputAlasanAbsen) inputAlasanAbsen.value = "";
+                if (inputPotongan) inputPotongan.value = "";
+                if (inputAlasanPotong) inputAlasanPotong.value = "";
+                
+                if (inputTambahanJamForm) inputTambahanJamForm.value = "";
+                if (inputAlasanTambahanForm) inputAlasanTambahanForm.value = "";
+                
+                if (inputAlasanCustom) inputAlasanCustom.value = "";
+                if (inputAlasanTambahanCustom) inputAlasanTambahanCustom.value = "";
+                
+                handleFormInteractivity(); 
+                if (typeof sinkronisasiTeksKeMirror === "function") {
+                    sinkronisasiTeksKeMirror();
+                }
+            })
+            .catch(error => {
+                console.error("Error posting presensi:", error);
+                alert("Terjadi gangguan jaringan, gagal terhubung ke server cloud.");
+            })
+            .finally(() => {
+                btnSubmit.removeAttribute("disabled");
+                btnSubmit.className = "w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2";
+                btnSubmit.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> KIRIM PRESENSI KE NSA CLOUD`;
+            });
+        });
+    }
+});
+</script>
+
 <!-- MODAL ALAT BANTU BELANJA (MATERIAL UI ROUNDY CHIP) -->
 <div id="modalBelanjaBarang" class="nsa-modal-overlay">
     <div class="nsa-modal-card nsa-modal-large" style="border-radius: 32px; overflow: hidden; border: none; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);">
@@ -1836,7 +2883,183 @@ function kirimRingkasanBelanjaWA() {
 
     </div>
 </div>
+<!-- MODAL PREVIEW KARTU PRESENSI PDF -->
+<div id="modal-kartu-presensi" class="fixed inset-0 bg-emerald-950/60 backdrop-blur-md z-[13000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
+    
+    <div class="bg-slate-900/95 backdrop-blur-lg w-full max-w-5xl max-h-[95vh] rounded-[32px] border border-emerald-500/30 shadow-[0_0_50px_-12px_rgba(16,185,129,0.3)] overflow-hidden flex flex-col transform scale-95 transition-all duration-300">
+        
+        <div class="p-4 border-b border-slate-800 bg-slate-950/80 backdrop-blur-sm flex justify-between items-center flex-shrink-0">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-6 bg-emerald-500 rounded-full animate-pulse"></div>
+                <h3 class="text-sm font-black text-white uppercase tracking-wider">
+                    <i class="fa-solid fa-address-card text-emerald-400 mr-1"></i> Preview Kartu Presensi Siap Cetak
+                </h3>
+            </div>
+            <button type="button" id="btn-tutup-modal" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-400 hover:bg-rose-600 hover:text-white transition-all duration-200 shadow-inner">
+                <i class="fa-solid fa-xmark text-xs font-black"></i>
+            </button>
+        </div>
 
+        <div class="p-5 overflow-y-auto overflow-x-hidden modal-scroll-container flex-1 bg-slate-950 pattern-grid-lg flex justify-center items-start">
+            
+            <div id="wrapper-viewport-cetak" style="width: 100%; max-width: 756px;">
+                
+                <div id="area-cetak-pdf" class="bg-white text-slate-900 pt-4 px-6 pb-6 rounded-[24px] border border-slate-200 shadow-2xl flex flex-col justify-between [color-scheme:light]" style="width: 756px; height: 756px; min-width: 756px; min-height: 756px; font-family: 'Arial', sans-serif; box-sizing: border-box;">
+                    
+                    <div class="text-center border-b-2 border-slate-700 pb-1.5 mb-2 flex-shrink-0">
+                        <h2 class="text-xl font-black tracking-widest text-emerald-900 m-0 leading-none">KARTU PRESENSI KARYAWAN</h2>
+                        <p class="text-[9px] text-emerald-700 font-bold tracking-widest uppercase mt-0.5 mb-1">Nurjaya Abadi Photocopy</p>
+                        
+                        <div class="grid grid-cols-3 text-[11px] font-medium text-slate-600 border-t border-slate-200 pt-1.5 max-w-2xl mx-auto">
+                            <div class="text-left">Nama: <span id="modal-nama-karyawan" class="font-bold text-slate-900">--</span></div>
+                            <div class="text-center">Unit: <span class="font-bold text-slate-900">Nurjaya Abadi Photocopy</span></div>
+                            <div class="text-right flex flex-col items-end leading-tight">
+                                <div>Periode: <span id="modal-periode-kerja" class="font-bold text-slate-900 italic">--</span></div>
+                                <div class="text-[10px] text-emerald-800 font-bold mt-0.5">Jumlah Hari Kerja: <span id="modal-total-hari-kerja" class="font-black bg-emerald-100 px-1.5 py-0.5 rounded-lg text-emerald-900">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 items-stretch flex-1 mb-2">
+                        
+                        <div class="border border-slate-700 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
+                            <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-slate-700">
+                                <thead>
+                                    <tr class="bg-emerald-700 font-black text-white uppercase text-[9px] tracking-tight">
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[14%]">Hari Ke-</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[22%]">Tgl / Hari</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[14%]">Masuk Kerja</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[22%]">Jenis Jadwal</th>
+                                        <th class="border-b border-slate-700 py-1.5 w-[28%]">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-kiri-body" class="font-bold text-slate-800 divide-y divide-slate-700 h-full"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="border border-slate-700 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
+                            <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-slate-700">
+                                <thead>
+                                    <tr class="bg-emerald-700 font-black text-white uppercase text-[9px] tracking-tight">
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[14%]">Hari Ke-</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[22%]">Tgl / Hari</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[14%]">Masuk Kerja</th>
+                                        <th class="border-r border-b border-slate-700 py-1.5 w-[22%]">Jenis Jadwal</th>
+                                        <th class="border-b border-slate-700 py-1.5 w-[28%]">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-kanan-body" class="font-bold text-slate-800 divide-y divide-slate-700 h-full"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 border-t-2 border-slate-700 pt-2 flex-shrink-0 items-stretch">
+                        
+                        <div class="p-3 border border-slate-700 bg-emerald-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
+                            <h4 class="font-black text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-1.5 mb-2 flex items-center gap-1.5 flex-shrink-0">
+                                <i class="fa-solid fa-square-poll-vertical text-emerald-700"></i> Rekapitulasi Data Kehadiran
+                            </h4>
+                            
+                            <ul class="space-y-1 font-semibold text-slate-700 flex-1 flex flex-col justify-start gap-1.5">
+                                <li class="flex justify-between items-center bg-white/80 border border-emerald-900/10 rounded-xl px-2.5 py-1.5 shadow-sm flex-shrink-0">
+                                    <span class="flex items-center gap-1.5 text-slate-900 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-600"></span>Jadwal 2 Karyawan (Full Team)</span>
+                                    <span id="rekap-jadwal-2" class="font-black text-emerald-900 bg-emerald-100/90 px-2 py-0.5 rounded-lg border border-emerald-200 text-[9.5px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white/80 border border-emerald-900/10 rounded-xl px-2.5 py-1.5 shadow-sm flex-shrink-0">
+                                    <span class="flex items-center gap-1.5 text-slate-900 font-bold"><span class="w-2 h-2 rounded-full bg-cyan-600"></span>Jadwal 1 Karyawan (Lembur)</span>
+                                    <span id="rekap-jadwal-1" class="font-black text-cyan-900 bg-cyan-100/90 px-2 py-0.5 rounded-lg border border-cyan-200 text-[9.5px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white/80 border border-emerald-900/10 rounded-xl px-2.5 py-1.5 shadow-sm flex-shrink-0">
+                                    <span class="flex items-center gap-1.5 text-slate-900 font-bold"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Jatah Libur</span>
+                                    <span id="rekap-libur" class="font-black text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-lg border border-amber-200 text-[9.5px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white/80 border border-rose-900/20 rounded-xl px-2.5 py-1.5 shadow-sm flex-shrink-0">
+                                    <span class="flex items-center gap-1.5 text-rose-950 font-bold"><span class="w-2 h-2 rounded-full bg-rose-600"></span>Absen Lainnya</span>
+                                    <span id="rekap-absen" class="font-black text-rose-900 bg-rose-100 px-2 py-0.5 rounded-lg border border-rose-200 text-[9.5px]">0 hari</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="p-3 border border-slate-700 bg-emerald-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
+                            <div class="flex flex-col flex-1 justify-between gap-1.5">
+                                
+                                <div class="flex flex-col gap-1 flex-shrink-0">
+                                    <div class="flex items-stretch gap-2">
+                                        <div class="w-1/3 flex flex-col">
+                                            <span class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Potongan Jam</span>
+                                            <div id="modal-total-potongan" class="w-full flex-1 min-h-[26px] px-1 py-0.5 bg-white border border-slate-700 font-black text-center text-[10px] flex items-center justify-center text-rose-700 shadow-inner rounded-xl">0 jam 0 menit</div>
+                                        </div>
+                                        <div class="w-2/3 flex flex-col">
+                                            <label id="label-alasan" for="modal-alasan-potongan-custom" class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Alasan Potongan Jam</label>
+                                            <input type="text" id="modal-alasan-potongan-custom" placeholder="Alasan Potongan" class="print:hidden w-full flex-1 min-h-[26px] px-2 py-0.5 bg-white border border-slate-700 text-[10px] font-bold focus:bg-emerald-50/40 focus:outline-none placeholder:text-slate-400 rounded-xl transition-all shadow-inner block">
+                                            <div id="mirror-alasan-potongan-custom" class="hidden print:flex w-full flex-1 min-h-[26px] px-2 py-0.5 bg-white border border-slate-700 text-[10px] font-bold items-center text-slate-800 text-left whitespace-pre-wrap break-words rounded-xl">-</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-stretch gap-2">
+                                        <div class="w-1/3 flex flex-col">
+                                            <span class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Tambahan Jam</span>
+                                            <div id="modal-total-tambahan" class="w-full flex-1 min-h-[26px] px-1 py-0.5 bg-white border border-slate-700 font-black text-center text-[10px] flex items-center justify-center text-emerald-700 shadow-inner rounded-xl">0 jam 0 menit</div>
+                                        </div>
+                                        <div class="w-2/3 flex flex-col">
+                                            <label for="modal-alasan-tambahan-custom" class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight">Alasan Tambahan Jam</label>
+                                            <input type="text" id="modal-alasan-tambahan-custom" placeholder="Alasan Tambahan" class="print:hidden w-full flex-1 min-h-[26px] px-2 py-0.5 bg-white border border-slate-700 text-[10px] font-bold focus:bg-emerald-50/40 focus:outline-none placeholder:text-slate-400 rounded-xl transition-all shadow-inner block">
+                                            <div id="mirror-alasan-tambahan-custom" class="hidden print:flex w-full flex-1 min-h-[26px] px-2 py-0.5 bg-white border border-slate-700 text-[10px] font-bold items-center text-slate-800 text-left whitespace-pre-wrap break-words rounded-xl">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col flex-1 justify-end">
+                                    <label class="block font-black text-slate-900 uppercase text-[8.5px] tracking-tight mb-1">Catatan Keterangan</label>
+                                    <div class="print:hidden flex flex-col gap-1 flex-1 justify-between">
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-white border border-slate-700 px-2 py-0 shadow-inner rounded-lg">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0"></span>
+                                            <input type="text" class="input-catatan-chip w-full bg-transparent text-[9px] font-bold text-slate-800 focus:outline-none h-5">
+                                        </div>
+                                    </div>
+                                    <div class="hidden print:block w-full flex-1 text-left">
+                                        <ul id="mirror-catatan-final" class="space-y-0.5 text-[9px] font-bold text-slate-800 list-none p-0 m-0 [word-break:break-word]">
+                                            <li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- Teks otomatis sinkron di sini saat dicetak -</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <div class="px-6 py-4 bg-slate-950/90 border-t border-slate-800 flex flex-col sm:flex-row justify-end gap-3 flex-shrink-0">
+            <button type="button" id="btn-upload-presensi-cloud" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-emerald-400 hover:text-emerald-300 font-bold text-xs rounded-2xl uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 border border-slate-700/60 shadow-md transform active:scale-95">
+                <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive
+            </button>
+            <button type="button" id="btn-unduh-pdf" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs rounded-2xl uppercase tracking-wider shadow-[0_4px_20px_rgba(16,185,129,0.4)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.6)] transition-all duration-200 flex items-center justify-center gap-2 transform active:scale-95">
+                <i class="fa-solid fa-file-pdf text-sm"></i> Unduh Dokumen PDF
+            </button>
+        </div>
+
+    </div>
+</div>
 
 </body>
 </html>
