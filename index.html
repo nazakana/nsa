@@ -1018,7 +1018,7 @@
 
 
 <!-- Modal Pengenalan Wajah -->
-<div id="modal-face-scanner" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+<div id="modal-face-scanner" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[30000] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
     <div class="bg-white w-full max-w-md rounded-[28px] p-6 shadow-2xl border border-slate-100 flex flex-col items-center space-y-4 relative transform scale-95 transition-all duration-300">
         
         <div class="w-full flex justify-between items-center pb-2 border-b border-slate-100">
@@ -1054,17 +1054,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-<!-- Wrapper Pop-up Modal Presensi yang Sudah Diperbaiki (Fixed Full Overlay + Scrollable) -->
+<!-- Wrapper Pop-up Modal Presensi yang Sudah Diperbaiki (Fixed Full Overlay + Profile Card) -->
 <div id="wrapper_form_presensi" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[12000] flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300 hidden">
     
     <!-- Kartu Modal Utama -->
@@ -1078,12 +1068,12 @@
                 </div>
                 <div>
                     <p class="text-xs font-black text-gray-800 uppercase">Presensi Digital NSA</p>
-                    <p class="text-[11px] text-emerald-700 font-bold">Verifikasi Identitas via Pemindaian Wajah</p>
+                    <p class="text-[11px] text-emerald-700 font-bold">Terverifikasi via Pemindaian Wajah</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
                 <button type="button" onclick="bukaModalFaceScanner()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera"></i> Scan Wajah
+                    <i class="fa-solid fa-camera"></i> Scan Ulang
                 </button>
                 <button type="button" onclick="tutupFormPresensiModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-rose-100 hover:text-rose-600 text-slate-600 flex items-center justify-center transition-colors">
                     <i class="fa-solid fa-xmark"></i>
@@ -1091,38 +1081,82 @@
             </div>
         </div>
 
-        <!-- Body Form (Area yang BISA di-scroll internal di dalam HP) -->
+        <!-- Body Form (Scrollable) -->
         <div class="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1 text-gray-700">
             
-            <div class="p-4 bg-slate-50 border-2 border-slate-200 rounded-[22px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                <div class="space-y-1">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-user-tie text-green-600"></i> Nama Karyawan
-                    </label>
-                    <div class="relative">
-                        <select id="presensi-karyawan" required 
-                            class="w-full pl-4 pr-12 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-sm appearance-none h-[48px]">
-                            <option value="" disabled selected hidden>-- Pilih Nama --</option>
-                            <option value="Dadan">Dadan Nurfaizal</option>
-                            <option value="Syamsi">Syamsi Nurhakim</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-green-600">
-                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            <!-- AREA CARD PROFIL KARYAWAN TERDETEKSI (Menggantikan Dropdown) -->
+            <div class="space-y-2">
+                <p class="text-[11px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-id-card text-emerald-600"></i> Identitas Karyawan Terverifikasi
+                </p>
+
+                <!-- Container Card Dadan (Hidden by default) -->
+                <div id="card-profile-Dadan" class="card-karyawan-profile hidden bg-[#E8F1EC] p-4 sm:p-5 rounded-[28px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
+                    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL')">
+                        <img src="https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL" 
+                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                        <div class="absolute bottom-0 right-0 bg-emerald-600 w-5 h-5 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px]">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
                         </div>
                     </div>
-                </div>
+                    
+                    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+                        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Dadan Nurfaizal</h5>
+                        
+                        <div class="flex items-center gap-1.5 mt-2">
+                            <a href="https://wa.me/6283130578886" target="_blank"
+                               class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                               title="Hubungi WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                            </a>
+                            <span class="inline-flex items-center h-7 text-[10px] font-black text-emerald-800 uppercase tracking-widest bg-white border border-[#B3D3C4] px-3 rounded-xl shadow-xs">
+                                Staf / Operator
+                            </span>
+                        </div>
+                    </div>
 
-                <div class="space-y-1">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-calendar-week text-green-600"></i> Target Buku Periode
-                    </label>
-                    <div class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] text-sm text-gray-700 font-black tracking-wide flex items-center gap-2.5 min-h-[48px]">
-                        <i class="fa-solid fa-clock-rotate-left text-amber-500 animate-pulse"></i>
-                        <span id="label-periode-aktif" class="italic text-gray-500 font-normal">Pilih nama karyawan dahulu...</span>
+                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
+                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
+                        <span id="label-periode-Dadan" class="text-xs font-black text-emerald-800">Memuat...</span>
                     </div>
                 </div>
+
+                <!-- Container Card Syamsi (Hidden by default) -->
+                <div id="card-profile-Syamsi" class="card-karyawan-profile hidden bg-[#E8F1EC] p-4 sm:p-5 rounded-[28px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
+                    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ')">
+                        <img src="https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ" 
+                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                        <div class="absolute bottom-0 right-0 bg-emerald-600 w-5 h-5 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px]">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+                        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Syamsi Nurhakim</h5>
+                        
+                        <div class="flex items-center gap-1.5 mt-2">
+                            <a href="https://wa.me/6282126333381" target="_blank"
+                               class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                               title="Hubungi WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                            </a>
+                            <span class="inline-flex items-center h-7 text-[10px] font-black text-emerald-800 uppercase tracking-widest bg-white border border-[#B3D3C4] px-3 rounded-xl shadow-xs">
+                                Staf / Operator
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
+                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
+                        <span id="label-periode-Syamsi" class="text-xs font-black text-emerald-800">Memuat...</span>
+                    </div>
+                </div>
+
+                <!-- Input Hidden Nama Karyawan untuk Kebutuhan Kirim Form ke Google Apps Script -->
+                <input type="hidden" id="presensi-karyawan" name="presensi-karyawan" value="">
             </div>
 
+            <!-- Form Isian Presensi -->
             <form id="form-presensi-nsa" class="space-y-5">
                 <div class="p-4 sm:p-5 bg-emerald-50 rounded-[24px] border border-emerald-200/80 shadow-sm space-y-4">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -2265,27 +2299,64 @@ function kirimRingkasanBelanjaWA() {
 // NSA PRESENSI JAVASCRIPT LOGIC - INTEGRASI SCAN WAJAH & FIT TO SCREEN
 // =========================================================================
 
-// Deklarasi fungsi global agar bisa dipanggil dari modul Scan Wajah
-// Buka Modal Presensi via Scan Wajah / Auto-Select
+// Buka Modal Presensi via Scan Wajah & Tampilkan Card Profile Instan
 window.eksekusiPresensiOtomatis = function(namaKaryawan) {
     const wrapperForm = document.getElementById("wrapper_form_presensi");
-    const selectKaryawan = document.getElementById("presensi-karyawan");
+    const inputHiddenKaryawan = document.getElementById("presensi-karyawan");
 
-    if (selectKaryawan) {
-        selectKaryawan.value = namaKaryawan;
-        selectKaryawan.dispatchEvent(new Event("change"));
+    // 1. Simpan nama karyawan ke input hidden
+    if (inputHiddenKaryawan) {
+        inputHiddenKaryawan.value = namaKaryawan;
     }
 
+    // 2. Sembunyikan semua card profile, lalu munculkan hanya yang cocok
+    document.querySelectorAll('.card-karyawan-profile').forEach(card => card.classList.add('hidden'));
+    const cardTerpilih = document.getElementById(`card-profile-${namaKaryawan}`);
+    if (cardTerpilih) {
+        cardTerpilih.classList.remove('hidden');
+    }
+
+    // 3. Tampilkan wrapper form modal
     if (wrapperForm) {
         wrapperForm.classList.remove("hidden");
-        // Beri waktu sekejap agar transisi fade-in berjalan halus
         setTimeout(() => {
             wrapperForm.classList.remove("opacity-0", "pointer-events-none");
             const innerCard = wrapperForm.querySelector(".transform");
             if (innerCard) innerCard.classList.remove("scale-95");
         }, 50);
     }
+
+    // 4. Ambil informasi target periode otomatis dari spreadsheet
+    muatPeriodeKaryawan(namaKaryawan);
 };
+
+// Fungsi Ambil Target Periode Aktif per Karyawan
+function muatPeriodeKaryawan(namaKaryawan) {
+    const targetLabel = document.getElementById(`label-periode-${namaKaryawan}`);
+    const API_URL_PRESENSI = "https://script.google.com/macros/s/AKfycbwyzHl2sdJAaskZR-OZNcAmcjSq4WebF8wfQk7u7He5ceMLcwyIRNPgwo1n-ZFxQyc-_A/exec";
+
+    if (targetLabel) {
+        targetLabel.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-emerald-600"></i> Memuat...`;
+    }
+
+    fetch(`${API_URL_PRESENSI}?karyawan=${namaKaryawan}`)
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === "success" && result.periode_langsung) {
+                if (targetLabel) targetLabel.textContent = result.periode_langsung;
+            } else {
+                if (targetLabel) targetLabel.textContent = "Buku Aktif";
+            }
+        })
+        .catch(() => {
+            if (targetLabel) targetLabel.textContent = "Buku Aktif";
+        });
+}
+
+// Fungsi Buka Preview Foto Profil
+function intipFotoKaryawan(urlFoto) {
+    window.open(urlFoto, '_blank');
+}
 
 // Fungsi Tutup Modal Presensi
 function tutupFormPresensiModal() {
@@ -2359,7 +2430,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (inputTanggal) {
         inputTanggal.value = new Date().toISOString().split('T')[0];
     }
-	
+    
     // Mengambil elemen tombol dan wrapper form
     const btnBukaForm = document.getElementById('btn-buka-form-presensi');
     const wrapperForm = document.getElementById('wrapper_form_presensi');
@@ -2456,41 +2527,6 @@ document.addEventListener("DOMContentLoaded", function() {
     handleFormInteractivity();
 
     // =========================================================================
-    // FUNGSI 2: DETEKSI PERIODE BUKU AKTIF (A2 SPREADSHEET)
-    // =========================================================================
-    if (selectKaryawan) {
-        selectKaryawan.addEventListener("change", function() {
-            const karyawanTerpilih = this.value;
-            if (!karyawanTerpilih) return;
-
-            if (labelPeriode) {
-                labelPeriode.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-green-600"></i> <span class="text-xs font-medium italic text-amber-600">Mengecek buku periode...</span>`;
-                labelPeriode.className = "text-xs font-bold text-amber-600 italic flex items-center gap-1.5";
-            }
-
-            fetch(`${API_URL_PRESENSI}?karyawan=${karyawanTerpilih}`)
-                .then(response => response.json())
-                .then(result => {
-                    if (result.status === "success" && result.periode_langsung && result.periode_langsung.toString().trim() !== "") {
-                        namaPeriodeTerdeteksi = result.periode_langsung;
-                        labelPeriode.textContent = "Periode " + result.periode_langsung;
-                        labelPeriode.className = "text-gray-800 font-black tracking-wide uppercase text-xs";
-                    } else {
-                        labelPeriode.textContent = "Periode belum diset di sel A2";
-                        labelPeriode.className = "text-xs font-bold text-amber-600 italic";
-                        namaPeriodeTerdeteksi = "";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching periode:", error);
-                    labelPeriode.textContent = "Gagal memuat info periode";
-                    labelPeriode.className = "text-xs font-bold text-red-600 italic";
-                    namaPeriodeTerdeteksi = "";
-                });
-        });
-    }
-
-    // =========================================================================
     // FUNGSI 3: FORMATTING & PARSING REKAPITULASI DATA
     // =========================================================================
     function singkatanHariIndo(strTanggal) {
@@ -2538,7 +2574,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const txtAlasan = inputAlasanCustom.value.trim();
             mirrorAlasanCustom.innerHTML = txtAlasan === "" ? "-" : txtAlasan.toUpperCase();
         }
-	
+    
         if (inputAlasanTambahanCustom && mirrorAlasanTambahanCustom) {
             const txtAlasanTambahan = inputAlasanTambahanCustom.value.trim();
             mirrorAlasanTambahanCustom.innerHTML = txtAlasanTambahan === "" ? "-" : txtAlasanTambahan.toUpperCase();
@@ -2593,8 +2629,7 @@ document.addEventListener("DOMContentLoaded", function() {
         };
 
         if (!karyawanTerpilih) {
-            alert("Pilih nama staf karyawan terlebih dahulu di form utama!");
-            if (selectKaryawan) selectKaryawan.focus();
+            alert("Lakukan pemindaian wajah terlebih dahulu untuk memilih staf karyawan!");
             return;
         }
 
@@ -2605,7 +2640,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (modalNamaKaryawan) modalNamaKaryawan.textContent = pemetaanNamaLengkap[karyawanTerpilih] || karyawanTerpilih;
-        if (modalPeriodeKerja) modalPeriodeKerja.textContent = labelPeriode ? labelPeriode.textContent.replace("Periode ", "") : "--";
+        
+        const labelPeriodeElement = document.getElementById(`label-periode-${karyawanTerpilih}`);
+        if (modalPeriodeKerja) modalPeriodeKerja.textContent = labelPeriodeElement ? labelPeriodeElement.textContent : "--";
+        
         if (modalTotalHariKerja) modalTotalHariKerja.textContent = "...";
         if (modalPresensi) {
             modalPresensi.classList.remove("opacity-0", "pointer-events-none");
@@ -2632,7 +2670,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     return;
                 }
 
-                if (result.periode_langsung && modalPeriodeKerja) modalPeriodeKerja.textContent = result.periode_langsung;
+                if (result.periode_langsung) {
+                    namaPeriodeTerdeteksi = result.periode_langsung;
+                    if (modalPeriodeKerja) modalPeriodeKerja.textContent = result.periode_langsung;
+                }
                 if (modalTotalHariKerja) modalTotalHariKerja.textContent = result.data.length;
 
                 let cJ2 = 0, cJ1 = 0, cLibur = 0, cAbsen = 0;
@@ -2865,7 +2906,7 @@ document.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
 
             const karyawanTerpilih = selectKaryawan ? selectKaryawan.value : "";
-            if (!karyawanTerpilih) return alert("Silakan pilih nama staff karyawan terlebih dahulu!");
+            if (!karyawanTerpilih) return alert("Pemindaian wajah belum terverifikasi!");
 
             btnSubmit.setAttribute("disabled", "disabled");
             btnSubmit.className = "w-full md:w-auto px-8 py-4 bg-gray-400 text-white font-black text-xs rounded-[18px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed";
