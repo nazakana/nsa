@@ -1222,7 +1222,7 @@
 
 </div>
 
-<script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+<script src="https://unpkg.com/face-api.js@0.22.2/dist/face-api.min.js"></script>
 
 <script>
 // =========================================================================
@@ -1267,30 +1267,68 @@ async function bukaModalFaceScanner() {
     statusText.textContent = "Menyiapkan Kamera & Sistem...";
     statusText.className = "text-xs font-black text-amber-600 uppercase tracking-wide";
 
-    try {
-        streamKamera = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-        video.srcObject = streamKamera;
+    // Cek ketersediaan faceapi
+    if (typeof faceapi === "undefined") {
+        alert("Library face-api.js belum selesai dimuat. Silakan tunggu sebentar!");
+        tutupModalFaceScanner();
+        return;
+    }
 
-        if (!modelTerpanggil) {
-            loadingText.textContent = "Memuat Modul AI TinyFace...";
-            const MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/";
-            await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
-            await faceapi.nets.faceLandmark64Net.loadFromUri(MODEL_URL);
-            await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
-            modelTerpanggil = true;
+    // 1. Akses Kamera
+    try {
+        try {
+            streamKamera = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        } catch (e) {
+            streamKamera = await navigator.mediaDevices.getUserMedia({ video: true });
         }
+        video.srcObject = streamKamera;
+    } catch (errKamera) {
+        console.error("Gagal Akses Kamera:", errKamera);
+        alert("Kamera tidak ditemukan atau izin ditolak! " + errKamera.message);
+        tutupModalFaceScanner();
+        return;
+    }
+
+    // 2. Load Model versi 0.22.2 + Akselerasi GPU (WebGL)
+try {
+    if (!modelTerpanggil) {
+        loadingText.textContent = "Mengaktifkan Akselerasi GPU (WebGL)...";
+        
+        // --- FITUR GPU WEBGL DARI HTML PERCOBAAN ---
+        if (faceapi.tf) {
+            await faceapi.tf.setBackend('webgl');
+            await faceapi.tf.ready();
+        }
+
+        loadingText.textContent = "Memuat Modul AI TinyFace...";
+        const MODEL_URL = "https://justadudewhohacks.github.io/face-api.js/models";
+        
+        await Promise.all([
+            faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+            faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL), // Menggunakan Landmark68Net yang sama persis
+            faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+        ]);
+        
+        modelTerpanggil = true;
+    }
 
         loading.classList.add("hidden");
         statusText.textContent = "Arahkan Wajah Anda ke Kamera";
         statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide";
 
         mulaiDeteksiWajahRealtime();
-    } catch (err) {
-        console.error("Gagal membuka kamera / modul face:", err);
-        alert("Gagal mengakses kamera atau memuat modul pemindaian wajah. Pastikan izin kamera aktif!");
+    } catch (errModel) {
+        console.error("Gagal Load Model:", errModel);
+        alert("Gagal mengunduh file weights AI. Pastikan jaringan internet stabil!");
         tutupModalFaceScanner();
     }
 }
+
+// Opsi detektor didefinisikan terpisah di luar interval agar memori tetap ringan
+const detectorOptionsNsa = new faceapi.TinyFaceDetectorOptions({
+    inputSize: 224,
+    scoreThreshold: 0.5
+});
 
 // Scanning Loop Realtime
 function mulaiDeteksiWajahRealtime() {
@@ -1301,8 +1339,12 @@ function mulaiDeteksiWajahRealtime() {
     const displaySize = { width: video.clientWidth || 320, height: video.clientHeight || 320 };
     faceapi.matchDimensions(canvas, displaySize);
 
+    // Hentikan interval lama jika masih berjalan
+    if (intervalDeteksi) clearInterval(intervalDeteksi);
+
     intervalDeteksi = setInterval(async () => {
-        const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 }))
+        // Pemindaian ringan & cepat dengan inputSize 224px
+        const detections = await faceapi.detectSingleFace(video, detectorOptionsNsa)
             .withFaceLandmarks()
             .withFaceDescriptor();
 
@@ -1314,7 +1356,7 @@ function mulaiDeteksiWajahRealtime() {
 
             // Euclidean Distance Matching
             let kecocokanTerbaik = null;
-            let jarakTerpendek = 0.50; // Threshold kecocokan
+            let jarakTerpendek = 0.60; // Threshold standar face-api (0.60)
 
             DATABASE_WAJAH_KARYAWAN.forEach(item => {
                 const jarak = faceapi.euclideanDistance(detections.descriptor, item.descriptor);
@@ -1325,15 +1367,17 @@ function mulaiDeteksiWajahRealtime() {
             });
 
             if (kecocokanTerbaik) {
+                // Kunci proses scanning agar tidak mengeksekusi ulang
+                clearInterval(intervalDeteksi);
+                intervalDeteksi = null;
+
                 statusText.textContent = `Wajah Terdeteksi: ${kecocokanTerbaik.namaLengkap}`;
                 statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide animate-pulse";
-
-                clearInterval(intervalDeteksi);
 
                 setTimeout(() => {
                     tutupModalFaceScanner();
                     eksekusiPresensiOtomatis(kecocokanTerbaik.nama);
-                }, 700);
+                }, 500);
             } else {
                 statusText.textContent = "Wajah Tidak Dikenali!";
                 statusText.className = "text-xs font-black text-rose-600 uppercase tracking-wide";
