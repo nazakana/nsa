@@ -1281,6 +1281,43 @@ let streamKamera = null;
 let intervalDeteksi = null;
 let modelTerpanggil = false;
 
+// =========================================================================
+// PRE-LOADING AI MODEL & WEBGL DI BACKGROUND
+// =========================================================================
+async function preloadFaceModel() {
+    if (modelTerpanggil) return;
+    
+    try {
+        console.log("NSA AI Engine: Menginisialisasi GPU & Model di Background...");
+        
+        // 1. Aktifkan Akselerasi GPU (WebGL) lebih awal
+        if (typeof faceapi !== "undefined" && faceapi.tf) {
+            await faceapi.tf.setBackend('webgl');
+            await faceapi.tf.ready();
+        }
+
+        // 2. Unduh & siapkan model AI TinyFace ke memori browser
+        const MODEL_URL = "https://justadudewhohacks.github.io/face-api.js/models";
+        await Promise.all([
+            faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+            faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+            faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+        ]);
+
+        modelTerpanggil = true;
+        console.log("NSA AI Engine: Model Wajah Siap Digunakan!");
+    } catch (err) {
+        console.warn("NSA AI Engine Preload Info:", err);
+    }
+}
+
+// Jalankan preload otomatis saat halaman selesai dimuat
+window.addEventListener("DOMContentLoaded", () => {
+    // Beri jeda halus 1000ms agar rendering UI awal tidak terganggu
+    setTimeout(preloadFaceModel, 1000);
+});
+
+// Buka Modal Scanner Wajah & Inisialisasi Kamera
 // Buka Modal Scanner Wajah & Inisialisasi Kamera
 async function bukaModalFaceScanner() {
     const modal = document.getElementById("modal-face-scanner");
@@ -1293,18 +1330,14 @@ async function bukaModalFaceScanner() {
     const innerBox = modal.querySelector(".transform");
     if (innerBox) innerBox.classList.remove("scale-95");
 
-    loading.classList.remove("hidden");
-    statusText.textContent = "Menyiapkan Kamera & Sistem...";
-    statusText.className = "text-xs font-black text-amber-600 uppercase tracking-wide";
-
     // Cek ketersediaan faceapi
     if (typeof faceapi === "undefined") {
-        alert("Library face-api.js belum selesai dimuat. Silakan tunggu sebentar!");
+        alert("Library face-api.js belum selesai dimuat!");
         tutupModalFaceScanner();
         return;
     }
 
-    // 1. Akses Kamera
+    // 1. Akses Kamera Instan
     try {
         try {
             streamKamera = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
@@ -1319,28 +1352,13 @@ async function bukaModalFaceScanner() {
         return;
     }
 
-    // 2. Load Model versi 0.22.2 + Akselerasi GPU (WebGL)
-try {
-    if (!modelTerpanggil) {
-        loadingText.textContent = "Mengaktifkan Akselerasi GPU (WebGL)...";
-        
-        // --- FITUR GPU WEBGL DARI HTML PERCOBAAN ---
-        if (faceapi.tf) {
-            await faceapi.tf.setBackend('webgl');
-            await faceapi.tf.ready();
+    // 2. Cek Status Model (Jika preload belum selesai, tunggu sebentar)
+    try {
+        if (!modelTerpanggil) {
+            loading.classList.remove("hidden");
+            loadingText.textContent = "Menyiapkan Modul AI TinyFace...";
+            await preloadFaceModel();
         }
-
-        loadingText.textContent = "Memuat Modul AI TinyFace...";
-        const MODEL_URL = "https://justadudewhohacks.github.io/face-api.js/models";
-        
-        await Promise.all([
-            faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-            faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL), // Menggunakan Landmark68Net yang sama persis
-            faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
-        ]);
-        
-        modelTerpanggil = true;
-    }
 
         loading.classList.add("hidden");
         statusText.textContent = "Arahkan Wajah Anda ke Kamera";
@@ -1349,7 +1367,7 @@ try {
         mulaiDeteksiWajahRealtime();
     } catch (errModel) {
         console.error("Gagal Load Model:", errModel);
-        alert("Gagal mengunduh file weights AI. Pastikan jaringan internet stabil!");
+        alert("Gagal mengunduh file weights AI!");
         tutupModalFaceScanner();
     }
 }
