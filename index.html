@@ -1067,13 +1067,13 @@
                     <i class="fa-solid fa-user-check"></i>
                 </div>
                 <div>
-                    <p class="text-xs font-black text-gray-800 uppercase">Presensi Digital NSA</p>
+                    <p class="text-xs font-black text-gray-800 uppercase">Presensi Nurjaya Abadi Photocopy</p>
                     <p class="text-[11px] text-emerald-700 font-bold">Terverifikasi via Pemindaian Wajah</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
                 <button type="button" onclick="bukaModalFaceScanner()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera"></i> Scan Ulang
+                    <i class="fa-solid fa-camera"></i> Scan
                 </button>
                 <button type="button" onclick="tutupFormPresensiModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-rose-100 hover:text-rose-600 text-slate-600 flex items-center justify-center transition-colors">
                     <i class="fa-solid fa-xmark"></i>
@@ -3976,7 +3976,7 @@ function uploadKartuApotekKeDrive() {
             </div>
             <div class="flex items-center gap-2">
                 <button type="button" onclick="bukaModalFaceScanner()" class="px-3 py-2 bg-pink-600 hover:bg-pink-700 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera"></i> Scan Ulang
+                    <i class="fa-solid fa-camera"></i> Scan
                 </button>
                 <button type="button" onclick="tutupFormPresensiApotekModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-rose-100 hover:text-rose-600 text-slate-600 flex items-center justify-center transition-colors">
                     <i class="fa-solid fa-xmark"></i>
@@ -4278,7 +4278,7 @@ function uploadKartuApotekKeDrive() {
             <div class="flex items-center gap-2">
                 <div class="w-2 h-6 bg-pink-500 rounded-full animate-pulse"></div>
                 <h3 class="text-sm font-black text-white uppercase tracking-wider">
-                    <i class="fa-solid fa-address-card text-pink-400 mr-1"></i> Preview Kartu Presensi Apotek Siap Cetak
+                    <i class="fa-solid fa-address-card text-pink-400 mr-1"></i> Kartu Presensi Apotek
                 </h3>
             </div>
             <button type="button" onclick="tutupModalKartuApotek()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-400 hover:bg-rose-600 hover:text-white transition-all duration-200 shadow-inner">
@@ -4417,7 +4417,7 @@ function uploadKartuApotekKeDrive() {
 
                             <!-- Sesi Catatan Tambahan (Asisten Apoteker) -->
                             <div class="flex flex-col flex-1 justify-end pt-1">
-                                <label class="block font-black text-pink-950 uppercase text-[8px] tracking-tight mb-1">Catatan Tambahan Asisten Apoteker</label>
+                                <label class="block font-black text-pink-950 uppercase text-[8px] tracking-tight mb-1">Catatan</label>
                                 <div class="print:hidden flex flex-col gap-1 flex-1 justify-between">
                                     <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
                                         <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
@@ -4428,6 +4428,10 @@ function uploadKartuApotekKeDrive() {
                                         <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
                                     </div>
                                     <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
+                                        <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
+                                    </div>
+									<div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
                                         <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
                                         <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
                                     </div>
@@ -4450,7 +4454,7 @@ function uploadKartuApotekKeDrive() {
         <!-- Footer Tombol Aksi -->
         <div class="px-6 py-4 bg-slate-950/90 border-t border-slate-800 flex flex-col sm:flex-row justify-end gap-3 flex-shrink-0">
             <button type="button" id="btn-upload-presensi-cloud-apotek" onclick="uploadKartuApotekKeDrive()" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-pink-400 hover:text-pink-300 font-bold text-xs rounded-2xl uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 border border-slate-700/60 shadow-md active:scale-95">
-                <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive
+                <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke NSA Cloud
             </button>
             <button type="button" id="btn-unduh-pdf-apotek" onclick="unduhKartuApotekPdf()" class="px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-black text-xs rounded-2xl uppercase tracking-wider shadow-[0_4px_20px_rgba(236,72,153,0.4)] transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
                 <i class="fa-solid fa-file-pdf text-sm"></i> Unduh Dokumen PDF
