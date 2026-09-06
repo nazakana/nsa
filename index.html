@@ -1589,7 +1589,7 @@ function mulaiDeteksiWajahRealtime() {
             }
 
             if (kecocokanTerbaik) {
-                // Mainkan suara beep sukses via Web Audio API
+                // Mainkan suara beep 1 detik
                 mainkanSuaraBeepTech();
 
                 clearInterval(intervalDeteksi);
@@ -1600,6 +1600,7 @@ function mulaiDeteksiWajahRealtime() {
                     statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide animate-pulse";
                 }
 
+                // Disesuaikan jadi 1000 ms agar pas dengan durasi suara 1 detik
                 setTimeout(() => {
                     tutupModalFaceScanner();
 
@@ -1613,7 +1614,7 @@ function mulaiDeteksiWajahRealtime() {
                             eksekusiPresensiApotek(kecocokanTerbaik.nama);
                         }
                     }
-                }, 500);
+                }, 1000);
             } else {
                 if (statusText) {
                     statusText.textContent = "Wajah Tidak Dikenali!";
@@ -1941,6 +1942,9 @@ document.addEventListener("DOMContentLoaded", function() {
 // =========================================================================
 // AUDIO SYNTHESIZER BEEP ALA TECH (WEB AUDIO API)
 // =========================================================================
+// =========================================================================
+// AUDIO SYNTHESIZER: BEEP SCANNER KASIR (DURASI 1 DETIK, VOLUME PELAN)
+// =========================================================================
 function mainkanSuaraBeepTech() {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1950,19 +1954,22 @@ function mainkanSuaraBeepTech() {
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 
-        // Frekuensi tinggi khas bunyi sensor tech (880 Hz / Nada A5)
+        // Frekuensi 1500 Hz khas nada beep scanner/elektronik
         oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+        oscillator.frequency.setValueAtTime(1500, audioCtx.currentTime);
 
-        // Pengaturan volume & fade out cepat
-        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.15);
+        // Volume dibuat pelan (0.035) agar tidak menusuk telinga
+        gainNode.gain.setValueAtTime(0.035, audioCtx.currentTime);
+        
+        // Tahan volume stabil, lalu fade-out halus menjelang akhir detik ke-1
+        gainNode.gain.setValueAtTime(0.035, audioCtx.currentTime + 0.85);
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 1.0);
 
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
 
         oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.15);
+        oscillator.stop(audioCtx.currentTime + 1.0); // Berhenti tepat di 1 detik
     } catch (err) {
         console.warn("Autoplay Audio API dibatasi browser:", err);
     }
