@@ -1588,8 +1588,8 @@ function mulaiDeteksiWajahRealtime() {
                 });
             }
 
-            if (kecocokanTerbaik) {
-                // Mainkan suara beep 1 detik
+           if (kecocokanTerbaik) {
+                // Mainkan suara beep canggih & keras
                 mainkanSuaraBeepTech();
 
                 clearInterval(intervalDeteksi);
@@ -1600,7 +1600,6 @@ function mulaiDeteksiWajahRealtime() {
                     statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide animate-pulse";
                 }
 
-                // Disesuaikan jadi 1000 ms agar pas dengan durasi suara 1 detik
                 setTimeout(() => {
                     tutupModalFaceScanner();
 
@@ -1614,7 +1613,7 @@ function mulaiDeteksiWajahRealtime() {
                             eksekusiPresensiApotek(kecocokanTerbaik.nama);
                         }
                     }
-                }, 1000);
+                }, 600);
             } else {
                 if (statusText) {
                     statusText.textContent = "Wajah Tidak Dikenali!";
@@ -1940,10 +1939,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // =========================================================================
-// AUDIO SYNTHESIZER BEEP ALA TECH (WEB AUDIO API)
-// =========================================================================
-// =========================================================================
-// AUDIO SYNTHESIZER: BEEP SCANNER KASIR (DURASI 1 DETIK, VOLUME PELAN)
+// AUDIO SYNTHESIZER: BEEP ELEGAN & FUTURISTIK (VOLUME KERAS)
 // =========================================================================
 function mainkanSuaraBeepTech() {
     try {
@@ -1951,25 +1947,45 @@ function mainkanSuaraBeepTech() {
         if (!AudioContext) return;
         
         const audioCtx = new AudioContext();
-        const oscillator = audioCtx.createOscillator();
+
+        // 1. Dual Oscillator untuk efek harmoni kristal canggih
+        const oscPrimary = audioCtx.createOscillator();
+        const oscSub = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 
-        // Frekuensi 1500 Hz khas nada beep scanner/elektronik
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(1500, audioCtx.currentTime);
+        // Menggunakan tipe 'triangle' untuk karakter suara halus, padat, & premium
+        oscPrimary.type = "triangle";
+        oscSub.type = "sine";
 
-        // Volume dibuat pelan (0.035) agar tidak menusuk telinga
-        gainNode.gain.setValueAtTime(0.035, audioCtx.currentTime);
-        
-        // Tahan volume stabil, lalu fade-out halus menjelang akhir detik ke-1
-        gainNode.gain.setValueAtTime(0.035, audioCtx.currentTime + 0.85);
-        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 1.0);
+        const skrg = audioCtx.currentTime;
 
-        oscillator.connect(gainNode);
+        // Pitch Sweep (Penurunan nada cepat memberikan efek "chime / tech confirm")
+        // Nada utama mulai dari 2400Hz meluncur ke 1600Hz dalam 0.15 detik
+        oscPrimary.frequency.setValueAtTime(2400, skrg);
+        oscPrimary.frequency.exponentialRampToValueAtTime(1600, skrg + 0.15);
+
+        // Sub-harmoni pendamping (pemanis suara)
+        oscSub.frequency.setValueAtTime(1200, skrg);
+        oscSub.frequency.exponentialRampToValueAtTime(800, skrg + 0.15);
+
+        // 2. Kontrol Volume Keras (Set ke 0.8 / 80% kekuatan maksimum Web Audio)
+        gainNode.gain.setValueAtTime(0.8, skrg);
+        // Fade-out halus di ujung agar tidak terdengar letupan/pop
+        gainNode.gain.exponentialRampToValueAtTime(0.001, skrg + 0.35);
+
+        // Sambungkan node audio ke speaker
+        oscPrimary.connect(gainNode);
+        oscSub.connect(gainNode);
         gainNode.connect(audioCtx.destination);
 
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 1.0); // Berhenti tepat di 1 detik
+        // Jalankan audio
+        oscPrimary.start(skrg);
+        oscSub.start(skrg);
+
+        // Berhenti otomatis setelah 0.35 detik (durasi pas untuk beep konfirmasi UI)
+        oscPrimary.stop(skrg + 0.35);
+        oscSub.stop(skrg + 0.35);
+
     } catch (err) {
         console.warn("Autoplay Audio API dibatasi browser:", err);
     }
