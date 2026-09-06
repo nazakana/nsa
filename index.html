@@ -1765,6 +1765,10 @@ function bukaTimePickerApotek(targetFieldId) {
     if (inner) inner.classList.remove("scale-95");
 }
 
+
+
+
+
 function ubahAngkaTimePicker(jenis, delta) {
     const input = document.getElementById(jenis === 'jam' ? "picker-jam" : "picker-menit");
     let val = parseInt(input.value) || 0;
@@ -1774,10 +1778,17 @@ function ubahAngkaTimePicker(jenis, delta) {
         if (val < 0) val = 23;
         if (val > 23) val = 0;
     } else {
-        if (val < 0) val = 55;
+        if (val < 0) val = 59;
         if (val > 59) val = 0;
     }
     input.value = String(val).padStart(2, '0');
+}
+
+function validasiFormatTimePicker(el, maxVal) {
+    let val = parseInt(el.value) || 0;
+    if (val < 0) val = 0;
+    if (val > maxVal) val = maxVal;
+    el.value = String(val).padStart(2, '0');
 }
 
 function resetTimePickerApotek() {
@@ -1787,8 +1798,8 @@ function resetTimePickerApotek() {
 
 function simpanTimePickerApotek() {
     if (fieldTimePickerAktif) {
-        const jam = document.getElementById("picker-jam").value;
-        const menit = document.getElementById("picker-menit").value;
+        const jam = String(document.getElementById("picker-jam").value).padStart(2, '0');
+        const menit = String(document.getElementById("picker-menit").value).padStart(2, '0');
         document.getElementById(fieldTimePickerAktif).value = `${jam}:${menit}`;
     }
     const modal = document.getElementById("modal-time-picker-apotek");
@@ -1841,10 +1852,13 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(res => res.json())
             .then(result => {
                 if (result.status === "success") {
-                    alert(`Presensi ${namaKaryawan} berhasil disimpan ke Cloud Apotek!`);
-                    tutupFormPresensiApotekModal();
-                    formApotek.reset();
-                    if (inputTanggalApotek) inputTanggalApotek.value = new Date().toISOString().split('T')[0];
+                    alert(`Presensi ${namaKaryawan} tanggal ${inputTanggalApotek.value} berhasil disimpan! Modal tetap terbuka untuk pengisian tanggal berikutnya.`);
+                    
+                    // Reset field-field input tanpa menutup modal presensi
+                    document.getElementById("presensi-defisit-jam").value = "";
+                    document.getElementById("presensi-alasan-defisit").value = "";
+                    document.getElementById("presensi-penggantian-jam").value = "";
+                    document.getElementById("presensi-dropdown-apotek").value = "Shift 1 (Pagi-Siang)";
                 } else {
                     alert("Gagal menyimpan: " + result.message);
                 }
@@ -3562,9 +3576,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <!-- Wrapper Modal Presensi Apotek Nurjaya -->
 <div id="wrapper_form_presensi_apotek" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[12000] flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300 hidden">
-    <div class="bg-white w-full max-w-lg max-h-[90vh] rounded-[28px] shadow-2xl border border-slate-100 flex flex-col overflow-hidden relative transform scale-95 transition-all duration-300">
+    
+    <!-- Kartu Modal Utama -->
+    <div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-[28px] shadow-2xl border border-slate-100 flex flex-col overflow-hidden relative transform scale-95 transition-all duration-300">
         
-        <!-- Header Modal -->
+        <!-- Header Modal Fixed -->
         <div class="flex items-center justify-between bg-pink-50/90 p-4 px-6 border-b border-pink-100 flex-shrink-0">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-full bg-pink-600 text-white flex items-center justify-center font-black text-sm shadow-md">
@@ -3588,89 +3604,185 @@ document.addEventListener("DOMContentLoaded", function() {
         <!-- Body Form (Scrollable) -->
         <div class="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1 text-gray-700">
             
-            <p class="text-[11px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-id-card text-pink-600"></i> Identitas Karyawan Terverifikasi
-            </p>
+            <!-- AREA CARD PROFIL KARYAWAN TERDETEKSI -->
+            <div class="space-y-2">
+                <p class="text-[11px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-id-card text-pink-600"></i> Identitas Karyawan Terverifikasi
+                </p>
 
-            <!-- Card Profil Eka -->
-            <div id="card-profile-Eka" class="card-karyawan-profile-apotek hidden bg-pink-50 p-4 rounded-[20px] border border-pink-200 flex items-center justify-between shadow-sm">
-                <div>
-                    <h5 class="text-base font-black text-gray-800">Eka Ainun Nisa</h5>
-                    <span class="text-[10px] font-black text-pink-800 bg-white border border-pink-200 px-2.5 py-0.5 rounded-lg uppercase">Apoteker / Staf Apotek</span>
+                <!-- Container Card Eka -->
+                <div id="card-profile-Eka" class="card-karyawan-profile-apotek hidden bg-[#FDF2F8] p-4 sm:p-5 rounded-[28px] border border-[#FBCFE8] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
+                    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500')">
+                        <img src="https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500" 
+                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                        <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px]">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+                        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Eka Ainun Nisa</h5>
+                        
+                        <div class="flex items-center gap-1.5 mt-2">
+                            <a href="https://wa.me/6285523823280" target="_blank"
+                               class="w-7 h-7 bg-pink-500 hover:bg-pink-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                               title="Hubungi WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                            </a>
+                            <span class="inline-flex items-center h-7 text-[10px] font-black text-pink-800 uppercase tracking-widest bg-white border border-[#FBCFE8] px-3 rounded-xl shadow-xs">
+                                Apoteker / Staf
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#FBCFE8] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
+                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
+                        <span id="label-periode-Eka" class="text-xs font-black text-pink-800">Memuat...</span>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <span class="block text-[10px] text-gray-500 font-bold uppercase">Buku Periode</span>
-                    <span id="label-periode-Eka" class="text-xs font-black text-pink-800">Memuat...</span>
+
+                <!-- Container Card Dea -->
+                <div id="card-profile-Dea" class="card-karyawan-profile-apotek hidden bg-[#FDF2F8] p-4 sm:p-5 rounded-[28px] border border-[#FBCFE8] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
+                    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500')">
+                        <img src="https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500" 
+                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                        <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px]">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+                        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Dea Nove Asyari</h5>
+                        
+                        <div class="flex items-center gap-1.5 mt-2">
+                            <a href="https://wa.me/6285220786175" target="_blank"
+                               class="w-7 h-7 bg-pink-500 hover:bg-pink-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                               title="Hubungi WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                            </a>
+                            <span class="inline-flex items-center h-7 text-[10px] font-black text-pink-800 uppercase tracking-widest bg-white border border-[#FBCFE8] px-3 rounded-xl shadow-xs">
+                                Staf Apotek
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#FBCFE8] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
+                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
+                        <span id="label-periode-Dea" class="text-xs font-black text-pink-800">Memuat...</span>
+                    </div>
                 </div>
+
+                <!-- Container Card Fadilla -->
+                <div id="card-profile-Fadilla" class="card-karyawan-profile-apotek hidden bg-[#FDF2F8] p-4 sm:p-5 rounded-[28px] border border-[#FBCFE8] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
+                    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea')">
+                        <img src="https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea" 
+                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                        <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px]">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+                        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Fadilla Nailul Wafa</h5>
+                        
+                        <div class="flex items-center gap-1.5 mt-2">
+                            <a href="https://wa.me/6282120737797" target="_blank"
+                               class="w-7 h-7 bg-pink-500 hover:bg-pink-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                               title="Hubungi WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                            </a>
+                            <span class="inline-flex items-center h-7 text-[10px] font-black text-pink-800 uppercase tracking-widest bg-white border border-[#FBCFE8] px-3 rounded-xl shadow-xs">
+                                Staf Apotek
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#FBCFE8] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
+                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
+                        <span id="label-periode-Fadilla" class="text-xs font-black text-pink-800">Memuat...</span>
+                    </div>
+                </div>
+
+                <input type="hidden" id="presensi-karyawan-apotek" name="presensi-karyawan-apotek" value="">
             </div>
-
-            <!-- Card Profil Dea -->
-            <div id="card-profile-Dea" class="card-karyawan-profile-apotek hidden bg-pink-50 p-4 rounded-[20px] border border-pink-200 flex items-center justify-between shadow-sm">
-                <div>
-                    <h5 class="text-base font-black text-gray-800">Dea Nove Asyari</h5>
-                    <span class="text-[10px] font-black text-pink-800 bg-white border border-pink-200 px-2.5 py-0.5 rounded-lg uppercase">Staf Apotek</span>
-                </div>
-                <div class="text-right">
-                    <span class="block text-[10px] text-gray-500 font-bold uppercase">Buku Periode</span>
-                    <span id="label-periode-Dea" class="text-xs font-black text-pink-800">Memuat...</span>
-                </div>
-            </div>
-
-            <!-- Card Profil Fadilla -->
-            <div id="card-profile-Fadilla" class="card-karyawan-profile-apotek hidden bg-pink-50 p-4 rounded-[20px] border border-pink-200 flex items-center justify-between shadow-sm">
-                <div>
-                    <h5 class="text-base font-black text-gray-800">Fadilla Nailul Wafa</h5>
-                    <span class="text-[10px] font-black text-pink-800 bg-white border border-pink-200 px-2.5 py-0.5 rounded-lg uppercase">Staf Apotek</span>
-                </div>
-                <div class="text-right">
-                    <span class="block text-[10px] text-gray-500 font-bold uppercase">Buku Periode</span>
-                    <span id="label-periode-Fadilla" class="text-xs font-black text-pink-800">Memuat...</span>
-                </div>
-            </div>
-
-            <input type="hidden" id="presensi-karyawan-apotek" value="">
 
             <!-- Form Presensi Apotek -->
-            <form id="form-presensi-apotek" class="space-y-4">
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider">Tanggal Kerja</label>
-                    <input type="date" id="presensi-tanggal-apotek" required class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-pink-500 font-bold text-sm text-gray-800 h-[48px]">
-                </div>
+            <form id="form-presensi-apotek" class="space-y-5">
+                <div class="p-4 sm:p-5 bg-pink-50 rounded-[24px] border border-pink-200/80 shadow-sm space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label for="presensi-tanggal-apotek" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-day text-pink-600"></i> Tanggal Kerja
+                            </label>
+                            <input type="date" id="presensi-tanggal-apotek" required 
+                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-pink-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
+                        </div>
 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider">Status Presensi / Kehadiran</label>
-                    <select id="presensi-dropdown-apotek" required class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-pink-500 font-black text-sm text-gray-800 h-[48px]">
-                        <option value="Hadir">Hadir</option>
-                        <option value="Sakit">Sakit</option>
-                        <option value="Izin">Izin</option>
-                        <option value="Libur">Libur</option>
-                    </select>
-                </div>
-
-                <div class="p-4 bg-amber-50 rounded-[20px] border border-amber-200 space-y-3">
-                    <div class="space-y-1">
-                        <label class="block text-xs font-black text-amber-900 uppercase">Defisit Jam Kerja (Opsional)</label>
-                        <input type="text" id="presensi-defisit-jam" readonly onclick="bukaTimePickerApotek('presensi-defisit-jam')" placeholder="00:00 (Klik untuk isi)" class="w-full px-4 py-2.5 bg-white border border-amber-300 rounded-[14px] font-bold text-sm text-amber-900 cursor-pointer">
+                        <div class="space-y-1.5">
+                            <label for="presensi-dropdown-apotek" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-pink-600"></i> Status Presensi / Kehadiran
+                            </label>
+                            <div class="relative">
+                                <select id="presensi-dropdown-apotek" required 
+                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-pink-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                                    <option value="Shift 1 (Pagi-Siang)">Shift 1 (Pagi-Siang)</option>
+                                    <option value="Shift 2 (Siang-Malam)">Shift 2 (Siang-Malam)</option>
+                                    <option value="Lembur">Lembur</option>
+                                    <option value="Khusus">Khusus</option>
+                                    <option value="Libur">Libur</option>
+                                    <option value="Izin/Sakit">Izin/Sakit</option>
+                                    <option value="Absen">Absen</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-black text-amber-900 uppercase">Alasan Defisit Jam</label>
-                        <input type="text" id="presensi-alasan-defisit" placeholder="Contoh: Datang terlambat / Pulang awal" class="w-full px-4 py-2.5 bg-white border border-amber-300 rounded-[14px] font-bold text-sm text-amber-900">
+                </div>
+
+                <div class="p-4 sm:p-5 bg-amber-500 rounded-[24px] border border-amber-600 shadow-md space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label for="presensi-defisit-jam" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-business-time text-amber-100"></i> Defisit Jam Kerja <span class="text-[10px] text-amber-200 font-bold normal-case">(Opsional)</span>
+                            </label>
+                            <input type="text" id="presensi-defisit-jam" readonly onclick="bukaTimePickerApotek('presensi-defisit-jam')" placeholder="00:00 (Klik untuk isi)" 
+                                class="w-full px-4 py-3 bg-white border-2 border-amber-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-amber-900 cursor-pointer transition-colors duration-200 h-[48px]">
+                        </div>
+                        
+                        <div class="space-y-1.5">
+                            <label for="presensi-alasan-defisit" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-comment-dots text-amber-100"></i> Alasan Defisit Jam
+                            </label>
+                            <input type="text" id="presensi-alasan-defisit" placeholder="Contoh: Datang terlambat / Pulang awal" 
+                                class="w-full px-4 py-3 bg-white border-2 border-amber-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-amber-900 transition-colors duration-200 h-[48px] placeholder:text-amber-400">
+                        </div>
                     </div>
                 </div>
 
-                <div class="p-4 bg-emerald-50 rounded-[20px] border border-emerald-200 space-y-1">
-                    <label class="block text-xs font-black text-emerald-900 uppercase">Penggantian Jam (Opsional)</label>
-                    <input type="text" id="presensi-penggantian-jam" readonly onclick="bukaTimePickerApotek('presensi-penggantian-jam')" placeholder="00:00 (Klik untuk isi)" class="w-full px-4 py-2.5 bg-white border border-emerald-300 rounded-[14px] font-bold text-sm text-emerald-900 cursor-pointer">
+                <div class="p-4 sm:p-5 bg-emerald-500 rounded-[24px] border border-emerald-600 shadow-md space-y-3">
+                    <div class="space-y-1.5">
+                        <label for="presensi-penggantian-jam" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-clock text-emerald-100"></i> Penggantian Jam <span class="text-[10px] text-emerald-200 font-bold normal-case">(Opsional)</span>
+                        </label>
+                        <input type="text" id="presensi-penggantian-jam" readonly onclick="bukaTimePickerApotek('presensi-penggantian-jam')" placeholder="00:00 (Klik untuk isi)" 
+                            class="w-full px-4 py-3 bg-white border-2 border-emerald-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-emerald-900 cursor-pointer transition-colors duration-200 h-[48px]">
+                    </div>
                 </div>
 
-                <button type="submit" id="btn-submit-presensi-apotek" class="w-full py-4 bg-pink-600 hover:bg-pink-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi Apotek
-                </button>
+                <div class="pt-3 border-t border-gray-100 flex justify-end">
+                    <button type="submit" id="btn-submit-presensi-apotek" 
+                        class="w-full md:w-auto px-8 py-4 bg-pink-600 hover:bg-pink-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi Apotek
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
+<!-- Modal Time Picker Khusus Apotek -->
 <!-- Modal Time Picker Khusus Apotek -->
 <div id="modal-time-picker-apotek" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[14000] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-200">
     <div class="bg-white w-full max-w-xs rounded-[24px] p-5 shadow-2xl border border-slate-100 space-y-4 text-center transform scale-95 transition-all duration-200">
@@ -3679,14 +3791,14 @@ document.addEventListener("DOMContentLoaded", function() {
         <div class="flex items-center justify-center gap-3">
             <div class="flex flex-col items-center">
                 <button type="button" onclick="ubahAngkaTimePicker('jam', 1)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-pink-100 font-bold text-slate-700">▲</button>
-                <input type="text" id="picker-jam" readonly value="00" class="w-14 text-center font-black text-xl py-2 bg-slate-50 border border-slate-200 rounded-xl my-1">
+                <input type="number" id="picker-jam" min="0" max="23" value="00" onblur="validasiFormatTimePicker(this, 23)" class="w-14 text-center font-black text-xl py-2 bg-slate-50 border border-slate-200 rounded-xl my-1 focus:outline-none focus:border-pink-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                 <button type="button" onclick="ubahAngkaTimePicker('jam', -1)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-pink-100 font-bold text-slate-700">▼</button>
             </div>
             <span class="font-black text-xl text-slate-400">:</span>
             <div class="flex flex-col items-center">
-                <button type="button" onclick="ubahAngkaTimePicker('menit', 5)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-pink-100 font-bold text-slate-700">▲</button>
-                <input type="text" id="picker-menit" readonly value="00" class="w-14 text-center font-black text-xl py-2 bg-slate-50 border border-slate-200 rounded-xl my-1">
-                <button type="button" onclick="ubahAngkaTimePicker('menit', -5)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-pink-100 font-bold text-slate-700">▼</button>
+                <button type="button" onclick="ubahAngkaTimePicker('menit', 1)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-pink-100 font-bold text-slate-700">▲</button>
+                <input type="number" id="picker-menit" min="0" max="59" value="00" onblur="validasiFormatTimePicker(this, 59)" class="w-14 text-center font-black text-xl py-2 bg-slate-50 border border-slate-200 rounded-xl my-1 focus:outline-none focus:border-pink-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                <button type="button" onclick="ubahAngkaTimePicker('menit', -1)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-pink-100 font-bold text-slate-700">▼</button>
             </div>
         </div>
 
