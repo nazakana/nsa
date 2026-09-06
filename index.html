@@ -1939,7 +1939,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // =========================================================================
-// AUDIO SYNTHESIZER: BEEP ELEGAN & FUTURISTIK (VOLUME KERAS)
+// AUDIO SYNTHESIZER: EFEK SUARA SUKSES / TERDETEKSI (HIGH-TECH CHIME)
 // =========================================================================
 function mainkanSuaraBeepTech() {
     try {
@@ -1947,44 +1947,35 @@ function mainkanSuaraBeepTech() {
         if (!AudioContext) return;
         
         const audioCtx = new AudioContext();
-
-        // 1. Dual Oscillator untuk efek harmoni kristal canggih
-        const oscPrimary = audioCtx.createOscillator();
-        const oscSub = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-
-        // Menggunakan tipe 'triangle' untuk karakter suara halus, padat, & premium
-        oscPrimary.type = "triangle";
-        oscSub.type = "sine";
-
         const skrg = audioCtx.currentTime;
 
-        // Pitch Sweep (Penurunan nada cepat memberikan efek "chime / tech confirm")
-        // Nada utama mulai dari 2400Hz meluncur ke 1600Hz dalam 0.15 detik
-        oscPrimary.frequency.setValueAtTime(2400, skrg);
-        oscPrimary.frequency.exponentialRampToValueAtTime(1600, skrg + 0.15);
+        // FUNGSI HELPER NADA INDIVIDUAL
+        function buatNadaChime(frekuensi, waktuMulai, durasi, volume) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
 
-        // Sub-harmoni pendamping (pemanis suara)
-        oscSub.frequency.setValueAtTime(1200, skrg);
-        oscSub.frequency.exponentialRampToValueAtTime(800, skrg + 0.15);
+            // Gelombang sine jernih bercampur sedikit sinyal halus
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(frekuensi, waktuMulai);
 
-        // 2. Kontrol Volume Keras (Set ke 0.8 / 80% kekuatan maksimum Web Audio)
-        gainNode.gain.setValueAtTime(0.8, skrg);
-        // Fade-out halus di ujung agar tidak terdengar letupan/pop
-        gainNode.gain.exponentialRampToValueAtTime(0.001, skrg + 0.35);
+            // Setting volume keras & padat
+            gain.gain.setValueAtTime(volume, waktuMulai);
+            // Decay / gema halus di akhir nada
+            gain.gain.exponentialRampToValueAtTime(0.0001, waktuMulai + durasi);
 
-        // Sambungkan node audio ke speaker
-        oscPrimary.connect(gainNode);
-        oscSub.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
 
-        // Jalankan audio
-        oscPrimary.start(skrg);
-        oscSub.start(skrg);
+            osc.start(waktuMulai);
+            osc.stop(waktuMulai + durasi);
+        }
 
-        // Berhenti otomatis setelah 0.35 detik (durasi pas untuk beep konfirmasi UI)
-        oscPrimary.stop(skrg + 0.35);
-        oscSub.stop(skrg + 0.35);
+        // --- NADA HARMONI BERURUTAN (CHIME SUKSES CHORD E-MAJOR) ---
+        // Nada 1: E5 (659.25 Hz) -> Bunyi pertama sebagai pemicu
+        buatNadaChime(659.25, skrg, 0.25, 0.7);
+
+        // Nada 2: B5 (987.77 Hz) -> Melompat tinggi penanda "SUKSES"
+        buatNadaChime(987.77, skrg + 0.08, 0.45, 0.85);
 
     } catch (err) {
         console.warn("Autoplay Audio API dibatasi browser:", err);
