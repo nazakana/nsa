@@ -1265,7 +1265,7 @@
                 <div class="pt-3 border-t border-gray-100 flex justify-end">
                     <button type="submit" id="btn-submit-presensi"
                         class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i> KIRIM PRESENSI KE NSA CLOUD
+                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi
                     </button>
                 </div>
                 
@@ -1589,6 +1589,9 @@ function mulaiDeteksiWajahRealtime() {
             }
 
             if (kecocokanTerbaik) {
+                // Mainkan suara beep sukses via Web Audio API
+                mainkanSuaraBeepTech();
+
                 clearInterval(intervalDeteksi);
                 intervalDeteksi = null;
 
@@ -1929,11 +1932,41 @@ document.addEventListener("DOMContentLoaded", function() {
             .finally(() => {
                 btnSubmit.removeAttribute("disabled");
                 btnSubmit.classList.remove("opacity-50", "cursor-not-allowed");
-                btnSubmit.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi Apotek`;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi`;
             });
         });
     }
 });
+
+// =========================================================================
+// AUDIO SYNTHESIZER BEEP ALA TECH (WEB AUDIO API)
+// =========================================================================
+function mainkanSuaraBeepTech() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        
+        const audioCtx = new AudioContext();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        // Frekuensi tinggi khas bunyi sensor tech (880 Hz / Nada A5)
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+
+        // Pengaturan volume & fade out cepat
+        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.15);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.15);
+    } catch (err) {
+        console.warn("Autoplay Audio API dibatasi browser:", err);
+    }
+}
 </script>
 
 
@@ -4184,7 +4217,7 @@ function uploadKartuApotekKeDrive() {
                 <div class="pt-3 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3">
 					<button type="submit" id="btn-submit-presensi-apotek" 
                         class="w-full sm:w-auto px-8 py-4 bg-pink-600 hover:bg-pink-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
-                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi Apotek
+                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi
                     </button>
                     <button type="button" id="btn-buka-kartu-presensi-apotek" onclick="pemicuBukaKartuApotek()"
                         class="w-full sm:w-auto px-5 py-3.5 bg-pink-100 hover:bg-pink-200 text-pink-900 font-extrabold text-xs rounded-[18px] uppercase tracking-wider border border-pink-200 transition-all duration-200 flex items-center justify-center gap-2 shadow-xs active:scale-95">
