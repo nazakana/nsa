@@ -3383,6 +3383,329 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+// =========================================================================
+// LOGIKA KARTU PRESENSI APOTEK NURJAYA (SEPARATE ID & ENGINE)
+// =========================================================================
+const API_URL_KARTU_APOTEK = "https://script.google.com/macros/s/AKfycby55pIwKb9kHh9ba2xmKD_scX7jzIj43ll5rpcGU5_AjpTwMnD42EN4140WZxhf0duL/exec";
+const API_URL_UPLOAD_APOTEK = "https://script.google.com/macros/s/AKfycby8Z287iFeysy_R6Nstv55dQ1U0RbKK-CTNtgLp5-ch309OyH4dDfmqsf5IC6K8Xdop/exec";
+
+const PEMETAAN_NAMA_APOTEK = {
+    "Eka": "Eka Ainun Nisa",
+    "Dea": "Dea Nove Asyari",
+    "Fadilla": "Fadilla Nailul Wafa"
+};
+
+function paskanKartuApotekKeLayarHP() {
+    const areaCetak = document.getElementById("area-cetak-pdf-apotek");
+    if (!areaCetak) return;
+
+    const lebarContainerModal = areaCetak.parentElement.clientWidth - 16;
+    const lebarAsliKartu = 756;
+
+    if (lebarContainerModal < lebarAsliKartu) {
+        const rasioSkala = lebarContainerModal / lebarAsliKartu;
+        areaCetak.style.transform = `scale(${rasioSkala})`;
+        areaCetak.style.transformOrigin = "top left";
+        areaCetak.parentElement.style.height = `${756 * rasioSkala}px`;
+        areaCetak.parentElement.style.width = `${756 * rasioSkala}px`;
+        areaCetak.parentElement.style.margin = "0 auto";
+    } else {
+        areaCetak.style.transform = "scale(1)";
+        areaCetak.style.transformOrigin = "top center";
+        areaCetak.parentElement.style.height = "756px";
+        areaCetak.parentElement.style.width = "756px";
+    }
+}
+
+window.addEventListener("resize", paskanKartuApotekKeLayarHP);
+
+function sinkronisasiCatatanApotek() {
+    const listChipsInput = document.querySelectorAll('.input-catatan-chip-apotek');
+    const mirrorCatatan = document.getElementById("mirror-catatan-final-apotek");
+    
+    if (mirrorCatatan) {
+        let htmlListChips = "";
+        let adaIsi = false;
+
+        listChipsInput.forEach(input => {
+            const isiPoin = input.value.trim();
+            if (isiPoin !== "") {
+                adaIsi = true;
+                htmlListChips += `
+                    <li class="flex items-start gap-1.5 leading-tight">
+                        <span class="w-1.5 h-1.5 rounded-full bg-pink-600 mt-0.5 flex-shrink-0"></span>
+                        <span class="uppercase">${isiPoin}</span>
+                    </li>
+                `;
+            }
+        });
+        mirrorCatatan.innerHTML = adaIsi ? htmlListChips : `<li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- BELUM ADA CATATAN -</li>`;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.input-catatan-chip-apotek').forEach(input => {
+        input.addEventListener('input', sinkronisasiCatatanApotek);
+    });
+});
+
+function pemicuBukaKartuApotek() {
+    const namaKaryawan = document.getElementById("presensi-karyawan-apotek")?.value;
+    const modal = document.getElementById("modal-kartu-presensi-apotek");
+    const tglInput = document.getElementById("presensi-tanggal-apotek")?.value || "";
+
+    if (!namaKaryawan) {
+        return alert("Pindai wajah karyawan terlebih dahulu!");
+    }
+
+    const modalNama = document.getElementById("modal-nama-karyawan-apotek");
+    const modalPeriode = document.getElementById("modal-periode-kerja-apotek");
+    const modalTotalHari = document.getElementById("modal-total-hari-kerja-apotek");
+    const tabelKiri = document.getElementById("tabel-kiri-body-apotek");
+    const tabelKanan = document.getElementById("tabel-kanan-body-apotek");
+
+    if (modalNama) modalNama.textContent = PEMETAAN_NAMA_APOTEK[namaKaryawan] || namaKaryawan;
+    if (modalPeriode) modalPeriode.textContent = "...";
+    if (modalTotalHari) modalTotalHari.textContent = "0";
+
+    tabelKiri.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
+    tabelKanan.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
+
+    modal.classList.remove("hidden");
+    setTimeout(() => {
+        modal.classList.remove("opacity-0", "pointer-events-none");
+        const innerBox = modal.querySelector(".transform");
+        if (innerBox) innerBox.classList.remove("scale-95");
+        paskanKartuApotekKeLayarHP();
+    }, 10);
+
+    fetch(`${API_URL_KARTU_APOTEK}?sheetName=${namaKaryawan}&tanggal=${tglInput}`)
+        .then(res => res.json())
+        .then(result => {
+            if (result.status !== "success" || !result.data || result.data.length === 0) {
+                tabelKiri.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
+                tabelKanan.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
+                return;
+            }
+
+            const dataRows = result.data;
+            if (modalTotalHari) modalTotalHari.textContent = dataRows.length;
+            if (modalPeriode && dataRows[0]?.periode) modalPeriode.textContent = dataRows[0].periode;
+
+            tabelKiri.innerHTML = "";
+            tabelKanan.innerHTML = "";
+
+            let countShift1 = 0, countShift2 = 0, countLembur = 0, countKhusus = 0, countLibur = 0, countAbsen = 0;
+            let totalDefisitMenit = 0, totalGantiMenit = 0;
+
+            dataRows.forEach((row, index) => {
+                const hariKe = index + 1;
+                const presensiStr = String(row.presensi || "").trim();
+                const jamKhususStr = String(row.jam_khusus || "").trim();
+                const defisitStr = String(row.defisit_jam || "00:00").trim();
+                const gantiStr = String(row.penggantian_jam || "00:00").trim();
+
+                let teksPresensiDisplay = presensiStr;
+                if (presensiStr === "Khusus" && jamKhususStr !== "") {
+                    teksPresensiDisplay = jamKhususStr;
+                }
+
+                // Kalkulasi Rekap
+                if (presensiStr.includes("Shift 1")) countShift1++;
+                else if (presensiStr.includes("Shift 2")) countShift2++;
+                else if (presensiStr.includes("Lembur")) countLembur++;
+                else if (presensiStr.includes("Khusus")) countKhusus++;
+                else if (presensiStr.includes("Libur")) countLibur++;
+                else countAbsen++;
+
+                // Kalkulasi Jam Defisit & Ganti
+                totalDefisitMenit += parseJamKeMenit(defisitStr);
+                totalGantiMenit += parseJamKeMenit(gantiStr);
+
+                const trHtml = `
+                    <tr class="h-[18px] bg-white text-[8.5px]">
+                        <td class="border-r border-pink-900 py-0.5 text-center font-mono font-normal text-slate-500">${hariKe}</td>
+                        <td class="border-r border-pink-900 py-0.5 text-center font-semibold">${formatSingkatTanggalIndo(row.tanggal)}</td>
+                        <td class="border-r border-pink-900 py-0.5 text-center uppercase tracking-tighter text-[8px] font-black">${teksPresensiDisplay}</td>
+                        <td class="border-r border-pink-900 py-0.5 text-center text-amber-700">${defisitStr !== "00:00" ? defisitStr : "-"}</td>
+                        <td class="py-0.5 text-center text-emerald-700">${gantiStr !== "00:00" ? gantiStr : "-"}</td>
+                    </tr>
+                `;
+
+                if (hariKe <= 15) {
+                    tabelKiri.insertAdjacentHTML('beforeend', trHtml);
+                } else {
+                    tabelKanan.insertAdjacentHTML('beforeend', trHtml);
+                }
+            });
+
+            // Fill Baris Kosong
+            while (tabelKiri.children.length < 15) {
+                tabelKiri.insertAdjacentHTML('beforeend', `<tr class="h-[18px]"><td class="border-r border-pink-200">&nbsp;</td><td class="border-r border-pink-200"></td><td class="border-r border-pink-200"></td><td class="border-r border-pink-200"></td><td></td></tr>`);
+            }
+            while (tabelKanan.children.length < 15) {
+                tabelKanan.insertAdjacentHTML('beforeend', `<tr class="h-[18px]"><td class="border-r border-pink-200">&nbsp;</td><td class="border-r border-pink-200"></td><td class="border-r border-pink-200"></td><td class="border-r border-pink-200"></td><td></td></tr>`);
+            }
+
+            // Update DOM Rekap Kiri
+            document.getElementById("rekap-shift1-apotek").textContent = `${countShift1} hari`;
+            document.getElementById("rekap-shift2-apotek").textContent = `${countShift2} hari`;
+            document.getElementById("rekap-lembur-apotek").textContent = `${countLembur} hari`;
+            document.getElementById("rekap-khusus-apotek").textContent = `${countKhusus} hari`;
+            document.getElementById("rekap-totalkERJA-apotek").textContent = `${countShift1 + countShift2 + countLembur + countKhusus} hari`;
+            document.getElementById("rekap-libur-apotek").textContent = `${countLibur} hari`;
+            document.getElementById("rekap-absen-apotek").textContent = `${countAbsen} hari`;
+
+            // Update DOM Rekap Kanan
+            document.getElementById("rekap-total-defisit-apotek").textContent = formatMenitKeTeksJam(totalDefisitMenit);
+            document.getElementById("rekap-total-ganti-apotek").textContent = formatMenitKeTeksJam(totalGantiMenit);
+
+            // Indikator Defisit Tergantikan / Sisa
+            const elIndikator = document.getElementById("status-indikator-defisit-apotek");
+            if (totalDefisitMenit <= totalGantiMenit) {
+                elIndikator.className = "w-full py-1 px-2 rounded-xl text-center font-black text-[9px] bg-emerald-100 text-emerald-900 border border-emerald-300";
+                elIndikator.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Defisit Jam Telah Tergantikan`;
+            } else {
+                const sisaMenit = totalDefisitMenit - totalGantiMenit;
+                elIndikator.className = "w-full py-1 px-2 rounded-xl text-center font-black text-[9px] bg-amber-100 text-amber-900 border border-amber-300";
+                elIndikator.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i> Defisit Jam tersisa: ${formatMenitKeTeksJam(sisaMenit)}`;
+            }
+        })
+        .catch(err => {
+            console.error("Gagal membaca kartu presensi apotek:", err);
+            tabelKiri.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-rose-600 text-[10px]">Gagal Memuat Data</td></tr>`;
+        });
+}
+
+function tutupModalKartuApotek() {
+    const modal = document.getElementById("modal-kartu-presensi-apotek");
+    const innerBox = modal.querySelector(".transform");
+    if (innerBox) innerBox.classList.add("scale-95");
+    modal.classList.add("opacity-0", "pointer-events-none");
+    setTimeout(() => {
+        modal.classList.add("hidden");
+    }, 200);
+}
+
+// Helper Formatting Waktu & Tanggal
+function parseJamKeMenit(strJam) {
+    if (!strJam || strJam === "-") return 0;
+    const parts = strJam.split(":");
+    const jam = parseInt(parts[0]) || 0;
+    const menit = parseInt(parts[1]) || 0;
+    return (jam * 60) + menit;
+}
+
+function formatMenitKeTeksJam(totalMenit) {
+    const jam = Math.floor(totalMenit / 60);
+    const menit = totalMenit % 60;
+    return `${jam} jam ${menit} menit`;
+}
+
+function formatSingkatTanggalIndo(strTanggalFull) {
+    if (!strTanggalFull) return "-";
+    const parts = strTanggalFull.split(",");
+    if (parts.length >= 2) {
+        const hariStr = parts[0].trim();
+        const tglFullStr = parts[1].trim();
+        const tglAngka = tglFullStr.split(" ")[0];
+        return `${tglAngka.padStart(2, '0')}/${hariStr.substring(0, 3)}`;
+    }
+    return strTanggalFull;
+}
+
+// Unduh PDF Lokal Apotek
+function unduhKartuApotekPdf() {
+    const elementTarget = document.getElementById("area-cetak-pdf-apotek");
+    const btn = document.getElementById("btn-unduh-pdf-apotek");
+    if (!elementTarget) return;
+
+    sinkronisasiCatatanApotek();
+
+    const txtNama = document.getElementById("modal-nama-karyawan-apotek")?.textContent || "Karyawan";
+    const txtPeriode = document.getElementById("modal-periode-kerja-apotek")?.textContent || "Periode";
+    const namaFile = `Kartu_Presensi_Apotek_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.pdf`;
+
+    btn.setAttribute("disabled", "disabled");
+    btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Merender PDF...`;
+
+    const styleAsli = elementTarget.getAttribute("style") || "";
+    elementTarget.style.setProperty("transform", "none", "important");
+
+    const opsiSetelan = {
+        margin: 0,
+        filename: namaFile,
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
+        jsPDF: { unit: 'cm', format: [20, 20], orientation: 'portrait' }
+    };
+
+    html2pdf().set(opsiSetelan).from(elementTarget).save().then(() => {
+        elementTarget.setAttribute("style", styleAsli);
+        btn.removeAttribute("disabled");
+        btn.innerHTML = `<i class="fa-solid fa-file-pdf text-sm"></i> Unduh Dokumen PDF`;
+    }).catch(err => {
+        console.error(err);
+        elementTarget.setAttribute("style", styleAsli);
+        btn.removeAttribute("disabled");
+        btn.innerHTML = `<i class="fa-solid fa-file-pdf text-sm"></i> Unduh Dokumen PDF`;
+    });
+}
+
+// Upload Gambar ke Google Drive Apotek
+function uploadKartuApotekKeDrive() {
+    const elementTarget = document.getElementById("area-cetak-pdf-apotek");
+    const btn = document.getElementById("btn-upload-presensi-cloud-apotek");
+    if (!elementTarget) return;
+
+    sinkronisasiCatatanApotek();
+
+    const txtNama = document.getElementById("modal-nama-karyawan-apotek")?.textContent || "Karyawan";
+    const txtPeriode = document.getElementById("modal-periode-kerja-apotek")?.textContent || "Periode";
+    const namaFile = `Kartu_Presensi_Apotek_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.jpg`;
+
+    btn.setAttribute("disabled", "disabled");
+    btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Merender...`;
+
+    const styleAsli = elementTarget.getAttribute("style") || "";
+    elementTarget.style.setProperty("transform", "none", "important");
+
+    const opsiSetelan = {
+        margin: 0,
+        filename: namaFile,
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
+        jsPDF: { unit: 'cm', format: [20, 20], orientation: 'portrait' }
+    };
+
+    html2pdf().set(opsiSetelan).from(elementTarget).outputImg('dataurl').then(function(dataUri) {
+        elementTarget.setAttribute("style", styleAsli);
+        const base64String = dataUri.split(',')[1];
+
+        btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Mengunggah...`;
+
+        const payload = { action: "generateServerJPG", filename: namaFile, image_blob: base64String };
+        return fetch(API_URL_UPLOAD_APOTEK, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+        });
+    })
+    .then(res => res.json())
+    .then(result => {
+        alert(result.status === "success" ? result.message : "Gagal: " + result.message);
+    })
+    .catch(err => {
+        console.error("Upload error:", err);
+        alert("Gagal mengupload ke Cloud Drive.");
+    })
+    .finally(() => {
+        elementTarget.setAttribute("style", styleAsli);
+        btn.removeAttribute("disabled");
+        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive`;
+    });
+}
 </script>
 
 <!-- MODAL ALAT BANTU BELANJA (MATERIAL UI ROUNDY CHIP) -->
@@ -3690,7 +4013,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
                             </a>
                             <span class="inline-flex items-center h-7 text-[10px] font-black text-pink-800 uppercase tracking-widest bg-white border border-[#FBCFE8] px-3 rounded-xl shadow-xs">
-                                Apoteker
+                                Asisten Apoteker
                             </span>
                         </div>
                     </div>
@@ -3858,13 +4181,23 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                 </div>
 
-                <div class="pt-3 border-t border-gray-100 flex justify-end">
-                    <button type="submit" id="btn-submit-presensi-apotek" 
-                        class="w-full md:w-auto px-8 py-4 bg-pink-600 hover:bg-pink-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                <div class="pt-3 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+					<button type="submit" id="btn-submit-presensi-apotek" 
+                        class="w-full sm:w-auto px-8 py-4 bg-pink-600 hover:bg-pink-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
                         <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi Apotek
                     </button>
+                    <button type="button" id="btn-buka-kartu-presensi-apotek" onclick="pemicuBukaKartuApotek()"
+                        class="w-full sm:w-auto px-5 py-3.5 bg-pink-100 hover:bg-pink-200 text-pink-900 font-extrabold text-xs rounded-[18px] uppercase tracking-wider border border-pink-200 transition-all duration-200 flex items-center justify-center gap-2 shadow-xs active:scale-95">
+                        <i class="fa-solid fa-address-card text-pink-600 text-sm"></i> Tampilkan Kartu Presensi
+                    </button>
+
+                    
                 </div>
+				
             </form>
+			
+			
+			
         </div>
     </div>
 </div>
@@ -3931,6 +4264,199 @@ document.addEventListener("DOMContentLoaded", function() {
             <button type="button" onclick="tutupModalRangeJamKhusus()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-extrabold text-xs rounded-xl">Batal</button>
             <button type="button" onclick="simpanRangeJamKhusus()" class="w-1/2 py-2.5 bg-pink-600 hover:bg-pink-700 text-white font-extrabold text-xs rounded-xl shadow-md">Terapkan</button>
         </div>
+    </div>
+</div>
+
+
+<!-- MODAL PREVIEW KARTU PRESENSI APOTEK NURJAYA (PINK THEME) -->
+<div id="modal-kartu-presensi-apotek" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[13500] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none hidden">
+    
+    <div class="bg-slate-900/95 backdrop-blur-lg w-full max-w-5xl max-h-[95vh] rounded-[32px] border border-pink-500/30 shadow-[0_0_50px_-12px_rgba(236,72,153,0.3)] overflow-hidden flex flex-col transform scale-95 transition-all duration-300">
+        
+        <!-- Header Modal -->
+        <div class="p-4 border-b border-slate-800 bg-slate-950/80 backdrop-blur-sm flex justify-between items-center flex-shrink-0">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-6 bg-pink-500 rounded-full animate-pulse"></div>
+                <h3 class="text-sm font-black text-white uppercase tracking-wider">
+                    <i class="fa-solid fa-address-card text-pink-400 mr-1"></i> Preview Kartu Presensi Apotek Siap Cetak
+                </h3>
+            </div>
+            <button type="button" onclick="tutupModalKartuApotek()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-400 hover:bg-rose-600 hover:text-white transition-all duration-200 shadow-inner">
+                <i class="fa-solid fa-xmark text-xs font-black"></i>
+            </button>
+        </div>
+
+        <!-- Body Scrollable Canvas -->
+        <div class="p-5 overflow-y-auto overflow-x-hidden modal-scroll-container flex-1 bg-slate-950 pattern-grid-lg flex justify-center items-start">
+            
+            <div id="wrapper-viewport-cetak-apotek" style="width: 100%; max-width: 756px;">
+                
+                <!-- AREA CANVAS CETAK 756x756px (TEMA PINK APOTEK) -->
+                <div id="area-cetak-pdf-apotek" class="bg-white text-slate-900 pt-4 px-6 pb-6 rounded-[24px] border border-slate-200 shadow-2xl flex flex-col justify-between [color-scheme:light]" style="width: 756px; height: 756px; min-width: 756px; min-height: 756px; font-family: 'Arial', sans-serif; box-sizing: border-box;">
+                    
+                    <!-- Header Kartu Cetak -->
+                    <div class="text-center border-b-2 border-pink-900 pb-1.5 mb-2 flex-shrink-0">
+                        <h2 class="text-xl font-black tracking-widest text-pink-950 m-0 leading-none">KARTU PRESENSI ASISTEN APOTEKER</h2>
+                        <p class="text-[9px] text-pink-700 font-bold tracking-widest uppercase mt-0.5 mb-1">Apotek Nurjaya</p>
+                        
+                        <div class="grid grid-cols-3 text-[11px] font-medium text-slate-600 border-t border-pink-200 pt-1.5 max-w-2xl mx-auto">
+                            <div class="text-left">Nama: <span id="modal-nama-karyawan-apotek" class="font-bold text-slate-900">--</span></div>
+                            <div class="text-center">Unit: <span class="font-bold text-slate-900">Apotek Nurjaya</span></div>
+                            <div class="text-right flex flex-col items-end leading-tight">
+                                <div>Periode: <span id="modal-periode-kerja-apotek" class="font-bold text-slate-900 italic">--</span></div>
+                                <div class="text-[10px] text-pink-800 font-bold mt-0.5">Jumlah Hari Kerja: <span id="modal-total-hari-kerja-apotek" class="font-black bg-pink-100 px-1.5 py-0.5 rounded-lg text-pink-900">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabel 2 Kolom Presensi -->
+                    <div class="grid grid-cols-2 gap-3 items-stretch flex-1 mb-2">
+                        <!-- Tabel Kiri -->
+                        <div class="border border-pink-900 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
+                            <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-pink-900">
+                                <thead>
+                                    <tr class="bg-pink-700 font-black text-white uppercase text-[9px] tracking-tight">
+                                        <th class="border-r border-b border-pink-900 py-1.5 w-[12%]">Hari</th>
+                                        <th class="border-r border-b border-pink-900 py-1.5 w-[22%]">Tgl / Hari</th>
+                                        <th class="border-r border-b border-pink-900 py-1.5 w-[26%]">Presensi</th>
+                                        <th class="border-b border-pink-900 py-1.5 w-[40%]" colspan="2">
+                                            <div class="border-b border-pink-500 pb-0.5 mb-0.5">Jam</div>
+                                            <div class="grid grid-cols-2 text-[8px]">
+                                                <span class="border-r border-pink-500">Defisit</span>
+                                                <span>Ganti</span>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-kiri-body-apotek" class="font-bold text-slate-800 divide-y divide-pink-900 h-full"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- Tabel Kanan -->
+                        <div class="border border-pink-900 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
+                            <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-pink-900">
+                                <thead>
+                                    <tr class="bg-pink-700 font-black text-white uppercase text-[9px] tracking-tight">
+                                        <th class="border-r border-b border-pink-900 py-1.5 w-[12%]">Hari</th>
+                                        <th class="border-r border-b border-pink-900 py-1.5 w-[22%]">Tgl / Hari</th>
+                                        <th class="border-r border-b border-pink-900 py-1.5 w-[26%]">Presensi</th>
+                                        <th class="border-b border-pink-900 py-1.5 w-[40%]" colspan="2">
+                                            <div class="border-b border-pink-500 pb-0.5 mb-0.5">Jam</div>
+                                            <div class="grid grid-cols-2 text-[8px]">
+                                                <span class="border-r border-pink-500">Defisit</span>
+                                                <span>Ganti</span>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-kanan-body-apotek" class="font-bold text-slate-800 divide-y divide-pink-900 h-full"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Rekapitulasi Sisi Kiri & Kanan -->
+                    <div class="grid grid-cols-2 gap-3 border-t-2 border-pink-900 pt-2 flex-shrink-0 items-stretch">
+                        
+                        <!-- SISI KIRI REKAP SHIFT -->
+                        <div class="p-3 border border-pink-900 bg-pink-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
+                            <h4 class="font-black text-pink-950 uppercase tracking-wider border-b border-pink-200 pb-1 mb-1.5 flex items-center gap-1.5 flex-shrink-0">
+                                <i class="fa-solid fa-square-poll-vertical text-pink-700"></i> Rekapitulasi Presensi
+                            </h4>
+                            
+                            <ul class="space-y-0.5 font-semibold text-slate-700 flex-1 flex flex-col justify-between">
+                                <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                                    <span class="font-bold text-slate-800 text-[9px]">Shift 1</span>
+                                    <span id="rekap-shift1-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                                    <span class="font-bold text-slate-800 text-[9px]">Shift 2</span>
+                                    <span id="rekap-shift2-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                                    <span class="font-bold text-slate-800 text-[9px]">Lembur</span>
+                                    <span id="rekap-lembur-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                                    <span class="font-bold text-slate-800 text-[9px]">Khusus</span>
+                                    <span id="rekap-khusus-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-pink-600 text-white rounded-lg px-2 py-0.5 shadow-2xs">
+                                    <span class="font-black text-[9px] uppercase">TOTAL HARI KERJA</span>
+                                    <span id="rekap-totalkERJA-apotek" class="font-black text-white bg-pink-800 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white border border-amber-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                                    <span class="font-bold text-amber-900 text-[9px]">Libur</span>
+                                    <span id="rekap-libur-apotek" class="font-black text-amber-900 bg-amber-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                                </li>
+                                <li class="flex justify-between items-center bg-white border border-rose-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                                    <span class="font-bold text-rose-900 text-[9px]">Izin / Sakit / Absen</span>
+                                    <span id="rekap-absen-apotek" class="font-black text-rose-900 bg-rose-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- SISI KANAN REKAP JAM & CATATAN ASISTEN -->
+                        <div class="p-3 border border-pink-900 bg-pink-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
+                            <div class="space-y-1">
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <div class="bg-white border border-amber-300 p-1 rounded-xl text-center">
+                                        <span class="block text-[8px] font-black text-amber-900 uppercase">Total Defisit Jam</span>
+                                        <span id="rekap-total-defisit-apotek" class="block text-[9.5px] font-black text-amber-700">0 jam 0 menit</span>
+                                    </div>
+                                    <div class="bg-white border border-emerald-300 p-1 rounded-xl text-center">
+                                        <span class="block text-[8px] font-black text-emerald-900 uppercase">Total Penggantian Jam</span>
+                                        <span id="rekap-total-ganti-apotek" class="block text-[9.5px] font-black text-emerald-700">0 jam 0 menit</span>
+                                    </div>
+                                </div>
+
+                                <!-- Indikator Lunas / Sisa Defisit -->
+                                <div id="status-indikator-defisit-apotek" class="w-full py-1 px-2 rounded-xl text-center font-black text-[9px] bg-slate-200 text-slate-700 border border-slate-300">
+                                    Mengecek status defisit...
+                                </div>
+                            </div>
+
+                            <!-- Sesi Catatan Tambahan (Asisten Apoteker) -->
+                            <div class="flex flex-col flex-1 justify-end pt-1">
+                                <label class="block font-black text-pink-950 uppercase text-[8px] tracking-tight mb-1">Catatan Tambahan Asisten Apoteker</label>
+                                <div class="print:hidden flex flex-col gap-1 flex-1 justify-between">
+                                    <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
+                                        <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
+                                    </div>
+                                    <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
+                                        <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
+                                    </div>
+                                    <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
+                                        <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
+                                    </div>
+                                </div>
+
+                                <!-- Output Mirroring saat Dicetak -->
+                                <div class="hidden print:block w-full flex-1 text-left">
+                                    <ul id="mirror-catatan-final-apotek" class="space-y-0.5 text-[8.5px] font-bold text-slate-800 list-none p-0 m-0 [word-break:break-word]">
+                                        <li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- BELUM ADA CATATAN -</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <!-- Footer Tombol Aksi -->
+        <div class="px-6 py-4 bg-slate-950/90 border-t border-slate-800 flex flex-col sm:flex-row justify-end gap-3 flex-shrink-0">
+            <button type="button" id="btn-upload-presensi-cloud-apotek" onclick="uploadKartuApotekKeDrive()" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-pink-400 hover:text-pink-300 font-bold text-xs rounded-2xl uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 border border-slate-700/60 shadow-md active:scale-95">
+                <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive
+            </button>
+            <button type="button" id="btn-unduh-pdf-apotek" onclick="unduhKartuApotekPdf()" class="px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-black text-xs rounded-2xl uppercase tracking-wider shadow-[0_4px_20px_rgba(236,72,153,0.4)] transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
+                <i class="fa-solid fa-file-pdf text-sm"></i> Unduh Dokumen PDF
+            </button>
+        </div>
+
     </div>
 </div>
 
