@@ -1737,7 +1737,7 @@ function renderChipDefisitJam(namaKaryawan, listRecord) {
     const itemPenggantianList = [];
 
     listRecord.forEach(row => {
-        // Parsing data fleksibel (mencakup format snake_case & camelCase)
+        // Mendukung format key snake_case maupun camelCase dari backend
         const valDefisit = row.defisit_jam || row.defisitJam || "00:00";
         const valPenggantian = row.penggantian_jam || row.penggantianJam || "00:00";
         const valAlasan = row.alasan_defisit_jam || row.alasanDefisitJam || "Tanpa Alasan";
@@ -1749,7 +1749,6 @@ function renderChipDefisitJam(namaKaryawan, listRecord) {
         totalMenitDefisit += mDefisit;
         totalMenitPenggantian += mGanti;
 
-        // Catat baris yang memiliki Defisit Jam
         if (mDefisit > 0) {
             itemDefisitList.push({
                 tanggal: valTanggal,
@@ -1758,7 +1757,6 @@ function renderChipDefisitJam(namaKaryawan, listRecord) {
             });
         }
 
-        // Catat baris yang memiliki Penggantian Jam
         if (mGanti > 0) {
             itemPenggantianList.push({
                 tanggal: valTanggal,
@@ -1769,7 +1767,7 @@ function renderChipDefisitJam(namaKaryawan, listRecord) {
 
     const sisaMenitDefisit = totalMenitDefisit - totalMenitPenggantian;
 
-    // 1. UPDATE STATUS CHIP UTAMA
+    // 1. SET STATUS CHIP UTAMA
     if (sisaMenitDefisit <= 0) {
         chipEl.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-xs";
         chipEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Hore! Kamu tidak punya defisit/utang jam`;
@@ -1779,7 +1777,7 @@ function renderChipDefisitJam(namaKaryawan, listRecord) {
         chipEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Peringatan: Kamu masih punya defisit jam (${sisaFormat})`;
     }
 
-    // 2. RENDER DETIL BILA ADA DEFISIT ATAU PENGGANTIAN JAM
+    // 2. RENDER DETIL RINCIAN (BLOCK MERAH & BLOCK BIRU)
     if (itemDefisitList.length > 0 || itemPenggantianList.length > 0) {
         let htmlCombined = `<div class="space-y-2 text-left w-full mt-2">`;
 
@@ -1871,7 +1869,8 @@ function eksekusiPresensiApotek(namaKaryawan) {
 function muatPeriodeKaryawanApotek(namaKaryawan) {
     const targetLabel = document.getElementById(`label-periode-${namaKaryawan}`);
     const targetGajiLabel = document.getElementById(`label-tglgaji-${namaKaryawan}`);
-    const chipDefisit = document.getElementById(`chip-status-defisit-${namaKaryawan}`);
+    const chipEl = document.getElementById(`chip-status-defisit-${namaKaryawan}`);
+    const listEl = document.getElementById(`detail-defisit-list-${namaKaryawan}`);
     const tglInput = document.getElementById("presensi-tanggal-apotek")?.value || "";
 
     if (targetLabel) {
@@ -1880,11 +1879,12 @@ function muatPeriodeKaryawanApotek(namaKaryawan) {
     if (targetGajiLabel) {
         targetGajiLabel.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-pink-600"></i>...`;
     }
-    if (chipDefisit) {
-        chipDefisit.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-600";
-        chipDefisit.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-pink-600"></i> Memeriksa Defisit...`;
+    if (chipEl) {
+        chipEl.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider bg-slate-200 text-slate-700";
+        chipEl.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-pink-600"></i> Memeriksa Defisit...`;
     }
 
+    // Ambil metadata sekaligus riwayat presensi dari Apps Script
     fetch(`${API_URL_APOTEK}?sheetName=${namaKaryawan}&action=getMetaData&tanggal=${tglInput}`)
         .then(res => res.json())
         .then(result => {
@@ -1892,15 +1892,17 @@ function muatPeriodeKaryawanApotek(namaKaryawan) {
                 if (targetLabel && result.periode) targetLabel.textContent = result.periode;
                 if (targetGajiLabel && result.tanggalGaji) targetGajiLabel.textContent = result.tanggalGaji;
                 
-                // PANGGUL RENDER CHIP DEFISIT DATA DARI SPREADSHEET
-                renderChipDefisitJam(namaKaryawan, result.records || result.dataPresensi || []);
+                // EKSEKUSI RENDER CHIP & RINCIAN LENGKAP
+                const listData = result.records || result.data || [];
+                renderChipDefisitJam(namaKaryawan, listData);
             } else {
                 if (targetLabel) targetLabel.textContent = "Buku Aktif";
                 if (targetGajiLabel) targetGajiLabel.textContent = "-";
                 renderChipDefisitJam(namaKaryawan, []);
             }
         })
-        .catch(() => {
+        .catch(err => {
+            console.error("Gagal muat data presensi:", err);
             if (targetLabel) targetLabel.textContent = "Buku Aktif";
             if (targetGajiLabel) targetGajiLabel.textContent = "-";
             renderChipDefisitJam(namaKaryawan, []);
