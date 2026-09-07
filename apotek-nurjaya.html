@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js untuk grafik data -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Library dom-to-image CDN (Sama seperti Fotokopi) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -487,7 +490,6 @@ document.addEventListener('keydown', function(e) {
     <!-- MAIN CONTENT CONTAINER -->
     <main class="mt-6 px-4 sm:px-6 md:px-8 w-full max-w-[92%] lg:max-w-[88%] xl:max-w-[85%] 2xl:max-w-7xl mx-auto">
         
-        <!-- ================= TAB 1: BERANDA ================= -->
         <!-- ================= TAB 1: BERANDA ================= -->
 <div id="tab-beranda" class="tab-content active space-y-6">
     
@@ -1376,7 +1378,470 @@ document.addEventListener('keydown', function(e) {
 
 
 
-        <!-- ================= TAB 5: TENTANG APOTEK ================= -->
+<!-- ================= TAB 5: SLIP GAJI APOTEK ================= -->
+<div id="tab-gaji" class="tab-content hidden space-y-6">
+    
+    <!-- CARD UTAMA: ASISTEN SLIP GAJI -->
+    <div class="bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-full overflow-hidden flex flex-col space-y-5">
+        
+        <!-- Header Section -->
+        <div class="flex justify-between items-center border-b border-pink-100 pb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-7 bg-pink-600 rounded-full"></div>
+                <div>
+                    <h3 class="text-xs sm:text-sm font-black text-pink-700 uppercase tracking-widest leading-none">Asisten Slip Gaji Apotek</h3>
+                    <p class="text-[10px] sm:text-[11px] text-slate-500 font-medium mt-1">Mode Khusus Owner (Apotek Nurjaya)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="px-3 py-1 rounded-full bg-pink-50 text-pink-700 text-[10px] font-black uppercase tracking-wider border border-pink-100">
+                    <i class="fa-solid fa-user-shield mr-1"></i> Owner Only
+                </span>
+            </div>
+        </div>
+
+        <!-- Body Section -->
+        <div class="flex flex-col gap-5">
+           <!-- Dropdown Karyawan Apotek -->
+<div class="bg-slate-50/80 border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-2">
+    <label for="gaji-pilih-karyawan-apotek" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Asisten Apoteker:</label>
+    <select id="gaji-pilih-karyawan-apotek" onchange="muatKartuPresensiApotekDrive()" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs sm:text-sm p-3 rounded-xl focus:border-pink-600 focus:ring-1 focus:ring-pink-600 focus:outline-none transition-all cursor-pointer shadow-xs">
+        <option value="" disabled selected>-- Pilih Karyawan Apotek --</option>
+        <option value="Eka">Eka Ainun Nisa</option>
+        <option value="Dea">Dea Nove Asyari</option>
+        <option value="Fadilla">Fadilla Nailul Wafa</option>
+    </select>
+</div>
+
+            <!-- Status Loading & Info Presensi -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Status Koneksi Data Cloud</span>
+                    <span id="status-loading-pdf-apotek" class="text-[10px] font-bold text-pink-600 hidden animate-pulse">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data presensi apotek...
+                    </span>
+                </div>
+            </div>
+			
+			<!-- CONTAINER Penampil Gambar Presensi dari Drive (Apotek) -->
+            <div class="bg-white border-2 border-dashed border-pink-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-2xl w-full aspect-square sm:aspect-[4/3]">
+                
+                <!-- Placeholder Awal -->
+                <div id="placeholder-pdf-text-apotek" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
+                    <i class="fa-solid fa-image text-4xl text-pink-200 mb-3"></i>
+                    <p class="text-xs font-bold text-slate-500">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
+                </div>
+
+                <!-- Indikator Loading -->
+                <div id="loading-pdf-animation-apotek" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/95 z-50 select-none transition-all duration-200">
+                    <div class="relative mb-4">
+                        <div class="absolute -inset-4 bg-pink-100 rounded-full blur-xl opacity-70 animate-ping"></div>
+                        <i class="fa-solid fa-file-invoice-dollar text-5xl text-pink-600 relative animate-bounce"></i>
+                    </div>
+                    <div class="space-y-2 w-2/3 mx-auto">
+                        <p id="teks-progres-loading-apotek" class="text-xs font-black text-pink-700 tracking-wide">Menghubungkan ke Drive Cloud Apotek...</p>
+                        <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
+                            <div class="h-full w-1/2 bg-pink-600 rounded-full absolute top-0 left-0 animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Preview Output -->
+                <img id="iframe-preview-pdf-apotek" 
+                     class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300" 
+                     src="" 
+                     alt="Preview Kartu Presensi Apotek">
+            </div>
+			
+			
+			
+			
+
+            <!-- Form Rincian Komponen Gaji -->
+<div id="sg-container-form-owner-apotek" class="flex flex-col gap-4 border-t border-slate-200 pt-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-xs text-center">
+            <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Periode Kerja</span>
+            <span id="sg-text-periode-apotek" class="text-xs sm:text-sm font-extrabold text-slate-700 block mt-1">-</span>
+        </div>
+        <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-xs text-center">
+            <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Total Hari Record</span>
+            <span id="sg-text-total-hari-apotek" class="text-xs sm:text-sm font-extrabold text-slate-700 block mt-1">-</span>
+        </div>
+    </div>
+
+    <h4 class="text-[11px] font-black text-pink-700 uppercase tracking-widest mt-2 px-1">Rincian Shift & Kehadiran:</h4>
+
+    <!-- 1. Shift 1 -->
+    <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+            <span class="text-xs font-black text-slate-700 block">1. Shift 1 (Pagi-Siang)</span>
+            <span id="sg-lbl-shift1-apotek" class="text-[11px] font-bold text-pink-600 bg-pink-50 px-2.5 py-0.5 rounded-md inline-block mt-1">0 hari</span>
+        </div>
+        <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+            <span class="text-xs font-bold text-slate-400">X</span>
+            <div class="relative rounded-xl shadow-inner shrink-0 flex-1 sm:flex-initial">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                <input type="text" id="sg-in-rate-shift1-apotek" class="sg-input-clean w-full sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-2.5 py-2 rounded-xl focus:border-pink-600 focus:outline-none text-right" placeholder="0">
+            </div>
+            <span class="text-xs font-bold text-slate-400">=</span>
+            <span id="sg-out-total-shift1-apotek" class="text-xs font-black text-slate-700 text-right min-w-[85px] sm:min-w-[100px] shrink-0 ml-auto sm:ml-0">Rp 0</span>
+        </div>
+    </div>
+
+    <!-- 2. Shift 2 -->
+    <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+            <span class="text-xs font-black text-slate-700 block">2. Shift 2 (Siang-Malam)</span>
+            <span id="sg-lbl-shift2-apotek" class="text-[11px] font-bold text-pink-600 bg-pink-50 px-2.5 py-0.5 rounded-md inline-block mt-1">0 hari</span>
+        </div>
+        <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+            <span class="text-xs font-bold text-slate-400">X</span>
+            <div class="relative rounded-xl shadow-inner shrink-0 flex-1 sm:flex-initial">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                <input type="text" id="sg-in-rate-shift2-apotek" class="sg-input-clean w-full sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-2.5 py-2 rounded-xl focus:border-pink-600 focus:outline-none text-right" placeholder="0">
+            </div>
+            <span class="text-xs font-bold text-slate-400">=</span>
+            <span id="sg-out-total-shift2-apotek" class="text-xs font-black text-slate-700 text-right min-w-[85px] sm:min-w-[100px] shrink-0 ml-auto sm:ml-0">Rp 0</span>
+        </div>
+    </div>
+
+    <!-- 3. Lembur -->
+    <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+            <span class="text-xs font-black text-slate-700 block">3. Shift Lembur</span>
+            <span id="sg-lbl-lembur-apotek" class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-md inline-block mt-1">0 hari</span>
+        </div>
+        <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+            <span class="text-xs font-bold text-slate-400">X</span>
+            <div class="relative rounded-xl shadow-inner shrink-0 flex-1 sm:flex-initial">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                <input type="text" id="sg-in-rate-lembur-apotek" class="sg-input-clean w-full sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-2.5 py-2 rounded-xl focus:border-pink-600 focus:outline-none text-right" placeholder="0">
+            </div>
+            <span class="text-xs font-bold text-slate-400">=</span>
+            <span id="sg-out-total-lembur-apotek" class="text-xs font-black text-slate-700 text-right min-w-[85px] sm:min-w-[100px] shrink-0 ml-auto sm:ml-0">Rp 0</span>
+        </div>
+    </div>
+
+    <!-- 4. Shift Khusus -->
+    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-3">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+            <div>
+                <span class="text-xs font-black text-slate-700 block">4. Shift Khusus</span>
+                <span id="sg-lbl-khusus-count-apotek" class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md inline-block mt-0.5">0 event</span>
+            </div>
+            <span id="sg-out-total-khusus-apotek" class="text-xs font-black text-slate-700 text-right">Rp 0</span>
+        </div>
+        
+        <div id="wrapper-shift-khusus-list-apotek" class="flex flex-col gap-2">
+            <p class="text-[11px] text-slate-400 italic">Pilih karyawan untuk menampilkan tanggal shift khusus.</p>
+        </div>
+    </div>
+
+    <!-- 5, 6, 7. Status Libur, Izin/Sakit & Absen -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs text-left">
+            <span class="block text-[9px] font-black text-slate-500 uppercase tracking-wider">5. Libur</span>
+            <span id="sg-out-libur-apotek" class="text-xs sm:text-sm font-extrabold text-indigo-600 block mt-1">0 hari</span>
+        </div>
+        <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs text-left">
+            <span class="block text-[9px] font-black text-slate-500 uppercase tracking-wider">6. Izin / Sakit</span>
+            <span id="sg-out-izin-sakit-apotek" class="text-xs sm:text-sm font-extrabold text-amber-600 block mt-1">0 hari</span>
+        </div>
+        <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs text-left">
+            <span class="block text-[9px] font-black text-slate-500 uppercase tracking-wider">7. Absen Lain</span>
+            <span id="sg-out-absen-lain-apotek" class="text-xs sm:text-sm font-extrabold text-rose-600 block mt-1">0 hari</span>
+        </div>
+    </div>
+
+    <!-- 8. Poin Tambahan -->
+    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div class="max-w-md">
+                <span class="text-xs font-black text-slate-700 block">8. Poin Tambahan <span class="text-slate-400 font-normal">(Opsional)</span></span>
+                <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                    (Bonus insentif khusus yang ditentukan Owner Apotek, max 4 poin)
+                </p>
+            </div>
+            <div class="self-end sm:self-start">
+                <select id="sg-sel-poin-apotek" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-pink-600 focus:outline-none cursor-pointer w-28">
+                    <option value="0">0 Poin</option>
+                    <option value="1">1 Poin</option>
+                    <option value="2">2 Poin</option>
+                    <option value="3">3 Poin</option>
+                    <option value="4">4 Poin</option>
+                </select>
+            </div>
+        </div>
+        <div id="sg-wrapper-poin-dinamis-apotek" class="flex flex-col gap-2"></div>
+    </div>
+
+    <!-- Subtotal, Pembulatan & Final -->
+   <div class="border-t-2 border-dashed border-slate-200 pt-5 mt-2 flex flex-col gap-4">
+    <!-- Total Hitungan Gaji -->
+    <div class="bg-pink-700 text-white p-4 sm:p-4.5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 sm:gap-2">
+        <span class="text-xs font-black uppercase tracking-wider shrink-0">Total Hitungan Gaji:</span>
+        <span id="sg-out-total-gaji-bersih-apotek" class="text-base sm:text-xl font-black tracking-wide text-right w-full sm:w-auto break-all">Rp 0</span>
+    </div>
+
+        <!-- Pembulatan Khusus -->
+        <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-3">
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                <div class="max-w-md">
+                    <span class="text-xs font-black text-slate-700 block">Pembulatan Khusus <span class="text-slate-400 font-normal">(Kebijakan Owner)</span></span>
+                    <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                        (Bersifat opsional, kosongkan jika tidak digunakan)
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 self-start sm:self-start w-full sm:w-auto justify-end">
+                    <div class="relative rounded-xl shadow-inner w-36 sm:w-44">
+                        <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                        <input type="text" id="sg-in-pembulatan-apotek" class="sg-input-clean w-full bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-pink-600 focus:outline-none text-right" placeholder="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       <div class="bg-slate-900 text-amber-400 p-4 sm:p-4.5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 sm:gap-2">
+    <span class="text-xs font-black uppercase tracking-wider shrink-0">Gaji Bersih Diterima:</span>
+    <span id="sg-out-final-gaji-apotek" class="text-base sm:text-xl font-black tracking-wide text-right w-full sm:w-auto break-all">Rp 0</span>
+</div>
+        
+        <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-2">
+            <label for="owner-input-catatan-apotek" class="block text-[11px] font-black text-slate-700 uppercase tracking-wider">
+                <i class="fa-solid fa-pen-to-square text-pink-600 mr-1"></i> Catatan Khusus Owner:
+            </label>
+            <textarea id="owner-input-catatan-apotek" rows="4" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-medium text-xs p-3 rounded-xl focus:border-pink-600 focus:outline-none transition-all resize-none placeholder-slate-400 min-h-[96px] leading-relaxed" placeholder="Contoh: Tingkatkan kreativitas pelayanan pasien, inovatif dan ekspresif dalam menawarkan obat. Terima kasih atas kerja kerasnya :)"></textarea>
+        </div>
+
+        <button type="button" id="btn-generate-slip-gaji-apotek" class="w-full mt-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white font-black text-xs uppercase tracking-widest py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-receipt text-sm"></i> Generate Slip Gaji Karyawan
+        </button>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================== -->
+<!-- MODAL 2: PREVIEW & EXPORT SLIP GAJI APOTEK NURJAYA         -->
+<!-- ========================================================== -->
+<div id="modal-preview-slip-apotek" class="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[14000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none hidden">
+    <div class="bg-slate-100 w-full max-w-xl h-[95vh] rounded-[24px] shadow-2xl overflow-hidden flex flex-col transform scale-95 transition-all duration-300 border border-slate-200">
+        
+        <div class="p-3 border-b border-slate-200 bg-white flex justify-between items-center flex-shrink-0">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-prescription-bottle-medical text-pink-600 text-sm"></i>
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest leading-normal">Preview Slip Gaji Apotek</h3>
+            </div>
+            <button type="button" id="btn-tutup-preview-slip-apotek" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600 border border-slate-200 hover:border-rose-200 transition-all duration-200">
+                <i class="fa-solid fa-xmark text-xs font-bold"></i>
+            </button>
+        </div>
+
+        <div class="p-2 sm:p-4 overflow-y-auto flex-1 flex justify-center items-start bg-slate-300/50 w-full box-border">
+            <div class="w-full max-w-full flex justify-start sm:justify-center items-start overflow-x-auto p-2">
+
+                <!-- ELEMEN LEMBAR SLIP GAJI APOTEK (SAFE RENDER SVG INLINE) -->
+                <div id="elemen-slip-gaji-render-apotek" class="relative overflow-hidden lembar-slip-gaji-cetak shadow-xl rounded-xl border-2 border-pink-700 text-slate-800 bg-white p-4 sm:p-6 flex flex-col gap-4 box-border w-full max-w-[500px]" style="height: auto; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                    
+                    <!-- ========================================================= -->
+                    <!-- WATERMARK FARMASI & KEUANGAN (SVG INLINE - FIX ANTI-KOTAK)-->
+                    <!-- ========================================================= -->
+
+                    <!-- 1. Pojok Kiri Atas: Botol Obat / Medis (Pink) -->
+                    <div class="absolute top-2 left-2 text-pink-600/20 pointer-events-none select-none z-0 transform -rotate-12">
+                        <svg class="w-12 h-12 sm:w-14 sm:h-14 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+                            <path d="M224 32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c17.7 0 32 14.3 32 32s-14.3 32-32 32H176c-17.7 0-32-14.3-32-32s14.3-32 32-32h48V32zM0 384c0-70.7 57.3-128 128-128h256c70.7 0 128 57.3 128 128v64c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V384zm288-48c0-8.8-7.2-16-16-16H240c-8.8 0-16 7.2-16 16v32H192c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32v32c0 8.8 7.2 16 16 16h32c0 8.8-7.2 16-16 16V464h32c8.8 0 16-7.2 16-16V432c0-8.8-7.2-16-16-16H288V368z"/>
+                        </svg>
+                    </div>
+
+                    <div class="absolute top-12 left-14 text-amber-500/30 pointer-events-none select-none z-0 transform rotate-12">
+                        <svg class="w-8 h-8 sm:w-9 sm:h-9 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+                            <path d="M512 80c0 44.2-114.6 80-256 80S0 124.2 0 80 114.6 0 256 0s256 35.8 256 80zM0 176c0 44.2 114.6 80 256 80s256-35.8 256-80v48c0 44.2-114.6 80-256 80S0 268.2 0 224v-48zm0 144c0 44.2 114.6 80 256 80s256-35.8 256-80v48c0 44.2-114.6 80-256 80S0 412.2 0 368v-48z"/>
+                        </svg>
+                    </div>
+
+                    <!-- 2. Pojok Kanan Bawah: Mortar & Pestle & Koin -->
+                    <div class="absolute bottom-10 right-14 text-pink-600/20 pointer-events-none select-none z-0 transform -rotate-12">
+                        <svg class="w-10 h-10 sm:w-12 sm:h-12 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+                            <path d="M256 0c-17.7 0-32 14.3-32 32v32h-64c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32h192c17.7 0 32-14.3 32-32V96c0-17.7-14.3-32-32-32h-64V32c0-17.7-14.3-32-32-32zm-96 224c-35.3 0-64 28.7-64 64v128c0 53 43 96 96 96h128c53 0 96-43 96-96V288c0-35.3-28.7-64-64-64H160zm96 64c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48z"/>
+                        </svg>
+                    </div>
+
+                    <div class="absolute bottom-2 right-2 text-amber-500/30 pointer-events-none select-none z-0 transform rotate-12">
+                        <svg class="w-12 h-12 sm:w-14 sm:h-14 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+                            <path d="M512 80c0 44.2-114.6 80-256 80S0 124.2 0 80 114.6 0 256 0s256 35.8 256 80zM0 176c0 44.2 114.6 80 256 80s256-35.8 256-80v48c0 44.2-114.6 80-256 80S0 268.2 0 224v-48zm0 144c0 44.2 114.6 80 256 80s256-35.8 256-80v48c0 44.2-114.6 80-256 80S0 412.2 0 368v-48z"/>
+                        </svg>
+                    </div>
+                    <!-- ========================================================= -->
+
+                    <!-- KONTEN UTAMA SLIP GAJI APOTEK -->
+                    <div class="w-full block relative z-10">
+                        <!-- HEADER LOGO PNG UTAMA APOTEK NURJAYA -->
+                        <div class="flex justify-center items-center pb-3 border-b-4 border-pink-700 mb-3">
+                            <img src="https://lh3.googleusercontent.com/d/11wzi-2GoDySSv4JIDtCXn2-Dd4t40CgU" alt="Logo Apotek Nurjaya" class="h-20 sm:h-24 max-w-full object-contain drop-shadow-sm">
+                        </div>
+                        
+                        <div class="text-center mb-3">
+                            <h2 class="text-sm sm:text-base font-bold uppercase tracking-widest text-pink-900 leading-normal">Slip Gaji Asisten Apoteker</h2>
+                            <div class="w-12 sm:w-16 h-1 bg-amber-500 mx-auto mt-0.5 rounded-full"></div>
+                        </div>
+
+                        <!-- Grid Identitas -->
+                        <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 bg-pink-50 border border-pink-200 p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs text-slate-800">
+                            <div class="tracking-wider text-pink-800 font-bold w-[95px] sm:w-[110px] shrink-0 whitespace-nowrap">Nama Karyawan</div>
+                            <div class="font-bold text-slate-900 whitespace-nowrap">: <span id="pv-nama-karyawan-apotek" class="ml-1">-</span></div>
+                            
+                            <div class="tracking-wider text-pink-800 font-bold w-[95px] sm:w-[110px] shrink-0 whitespace-nowrap">Unit Bisnis</div>
+                            <div class="font-bold text-slate-900 whitespace-nowrap">: <span class="ml-1">Apotek Nurjaya</span></div>
+                            
+                            <div class="tracking-wider text-pink-800 font-bold w-[95px] sm:w-[110px] shrink-0 whitespace-nowrap">Jabatan</div>
+                            <div class="font-bold text-slate-900 whitespace-nowrap">: <span class="ml-1">Asisten Apoteker</span></div>
+                            
+                            <div class="tracking-wider text-pink-800 font-bold w-[95px] sm:w-[110px] shrink-0 whitespace-nowrap">Status</div>
+                            <div class="font-bold text-slate-900 flex items-center whitespace-nowrap">: 
+                                <span class="ml-2 font-bold text-[9px] text-pink-800 bg-pink-200 px-1.5 py-0.5 rounded tracking-wider uppercase inline-block">Karyawan Aktif</span>
+                            </div>
+                            
+                            <div class="col-span-2 border-t border-pink-200/60 my-0.5"></div>
+                            
+                            <div class="tracking-wider text-pink-800 font-bold w-[95px] sm:w-[110px] shrink-0 whitespace-nowrap">Periode</div>
+                            <div class="font-bold text-slate-900 text-[11px] sm:text-xs whitespace-nowrap">: <span id="pv-periode-kerja-apotek" class="ml-1">-</span></div>
+                        </div>
+
+                        <!-- Tabel Rincian -->
+                        <div class="mt-3 w-full border border-slate-300 rounded-lg overflow-hidden bg-white">
+                            <table class="w-full text-left border-collapse table-fixed text-[10px] sm:text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-800 text-[9px] font-bold uppercase text-slate-700 tracking-wider bg-slate-100">
+                                        <th class="py-1 w-[7%] text-center border-r border-slate-300">No</th>
+                                        <th class="py-1 w-[38%] text-center border-r border-slate-300">Rincian Shift / Kehadiran</th>
+                                        <th class="py-1 w-[15%] text-center border-r border-slate-300">Jml</th>
+                                        <th class="py-1 w-[18%] text-center border-r border-slate-300">Tarif</th>
+                                        <th class="py-1 w-[22%] text-center">Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="container-baris-slip-apotek" class="text-slate-800 divide-y divide-slate-300 break-words">
+                                    <!-- Baris di-generate dinamis oleh JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Rekapitulasi Akhir -->
+<div class="w-full block text-[11px] sm:text-xs relative z-10">
+    <div class="border-t-2 border-slate-800 pt-2 w-full block space-y-1.5">
+        <div class="flex justify-between items-center text-slate-600 font-medium gap-2 w-full">
+            <span class="whitespace-nowrap">Total Hitungan Gaji:</span>
+            <span id="pv-rekap-otomatis-apotek" class="text-slate-900 font-bold tracking-tighter text-right whitespace-nowrap">Rp 0</span>
+        </div>
+
+        <div class="flex justify-between items-center text-slate-600 font-medium gap-2 w-full">
+            <span class="whitespace-nowrap">Pembulatan Khusus:</span>
+            <span id="pv-rekap-pembulatan-apotek" class="text-slate-900 font-bold tracking-tighter text-right whitespace-nowrap">Rp 0</span>
+        </div>
+        
+        <!-- Box Gaji Bersih Diterima -->
+        <div class="w-full bg-pink-900 rounded-xl p-2.5 sm:p-3 block box-border border border-pink-800 my-2 shadow-md">
+            <div class="flex flex-col gap-1 w-full">
+                <div class="text-left font-extrabold text-xs sm:text-sm uppercase tracking-wide text-amber-300">
+                    Gaji Bersih Diterima:
+                </div>
+                <div class="text-right">
+                    <span id="pv-rekap-final-apotek" class="font-extrabold text-base sm:text-lg tracking-tight text-white inline-block">
+                        Rp 0
+                    </span>
+                </div>
+            </div>
+        </div>
+
+<!-- ========================================================= -->
+<!-- TAMBAHAN: TUNJANGAN MAKAN & TOTAL AKUMULASI (KHUSUS APOTEK)-->
+<!-- ========================================================= -->
+<div class="flex flex-col gap-1 w-full pt-1">
+    <!-- Header Row -->
+    <div class="flex justify-between items-center text-slate-700 font-bold">
+        <span>Tunjangan Makan*:</span>
+        <span id="pv-total-uang-makan-apotek" class="text-slate-900 tracking-tighter text-right whitespace-nowrap">
+            Rp 0
+        </span>
+    </div>
+
+    <!-- Container Rincian Per Baris -->
+    <div id="pv-makan-detail-rumus-apotek" class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] text-pink-800 font-semibold pl-2 border-l-2 border-pink-300 my-0.5">
+        <!-- Generasi dinamis via JS -->
+        <span>- 0 Shift</span>
+    </div>
+</div>
+
+<!-- Catatan Tunjangan Makan -->
+<p class="text-[9px] sm:text-[10px] text-slate-400 italic px-0.5 leading-tight m-0">
+    *Catatan: Tunjangan makan harian telah diambil/diberikan secara harian langsung.
+</p>
+
+        <!-- Highlight Box: Total Akumulasi Pendapatan -->
+        <div class="w-full bg-purple-50 rounded-xl p-2.5 sm:p-3 block box-border border-2 border-dashed border-purple-500 mt-2">
+            <div class="flex flex-col gap-1 w-full">
+                <div class="text-left font-bold text-xs sm:text-sm tracking-wide text-purple-900">
+                    Total Akumulasi Pendapatan:
+                </div>
+                <div class="text-right">
+                    <span id="pv-total-akumulasi-apotek" class="font-extrabold text-base sm:text-lg tracking-tight text-purple-700 inline-block">
+                        Rp 0
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- ========================================================= -->
+
+    </div>
+    
+    <!-- Box Catatan Owner -->
+    <div id="pv-box-catatan-render-apotek" class="mt-2 bg-slate-50 border border-dashed border-slate-300 p-2 rounded-lg box-border hidden">
+        <span class="font-bold text-pink-800 uppercase block text-[8px] tracking-wider mb-0.5">Catatan Penting Owner:</span>
+        <p id="pv-text-catatan-owner-apotek" class="italic font-medium text-slate-700 text-[9px] leading-tight m-0"></p>
+    </div>
+    
+    <!-- Penandatangan -->
+    <div class="w-full flex justify-between items-end text-[9px] sm:text-[10px] text-slate-400 mt-6 sm:mt-8 tracking-wider font-normal">
+        <div class="text-left text-slate-600 whitespace-nowrap">
+            Tgl Cetak: <span id="pv-tanggal-cetak-apotek" class="text-slate-800 font-bold">-</span>
+        </div>
+        <div class="text-center border-t-2 border-slate-400 pt-2 w-44 sm:w-52 text-slate-800 normal-case tracking-normal font-bold whitespace-nowrap">
+            apt. Siti Nurjanah, S.Farm.
+        </div>
+    </div>
+</div>
+
+
+                </div> 
+            </div>
+        </div>
+
+        <div class="p-3 bg-white border-t border-slate-200 flex flex-col gap-2 flex-shrink-0">
+            <button type="button" id="nsa-btn-wa-kirim-slip-apotek" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold text-xs uppercase tracking-widest py-3 px-6 rounded-xl shadow-md transform active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp text-base"></i> Kirim Slip Gaji ke WhatsApp
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- ================= TAB 6: TENTANG APOTEK ================= -->
         <div id="tab-tentang" class="tab-content hidden fade-in space-y-8">
     
     <div class="container mx-auto px-1 md:px-4">
@@ -1639,58 +2104,84 @@ document.addEventListener('keydown', function(e) {
 
     </main>
 
-    <!-- BOTTOM NAVIGATION BAR (FIXED 4 TABS) -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-100 shadow-[0_-4px_24px_rgba(0,0,0,0.04)] z-50">
-        <div class="max-w-md mx-auto md:max-w-xl px-6 py-2 flex justify-between items-center">
+<!-- FLOATING LIQUID GLASS BOTTOM NAV APOTEK (iOS DOCK STYLE) -->
+<aside class="fixed bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-50 w-[92%] sm:w-[90%] max-w-lg bg-transparent p-0 m-0 border-none shadow-none outline-none">
+    
+    <!-- Main Liquid Glass Capsule Container -->
+    <div class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_15px_35px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden">
+        
+        <!-- Glossy Specular Light Reflection -->
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent rounded-t-full"></div>
+
+        <!-- Tab 1: Beranda -->
+        <button onclick="switchTab('beranda')" id="btn-tab-beranda" 
+            class="nav-tab active group relative flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-full transition-all duration-300 active:scale-90" 
+            data-search="beranda home utama dashboard">
+            <span class="nav-pill absolute inset-0 bg-pink-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
             
-            <!-- Tab 1: Beranda -->
-            <button onclick="switchTab('beranda')" id="btn-tab-beranda" 
-			class="nav-tab flex flex-col items-center justify-center flex-1 py-1 text-brand-500 transition-all duration-300" 
-			data-search="beranda home utama dashboard">
-			<div class="p-1 rounded-xl">
-				<i class="fas fa-home text-lg"></i>
-			</div>
-			<span class="text-[10px] font-bold mt-0.5 tracking-tight">Beranda</span>
-			</button>
+            <i class="fa-solid fa-house text-base sm:text-lg transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[8px] sm:text-[9px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Beranda</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-pink-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+        </button>
 
-            <!-- Tab 2: Input Harian -->
-            <button onclick="switchTab('input')" id="btn-tab-input" 
-                    class="nav-tab flex flex-col items-center justify-center flex-1 py-1 text-gray-400 hover:text-brand-500 transition-all duration-300">
-                <div class="p-1 rounded-xl">
-                    <i class="fas fa-pen-to-square text-lg"></i>
-                </div>
-                <span class="text-[10px] font-bold mt-0.5 tracking-tight">Input Harian</span>
-            </button>
+        <!-- Tab 2: Input Harian -->
+        <button onclick="switchTab('input')" id="btn-tab-input" 
+            class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-full transition-all duration-300 active:scale-90">
+            <span class="nav-pill absolute inset-0 bg-pink-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+            
+            <i class="fa-solid fa-pen-to-square text-base sm:text-lg transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[8px] sm:text-[9px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Input Harian</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-pink-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+        </button>
 
-            <!-- Tab 3: Arsip Summary -->
-            <button onclick="switchTab('summary')" id="btn-tab-summary" 
-                    class="nav-tab flex flex-col items-center justify-center flex-1 py-1 text-gray-400 hover:text-brand-500 transition-all duration-300">
-                <div class="p-1 rounded-xl">
-                    <i class="fas fa-folder-closed text-lg"></i>
-                </div>
-                <span class="text-[10px] font-bold mt-0.5 tracking-tight">Arsip Summary</span>
-            </button>
-			
-			<!-- Tab 4: Asisten Tutup Buku -->
-            <button onclick="switchTab('closing')" id="btn-tab-closing" 
-                    class="nav-tab flex flex-col items-center justify-center flex-1 py-1 text-gray-400 hover:text-brand-500 transition-all duration-300">
-                <div class="p-1 rounded-xl">
-                    <i class="fas fa-folder-closed text-lg"></i>
-                </div>
-                <span class="text-[10px] font-bold mt-0.5 tracking-tight">Tutup Buku</span>
-            </button>
+        <!-- Tab 3: Arsip Summary -->
+        <button onclick="switchTab('summary')" id="btn-tab-summary" 
+            class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-full transition-all duration-300 active:scale-90 focus:outline-none">
+            <span class="nav-pill absolute inset-0 bg-pink-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+            
+            <i class="fa-solid fa-folder-closed text-base sm:text-lg transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[8px] sm:text-[9px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Summary</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-pink-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+        </button>
 
-            <!-- Tab 4: Tentang Apotek -->
-            <button onclick="switchTab('tentang')" id="btn-tab-tentang" 
-                    class="nav-tab flex flex-col items-center justify-center flex-1 py-1 text-gray-400 hover:text-brand-500 transition-all duration-300">
-                <div class="p-1 rounded-xl">
-                    <i class="fas fa-clinic-medical text-lg"></i>
-                </div>
-                <span class="text-[10px] font-bold mt-0.5 tracking-tight">Tentang Apotek</span>
-            </button>
+        <!-- Tab 4: Tutup Buku -->
+        <button onclick="switchTab('closing')" id="btn-tab-closing" 
+            class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-full transition-all duration-300 active:scale-90">
+            <span class="nav-pill absolute inset-0 bg-pink-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+            
+            <i class="fa-solid fa-book-bookmark text-base sm:text-lg transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[8px] sm:text-[9px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Tutup Buku</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-pink-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+        </button>
 
-        </div>
+        <!-- Tab 5: Slip Gaji -->
+<button onclick="switchTab('gaji')" id="btn-tab-gaji" 
+    class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-full transition-all duration-300 active:scale-90">
+    <span class="nav-pill absolute inset-0 bg-pink-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+    
+    <i class="fa-solid fa-file-invoice-dollar text-base sm:text-lg transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+    <span class="text-[8px] sm:text-[9px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
+    
+    <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-pink-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+</button>
+
+        <!-- Tab 6: Tentang Apotek -->
+        <button onclick="switchTab('tentang')" id="btn-tab-tentang" 
+            class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-full transition-all duration-300 active:scale-90">
+            <span class="nav-pill absolute inset-0 bg-pink-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+            
+            <i class="fa-solid fa-clinic-medical text-base sm:text-lg transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="text-[8px] sm:text-[9px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Apotek</span>
+            
+            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-pink-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+        </button>
+
     </div>
+</aside>
 	
 	
 	
@@ -1703,62 +2194,52 @@ document.addEventListener('keydown', function(e) {
     <script>
         // Data Tab State
         const tabs = {
-            'beranda': {
-                title: 'Apotek Nurjaya',
-                subtitle: 'Ringkasan Informasi'
-            },
-            'input': {
-                title: 'Input Harian',
-                subtitle: 'Data Harian Pendapatan'
-            },
-            'summary': {
-                title: 'Arsip Summary',
-                subtitle: 'Laporan & Histori Arsip Apotek'
-            },
-			'closing': {
-                title: 'Asisten Tutup Buku',
-                subtitle: 'Media Input Data Penutupan Pembukuan'
-            },
-            'tentang': {
-                title: 'Tentang Apotek',
-                subtitle: 'Informasi Profil Apotek Nurjaya'
-            }
-        };
+    'beranda': { title: 'Dashboard Utama', subtitle: 'Apotek Nurjaya' },
+    'input': { title: 'Input Harian', subtitle: 'Pencatatan Presensi & Transaksi' },
+    'summary': { title: 'Arsip Summary', subtitle: 'Laporan Rekapitulasi' },
+    'closing': { title: 'Tutup Buku', subtitle: 'Laporan Keuangan Bulanan' },
+    'gaji': { title: 'Asisten Slip Gaji', subtitle: 'Penggajian Karyawan Apotek' }, // <-- Tambahkan ini
+    'tentang': { title: 'Tentang Apotek', subtitle: 'Profil & Informasi' }
+};
 
-        // Switch Tab Function
-        function switchTab(tabId) {
-            // Sembunyikan semua tab konten
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            // Tampilkan tab konten pilihan
-            const activeContent = document.getElementById(`tab-${tabId}`);
-            if (activeContent) {
-                activeContent.classList.add('active');
-            }
+        // Switch Tab Function (Updated for Floating Liquid Glass Nav)
+// Switch Tab Function (Clean & Native Tab Navigation)
+function switchTab(tabId) {
+    // 1. Sembunyikan semua konten tab (cabut 'active' dan pasang 'hidden')
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+        content.classList.add('hidden');
+    });
 
-            // Ubah indikator warna tab aktif
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('text-brand-500');
-                tab.classList.add('text-gray-400');
-            });
-            const activeTabButton = document.getElementById(`btn-tab-${tabId}`);
-            if (activeTabButton) {
-                activeTabButton.classList.remove('text-gray-400');
-                activeTabButton.classList.add('text-brand-500');
-            }
+    // 2. Tampilkan tab konten pilihan (pasang 'active' dan lepas 'hidden')
+    const activeContent = document.getElementById(`tab-${tabId}`);
+    if (activeContent) {
+        activeContent.classList.remove('hidden');
+        activeContent.classList.add('active');
+    }
 
-            // Ganti teks header dinamis
-            const headerTitle = document.getElementById('headerTitle');
-            const headerSubtitle = document.getElementById('headerSubtitle');
-            if (headerTitle && headerSubtitle && tabs[tabId]) {
-                headerTitle.textContent = tabs[tabId].title;
-                headerSubtitle.textContent = tabs[tabId].subtitle;
-            }
-            
-            // Gulir otomatis kembali ke atas
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    // 3. Reset kelas 'active' di SEMUA tombol nav-tab
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    // 4. Tambahkan kelas 'active' HANYA ke tombol yang diklik
+    const activeTabButton = document.getElementById(`btn-tab-${tabId}`);
+    if (activeTabButton) {
+        activeTabButton.classList.add('active');
+    }
+
+    // 5. Ganti teks header dinamis
+    const headerTitle = document.getElementById('headerTitle');
+    const headerSubtitle = document.getElementById('headerSubtitle');
+    if (headerTitle && headerSubtitle && tabs[tabId]) {
+        headerTitle.textContent = tabs[tabId].title;
+        headerSubtitle.textContent = tabs[tabId].subtitle;
+    }
+
+    // 6. Gulir otomatis kembali ke atas
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
         // Memuat grafik saat DOM siap
         window.onload = function() {
@@ -4680,6 +5161,802 @@ function tutupAlertNarasi() {
       }
     }
   });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const API_URL_SLIP_APOTEK = "https://script.google.com/macros/s/AKfycby55pIwKb9kHh9ba2xmKD_scX7jzIj43ll5rpcGU5_AjpTwMnD42EN4140WZxhf0duL/exec";
+
+    // Database Karyawan Apotek & Nomor WhatsApp
+    const DATABASE_WA_APOTEK = {
+        "Eka": { namaLengkap: "Eka Ainun Nisa", wa: "6285523823280" },
+        "Dea": { namaLengkap: "Dea Nove Asyari", wa: "6285220786175" },
+        "Fadilla": { namaLengkap: "Fadilla Nailul Wafa", wa: "6282120737797" }
+    };
+
+    // Binding Elemen UI Form
+    const selectKaryawanApotek = document.getElementById("gaji-pilih-karyawan-apotek");
+    const statusLoadingApotek   = document.getElementById("status-loading-pdf-apotek");
+    const txtPeriodeApotek      = document.getElementById("sg-text-periode-apotek");
+    const txtTotalHariApotek    = document.getElementById("sg-text-total-hari-apotek");
+
+    const lblShift1Apotek       = document.getElementById("sg-lbl-shift1-apotek");
+    const inRateShift1Apotek    = document.getElementById("sg-in-rate-shift1-apotek");
+    const outTotalShift1Apotek  = document.getElementById("sg-out-total-shift1-apotek");
+
+    const lblShift2Apotek       = document.getElementById("sg-lbl-shift2-apotek");
+    const inRateShift2Apotek    = document.getElementById("sg-in-rate-shift2-apotek");
+    const outTotalShift2Apotek  = document.getElementById("sg-out-total-shift2-apotek");
+
+    const lblLemburApotek       = document.getElementById("sg-lbl-lembur-apotek");
+    const inRateLemburApotek    = document.getElementById("sg-in-rate-lembur-apotek");
+    const outTotalLemburApotek  = document.getElementById("sg-out-total-lembur-apotek");
+
+    const lblKhususCountApotek  = document.getElementById("sg-lbl-khusus-count-apotek");
+    const outTotalKhususApotek  = document.getElementById("sg-out-total-khusus-apotek");
+    const wrapperKhususList     = document.getElementById("wrapper-shift-khusus-list-apotek");
+
+    const outLiburApotek        = document.getElementById("sg-out-libur-apotek");
+    const outIzinSakitApotek    = document.getElementById("sg-out-izin-sakit-apotek");
+    const outAbsenLainApotek    = document.getElementById("sg-out-absen-lain-apotek");
+
+    const selPoinApotek         = document.getElementById("sg-sel-poin-apotek");
+    const wrapperPoinApotek     = document.getElementById("sg-wrapper-poin-dinamis-apotek");
+
+    const outTotalGajiApotek    = document.getElementById("sg-out-total-gaji-bersih-apotek");
+    const inPembulatanApotek    = document.getElementById("sg-in-pembulatan-apotek");
+    const outFinalGajiApotek    = document.getElementById("sg-out-final-gaji-apotek");
+
+    // State data presensi terurai
+    let dataPresensiApotekHitung = {
+        shift1: 0,
+        shift2: 0,
+        lembur: 0,
+        khususList: [],
+        libur: 0,
+        izinSakit: 0,
+        absenLain: 0
+    };
+
+    function formatRupiah(angka) {
+        return "Rp " + Number(angka).toLocaleString("id-ID");
+    }
+
+    function bersihkanAngkaMurni(teks) {
+        if (!teks) return 0;
+        return parseFloat(String(teks).replace(/[^0-9]/g, "")) || 0;
+    }
+
+    function pasangMasking(inputEl) {
+        if (!inputEl) return;
+        inputEl.type = "text";
+        inputEl.setAttribute("inputmode", "numeric");
+        inputEl.addEventListener("input", function() {
+            let val = bersihkanAngkaMurni(this.value);
+            this.value = val === 0 ? "" : val.toLocaleString("id-ID");
+            hitungSemuaApotek();
+        });
+    }
+
+    pasangMasking(inRateShift1Apotek);
+    pasangMasking(inRateShift2Apotek);
+    pasangMasking(inRateLemburApotek);
+    pasangMasking(inPembulatanApotek);
+
+    // Fetch Data Presensi Apotek
+    if (selectKaryawanApotek) {
+        selectKaryawanApotek.addEventListener("change", function() {
+            const karyawan = this.value;
+            if (!karyawan) return;
+
+            if (statusLoadingApotek) statusLoadingApotek.classList.remove("hidden");
+
+            fetch(`${API_URL_SLIP_APOTEK}?sheetName=${karyawan}`)
+                .then(res => res.json())
+                .then(result => {
+                    if (statusLoadingApotek) statusLoadingApotek.classList.add("hidden");
+                    if (result.status === "success") {
+                        prosesAkumulasiApotek(result.data, karyawan);
+                    } else {
+                        alert("Gagal memuat presensi: " + result.message);
+                    }
+                })
+                .catch(err => {
+                    if (statusLoadingApotek) statusLoadingApotek.classList.add("hidden");
+                    console.error("Error presensi apotek:", err);
+                });
+        });
+    }
+
+    function prosesAkumulasiApotek(rows, karyawan) {
+        let s1 = 0, s2 = 0, lbr = 0, lbrTerjadwal = 0, izinSakit = 0, absen = 0;
+        let listKhusus = [];
+
+        rows.forEach(row => {
+            const status = String(row.presensi || "").trim();
+            const tgl = row.tanggal || "-";
+
+            if (status.includes("Shift 1")) {
+                s1++;
+            } else if (status.includes("Shift 2")) {
+                s2++;
+            } else if (status === "Lembur") {
+                lbr++;
+            } else if (status.includes("Khusus")) {
+                const jamStr = row.jam_khusus ? row.jam_khusus : "Jam tidak tercatat";
+                listKhusus.push({ tanggal: tgl, jamKerja: jamStr });
+            } else if (status === "Libur") {
+                lbrTerjadwal++;
+            } else if (status === "Izin/Sakit") {
+                izinSakit++;
+            } else if (status === "Absen") {
+                absen++;
+            }
+        });
+
+        dataPresensiApotekHitung = {
+            shift1: s1,
+            shift2: s2,
+            lembur: lbr,
+            khususList: listKhusus,
+            libur: lbrTerjadwal,
+            izinSakit: izinSakit,
+            absenLain: absen
+        };
+
+        if (lblShift1Apotek) lblShift1Apotek.innerText = s1 + " hari";
+        if (lblShift2Apotek) lblShift2Apotek.innerText = s2 + " hari";
+        if (lblLemburApotek) lblLemburApotek.innerText = lbr + " hari";
+        if (lblKhususCountApotek) lblKhususCountApotek.innerText = listKhusus.length + " event";
+
+        if (outLiburApotek) outLiburApotek.innerText = lbrTerjadwal + " hari";
+        if (outIzinSakitApotek) outIzinSakitApotek.innerText = izinSakit + " hari";
+        if (outAbsenLainApotek) outAbsenLainApotek.innerText = absen + " hari";
+
+        if (wrapperKhususList) {
+            wrapperKhususList.innerHTML = "";
+            if (listKhusus.length === 0) {
+                wrapperKhususList.innerHTML = `<p class="text-[11px] text-slate-400 italic">Tidak ada catatan shift khusus pada periode ini.</p>`;
+            } else {
+                listKhusus.forEach((kh, idx) => {
+                    const htmlKh = `
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-slate-800">${kh.tanggal}</span>
+                                <span class="text-[10px] text-purple-700 font-medium">Jam Kerja: ${kh.jamKerja}</span>
+                            </div>
+                            <div class="flex items-center gap-2 self-end sm:self-center">
+                                <div class="relative shadow-inner w-32">
+                                    <span class="absolute left-2.5 top-2 text-xs font-bold text-slate-400">Rp</span>
+                                    <input type="text" data-kh-idx="${idx}" class="sg-in-khusus-rp sg-input-clean w-full bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-7 pr-2 py-1.5 rounded-lg text-right" placeholder="0">
+                                </div>
+                            </div>
+                        </div>`;
+                    wrapperKhususList.insertAdjacentHTML("beforeend", htmlKh);
+                });
+
+                wrapperKhususList.querySelectorAll(".sg-in-khusus-rp").forEach(inp => pasangMasking(inp));
+            }
+        }
+
+        fetch(`${API_URL_SLIP_APOTEK}?sheetName=${karyawan}&action=getMetaData`)
+            .then(r => r.json())
+            .then(res => {
+                if (res.status === "success" && txtPeriodeApotek) {
+                    txtPeriodeApotek.innerText = res.periode || "-";
+                }
+            });
+
+        if (txtTotalHariApotek) txtTotalHariApotek.innerText = rows.length + " Hari";
+
+        hitungSemuaApotek();
+    }
+
+    function hitungSemuaApotek() {
+        const rS1 = bersihkanAngkaMurni(inRateShift1Apotek?.value);
+        const rS2 = bersihkanAngkaMurni(inRateShift2Apotek?.value);
+        const rLembur = bersihkanAngkaMurni(inRateLemburApotek?.value);
+
+        const totalS1 = dataPresensiApotekHitung.shift1 * rS1;
+        const totalS2 = dataPresensiApotekHitung.shift2 * rS2;
+        const totalLembur = dataPresensiApotekHitung.lembur * rLembur;
+
+        if (outTotalShift1Apotek) outTotalShift1Apotek.innerText = formatRupiah(totalS1);
+        if (outTotalShift2Apotek) outTotalShift2Apotek.innerText = formatRupiah(totalS2);
+        if (outTotalLemburApotek) outTotalLemburApotek.innerText = formatRupiah(totalLembur);
+
+        let totalKhususRp = 0;
+        if (wrapperKhususList) {
+            wrapperKhususList.querySelectorAll(".sg-in-khusus-rp").forEach(inp => {
+                totalKhususRp += bersihkanAngkaMurni(inp.value);
+            });
+        }
+        if (outTotalKhususApotek) outTotalKhususApotek.innerText = formatRupiah(totalKhususRp);
+
+        let totalPoin = 0;
+        if (wrapperPoinApotek) {
+            wrapperPoinApotek.querySelectorAll(".sg-in-poin-rp").forEach(inp => {
+                totalPoin += bersihkanAngkaMurni(inp.value);
+            });
+        }
+
+        const subtotal = totalS1 + totalS2 + totalLembur + totalKhususRp + totalPoin;
+        if (outTotalGajiApotek) outTotalGajiApotek.innerText = formatRupiah(subtotal);
+
+        const rpPembulatan = bersihkanAngkaMurni(inPembulatanApotek?.value);
+        const finalGaji = rpPembulatan > 0 ? rpPembulatan : subtotal;
+        if (outFinalGajiApotek) outFinalGajiApotek.innerText = formatRupiah(finalGaji);
+    }
+
+    if (selPoinApotek) {
+        selPoinApotek.addEventListener("change", function() {
+            const jml = parseInt(this.value) || 0;
+            if (!wrapperPoinApotek) return;
+            wrapperPoinApotek.innerHTML = "";
+            for (let i = 1; i <= jml; i++) {
+                const html = `
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-1 p-2 bg-slate-50 border border-slate-100 rounded-xl">
+                        <input type="text" class="sg-in-poin-ket w-full flex-1 bg-white border border-slate-200 text-slate-700 font-bold text-xs px-3 py-2 rounded-xl focus:outline-none" placeholder="Isi rincian poin tambahan ${i}...">
+                        <div class="relative shadow-inner w-full sm:w-36">
+                            <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                            <input type="text" class="sg-in-poin-rp sg-input-clean w-full bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl text-right" placeholder="0">
+                        </div>
+                    </div>`;
+                wrapperPoinApotek.insertAdjacentHTML("beforeend", html);
+            }
+            wrapperPoinApotek.querySelectorAll(".sg-in-poin-rp").forEach(inp => pasangMasking(inp));
+            hitungSemuaApotek();
+        });
+    }
+
+    // Close Modals
+    document.getElementById("btn-tutup-modal-gaji-apotek")?.addEventListener("click", () => window.switchTab("beranda"));
+    document.getElementById("btn-tutup-preview-slip-apotek")?.addEventListener("click", () => {
+        const modalPv = document.getElementById("modal-preview-slip-apotek");
+        if (modalPv) {
+            modalPv.classList.add("opacity-0", "pointer-events-none");
+            setTimeout(() => modalPv.classList.add("hidden"), 300);
+        }
+    });
+
+// Helper Function: Hitung Tunjangan Makan Khusus Apotek
+    function hitungTunjanganMakanApotek(dataPresensi) {
+    if (!dataPresensi) return { totalUangMakan: 0, htmlList: "<span>- 0 Shift</span>" };
+
+    const s1 = Number(dataPresensi.shift1) || 0;
+    const s2 = Number(dataPresensi.shift2) || 0;
+    const totalShiftReguler = s1 + s2;
+    
+    const totalKhusus = Array.isArray(dataPresensi.khususList) ? dataPresensi.khususList.length : 0;
+    const totalLembur = Number(dataPresensi.lembur) || 0;
+
+    // Nominal
+    const nominalRegulerKhusus = (totalShiftReguler + totalKhusus) * 10000;
+    const nominalLembur = totalLembur * 20000;
+    const totalUangMakan = nominalRegulerKhusus + nominalLembur;
+
+    // Susun rincian per baris ke bawah
+    let listItems = [];
+    if (totalShiftReguler > 0) {
+        listItems.push(`<span>• Shift Reguler: ${totalShiftReguler} Hari × Rp 10.000</span>`);
+    }
+    if (totalKhusus > 0) {
+        listItems.push(`<span>• Shift Khusus: ${totalKhusus} Event × Rp 10.000</span>`);
+    }
+    if (totalLembur > 0) {
+        listItems.push(`<span>• Shift Lembur: ${totalLembur} Hari × Rp 20.000</span>`);
+    }
+
+    const htmlList = listItems.length > 0 ? listItems.join("") : "<span>- 0 Shift</span>";
+
+    return {
+        totalUangMakan: totalUangMakan,
+        htmlList: htmlList
+    };
+}
+
+    // Generate Preview Slip Gaji Cetak
+    document.getElementById("btn-generate-slip-gaji-apotek")?.addEventListener("click", function() {
+        const karyawan = selectKaryawanApotek?.value;
+        if (!karyawan) return alert("Pilih nama karyawan terlebih dahulu!");
+
+        const info = DATABASE_WA_APOTEK[karyawan] || { namaLengkap: karyawan };
+        document.getElementById("pv-nama-karyawan-apotek").innerText = info.namaLengkap;
+        document.getElementById("pv-periode-kerja-apotek").innerText = txtPeriodeApotek?.innerText || "-";
+
+        const containerTbody = document.getElementById("container-baris-slip-apotek");
+        if (!containerTbody) return;
+
+        let noRow = 1;
+        let tbodyHtml = "";
+
+        const rS1 = bersihkanAngkaMurni(inRateShift1Apotek?.value);
+        const rS2 = bersihkanAngkaMurni(inRateShift2Apotek?.value);
+        const rLembur = bersihkanAngkaMurni(inRateLemburApotek?.value);
+
+        // 1. Shift 1
+        tbodyHtml += `
+            <tr class="align-middle bg-white">
+                <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
+                <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Shift 1 (Pagi-Siang)</td>
+                <td class="py-1 text-center font-medium border-r border-slate-300">${dataPresensiApotekHitung.shift1} hari</td>
+                <td class="py-1 text-center text-slate-500 tracking-tighter border-r border-slate-300">${rS1.toLocaleString("id-ID")}</td>
+                <td class="py-1 text-right pr-1 sm:pr-2 font-bold tracking-tighter text-slate-900">${formatRupiah(dataPresensiApotekHitung.shift1 * rS1)}</td>
+            </tr>`;
+
+        // 2. Shift 2
+        tbodyHtml += `
+            <tr class="align-middle bg-white">
+                <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
+                <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Shift 2 (Siang-Malam)</td>
+                <td class="py-1 text-center font-medium border-r border-slate-300">${dataPresensiApotekHitung.shift2} hari</td>
+                <td class="py-1 text-center text-slate-500 tracking-tighter border-r border-slate-300">${rS2.toLocaleString("id-ID")}</td>
+                <td class="py-1 text-right pr-1 sm:pr-2 font-bold tracking-tighter text-slate-900">${formatRupiah(dataPresensiApotekHitung.shift2 * rS2)}</td>
+            </tr>`;
+
+        // 3. Lembur
+        tbodyHtml += `
+            <tr class="align-middle bg-white">
+                <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
+                <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Shift Lembur</td>
+                <td class="py-1 text-center font-medium border-r border-slate-300">${dataPresensiApotekHitung.lembur} hari</td>
+                <td class="py-1 text-center text-slate-500 tracking-tighter border-r border-slate-300">${rLembur.toLocaleString("id-ID")}</td>
+                <td class="py-1 text-right pr-1 sm:pr-2 font-bold tracking-tighter text-slate-900">${formatRupiah(dataPresensiApotekHitung.lembur * rLembur)}</td>
+            </tr>`;
+
+        // 4. Shift Khusus
+        if (dataPresensiApotekHitung.khususList.length > 0) {
+            const inputsKhusus = wrapperKhususList?.querySelectorAll(".sg-in-khusus-rp");
+            dataPresensiApotekHitung.khususList.forEach((kh, idx) => {
+                const rpVal = inputsKhusus && inputsKhusus[idx] ? bersihkanAngkaMurni(inputsKhusus[idx].value) : 0;
+                tbodyHtml += `
+                    <tr class="align-middle bg-purple-50/50">
+                        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
+                        <td class="py-1 pl-1 sm:pl-2 border-r border-slate-300" colspan="3">
+                            <span class="font-bold text-slate-900 block">Shift Khusus (${kh.tanggal})</span>
+                            <span class="text-[9px] text-purple-700 italic block">Jam Kerja ${kh.jamKerja}</span>
+                        </td>
+                        <td class="py-1 text-right pr-1 sm:pr-2 font-bold tracking-tighter text-slate-900">${formatRupiah(rpVal)}</td>
+                    </tr>`;
+            });
+        } else {
+            tbodyHtml += `
+                <tr class="align-middle bg-white">
+                    <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
+                    <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Shift Khusus</td>
+                    <td class="py-1 text-center font-medium border-r border-slate-300">0 event</td>
+                    <td class="py-1 text-center text-slate-400 border-r border-slate-300">-</td>
+                    <td class="py-1 text-right pr-1 sm:pr-2 font-bold tracking-tighter text-slate-900">Rp 0</td>
+                </tr>`;
+        }
+
+        // 5. Libur
+        tbodyHtml += `
+            <tr class="align-middle bg-white">
+                <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
+                <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Libur Terjadwal</td>
+                <td class="py-1 text-center font-medium border-r border-slate-300">${dataPresensiApotekHitung.libur} hari</td>
+                <td class="py-1 text-center text-slate-400 border-r border-slate-300">-</td>
+                <td class="py-1 text-center text-slate-400 font-bold pr-1 sm:pr-2">-</td>
+            </tr>`;
+
+        // 6. Izin / Sakit
+        tbodyHtml += `
+            <tr class="align-middle bg-white">
+                <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
+                <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Izin / Sakit</td>
+                <td class="py-1 text-center font-medium border-r border-slate-300">${dataPresensiApotekHitung.izinSakit} hari</td>
+                <td class="py-1 text-center text-slate-400 border-r border-slate-300">-</td>
+                <td class="py-1 text-center text-slate-400 font-bold pr-1 sm:pr-2">-</td>
+            </tr>`;
+
+        // 7. Absen Lain
+        tbodyHtml += `
+            <tr class="align-middle bg-white">
+                <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
+                <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300">Absen Lain</td>
+                <td class="py-1 text-center font-medium border-r border-slate-300">${dataPresensiApotekHitung.absenLain} hari</td>
+                <td class="py-1 text-center text-slate-400 border-r border-slate-300">-</td>
+                <td class="py-1 text-center text-slate-400 font-bold pr-1 sm:pr-2">-</td>
+            </tr>`;
+
+        // 8. Poin Tambahan
+        const poinKets = wrapperPoinApotek?.querySelectorAll(".sg-in-poin-ket");
+        const poinRps  = wrapperPoinApotek?.querySelectorAll(".sg-in-poin-rp");
+        if (poinKets && poinKets.length > 0) {
+            poinKets.forEach((ketEl, i) => {
+                const ketText = ketEl.value.trim() || `Poin Tambahan ${i + 1}`;
+                const rpVal   = bersihkanAngkaMurni(poinRps[i]?.value);
+                tbodyHtml += `
+                    <tr class="align-middle bg-amber-50/40">
+                        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
+                        <td class="py-1 pl-1 sm:pl-2 font-bold text-slate-900 border-r border-slate-300" colspan="3">${ketText}</td>
+                        <td class="py-1 text-right pr-1 sm:pr-2 font-bold tracking-tighter text-slate-900">${formatRupiah(rpVal)}</td>
+                    </tr>`;
+            });
+        }
+
+        containerTbody.innerHTML = tbodyHtml;
+
+        // Rekapitulasi Utama Gaji
+        document.getElementById("pv-rekap-otomatis-apotek").innerText = outTotalGajiApotek?.innerText || "Rp 0";
+        document.getElementById("pv-rekap-pembulatan-apotek").innerText = formatRupiah(bersihkanAngkaMurni(inPembulatanApotek?.value));
+        document.getElementById("pv-rekap-final-apotek").innerText = outFinalGajiApotek?.innerText || "Rp 0";
+
+        // =========================================================================
+        // PROSES OTOMATIS: TUNJANGAN MAKAN & TOTAL AKUMULASI PENDAPATAN
+        // =========================================================================
+        const dataMakan = hitungTunjanganMakanApotek(dataPresensiApotekHitung);
+
+        // Hitung nilai murni Gaji Final
+        let totalKhususRp = 0;
+        if (wrapperKhususList) {
+            wrapperKhususList.querySelectorAll(".sg-in-khusus-rp").forEach(inp => {
+                totalKhususRp += bersihkanAngkaMurni(inp.value);
+            });
+        }
+
+        let totalPoin = 0;
+        if (wrapperPoinApotek) {
+            wrapperPoinApotek.querySelectorAll(".sg-in-poin-rp").forEach(inp => {
+                totalPoin += bersihkanAngkaMurni(inp.value);
+            });
+        }
+
+        const subtotalGaji = (dataPresensiApotekHitung.shift1 * rS1) + 
+                             (dataPresensiApotekHitung.shift2 * rS2) + 
+                             (dataPresensiApotekHitung.lembur * rLembur) + 
+                             totalKhususRp + totalPoin;
+
+        const rpPembulatan = bersihkanAngkaMurni(inPembulatanApotek?.value);
+        const rpGajiFinal = rpPembulatan > 0 ? rpPembulatan : subtotalGaji;
+
+        const totalAkumulasi = rpGajiFinal + dataMakan.totalUangMakan;
+
+      // Render ke Elemen Slip
+const elMakanRumus = document.getElementById("pv-makan-detail-rumus-apotek");
+const elMakanTotal = document.getElementById("pv-total-uang-makan-apotek");
+const elAkumulasi  = document.getElementById("pv-total-akumulasi-apotek");
+
+if (elMakanRumus) elMakanRumus.innerHTML = dataMakan.htmlList; // Ganti .innerText jadi .innerHTML & panggil .htmlList
+if (elMakanTotal) elMakanTotal.innerText = formatRupiah(dataMakan.totalUangMakan);
+if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
+
+        // Catatan Owner
+        const catatan = document.getElementById("owner-input-catatan-apotek")?.value.trim();
+        const boxCatatan = document.getElementById("pv-box-catatan-render-apotek");
+        const txtCatatan = document.getElementById("pv-text-catatan-owner-apotek");
+        if (catatan && boxCatatan && txtCatatan) {
+            txtCatatan.innerText = catatan;
+            boxCatatan.classList.remove("hidden");
+        } else if (boxCatatan) {
+            boxCatatan.classList.add("hidden");
+        }
+
+        document.getElementById("pv-tanggal-cetak-apotek").innerText = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+
+        const modalPv = document.getElementById("modal-preview-slip-apotek");
+        if (modalPv) {
+            modalPv.classList.remove("hidden");
+            setTimeout(() => {
+                modalPv.classList.remove("opacity-0", "pointer-events-none");
+                modalPv.querySelector(".transform")?.classList.remove("scale-95");
+            }, 10);
+        }
+    });
+
+    // =========================================================================
+    // REVISI TOTAL: KIRIM SLIP GAJI APOTEK KE WHATSAPP (RENDER HIGH-RES JPG)
+    // =========================================================================
+    // =========================================================================
+    // REVISI FIX: KIRIM SLIP GAJI APOTEK (ANTI-STUCK LOADING & ANTI-BLOCK SHARE)
+    // =========================================================================
+    const btnKirimWaApotekReal = document.getElementById("nsa-btn-wa-kirim-slip-apotek");
+
+    if (btnKirimWaApotekReal) {
+        btnKirimWaApotekReal.addEventListener("click", async function() {
+            const karyawanTerpilih = selectKaryawanApotek?.value || "";
+            if (!karyawanTerpilih) {
+                alert("Silakan pilih karyawan Apotek terlebih dahulu!");
+                return;
+            }
+
+            let namaLengkapKaryawan = "";
+            let nomorWa = "";
+
+            if (DATABASE_WA_APOTEK[karyawanTerpilih]) {
+                namaLengkapKaryawan = DATABASE_WA_APOTEK[karyawanTerpilih].namaLengkap;
+                nomorWa = DATABASE_WA_APOTEK[karyawanTerpilih].wa;
+            } else {
+                namaLengkapKaryawan = karyawanTerpilih;
+                let inputNomor = prompt(`Nomor WA untuk ${namaLengkapKaryawan} tidak terdaftar. Masukkan manual (Format: 628xxx):`, "628");
+                if (!inputNomor) return;
+                nomorWa = inputNomor.replace(/[^0-9]/g, '');
+                if (nomorWa.startsWith("08")) nomorWa = "628" + nomorWa.slice(2);
+            }
+
+            const periodeGaji = txtPeriodeApotek?.innerText || "-";
+            const targetRenderImage = document.getElementById("elemen-slip-gaji-render-apotek");
+
+            if (!targetRenderImage) {
+                alert("Elemen '#elemen-slip-gaji-render-apotek' tidak ditemukan di DOM!");
+                return;
+            }
+
+            // A. Animasi Loading Spinner
+            const textAwalTombol = this.innerHTML;
+            this.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Slip Apotek...`;
+            this.disabled = true;
+
+            // B. Teks Pesan WhatsApp
+            const teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji Asisten Apoteker untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja dan dedikasinya di Apotek Nurjaya, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Apotek Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
+
+            try {
+                if (typeof domtoimage === 'undefined') {
+                    alert("Library domtoimage belum terpasang atau gagal dimuat!");
+                    return;
+                }
+
+                const namaFileJpg = `Slip_Gaji_Apotek_${namaLengkapKaryawan.replace(/\s+/g, '_')}_${periodeGaji.replace(/\s+/g, '_')}.jpg`;
+
+                // C. Render HD 2x tanpa penundaan setTimeout
+                const originalWidth = targetRenderImage.offsetWidth || 500;
+                const originalHeight = targetRenderImage.offsetHeight || 700;
+                const scaleFactor = 2;
+
+                const dataUrl = await domtoimage.toJpeg(targetRenderImage, {
+                    quality: 0.95,
+                    bgcolor: '#ffffff',
+                    width: originalWidth * scaleFactor,
+                    height: originalHeight * scaleFactor,
+                    style: {
+                        'transform': `scale(${scaleFactor})`,
+                        'transform-origin': 'top left',
+                        'width': originalWidth + 'px',
+                        'height': originalHeight + 'px',
+                        'backdrop-filter': 'none',
+                        '-webkit-backdrop-filter': 'none'
+                    }
+                });
+
+                // D. Konversi ke Blob File
+                const responBlob = await fetch(dataUrl);
+                const blobGambar = await responBlob.blob();
+                const fileGambar = new File([blobGambar], namaFileJpg, { type: "image/jpeg" });
+
+                // E. Coba panggil Web Share API (Gunakan try-catch khusus agar tidak menggantung)
+                let isSharedSuccess = false;
+                if (navigator.canShare && navigator.canShare({ files: [fileGambar] })) {
+                    try {
+                        await navigator.share({
+                            files: [fileGambar],
+                            title: `Slip Gaji Apotek ${namaLengkapKaryawan}`,
+                            text: teksSapaan
+                        });
+                        isSharedSuccess = true;
+                    } catch (shareErr) {
+                        console.warn("Web Share dibatalkan atau diblokir browser:", shareErr);
+                    }
+                }
+
+                // F. Fallback Otomatis: Jika Web Share gagal/diblokir/di-cancel
+                if (!isSharedSuccess) {
+                    let linkDownload = document.createElement('a');
+                    linkDownload.download = namaFileJpg;
+                    linkDownload.href = dataUrl;
+                    document.body.appendChild(linkDownload);
+                    linkDownload.click();
+                    document.body.removeChild(linkDownload);
+
+                    const urlWhatsApp = `https://api.whatsapp.com/send?phone=${nomorWa}&text=${encodeURIComponent(teksSapaan)}`;
+                    window.open(urlWhatsApp, '_blank');
+                }
+
+            } catch (error) {
+                console.error('Gagal render slip gaji Apotek:', error);
+                alert("Gagal me-render slip gaji Apotek. Silakan periksa koneksi atau coba kembali.");
+            } finally {
+                // G. Pastikan status tombol SELALU kembali normal
+                this.innerHTML = textAwalTombol;
+                this.disabled = false;
+            }
+        });
+    }
+});
+
+function hitungTunjanganMakanApotek(dataPresensi) {
+    if (!dataPresensi) return { totalUangMakan: 0, htmlList: "<span>- 0 Shift</span>" };
+
+    const s1 = Number(dataPresensi.shift1) || 0;
+    const s2 = Number(dataPresensi.shift2) || 0;
+    const totalShiftReguler = s1 + s2;
+    
+    const totalKhusus = Array.isArray(dataPresensi.khususList) ? dataPresensi.khususList.length : 0;
+    const totalLembur = Number(dataPresensi.lembur) || 0;
+
+    // Nominal
+    const nominalRegulerKhusus = (totalShiftReguler + totalKhusus) * 10000;
+    const nominalLembur = totalLembur * 20000;
+    const totalUangMakan = nominalRegulerKhusus + nominalLembur;
+
+    // Susun rincian per baris
+    let listItems = [];
+    if (totalShiftReguler > 0) {
+        listItems.push(`<span>• Shift Reguler: ${totalShiftReguler} Hari × Rp 10.000</span>`);
+    }
+    if (totalKhusus > 0) {
+        listItems.push(`<span>• Shift Khusus: ${totalKhusus} Event × Rp 10.000</span>`);
+    }
+    if (totalLembur > 0) {
+        listItems.push(`<span>• Shift Lembur: ${totalLembur} Hari × Rp 20.000</span>`);
+    }
+
+    const htmlList = listItems.length > 0 ? listItems.join("") : "<span>- 0 Shift</span>";
+
+    return {
+        totalUangMakan: totalUangMakan,
+        htmlList: htmlList
+    };
+}
+
+</script>
+
+<script>
+// URL Web App Google Apps Script Khusus Integrasi Drive Kartu Presensi
+const API_URL_DRIVE_KARTU_APOTEK = "https://script.google.com/macros/s/AKfycby8Z287iFeysy_R6Nstv55dQ1U0RbKK-CTNtgLp5-ch309OyH4dDfmqsf5IC6K8Xdop/exec";
+
+// Mapping nama panggilan ke format nama file di Drive
+const MAP_NAMA_DRIVE_APOTEK = {
+    "Eka": "Eka_Ainun_Nisa",
+    "Dea": "Dea_Nove_Asyari",
+    "Fadilla": "Fadilla_Nailul_Wafa"
+};
+
+/**
+ * Reset penuh elemen UI penampil kartu presensi
+ */
+function resetUIPenampilKartuApotek() {
+    const placeholder = document.getElementById("placeholder-pdf-text-apotek");
+    const loadingAnim = document.getElementById("loading-pdf-animation-apotek");
+    const imgPreview = document.getElementById("iframe-preview-pdf-apotek");
+    const statusTextHeader = document.getElementById("status-loading-pdf-apotek");
+
+    if (imgPreview) {
+        imgPreview.onload = null;
+        imgPreview.onerror = null;
+        imgPreview.src = "";
+        imgPreview.classList.add("hidden");
+    }
+    
+    if (placeholder) {
+        placeholder.classList.add("hidden");
+        const p = placeholder.querySelector("p");
+        if (p) p.textContent = "Silakan pilih nama karyawan di atas untuk memuat kartu presensi.";
+    }
+
+    if (loadingAnim) {
+        loadingAnim.classList.remove("hidden");
+    }
+
+    if (statusTextHeader) {
+        statusTextHeader.classList.remove("hidden");
+    }
+}
+
+/**
+ * Fungsi Utama: Memuat Gambar Kartu Presensi Apotek dari Drive
+ */
+function muatKartuPresensiApotekDrive() {
+    const selectElem = document.getElementById("gaji-pilih-karyawan-apotek");
+    const panggilName = selectElem ? selectElem.value : "";
+
+    if (!panggilName) return;
+
+    // 1. Jalankan Reset State & Tampilkan Animasi Loading terlebih dahulu
+    resetUIPenampilKartuApotek();
+
+    const placeholder = document.getElementById("placeholder-pdf-text-apotek");
+    const loadingAnim = document.getElementById("loading-pdf-animation-apotek");
+    const teksLoading = document.getElementById("teks-progres-loading-apotek");
+    const imgPreview = document.getElementById("iframe-preview-pdf-apotek");
+    const statusTextHeader = document.getElementById("status-loading-pdf-apotek");
+
+    if (teksLoading) {
+        teksLoading.textContent = `Mencari Kartu Presensi ${panggilName}...`;
+    }
+
+    const namaFormatted = MAP_NAMA_DRIVE_APOTEK[panggilName] || panggilName;
+    const namaSpace = namaFormatted.replace(/_/g, ' ');
+
+    // 2. Tembak API Apps Script
+    fetch(`${API_URL_DRIVE_KARTU_APOTEK}?action=getKartuPresensi&karyawan=${encodeURIComponent(panggilName)}`)
+        .then(res => res.json())
+        .then(result => {
+            if (result.status === "success" && Array.isArray(result.files) && result.files.length > 0) {
+                
+                // Filter pencarian nama (Cocokkan nama panggilan, nama underscore, maupun nama dengan spasi)
+                const filesKaryawan = result.files.filter(f => {
+                    const fn = (f.name || "").toLowerCase();
+                    return fn.includes(panggilName.toLowerCase()) || 
+                           fn.includes(namaFormatted.toLowerCase()) || 
+                           fn.includes(namaSpace.toLowerCase());
+                });
+
+                if (filesKaryawan.length > 0) {
+                    // Sortir berkas berdasarkan timestamp pembaharuan (terbaru di atas)
+                    filesKaryawan.sort((a, b) => {
+                        const timeA = a.updated ? new Date(a.updated).getTime() : 0;
+                        const timeB = b.updated ? new Date(b.updated).getTime() : 0;
+                        if (timeA !== timeB) {
+                            return timeB - timeA;
+                        }
+                        return b.name.localeCompare(a.name);
+                    });
+
+                    const fileTerbaru = filesKaryawan[0];
+                    // Buat timestamp acak untuk membongkar cache browser jika gambar diperbarui
+                    const cacheBuster = "&cb=" + new Date().getTime();
+                    const urlGambar = (fileTerbaru.url || `https://drive.google.com/thumbnail?id=${fileTerbaru.id}&sz=w1000`) + cacheBuster;
+
+                    // Pasang handler onload dan onerror sebelum menetapkan src
+                    imgPreview.onload = function() {
+                        if (loadingAnim) loadingAnim.classList.add("hidden");
+                        if (statusTextHeader) statusTextHeader.classList.add("hidden");
+                        imgPreview.classList.remove("hidden");
+                    };
+
+                    imgPreview.onerror = function() {
+                        tampilkanGagalKartuDrive(`Gagal memuat berkas gambar presensi untuk ${panggilName}.`);
+                    };
+
+                    // Setel URL gambar
+                    imgPreview.src = urlGambar;
+
+                } else {
+                    tampilkanGagalKartuDrive(`Kartu presensi untuk ${panggilName} belum tersedia di Drive.`);
+                }
+            } else {
+                tampilkanGagalKartuDrive(`Kartu presensi untuk ${panggilName} tidak ditemukan di Cloud.`);
+            }
+        })
+        .catch(err => {
+            console.error("Error fetching Kartu Presensi Apotek:", err);
+            tampilkanGagalKartuDrive("Terjadi gangguan jaringan ke Google Drive Cloud.");
+        });
+}
+
+/**
+ * Helper Tampilan Gagal / Error
+ */
+function tampilkanGagalKartuDrive(pesanError) {
+    const placeholder = document.getElementById("placeholder-pdf-text-apotek");
+    const loadingAnim = document.getElementById("loading-pdf-animation-apotek");
+    const statusTextHeader = document.getElementById("status-loading-pdf-apotek");
+    const imgPreview = document.getElementById("iframe-preview-pdf-apotek");
+
+    if (imgPreview) {
+        imgPreview.classList.add("hidden");
+    }
+    if (loadingAnim) {
+        loadingAnim.classList.add("hidden");
+    }
+    if (statusTextHeader) {
+        statusTextHeader.classList.add("hidden");
+    }
+    if (placeholder) {
+        placeholder.classList.remove("hidden");
+        const teks = placeholder.querySelector("p");
+        if (teks) teks.textContent = pesanError;
+    }
+}
+
+// Pasang Event Listener otomatis saat dokumen selesai dimuat
+document.addEventListener("DOMContentLoaded", function() {
+    const selectElem = document.getElementById("gaji-pilih-karyawan-apotek");
+    if (selectElem) {
+        selectElem.addEventListener("change", muatKartuPresensiApotekDrive);
+    }
+});
 </script>
 
 </body>
