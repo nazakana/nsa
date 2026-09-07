@@ -1739,11 +1739,11 @@ function renderChipDefisitJam(namaKaryawan, listRecord) {
     const itemDefisitList = [];
 
     listRecord.forEach(row => {
-        // PERBAIKAN: Baca berbagai variasi nama key/header dari Apps Script
-        const valDefisit = row.defisitJam || row["Defisit Jam"] || row.defisit_jam || row.defisit || "00:00";
-        const valPenggantian = row.penggantianJam || row["Penggantian Jam"] || row.penggantian_jam || row.penggantian || "00:00";
-        const valAlasan = row.alasanDefisitJam || row["Alasan Defisit Jam"] || row.alasanDefisit || row.alasan_defisit || row.alasan || "Tanpa Alasan";
-        const valTanggal = row.tanggal || row.Tanggal || row.tanggalRaw || "-";
+        // SESUAIKAN DENGAN FORMAT HASIL PARSING APPS SCRIPT (SNAKE_CASE)
+        const valDefisit = row.defisit_jam || row.defisitJam || "00:00";
+        const valPenggantian = row.penggantian_jam || row.penggantianJam || "00:00";
+        const valAlasan = row.alasan_defisit_jam || row.alasanDefisitJam || "Tanpa Alasan";
+        const valTanggal = row.tanggal || row.tanggalraw || "-";
 
         const mDefisit = jamKeMenit(valDefisit);
         const mGanti = jamKeMenit(valPenggantian);
@@ -1760,22 +1760,18 @@ function renderChipDefisitJam(namaKaryawan, listRecord) {
         }
     });
 
-    // Kalkulasi Sisa Defisit Bersih (Total Defisit - Total Penggantian)
     const sisaMenitDefisit = totalMenitDefisit - totalMenitPenggantian;
 
     if (sisaMenitDefisit <= 0) {
-        // Bebas Defisit / Lunas Tergantikan
         chipEl.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-xs";
         chipEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Hore! Kamu tidak punya defisit/utang jam`;
         listEl.classList.add("hidden");
         listEl.innerHTML = "";
     } else {
-        // Masih Punya Tunggakan Defisit
         const sisaFormat = menitKeJam(sisaMenitDefisit);
         chipEl.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider bg-rose-100 text-rose-800 border border-rose-300 shadow-xs";
         chipEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Peringatan: Kamu masih punya defisit jam (${sisaFormat})`;
 
-        // Render Rincian Daftar Tanggal Terkena Defisit
         let htmlList = `<p class="font-extrabold text-rose-900 border-b border-rose-200 pb-1 mb-1.5 flex items-center gap-1">
                             <i class="fa-solid fa-list-check"></i> Rincian Defisit Jam Belum Lunas:
                         </p><ul class="space-y-1">`;
