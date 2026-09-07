@@ -4580,6 +4580,70 @@ function uploadKartuApotekKeDrive() {
 }
 </script>
 
+<script>
+/**
+ * UTILITY: Membuka Modal Alert Kustom Fotokopi (Dinamis Sukses/Gagal)
+ * @param {string} tipe - 'sukses' atau 'error'
+ */
+function bukaAlertFotokopi(tipe, judul, deskripsi) {
+    const modal = document.getElementById('modal-alert-fotokopi');
+    const box = document.getElementById('fotokopi-box-content');
+    const iconBox = document.getElementById('fotokopi-alert-icon-box');
+    const icon = document.getElementById('fotokopi-alert-icon');
+    const judulElem = document.getElementById('fotokopi-alert-judul');
+    const deskripsiElem = document.getElementById('fotokopi-alert-deskripsi');
+    const btn = document.getElementById('fotokopi-alert-btn');
+
+    if (!modal || !box || !iconBox || !icon || !judulElem || !deskripsiElem || !btn) return;
+
+    // Setel konten teks
+    judulElem.innerHTML = judul;
+    deskripsiElem.innerHTML = deskripsi;
+
+    // Atur visual berdasarkan tipe respon cloud
+    if (tipe === 'sukses') {
+        // Tema Hijau Emerald khas Fotokopi
+        box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
+        iconBox.className = "mx-auto w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl animate-bounce border border-emerald-200";
+        icon.className = "fa-solid fa-cloud-arrow-up";
+        btn.className = "w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
+    } else {
+        // Tema Merah/Rose jika terjadi masalah koneksi
+        box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-rose-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
+        iconBox.className = "mx-auto w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center text-2xl animate-pulse border border-rose-200";
+        icon.className = "fa-solid fa-circle-exclamation";
+        btn.className = "w-full py-3 bg-gradient-to-r from-rose-500 to-red-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
+    }
+
+    // Aktifkan layout grid PWA
+    modal.classList.remove('hidden');
+    modal.classList.add('grid');
+    
+    setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+    }, 50);
+}
+
+/**
+ * UTILITY: Menutup Modal Alert Kustom Fotokopi
+ */
+function tutupAlertFotokopi() {
+    const modal = document.getElementById('modal-alert-fotokopi');
+    const box = document.getElementById('fotokopi-box-content');
+
+    if (!modal || !box) return;
+
+    box.classList.remove('scale-100', 'opacity-100');
+    box.classList.add('scale-95', 'opacity-0');
+
+    setTimeout(() => {
+        modal.classList.remove('grid');
+        modal.classList.add('hidden');
+    }, 300);
+}
+</script>
+
 <!-- MODAL ALAT BANTU BELANJA (MATERIAL UI ROUNDY CHIP) -->
 <div id="modalBelanjaBarang" class="nsa-modal-overlay">
     <div class="nsa-modal-card nsa-modal-large" style="border-radius: 32px; overflow: hidden; border: none; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);">
@@ -5358,6 +5422,29 @@ function uploadKartuApotekKeDrive() {
             </button>
         </div>
 
+    </div>
+</div>
+
+<!-- ================= MODAL ALERT UNIVERSAL CLOUD FOTOKOPI ================= -->
+<div id="modal-alert-fotokopi" class="fixed inset-0 z-[15000] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+    <div id="fotokopi-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
+        
+        <!-- Wadah Lingkaran Icon (Warna & Icon akan diatur dinamis lewat JS) -->
+        <div id="fotokopi-alert-icon-box" class="mx-auto w-16 h-16 rounded-full flex items-center justify-center text-2xl animate-bounce">
+            <i id="fotokopi-alert-icon" class="fa-solid"></i>
+        </div>
+
+        <!-- Wadah Teks Informasi -->
+        <div class="space-y-1">
+            <h3 id="fotokopi-alert-judul" class="text-lg font-black text-gray-900 uppercase tracking-wide leading-tight"></h3>
+            <p id="fotokopi-alert-deskripsi" class="text-xs font-bold text-gray-500 leading-relaxed px-2"></p>
+        </div>
+
+        <!-- Tombol Konfirmasi -->
+        <button type="button" onclick="tutupAlertFotokopi()" id="fotokopi-alert-btn"
+            class="w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all">
+            SAYA MENGERTI
+        </button>
     </div>
 </div>
 
