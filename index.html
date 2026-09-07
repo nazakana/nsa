@@ -1866,6 +1866,8 @@ function eksekusiPresensiApotek(namaKaryawan) {
     muatPeriodeKaryawanApotek(namaKaryawan);
 }
 
+let requestPeriodeApotek = null;
+
 function muatPeriodeKaryawanApotek(namaKaryawan) {
     const targetLabel = document.getElementById(`label-periode-${namaKaryawan}`);
     const targetGajiLabel = document.getElementById(`label-tglgaji-${namaKaryawan}`);
@@ -1873,40 +1875,102 @@ function muatPeriodeKaryawanApotek(namaKaryawan) {
     const listEl = document.getElementById(`detail-defisit-list-${namaKaryawan}`);
     const tglInput = document.getElementById("presensi-tanggal-apotek")?.value || "";
 
-    if (targetLabel) {
-        targetLabel.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-pink-600"></i> Memuat...`;
-    }
-    if (targetGajiLabel) {
-        targetGajiLabel.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-pink-600"></i>...`;
-    }
-    if (chipEl) {
-        chipEl.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider bg-slate-200 text-slate-700";
-        chipEl.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-pink-600"></i> Memeriksa Defisit...`;
+    // Batalkan request sebelumnya kalau masih berjalan
+    if (requestPeriodeApotek) {
+        requestPeriodeApotek.abort();
     }
 
-    // Ambil metadata sekaligus riwayat presensi dari Apps Script
-    fetch(`${API_URL_APOTEK}?sheetName=${namaKaryawan}&action=getMetaData&tanggal=${tglInput}`)
-        .then(res => res.json())
-        .then(result => {
-            if (result.status === "success") {
-                if (targetLabel && result.periode) targetLabel.textContent = result.periode;
-                if (targetGajiLabel && result.tanggalGaji) targetGajiLabel.textContent = result.tanggalGaji;
-                
-                // EKSEKUSI RENDER CHIP & RINCIAN LENGKAP
-                const listData = result.records || result.data || [];
-                renderChipDefisitJam(namaKaryawan, listData);
-            } else {
-                if (targetLabel) targetLabel.textContent = "Buku Aktif";
-                if (targetGajiLabel) targetGajiLabel.textContent = "-";
-                renderChipDefisitJam(namaKaryawan, []);
+    const controller = new AbortController();
+    requestPeriodeApotek = controller;
+
+    // Loading
+    if (targetLabel) {
+        targetLabel.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Memuat...`;
+    }
+
+    if (targetGajiLabel) {
+        targetGajiLabel.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ...`;
+    }
+
+    if (chipEl) {
+        chipEl.className = "text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-500";
+        chipEl.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Memeriksa...`;
+    }
+
+    fetch(
+        `${API_URL_APOTEK}?sheetName=${encodeURIComponent(namaKaryawan)}&action=getMetaData&tanggal=${encodeURIComponent(tglInput)}`,
+        {
+            signal: controller.signal
+        }
+    )
+    .then(res => {
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(result => {
+
+        // Pastikan response masih untuk karyawan yang sedang aktif
+        const namaAktif =
+            document.getElementById("presensi-karyawan-apotek")?.value;
+
+        if (namaAktif !== namaKaryawan) return;
+
+        if (result.status === "success") {
+
+            if (targetLabel) {
+                targetLabel.textContent = result.periode || "Buku Aktif";
             }
-        })
-        .catch(err => {
-            console.error("Gagal muat data presensi:", err);
-            if (targetLabel) targetLabel.textContent = "Buku Aktif";
-            if (targetGajiLabel) targetGajiLabel.textContent = "-";
+
+            if (targetGajiLabel) {
+                targetGajiLabel.textContent = result.tanggalGaji || "-";
+            }
+
+            const listData = result.records || result.data || [];
+
+            renderChipDefisitJam(
+                namaKaryawan,
+                Array.isArray(listData) ? listData : []
+            );
+
+        } else {
+
+            if (targetLabel) {
+                targetLabel.textContent = "Buku Aktif";
+            }
+
+            if (targetGajiLabel) {
+                targetGajiLabel.textContent = "-";
+            }
+
             renderChipDefisitJam(namaKaryawan, []);
-        });
+        }
+    })
+    .catch(err => {
+
+        // Abort bukan error
+        if (err.name === "AbortError") {
+            return;
+        }
+
+        console.error("Gagal muat data presensi:", err);
+
+        if (targetLabel) {
+            targetLabel.textContent = "Buku Aktif";
+        }
+
+        if (targetGajiLabel) {
+            targetGajiLabel.textContent = "-";
+        }
+
+        renderChipDefisitJam(namaKaryawan, []);
+    })
+    .finally(() => {
+        if (requestPeriodeApotek === controller) {
+            requestPeriodeApotek = null;
+        }
+    });
 }
 
 function perbaruiPeriodeOtomatisRealtime() {
@@ -3591,6 +3655,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+
+
 
 // =========================================================================
 // LOGIKA KARTU PRESENSI APOTEK NURJAYA (SEPARATE ID & ENGINE)
