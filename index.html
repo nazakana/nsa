@@ -4584,6 +4584,8 @@ function uploadKartuApotekKeDrive() {
 /**
  * UTILITY: Membuka Modal Alert Kustom Fotokopi (Dinamis Sukses/Gagal)
  * @param {string} tipe - 'sukses' atau 'error'
+ * @param {string} judul - Judul modal
+ * @param {string} deskripsi - Pesan detail
  */
 function bukaAlertFotokopi(tipe, judul, deskripsi) {
     const modal = document.getElementById('modal-alert-fotokopi');
@@ -4600,22 +4602,20 @@ function bukaAlertFotokopi(tipe, judul, deskripsi) {
     judulElem.innerHTML = judul;
     deskripsiElem.innerHTML = deskripsi;
 
-    // Atur visual berdasarkan tipe respon cloud
+    // Atur visual berdasarkan tipe respon
     if (tipe === 'sukses') {
-        // Tema Hijau Emerald khas Fotokopi
         box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
         iconBox.className = "mx-auto w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl animate-bounce border border-emerald-200";
         icon.className = "fa-solid fa-cloud-arrow-up";
         btn.className = "w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
     } else {
-        // Tema Merah/Rose jika terjadi masalah koneksi
         box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-rose-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
         iconBox.className = "mx-auto w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center text-2xl animate-pulse border border-rose-200";
         icon.className = "fa-solid fa-circle-exclamation";
         btn.className = "w-full py-3 bg-gradient-to-r from-rose-500 to-red-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
     }
 
-    // Aktifkan layout grid PWA
+    // Aktifkan layout modal
     modal.classList.remove('hidden');
     modal.classList.add('grid');
     
@@ -4642,6 +4642,21 @@ function tutupAlertFotokopi() {
         modal.classList.add('hidden');
     }, 300);
 }
+
+/**
+ * OVERRIDE: Menimpa alert bawaan browser
+ */
+window.alert = function(message) {
+    const msgString = String(message || '');
+    
+    // Kata kunci penentu tipe error
+    const isError = /gagal|error|salah|terjadi kesalahan|batal|invalid|failed/i.test(msgString);
+    
+    const tipe = isError ? 'error' : 'sukses';
+    const judul = isError ? 'Pemberitahuan' : 'Informasi';
+    
+    bukaAlertFotokopi(tipe, judul, msgString);
+};
 </script>
 
 <!-- MODAL ALAT BANTU BELANJA (MATERIAL UI ROUNDY CHIP) -->
@@ -5426,7 +5441,7 @@ function tutupAlertFotokopi() {
 </div>
 
 <!-- ================= MODAL ALERT UNIVERSAL CLOUD FOTOKOPI ================= -->
-<div id="modal-alert-fotokopi" class="fixed inset-0 z-[15000] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+<div id="modal-alert-fotokopi" class="fixed inset-0 z-[30000] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
     <div id="fotokopi-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
         
         <!-- Wadah Lingkaran Icon (Warna & Icon akan diatur dinamis lewat JS) -->
