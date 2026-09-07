@@ -1698,16 +1698,16 @@ function eksekusiPresensiFotokopi(namaKaryawan) {
 const API_URL_APOTEK = "https://script.google.com/macros/s/AKfycby55pIwKb9kHh9ba2xmKD_scX7jzIj43ll5rpcGU5_AjpTwMnD42EN4140WZxhf0duL/exec";
 
 // =========================================================================
-// HELPER KALKULASI DEFISIT & PENGGANTIAN JAM REALTIME
+// HELPER KALKULASI DEFISIT & PENGGANTIAN JAM REALTIME (REVISI ACCURATE)
 // =========================================================================
 
 // Helper Konversi HH:MM ke Total Menit
 function jamKeMenit(strJam) {
-    if (!strJam || strJam === "-" || strJam === "00:00") return 0;
+    if (!strJam || strJam === "-" || strJam === "00:00" || strJam === "0") return 0;
     const parts = String(strJam).trim().split(":");
     if (parts.length < 2) return 0;
-    const jam = parseInt(parts[0]) || 0;
-    const menit = parseInt(parts[1]) || 0;
+    const jam = parseInt(parts[0], 10) || 0;
+    const menit = parseInt(parts[1], 10) || 0;
     return (jam * 60) + menit;
 }
 
@@ -1734,28 +1734,33 @@ function renderChipDefisitJam(namaKaryawan, listRecord) {
         return;
     }
 
-    // 1. Hitung Akumulasi Total Menit Defisit & Penggantian
     let totalMenitDefisit = 0;
     let totalMenitPenggantian = 0;
     const itemDefisitList = [];
 
     listRecord.forEach(row => {
-        const mDefisit = jamKeMenit(row.defisitJam);
-        const mGanti = jamKeMenit(row.penggantianJam);
+        // PERBAIKAN: Baca berbagai variasi nama key/header dari Apps Script
+        const valDefisit = row.defisitJam || row["Defisit Jam"] || row.defisit_jam || row.defisit || "00:00";
+        const valPenggantian = row.penggantianJam || row["Penggantian Jam"] || row.penggantian_jam || row.penggantian || "00:00";
+        const valAlasan = row.alasanDefisitJam || row["Alasan Defisit Jam"] || row.alasanDefisit || row.alasan_defisit || row.alasan || "Tanpa Alasan";
+        const valTanggal = row.tanggal || row.Tanggal || row.tanggalRaw || "-";
+
+        const mDefisit = jamKeMenit(valDefisit);
+        const mGanti = jamKeMenit(valPenggantian);
 
         totalMenitDefisit += mDefisit;
         totalMenitPenggantian += mGanti;
 
         if (mDefisit > 0) {
             itemDefisitList.push({
-                tanggal: row.tanggal || "-",
-                durasi: row.defisitJam,
-                alasan: row.alasanDefisitJam || "Tanpa Alasan"
+                tanggal: valTanggal,
+                durasi: valDefisit,
+                alasan: valAlasan
             });
         }
     });
 
-    // 2. Kalkulasi Sisa Defisit Bersih (Defisit - Penggantian)
+    // Kalkulasi Sisa Defisit Bersih (Total Defisit - Total Penggantian)
     const sisaMenitDefisit = totalMenitDefisit - totalMenitPenggantian;
 
     if (sisaMenitDefisit <= 0) {
