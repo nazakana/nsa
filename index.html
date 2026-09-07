@@ -2156,6 +2156,7 @@ function simpanTimePickerApotek() {
 }
 
 // Handler Submit Form Apotek
+// Handler Submit Form Apotek
 document.addEventListener("DOMContentLoaded", function() {
     const formApotek = document.getElementById("form-presensi-apotek");
     const inputTanggalApotek = document.getElementById("presensi-tanggal-apotek");
@@ -2173,6 +2174,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
             if (!namaKaryawan) return alert("Pindai wajah terlebih dahulu!");
 
+            // =========================================================
+            // VALIDASI MANDATORI KONDISIONAL
+            // =========================================================
+            const statusDropdown = document.getElementById("presensi-dropdown-apotek")?.value || "";
+            const jamKhususVal = document.getElementById("presensi-jam-khusus")?.value?.trim() || "";
+            const defisitJamVal = document.getElementById("presensi-defisit-jam")?.value?.trim() || "";
+            const alasanDefisitVal = document.getElementById("presensi-alasan-defisit")?.value?.trim() || "";
+
+            // 1. Validasi Rentang Jam Khusus jika Dropdown memilih 'Khusus'
+            if (statusDropdown === "Khusus" && (!jamKhususVal || jamKhususVal === "")) {
+                alert("Gagal menyimpan: Anda memilih status 'Khusus', harap atur Rentang Jam Khusus terlebih dahulu!");
+                bukaModalRangeJamKhusus(); // Langsung bukakan modal picker jam khusus agar user memicu input
+                return;
+            }
+
+            // 2. Validasi Alasan Defisit jika Defisit Jam terisi dan bukan '00:00'
+            if (defisitJamVal !== "" && defisitJamVal !== "00:00" && defisitJamVal !== "0" && !alasanDefisitVal) {
+                alert("Gagal menyimpan: Anda memasukkan Defisit Jam Kerja (" + defisitJamVal + "). Harap isi Alasan Defisit Jam terlebih dahulu!");
+                document.getElementById("presensi-alasan-defisit")?.focus();
+                return;
+            }
+            // =========================================================
+
             btnSubmit.setAttribute("disabled", "disabled");
             btnSubmit.classList.add("opacity-50", "cursor-not-allowed");
             btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Menyimpan ke Cloud...`;
@@ -2186,10 +2210,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 tanggalRaw: inputTanggalApotek.value,
                 periode: document.getElementById(`label-periode-${namaKaryawan}`)?.textContent || "",
                 tanggal: tanggalFormatted,
-                presensi: document.getElementById("presensi-dropdown-apotek").value,
-                jamKhusus: document.getElementById("presensi-jam-khusus")?.value || "",
-                defisitJam: document.getElementById("presensi-defisit-jam").value || "00:00",
-                alasanDefisitJam: document.getElementById("presensi-alasan-defisit").value || "",
+                presensi: statusDropdown,
+                jamKhusus: jamKhususVal,
+                defisitJam: defisitJamVal || "00:00",
+                alasanDefisitJam: alasanDefisitVal,
                 penggantianJam: document.getElementById("presensi-penggantian-jam").value || "00:00"
             };
 
@@ -2201,7 +2225,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(res => res.json())
             .then(result => {
                 if (result.status === "success") {
-                    alert(`Presensi ${namaKaryawan} tanggal ${inputTanggalApotek.value} berhasil disimpan! Modal tetap terbuka untuk pengisian tanggal berikutnya.`);
+                    alert(`Presensi ${namaKaryawan} tanggal ${inputTanggalApotek.value} berhasil disimpan! Sesi ${namaKaryawan} akan tetap terbuka untuk pengisian tanggal berikutnya.`);
                     
                     // Reset field-field input tanpa menutup modal presensi
                     document.getElementById("presensi-jam-khusus").value = "";
@@ -5124,7 +5148,7 @@ window.alert = function(message) {
                     <!-- Input Dynamic Jam Khusus (Sembunyi secara default) -->
                     <div id="container-jam-khusus-apotek" class="hidden pt-2 border-t border-pink-200/60 animate-fade-in space-y-1.5">
                         <label for="presensi-jam-khusus" class="block text-xs font-black text-pink-900 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-clock text-pink-600"></i> Rentang Jam Khusus
+                            <i class="fa-solid fa-clock text-pink-600"></i> Rentang Jam Khusus <span class="text-rose-500">*</span>
                         </label>
                         <input type="text" id="presensi-jam-khusus" readonly onclick="bukaModalRangeJamKhusus()" placeholder="Klik untuk atur jam (Contoh: 11:00-21:00)" 
                             class="w-full px-4 py-3 bg-white border-2 border-pink-300 rounded-[18px] focus:outline-none focus:border-pink-600 font-black text-sm text-pink-900 cursor-pointer transition-colors duration-200 h-[48px]">
@@ -5441,7 +5465,7 @@ window.alert = function(message) {
 </div>
 
 <!-- ================= MODAL ALERT UNIVERSAL CLOUD FOTOKOPI ================= -->
-<div id="modal-alert-fotokopi" class="fixed inset-0 z-[30000] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+<div id="modal-alert-fotokopi" class="fixed inset-0 z-[15000] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
     <div id="fotokopi-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
         
         <!-- Wadah Lingkaran Icon (Warna & Icon akan diatur dinamis lewat JS) -->
