@@ -13,6 +13,7 @@
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
@@ -451,16 +452,21 @@ document.addEventListener('keydown', function(event) {
             <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
         </button>
 
-        <!-- Presensi Button -->
-        <button onclick="showTab('presensi')" id="btn-presensi" 
-            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90" data-search="presensi absensi jadwal kerja">
-            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
-            
-            <i class="fa-solid fa-id-badge text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Presensi</span>
-            
-            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
-        </button>
+        <!-- Slip Gaji -->
+<button onclick="showTab('presensi')" id="btn-presensi" 
+    class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90" data-search="presensi absensi jadwal kerja">
+    <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
+    
+    <!-- SVG Icon Slip Gaji / Money Check / Receipt -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300 fill-slate-500 group-hover:fill-slate-700 group-[.active]:fill-emerald-700 group-[.active]:-translate-y-0.5 relative z-10">
+        <!-- FontAwesome Free Solid: File Invoice Dollar / Receipt -->
+        <path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-288-160 0c-17.7 0-32-14.3-32-32L320 0 64 0zM256 0l0 128 128 0L256 0zM128 224c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm0 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm32 64l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-96 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/>
+    </svg>
+
+    <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
+    
+    <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+</button>
 
         <!-- Profil Button -->
         <button onclick="showTab('about')" id="btn-about" 
@@ -1278,7 +1284,7 @@ function closePdfModal() {
 </script>
 
 
-<!-- KONTEN TAB: PRESENSI STAF -->
+<!-- KONTEN TAB: SLIP GAJI -->
 <div id="tab-presensi" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
     
     <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
@@ -1289,49 +1295,40 @@ function closePdfModal() {
                 <div class="w-2 h-8 bg-green-500 rounded-full"></div>
                 <div>
                     <h3 class="text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight flex items-center gap-2">
-                        <i class="fa-solid fa-id-card-clip text-green-600"></i> Manajemen Presensi
+                        <i class="fa-solid fa-id-card-clip text-green-600"></i> Asisten Slip Gaji
                     </h3>
                     <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Nurjaya Abadi Photocopy</p>
                 </div>
             </div>
-            <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-1 rounded-full">
-                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <small class="text-green-700 text-[10px] font-black uppercase tracking-wider">Form Siap</small>
-            </div>
+           
         </div>
 
-        <!-- MENU UTAMA / NAVIGASI AWAL -->
-        <div class="px-6 md:px-8 pt-6 pb-6 space-y-4">
-            <div class="p-4 bg-gray-50 border-2 border-gray-200 rounded-[22px] flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div class="text-center sm:text-left">
-                    <p class="text-xs font-black text-gray-800 uppercase tracking-wider">FORM PRESENSI KARYAWAN</p>
-                    <p class="text-[11px] text-gray-500 font-bold">Menu untuk isi presensi karyawan setiap hari, dan opsi pembuatan slip gaji (Khusus Owner Nurjaya)</p>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-3 w-full sm:w-auto min-w-[280px] sm:min-w-[380px]">
-                    <!-- Tombol Kartu Presensi (Ditambahkan ID btn-buka-form-presensi) -->
-                    <button type="button" id="btn-buka-form-presensi" class="group relative px-3 py-3.5 sm:px-4 sm:py-3 rounded-2xl bg-gradient-to-br from-emerald-600 to-green-700 hover:from-emerald-500 hover:to-green-600 text-white shadow-md hover:shadow-xl flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden">
-                        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
-                            <i class="fa-solid fa-address-card text-sm sm:text-base"></i>
-                        </div>
-                        <div class="flex flex-col min-w-0 w-full">
-                            <span class="font-black text-[11px] sm:text-[13px] tracking-wide truncate w-full">Kartu Presensi</span>
-                            <span class="text-[8px] sm:text-[10px] font-medium text-green-100/75 tracking-wider uppercase mt-0.5 block truncate">Untuk Karyawan</span>
-                        </div>
-                    </button>
-                    
-                    <button type="button" id="btn-buka-modal-gaji" class="group relative px-3 py-3.5 sm:px-4 sm:py-3 rounded-2xl bg-gradient-to-br from-rose-700 to-red-800 hover:from-rose-600 hover:to-red-700 text-white shadow-md hover:shadow-xl flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden dynamic-btn">
-                        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
-                            <i class="fa-solid fa-file-invoice-dollar text-sm sm:text-base"></i>
-                        </div>
-                        <div class="flex flex-col min-w-0 w-full">
-                            <span class="font-black text-[11px] sm:text-[13px] tracking-wide truncate w-full">Buat Slip Gaji</span>
-                            <span class="text-[8px] sm:text-[10px] font-medium text-rose-200/75 tracking-wider uppercase mt-0.5 block truncate">Untuk Owner</span>
-                        </div>
-                    </button>
-                </div>
-            </div>
+
+
+
+
+        <!-- MENU UTAMA SLIP GAJI -->
+<div class="px-6 md:px-8 pt-6 pb-6 space-y-4">
+    <div class="p-4 bg-gray-50 border-2 border-gray-200 rounded-[22px] flex flex-col gap-4">
+        <div>
+            <p class="text-[11px] text-gray-500 font-bold text-center sm:text-left">Menu khusus Owner untuk proses pembuatan Slip Gaji Karyawan.</p>
         </div>
+        
+        <!-- Tombol dibuat full width (w-full) -->
+        <button type="button" id="btn-buka-modal-gaji" class="w-full group relative px-4 py-3.5 rounded-2xl bg-gradient-to-br from-rose-700 to-red-800 hover:from-rose-600 hover:to-red-700 text-white shadow-md hover:shadow-xl flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden dynamic-btn">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+                <i class="fa-solid fa-file-invoice-dollar text-sm sm:text-base"></i>
+            </div>
+            <div class="flex flex-col text-left min-w-0">
+                <span class="font-black text-[12px] sm:text-[14px] tracking-wide truncate">Buat Slip Gaji</span>
+                <span class="text-[9px] sm:text-[10px] font-medium text-rose-200/75 tracking-wider uppercase block truncate">Untuk Owner</span>
+            </div>
+        </button>
+    </div>
+</div>
+
+
+
 
         <!-- CONTAINER FORM PRESENSI (Secara default tersembunyi dengan class hidden & fade-in) -->
         <div id="wrapper_form_presensi" class="p-6 md:px-8 md:pb-8 space-y-6 text-gray-700 hidden fade-in border-t border-gray-100">
@@ -1861,7 +1858,7 @@ function closePdfModal() {
                 'dashboard': ['NSA (Nurjaya Smart Archive)', 'Arsip Operasional Nurjaya Abadi'],
                 'dailyinput': ['Daily Input', 'Formulir Laporan Operasional Harian'], // Data untuk tab baru
                 'archive': ['Arsip Digital Laporan', 'Pusat Dokumentasi Keuangan'],
-                'presensi': ['Presensi Karyawan', 'Monitor Staf Nurjaya Abadi'],
+                'presensi': ['Asisten Slip Gaji', 'Menu Khusus Pembuatan Slip Gaji'],
                 'calendar': ['Jadwal & Shift Kerja', 'Pengaturan Operasional Toko'],
                 'about': ['Profil Nurjaya Abadi', 'Informasi Kepemilikan & Manajemen']
             };
@@ -4564,7 +4561,6 @@ function pemicuTombolSinkronasi() {
 
 
 
-
 			
 <script>
 // GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
@@ -5001,6 +4997,7 @@ function tutupTentangAplikasi() {
     }
 }
 </script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
@@ -6630,7 +6627,7 @@ function tutupModalBK_Wrapper() {
 				
 				
 				
-				
+				<!-- CONTAINER Penampil Gambar Presensi dari Drive  -->
 				<div class="bg-white border-2 border-dashed border-slate-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-xl w-full aspect-square">
     
     <div id="placeholder-pdf-text" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
@@ -7947,6 +7944,7 @@ if (btnGenerateSlip) {
         let namaLengkap = "Karyawan";
         if (karyawanAktif === "Dadan") namaLengkap = "Dadan Nurfaizal";
         if (karyawanAktif === "Cahya") namaLengkap = "M. Cahya Ardiansyah";
+		if (karyawanAktif === "Syamsi") namaLengkap = "Syamsi Nurhakim";
         if (pvNamaKaryawan) pvNamaKaryawan.innerText = namaLengkap;
 
         // 2. Tarik Data Periode Dokumen
@@ -8128,6 +8126,9 @@ if (btnKirimWaReal) {
         } else if (karyawanTerpilih === "Dadan") {
             namaLengkapKaryawan = "Dadan Nurfaizal";
             nomorWa = "6283130578886";
+        } else if (karyawanTerpilih === "Syamsi") {
+            namaLengkapKaryawan = "Syamsi Nurhakim";
+            nomorWa = "6282126333381";
         } else {
             namaLengkapKaryawan = "Karyawan";
             let inputNomor = prompt("Nomor WA karyawan tidak dikenal. Masukkan manual (Format: 628xxx):", "628");
