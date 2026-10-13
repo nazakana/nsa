@@ -3790,18 +3790,21 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
         const m = String(sekarang.getMonth() + 1).padStart(2, '0');
         const y = sekarang.getFullYear();
         
-        const tanggalHariIniStr = `${d}/${m}/${y}`; // Format baku: "13/10/2026"
-        const tanggalTampilModal = `${d}.${m}.${y}`; // Format tampilan: "13.10.2026"
+        const tanggalHariIniStr = `${d}/${m}/${y}`; // Format: "13/10/2026"
+        const tanggalTampilModal = `${d}.${m}.${y}`; // Format UI: "13.10.2026"
         
         const daftarBulan = [
             "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
             "Juli", "Agustus", "September", "Oktober", "November", "Desember"
         ];
         
-        // Tentukan nama sheet target jika parameter kosong
-        const sheetTargetBulan = (namaBulanTarget && namaBulanTarget.trim()) 
-            ? namaBulanTarget.replace(/\s+/g, '') 
-            : `${daftarBulan[sekarang.getMonth()]}${y}`;
+        // Spreadsheet B butuh nama sheet DENGAN SPASI (contoh: "Oktober 2026")
+        const bulanB = (namaBulanTarget && namaBulanTarget.trim()) 
+            ? namaBulanTarget.trim() 
+            : `${daftarBulan[sekarang.getMonth()]} ${y}`;
+
+        // Spreadsheet A butuh nama sheet TANPA SPASI (contoh: "Oktober2026")
+        const bulanA = bulanB.replace(/\s+/g, '');
 
         // Tampilkan Modal Progress
         if (modalProgress) {
@@ -3812,13 +3815,13 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
             modalProgress.classList.remove("hidden");
         }
 
-        // 2. Tarik data rekap bulan berjalan dari Spreadsheet B
-        const responseB = await fetch(`${API_URL_SPREADSHEET_B}?bulan=${encodeURIComponent(sheetTargetBulan)}`);
+        // 2. Tarik data dari Spreadsheet B menggunakan nama "Oktober 2026"
+        const responseB = await fetch(`${API_URL_SPREADSHEET_B}?bulan=${encodeURIComponent(bulanB)}`);
         const resultB = await responseB.json();
 
         if (resultB.status !== "success" || !resultB.data || resultB.data.length === 0) {
             if (modalProgress) modalProgress.classList.add("hidden");
-            bukaAlertFotokopi("error", "Data Tidak Ditemukan", `Sheet rekap [${sheetTargetBulan}] di Spreadsheet B belum dibuat!`);
+            bukaAlertFotokopi("error", "Data Tidak Ditemukan", `Sheet rekap [${bulanB}] di Spreadsheet B belum dibuat!`);
             return;
         }
 
@@ -3866,7 +3869,7 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
 
         const payloadData = new URLSearchParams();
         payloadData.append("tanggal", itemHariIni.hari_tanggal);
-        payloadData.append("bulan_target", sheetTargetBulan);
+        payloadData.append("bulan_target", bulanA); // Dikirim ke Spreadsheet A TANPA SPASI
         payloadData.append("pendapatan_kotor", pendapatanKotorVal);
         payloadData.append("meterai_terjual", meteraiTerjualVal);
         payloadData.append("meterai_terjual_qris", meteraiQrisVal);
