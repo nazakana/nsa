@@ -146,40 +146,38 @@
         box-shadow: 0 8px 32px rgba(0,0,0,0.03);
     }
 
-    .header-banner {
+.header-banner {
         width: 100%;
-        height: 340px;
+        height: 150px;
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, var(--bg-base) 100%),
                     url('https://lh3.googleusercontent.com/d/1jOnARlmFMuKn3dxJDQh1YSJN-u52dTCT') center/cover;
         position: relative;
         display: flex;
         align-items: flex-end;
-        padding: 0 3rem 4.5rem;
+        padding: 0 2rem 1.75rem;
     }
 
     /* FIX BOTNAV ITEM & FLOATING CAPSULE TRANSPARENCY */
-    /* FIX BOTNAV ITEM & FLOATING CAPSULE TRANSPARENCY */
-aside {
-    background: transparent !important;
-    background-color: transparent !important;
-}
+    aside {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
 
-.nav-link {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #576574;
-    font-weight: 600;
-    background: transparent !important;
-    box-shadow: none !important;
-}
+    .nav-link {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #576574;
+        font-weight: 600;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
 
-/* Aktifkan kembali chip hijau di tombol aktif */
-.nav-link.active .nav-pill {
-    display: block !important;
-    opacity: 1 !important;
-    transform: scale(1) !important;
-    background-color: rgba(16, 185, 129, 0.18) !important; /* Hijau emerald soft */
-}
-
+    /* Aktifkan kembali chip hijau di tombol aktif */
+    .nav-link.active .nav-pill {
+        display: block !important;
+        opacity: 1 !important;
+        transform: scale(1) !important;
+        background-color: rgba(16, 185, 129, 0.18) !important; /* Hijau emerald soft */
+    }
 
     .main-content {
         flex: 1;
@@ -284,8 +282,8 @@ aside {
         }
         
         .header-banner { 
-            height: 260px; 
-            padding: 0 1.5rem 3.5rem; 
+            height: 180px; /* Disesuaikan agar pendek di layar HP */
+            padding: 0 1.5rem 1.5rem; 
         }
         
         #page-title { 
@@ -361,20 +359,22 @@ aside {
     .fade-in { animation: fadeIn 0.5s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 	
-	/* Container pembungkus grafik luar */
-#container-canvas {
-    width: 100% !important;
-    overflow-x: auto !important; /* Wajib: Aktifkan scroll horizontal */
-    overflow-y: hidden !important;
-    -webkit-overflow-scrolling: touch; /* Biar scroll di HP lancar/smooth */
-}
+    /* Container pembungkus grafik luar */
+    #container-canvas {
+        width: 100% !important;
+        overflow-x: auto !important; /* Wajib: Aktifkan scroll horizontal */
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch; /* Biar scroll di HP lancar/smooth */
+    }
 
-/* Kunci elemen di dalamnya agar bisa melebar melampaui layar HP */
-#wrapper-chart-inner {
-    display: block !important;
-    position: relative !important;
-    height: 220px !important; /* Sesuaikan tinggi grafik */
-}
+    /* Kunci elemen di dalamnya agar bisa melebar melampaui layar HP */
+    #wrapper-chart-inner {
+        display: block !important;
+        position: relative !important;
+        height: 220px !important; /* Sesuaikan tinggi grafik */
+    }
+	
+	
 </style>
 
 <script>
@@ -485,15 +485,19 @@ document.addEventListener('keydown', function(event) {
 		
 <main class="main-content">
    <!-- HEADER -->
-	<div class="header-banner">
+<div class="header-banner">
     <div class="flex flex-col md:flex-row md:items-end justify-between w-full">
-    <div class="fade-in">
-                    <h2 class="text-white/80 text-[10px] md:text-sm font-bold tracking-widest uppercase mb-1 md:mb-2">Dashboard System</h2>
-                    <h1 id="page-title" class="text-white text-2xl md:text-5xl font-black leading-tight drop-shadow-md">NSA <br> (Nurjaya Smart Archive)</h1>
-                    <p id="page-subtitle" class="text-white/70 font-bold mt-2 text-sm md:text-xl">Arsip Operasional Nurjaya Abadi</p>
-                </div>
-            </div>
-			</div>
+        <div class="fade-in">
+            <h2 class="text-white/80 text-[10px] md:text-sm font-bold tracking-widest uppercase mb-1 md:mb-2">Dashboard System</h2>
+            
+            <h1 id="page-title" class="text-white text-2xl md:text-4xl font-black leading-tight drop-shadow-md">
+                NSA (Nurjaya Smart Archive)
+            </h1>
+            
+            <p id="page-subtitle" class="text-white/70 font-bold mt-2 text-sm md:text-xl">Arsip Operasional Nurjaya Abadi</p>
+        </div>
+    </div>
+</div>
 
 
 
@@ -502,44 +506,57 @@ document.addEventListener('keydown', function(event) {
 <!-- CONTAINER UTAMA DASHBOARD -->
 <div id="tab-dashboard" class="tab-content px-4 py-2 sm:p-6 md:p-10 fade-in" style="font-family: sans-serif;">
     
-    <!-- HEADER INFORMASI & NOTIFIKASI -->
-<div class="pt-2 pb-3 max-w-md mx-auto text-center"> 
-    <!-- Wadah Ikon Notifikasi dengan Efek Radar Ping Loop -->
-    <div class="relative inline-flex mb-2">
-        <!-- Lingkaran Gelombang Radar Ping (Looping) -->
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-2xl bg-emerald-400/50 opacity-75"></span>
+    <!-- HEADER INFORMASI & NOTIFIKASI + BADGE BULAN DINAMIS -->
+    <div class="pt-2 pb-4 max-w-md md:max-w-5xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-100/80 mb-4">
         
-        <!-- Box Utama Ikon -->
-        <div class="relative inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30">
-            <!-- Ikon Lonceng Bergerak (Shake Animation Loop) -->
-            <i class="fa-solid fa-bell text-xl fa-shake" style="--fa-animation-duration: 2.5s;"></i>
-            
-            <!-- Indikator Titik Notifikasi Merah -->
-            <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-rose-500 border-2 border-white"></span>
-            </span>
+        <!-- Sisi Kiri: Lonceng di Atas (HP) / Sejajar (PC) -->
+        <div class="flex flex-col md:flex-row items-center md:items-center gap-3.5 text-center md:text-left">
+            <!-- Wadah Ikon Notifikasi dengan Efek Radar Ping Loop -->
+            <div class="relative inline-flex flex-shrink-0 mb-1 md:mb-0">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-2xl bg-emerald-400/50 opacity-75"></span>
+                <div class="relative inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30">
+                    <i class="fa-solid fa-bell text-xl fa-shake" style="--fa-animation-duration: 2.5s;"></i>
+                    <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-rose-500 border-2 border-white"></span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Judul & Subtitle -->
+            <div>
+                <h3 class="text-xl md:text-2xl font-black uppercase tracking-tight text-slate-800">
+                    Informasi Terbaru
+                </h3>
+                <p class="text-xs text-slate-500 font-medium mt-0.5">Pilih menu di bawah untuk melihat rincian data</p>
+            </div>
         </div>
+
+        <!-- Sisi Kanan: Badge Ikhtisar Bulan (Tone Senada / Emerald Soft) -->
+        <div class="self-center md:self-auto">
+            <div class="inline-flex items-center gap-2.5 px-4 py-2 bg-gradient-to-r from-emerald-50 via-teal-50/50 to-white border-2 border-emerald-400/80 rounded-2xl shadow-sm">
+                <div class="w-7 h-7 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xs shadow-sm flex-shrink-0">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+                <div class="flex flex-col text-left leading-none">
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-emerald-700/80">Periode Aktif</span>
+                    <span id="badgeBulanDinamis" class="text-xs md:text-sm font-black uppercase tracking-wide text-emerald-900 mt-0.5">
+                        Oktober 2026
+                    </span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Judul & Subtitle -->
-    <h3 class="text-xl md:text-2xl font-black uppercase tracking-tight text-slate-800">
-        Informasi Terbaru
-    </h3>
-    <p class="text-xs text-slate-500 font-medium mt-0.5">Pilih menu di bawah untuk melihat rincian data</p>
-</div>
-
-    <!-- MENU 3 TOMBOL UTAMA (GAYA iOS CONTROL CENTER DENGAN ANIMASI LOOP & CHIP SOLID) -->
-    <div class="max-w-md mx-auto flex flex-col gap-3.5 my-2">
+    <!-- MENU 3 TOMBOL UTAMA (RESPONSIF: 1 KOLOM DI HP, 3 KOLOM DI PC) -->
+    <div class="max-w-md md:max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-3.5 my-2">
         
         <!-- Tombol 1: Pendapatan Terbaru (Aksen Emerald Mint) -->
         <button onclick="bukaModal('modal-pendapatan')" class="group relative overflow-hidden p-4 rounded-[24px] border-2 border-emerald-400/90 bg-gradient-to-r from-emerald-100/90 via-emerald-50/70 to-white backdrop-blur-md shadow-[0_6px_20px_rgba(16,185,129,0.15)] hover:shadow-[0_8px_25px_rgba(16,185,129,0.25)] hover:border-emerald-500 transition-all duration-300 text-left flex items-center gap-3.5 active:scale-[0.98]">
-            <!-- Animated Icon Box -->
             <div class="w-12 h-12 rounded-[18px] bg-gradient-to-br from-emerald-500 to-green-600 text-white flex-shrink-0 flex items-center justify-center text-xl shadow-md shadow-emerald-500/30 group-hover:scale-105 transition-transform duration-300">
                 <i class="fa-solid fa-wallet fa-bounce" style="--fa-animation-duration: 2.5s;"></i>
             </div>
-            
-            <!-- Area Teks Utama (Bebas Potong) -->
             <div class="flex-grow min-w-0 pr-1">
                 <h4 class="text-sm sm:text-base font-black text-gray-900 leading-tight group-hover:text-emerald-700 transition-colors">
                     Pendapatan Terbaru
@@ -548,8 +565,6 @@ document.addEventListener('keydown', function(event) {
                     Cek rincian pemasukan, meterai & tabungan
                 </p>
             </div>
-
-            <!-- Sisi Kanan: Solid Chip & Chevron -->
             <div class="flex flex-col items-end justify-center gap-1.5 flex-shrink-0">
                 <span class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-emerald-600 text-white rounded-lg shadow-sm">
                     LAPORAN
@@ -562,12 +577,9 @@ document.addEventListener('keydown', function(event) {
 
         <!-- Tombol 2: Progres Harian (Aksen Teal Forest) -->
         <button onclick="bukaModal('modal-harian')" class="group relative overflow-hidden p-4 rounded-[24px] border-2 border-teal-400/90 bg-gradient-to-r from-teal-100/90 via-teal-50/70 to-white backdrop-blur-md shadow-[0_6px_20px_rgba(20,184,166,0.15)] hover:shadow-[0_8px_25px_rgba(20,184,166,0.25)] hover:border-teal-500 transition-all duration-300 text-left flex items-center gap-3.5 active:scale-[0.98]">
-            <!-- Animated Icon Box -->
             <div class="w-12 h-12 rounded-[18px] bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex-shrink-0 flex items-center justify-center text-xl shadow-md shadow-teal-500/30 group-hover:scale-105 transition-transform duration-300">
                 <i class="fa-solid fa-chart-line fa-beat" style="--fa-animation-duration: 2s;"></i>
             </div>
-            
-            <!-- Area Teks Utama (Bebas Potong) -->
             <div class="flex-grow min-w-0 pr-1">
                 <h4 class="text-sm sm:text-base font-black text-gray-900 leading-tight group-hover:text-teal-700 transition-colors">
                     Progres Harian
@@ -576,8 +588,6 @@ document.addEventListener('keydown', function(event) {
                     Statistik pendapatan kotor bulan ini
                 </p>
             </div>
-
-            <!-- Sisi Kanan: Solid Chip & Chevron -->
             <div class="flex flex-col items-end justify-center gap-1.5 flex-shrink-0">
                 <span class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-teal-600 text-white rounded-lg shadow-sm">
                     GRAFIK
@@ -590,12 +600,9 @@ document.addEventListener('keydown', function(event) {
 
         <!-- Tombol 3: Progres Bulanan (Aksen Bright Lime-Green) -->
         <button onclick="bukaModal('modal-bulanan')" class="group relative overflow-hidden p-4 rounded-[24px] border-2 border-green-400/90 bg-gradient-to-r from-green-100/90 via-green-50/70 to-white backdrop-blur-md shadow-[0_6px_20px_rgba(34,197,94,0.15)] hover:shadow-[0_8px_25px_rgba(34,197,94,0.25)] hover:border-green-500 transition-all duration-300 text-left flex items-center gap-3.5 active:scale-[0.98]">
-            <!-- Animated Icon Box -->
             <div class="w-12 h-12 rounded-[18px] bg-gradient-to-br from-green-500 to-lime-600 text-white flex-shrink-0 flex items-center justify-center text-xl shadow-md shadow-green-500/30 group-hover:scale-105 transition-transform duration-300">
                 <i class="fa-solid fa-chart-column fa-bounce" style="--fa-animation-duration: 2.8s;"></i>
             </div>
-            
-            <!-- Area Teks Utama (Bebas Potong) -->
             <div class="flex-grow min-w-0 pr-1">
                 <h4 class="text-sm sm:text-base font-black text-gray-900 leading-tight group-hover:text-green-700 transition-colors">
                     Progres Bulanan
@@ -604,8 +611,6 @@ document.addEventListener('keydown', function(event) {
                     Tren akumulasi data spreadsheet
                 </p>
             </div>
-
-            <!-- Sisi Kanan: Solid Chip & Chevron -->
             <div class="flex flex-col items-end justify-center gap-1.5 flex-shrink-0">
                 <span class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-green-600 text-white rounded-lg shadow-sm">
                     GRAFIK
@@ -619,6 +624,9 @@ document.addEventListener('keydown', function(event) {
     </div>
 
 </div> <!-- PENUTUP TAB DASHBOARD -->
+
+
+
 
 
 <!-- ==================== POPUP / MODAL CONTAINERS (DI LUAR FADE-IN) ==================== -->
@@ -2362,91 +2370,111 @@ function toggleGatePass() {
 
 
 
-		<!-- SESI TOMBOL AKSI -->
+<!-- ========================================== -->
+<!-- 1. TOMBOL UTAMA MENU (Hamburger Floating) -->
+<!-- ========================================== -->
+<div class="fixed top-6 right-6 z-[9998]">
+    <button onclick="toggleMenuSidebar()" 
+            class="w-12 h-12 bg-white/80 hover:bg-white text-gray-800 backdrop-blur-md border border-white/40 rounded-full shadow-lg flex items-center justify-center focus:outline-none transition-all duration-300 group">
+        <i class="fas fa-bars text-lg group-hover:scale-110 transition-transform"></i>
+    </button>
+</div>
 
+<!-- ========================================== -->
+<!-- 2. SIDEBAR / DRAWER MENU UTAMA            -->
+<!-- ========================================== -->
+<div id="menuSidebarOverlay" onclick="toggleMenuSidebar()" class="fixed inset-0 z-[9999] bg-black/40 backdrop-blur-sm hidden transition-opacity opacity-0 duration-300"></div>
 
-		<!-- PEMBUNGKUS UTAMA (Fixed & Responsive) -->
-<div class="fixed top-6 left-0 right-0 px-[4%] md:left-auto md:right-6 md:px-0 z-[9998] flex items-start justify-end gap-2 md:gap-3 transition-all duration-500">
-
-    <div onclick="openNSASearch()" 
-         class="flex-1 min-w-0 max-w-[350px] bg-white/60 backdrop-blur-md border border-white/40 px-4 py-2.5 md:py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:bg-white/80 transition-all duration-300 group">
-        <i class="fas fa-search text-blue-600 group-hover:scale-110 transition-transform text-sm md:text-base flex-shrink-0"></i>
-        <span class="text-gray-900 font-medium text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Cari laporan atau data karyawan</span>
-    </div>
-
-    <div class="flex flex-col gap-2 md:gap-3 flex-shrink-0">
-        
-        <div class="grid grid-cols-[auto_auto_1fr] gap-2 md:gap-3 items-center">
-            <button id="btnNotifAksi" 
-                    class="w-10 h-10 md:w-12 md:h-12 bg-white text-blue-600 rounded-full shadow-lg flex items-center justify-center focus:outline-none">
-                <i class="fas fa-bell text-xs md:text-base"></i>
-            </button>
-
-            <button id="openDevModal" 
-                    class="w-10 h-10 md:w-12 md:h-12 bg-green-500 text-white rounded-full shadow-lg flex items-center justify-center focus:outline-none">
-                <i class="fas fa-cog text-xs md:text-base"></i>
-            </button>
-            
-            <button type="button"
-                    id="btn-switch-ke-apotek"
-                    onclick="navigasiKeApotek()" 
-                    class="h-10 md:h-12 px-4 md:px-5 bg-rose-500 hover:bg-rose-600 text-white rounded-full shadow-lg flex items-center justify-center space-x-2 md:space-x-3 focus:outline-none transition-all min-w-[115px] md:min-w-[140px]">
-                <i class="fas fa-flask text-sm md:text-lg flex-shrink-0"></i>
-                <div class="flex flex-col items-start gap-y-0.5 leading-none">
-                    <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight opacity-95 whitespace-nowrap">
-                        Kembali Ke
-                    </span>
-                    <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight whitespace-nowrap">
-                        Portal
-                    </span>
-                </div>
+<div id="menuSidebar" class="fixed top-0 right-0 bottom-0 z-[10000] w-full max-w-[340px] bg-white/90 backdrop-blur-xl shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300">
+    
+    <!-- Bagian Atas Sidebar -->
+    <div>
+        <!-- Header Sidebar & Tombol Close -->
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+            <span class="font-bold text-gray-800 tracking-wider text-sm uppercase">Menu Navigasi</span>
+            <button onclick="toggleMenuSidebar()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-colors">
+                <i class="fas fa-times text-sm"></i>
             </button>
         </div>
 
-        <div class="grid grid-cols-[1fr_auto] gap-2 md:gap-3 items-center">
+        <!-- Daftar Menu (Tombol-tombol asli dengan ID & Fungsi yang Dipertahankan) -->
+        <div class="flex flex-col gap-3">
             
-            <div class="grid grid-cols-2 gap-2 md:gap-3 col-span-1">
-               <button type="button" 
-        id="btnBarangKosong" 
-        onclick="bukaModalBK()" 
-        class="h-10 md:h-12 col-span-2 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg flex items-center justify-center space-x-2 md:space-x-3 focus:outline-none transition-all border border-green-500/30">
-    <i class="fas fa-exclamation-triangle text-sm md:text-lg flex-shrink-0"></i>
-    <div class="flex flex-col items-start gap-y-0.5 leading-none">
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight opacity-95">
-            Barang
-        </span>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight">
-            Kosong
-        </span>
-    </div>
-</button>
+            <!-- 1. Pencarian -->
+            <div onclick="openNSASearch(); toggleMenuSidebar();" 
+                 class="w-full bg-gray-50/80 hover:bg-gray-100 border border-gray-200 px-4 py-3 rounded-2xl shadow-sm flex items-center gap-3 cursor-pointer transition-all group">
+                <i class="fas fa-search text-blue-600 group-hover:scale-110 transition-transform text-base flex-shrink-0"></i>
+                <span class="text-gray-800 font-medium text-sm">Cari laporan atau data</span>
             </div>
 
+            <!-- 2. Baris Notifikasi & Pengaturan Dev -->
+            <div class="grid grid-cols-2 gap-3">
+                <button id="btnNotifAksi" 
+                        class="w-full h-12 bg-white border border-gray-200 text-blue-600 rounded-2xl shadow-sm flex items-center justify-center gap-2 hover:bg-gray-50 focus:outline-none transition-all font-medium text-sm">
+                    <i class="fas fa-bell text-base"></i>
+                    <span>Notifikasi</span>
+                </button>
+
+                <button id="openDevModal" 
+                        class="w-full h-12 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-2xl shadow-sm flex items-center justify-center gap-2 hover:bg-emerald-100 focus:outline-none transition-all font-medium text-sm">
+                    <i class="fas fa-cog text-base"></i>
+                    <span>Pengaturan</span>
+                </button>
+            </div>
+
+<!-- 3. Tombol Kembali ke Portal (TEMA BIRU TUA Modern) -->
+<button type="button"
+        id="btn-switch-ke-apotek"
+        onclick="navigasiKeApotek()" 
+        class="w-full h-12 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-md flex items-center justify-center space-x-3 focus:outline-none transition-all duration-300">
+    <!-- Ikon Globe Putih -->
+    <i class="fas fa-globe text-lg flex-shrink-0 text-white"></i>
+    
+    <!-- Teks Putih -->
+    <div class="flex flex-col items-start leading-tight">
+        <span class="text-[10px] font-bold uppercase tracking-tight text-white opacity-95">Kembali Ke</span>
+        <span class="text-xs font-bold uppercase tracking-tight text-white">Portal</span>
+    </div>
+</button>
+
+            <!-- 4. Tombol Barang Kosong -->
+            <button type="button" 
+                    id="btnBarangKosong" 
+                    onclick="bukaModalBK()" 
+                    class="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl shadow-md flex items-center justify-center space-x-3 focus:outline-none transition-all">
+                <i class="fas fa-exclamation-triangle text-lg flex-shrink-0"></i>
+                <div class="flex flex-col items-start leading-tight">
+                    <span class="text-[10px] font-bold uppercase tracking-tight opacity-95">Barang</span>
+                    <span class="text-xs font-bold uppercase tracking-tight">Kosong</span>
+                </div>
+            </button>
+
+            <!-- 5. Tombol Katalog Barang -->
             <button type="button" 
                     id="btnBukaKatalog"
                     onclick="bukaModalKatalog()" 
-                    class="h-10 md:h-12 px-4 md:px-5 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg flex items-center justify-center space-x-2 md:space-x-3 focus:outline-none active:scale-95 group border border-green-500/30 shadow-green-600/10 transition-all min-w-[115px] md:min-w-[140px]">
-                <i id="iconKatalog" class="fas fa-book-open text-sm md:text-lg flex-shrink-0"></i>
-                <div class="flex flex-col items-start gap-y-0.5 leading-none">
-                    <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight opacity-95 whitespace-nowrap">
-                        Katalog
-                    </span>
-                    <span id="textKatalog" class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight whitespace-nowrap">
-                        Barang
-                    </span>
+                    class="w-full h-12 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl shadow-md flex items-center justify-center space-x-3 focus:outline-none transition-all">
+                <i id="iconKatalog" class="fas fa-book-open text-lg flex-shrink-0"></i>
+                <div class="flex flex-col items-start leading-tight">
+                    <span class="text-[10px] font-bold uppercase tracking-tight opacity-95">Katalog</span>
+                    <span id="textKatalog" class="text-xs font-bold uppercase tracking-tight">Barang</span>
                 </div>
             </button>
-        </div>
 
+        </div>
+    </div>
+
+    <!-- Footer Sidebar (Opsional) -->
+    <div class="text-center pt-4 border-t border-gray-200">
+        <p class="text-[11px] text-gray-400 font-medium">NURJAYA SMART ARCHIVE</p>
     </div>
 </div>
-		
-		
 
-
-<!-- MODAL SEARCHBOX -->
+<!-- ========================================== -->
+<!-- 3. MODAL SEARCHBOX (Tetap Sesuai Aslinya)   -->
+<!-- ========================================== -->
 <div id="boxSearchNSA" style="display:none;" class="fixed inset-0 z-[10000] bg-white/40 backdrop-blur-[30px] flex-col items-center p-6 pt-24">
-		<div style="width:100%; max-width:600px;">
+    <div style="width:100%; max-width:600px;">
         <div class="relative">
             <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-indigo-600 text-l"></i>
             <input type="text" id="inputNSA" placeholder="Cari misal: Januari, Laporan, Cahya ..." 
@@ -2454,11 +2482,35 @@ function toggleGatePass() {
         </div>
         <div id="resultNSA" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center; max-height:65vh; overflow-y:auto; padding:10px;"></div>
         <button onclick="closeNSASearch()" class="mt-6 w-full py-3 text-gray-400 font-bold hover:text-indigo-600 transition-colors uppercase tracking-widest text-[12px]">Klik untuk membatalkan pencarian</button>
-		</div>
-		</div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- 4. SCRIPT PENDUKUNG BUKA/TUTUP SIDEBAR    -->
+<!-- ========================================== -->
+<script>
+function toggleMenuSidebar() {
+    const sidebar = document.getElementById('menuSidebar');
+    const overlay = document.getElementById('menuSidebarOverlay');
+    
+    if (sidebar.classList.contains('translate-x-full')) {
+        // Buka Sidebar
+        sidebar.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+        setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+    } else {
+        // Tutup Sidebar
+        sidebar.classList.add('translate-x-full');
+        overlay.classList.add('opacity-0');
+        setTimeout(() => overlay.classList.add('hidden'), 300);
+    }
+}
+</script>
+		
+		
 		
 	<!-- MODAL PENAMPIL KATALOG -->	
-<div id="modalKatalogNSA" style="display:none;" class="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+<div id="modalKatalogNSA" style="display:none;" class="fixed inset-0 z-[50000] flex items-center justify-center p-4">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="tutupModalKatalog()"></div>
 
     <div class="relative bg-white w-full max-w-lg rounded-[30px] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
@@ -2517,7 +2569,7 @@ function toggleGatePass() {
 
 
 <!-- MODAL MENU DEVELOPER FOTOKOPI -->
-<div id="devModal" class="fixed inset-0 z-[50] flex items-center justify-center hidden p-4 transform-gpu">
+<div id="devModal" class="fixed inset-0 z-[50000] flex items-center justify-center hidden p-4 transform-gpu">
     <div id="modalOverlay" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px] overlay-animate-in" onclick="closeDevModalFunction()"></div>
 
     <div class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden modal-animate-in flex flex-col border border-green-50 shadow-green-100/10">
@@ -8923,6 +8975,17 @@ window.addEventListener('click', function(e) {
 })();
 </script>
 
+<!-- SKRIP JAVASCRIPT OTOMATIS MENDETEKSI BULAN SAAT INI -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const opsiBulan = { month: 'long', year: 'numeric' };
+    const tanggalSekarang = new Date().toLocaleDateString('id-ID', opsiBulan);
+    const badgeBulan = document.getElementById('badgeBulanDinamis');
+    if (badgeBulan) {
+        badgeBulan.textContent = tanggalSekarang;
+    }
+});
+</script>
 
 </body>
 </html>
