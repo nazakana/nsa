@@ -963,7 +963,37 @@
 
 }
 
+/* PAKSA OVERLAY TRANSISI FRESH LIGHT GLASSMORPHISM */
+#portal-transition {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
 
+#transition-backdrop {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(255, 255, 255, 0.82) !important; /* Latar Putih Transparan Segar */
+    -webkit-backdrop-filter: blur(20px) !important;
+    backdrop-filter: blur(20px) !important;
+}
+
+#transition-card {
+    position: relative !important;
+    z-index: 10 !important;
+    background-color: #ffffff !important; /* Kartu Putih Solid / Clean */
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.12) !important;
+}
 </style>
 </head>
 <body>
@@ -997,13 +1027,13 @@
     
     <!-- PANEL BAWAH/KANAN: MENU SELEKSI & DATA INTEGRASI -->
     <div class="nsa-right-panel">
-        <p class="panel-section-title">Silakan Pilih Unit Kerja</p>
+        <p class="panel-section-title">Silakan Pilih Menu</p>
         
         <!-- KUMPULAN 5 TOMBOL DALAM 1 DIV KESATUAN -->
         <div class="menu-grid">
             <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-fotokopi">
                 <div class="icon-wrapper">
-                    <i class="fas fa-print style-icon"></i>
+                    <i class="fas fa-print style-icon fa-bounce" style="--fa-animation-duration: 2.5s;"></i>
                 </div>
                 <div class="btn-content">
                     <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
@@ -1014,7 +1044,7 @@
 
             <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-apotek">
                 <div class="icon-wrapper">
-                    <i class="fas fa-flask style-icon"></i>
+                    <i class="fas fa-flask style-icon fa-bounce" style="--fa-animation-duration: 2.2s;"></i>
                 </div>
                 <div class="btn-content">
                     <span class="btn-text">APOTEK NURJAYA</span>
@@ -1025,7 +1055,7 @@
 
             <button onclick="bukaModalFaceScanner()" class="btn-unit bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg hover:shadow-emerald-500/20">
                 <div class="icon-wrapper bg-white/20 text-white">
-                    <i class="fas fa-user-check style-icon"></i>
+                    <i class="fas fa-user-check style-icon fa-beat" style="--fa-animation-duration: 2s;"></i>
                 </div>
                 <div class="btn-content">
                     <span class="btn-text">PRESENSI KARYAWAN</span>
@@ -1036,7 +1066,7 @@
 
             <button onclick="bukaModalAksesCepat()" class="btn-unit btn-akses-cepat">
                 <div class="icon-wrapper">
-                    <i class="fas fa-bolt style-icon"></i>
+                    <i class="fas fa-bolt style-icon fa-beat-fade" style="--fa-animation-duration: 1.8s;"></i>
                 </div>
                 <div class="btn-content">
                     <span class="btn-text">AKSES CEPAT</span>
@@ -1047,7 +1077,7 @@
 
             <button onclick="bukaModalSemuaApp()" class="btn-unit btn-semua-app">
                 <div class="icon-wrapper">
-                    <i class="fas fa-th-large style-icon"></i>
+                    <i class="fas fa-th-large style-icon fa-pulse" style="--fa-animation-duration: 3s;"></i>
                 </div>
                 <div class="btn-content">
                     <span class="btn-text">SEMUA APP NJA</span>
@@ -2297,66 +2327,7 @@ function mainkanSuaraBeepTech() {
 </script>
 
 
-<script>
-    function pilihUnitNSA(mode, targetUrl) {
-        const overlay = document.getElementById('portal-transition');
-        const iconElement = document.getElementById('transition-icon');
-        const titleElement = document.getElementById('transition-title');
-        const loadingElement = document.getElementById('transition-loading');
-        
-        // 1. Tampilkan layer dasar & bersihkan kelas sisa jika ada
-        overlay.classList.remove('active-fotokopi', 'active-apotek', 'active', 'fade-out');
-        overlay.classList.add('show-layer');
-        
-        // 2. Set Konten Visual Berdasarkan Unit Kerja yang dipilih
-        if (mode === 'fotokopi') {
-            iconElement.className = 'fas fa-print';
-            titleElement.innerText = 'NURJAYA ABADI PHOTOCOPY';
-            overlay.classList.add('active-fotokopi');
-        } else if (mode === 'apotek') {
-            iconElement.className = 'fas fa-flask';
-            titleElement.innerText = 'APOTEK NURJAYA';
-            overlay.classList.add('active-apotek');
-        }
-        
-        // 3. Picu animasi lingkaran menyapu & teks membal muncul
-        // Diberi sekejap waktu (50ms) agar browser siap mengeksekusi transisi CSS
-        setTimeout(() => {
-            overlay.classList.add('active');
-        }, 50);
-        
-        // Simpan status session mode aktif
-        sessionStorage.setItem('nsa_active_mode', mode);
-        
-        // 4. Skenario Perubahan Teks Loading ala Booting OS (Total Jeda: 2500ms)
-        
-        // Tahap 1: Detik ke 0.6
-        setTimeout(() => {
-            loadingElement.innerText = 'Memverifikasi hak akses jaringan NSA...';
-        }, 600);
-        
-        // Tahap 2: Detik ke 1.3
-        setTimeout(() => {
-            loadingElement.innerText = 'Sinkronisasi dengan pangkalan basis data cloud...';
-        }, 1300);
-        
-        // Tahap 3: Detik ke 2.0
-        setTimeout(() => {
-            loadingElement.innerText = 'Membuka gerbang enkripsi arsip internal...';
-        }, 2000);
-        
-        // Tahap Akhir: Detik ke 2.5 (Fade out total, lalu pindah halaman)
-        setTimeout(() => {
-            overlay.classList.add('fade-out');
-            
-            // Berpindah halaman tepat saat efek fade out selesai (400ms sesuai CSS)
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 400);
 
-        }, 2500);
-    }
-</script>
 
 <script>
 // =========================================================================
@@ -2505,23 +2476,7 @@ function tutupModalAdaYangBaru() {
 }
 </script>
 
-<!-- Struktur Elemen Transisi Premium (Booting OS Style) -->
-<div id="portal-transition" class="nsa-transition-overlay">
-    <div class="nsa-transition-circle"></div>
-    
-    <div class="nsa-transition-content">
-        <!-- Ikon Tengah -->
-        <div class="nsa-transition-icon-box">
-            <i id="transition-icon" class="fas fa-circle"></i>
-        </div>
-        
-        <!-- Judul Unit Kerja Dinamis -->
-        <h3 id="transition-title" class="nsa-transition-title">Menghubungkan...</h3>
-        
-        <!-- Log Teks Sistem Loading -->
-        <p id="transition-loading" class="nsa-transition-loading-text">Menginisialisasi sistem...</p>
-    </div>
-</div>
+
 
 
 <!-- Modal Pop-Up Akses Cepat -->
@@ -5487,5 +5442,139 @@ window.alert = function(message) {
     </div>
 </div>
 
+
+
+
+
+<script>
+function pilihUnitNSA(mode, targetUrl) {
+    const overlay = document.getElementById('portal-transition');
+    const card = document.getElementById('transition-card');
+    const aura = document.getElementById('transition-aura');
+    const badge = document.getElementById('transition-badge');
+    const modeTag = document.getElementById('transition-mode-tag');
+    const iconElement = document.getElementById('transition-icon');
+    const titleElement = document.getElementById('transition-title');
+    const loadingElement = document.getElementById('transition-loading');
+    const progressBar = document.getElementById('transition-bar');
+
+    // 1. Skema Warna Terang Berdasarkan Unit
+    if (mode === 'fotokopi') {
+        iconElement.className = 'fas fa-print fa-bounce';
+        titleElement.innerText = 'NURJAYA ABADI PHOTOCOPY';
+        
+        aura.style.backgroundColor = 'rgba(46, 204, 113, 0.35)';
+        badge.className = 'relative w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-400 to-teal-600 text-white flex items-center justify-center text-3xl mb-5 transition-all duration-500 shadow-lg shadow-emerald-500/30';
+        
+        modeTag.style.backgroundColor = '#dcfce7';
+        modeTag.style.borderColor = '#86efac';
+        modeTag.style.color = '#166534';
+        
+        progressBar.className = 'h-full w-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 rounded-full transition-all duration-500 ease-out';
+    } else if (mode === 'apotek') {
+        iconElement.className = 'fas fa-flask fa-bounce';
+        titleElement.innerText = 'APOTEK NURJAYA';
+        
+        aura.style.backgroundColor = 'rgba(236, 72, 153, 0.35)';
+        badge.className = 'relative w-20 h-20 rounded-3xl bg-gradient-to-br from-pink-500 to-rose-600 text-white flex items-center justify-center text-3xl mb-5 transition-all duration-500 shadow-lg shadow-pink-500/30';
+        
+        modeTag.style.backgroundColor = '#fce7f3';
+        modeTag.style.borderColor = '#fbcfe8';
+        modeTag.style.color = '#9d174d';
+        
+        progressBar.className = 'h-full w-0 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 rounded-full transition-all duration-500 ease-out';
+    } else {
+        iconElement.className = 'fas fa-bolt fa-beat-fade';
+        titleElement.innerText = 'AKSES CEPAT NSA';
+        
+        aura.style.backgroundColor = 'rgba(139, 92, 246, 0.35)';
+        badge.className = 'relative w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white flex items-center justify-center text-3xl mb-5 transition-all duration-500 shadow-lg shadow-violet-500/30';
+        
+        modeTag.style.backgroundColor = '#ede9fe';
+        modeTag.style.borderColor = '#ddd6fe';
+        modeTag.style.color = '#5b21b6';
+        
+        progressBar.className = 'h-full w-0 bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-500 rounded-full transition-all duration-500 ease-out';
+    }
+
+    progressBar.style.width = '0%';
+    loadingElement.innerText = 'Memverifikasi hak akses...';
+
+    // 2. Munculkan Overlay
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    requestAnimationFrame(() => {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100');
+        card.classList.remove('scale-90');
+        card.classList.add('scale-100');
+        progressBar.style.width = '45%';
+    });
+
+    sessionStorage.setItem('nsa_active_mode', mode);
+
+    // 3. Mikrotransisi Lanjutan (~350ms)
+    setTimeout(() => {
+        loadingElement.innerText = 'Menghubungkan basis data...';
+        progressBar.style.width = '90%';
+    }, 350);
+
+    // 4. Selesai & Pindah Halaman (~750ms)
+    setTimeout(() => {
+        progressBar.style.width = '100%';
+        overlay.classList.add('opacity-0');
+        card.classList.remove('scale-100');
+        card.classList.add('scale-95');
+
+        setTimeout(() => {
+            document.body.style.overflow = '';
+            window.location.href = targetUrl;
+        }, 200);
+
+    }, 750);
+}
+</script>
+
+
+<!-- OVERLAY TRANSISI PORTAL NSA (LIGHT & FRESH STYLE) -->
+<div id="portal-transition" class="hidden opacity-0 pointer-events-none transition-all duration-300">
+    
+    <!-- Dynamic Light Backdrop -->
+    <div id="transition-backdrop" class="transition-all duration-300"></div>
+
+    <!-- Floating White Glass Card Center -->
+    <div id="transition-card" class="w-full max-w-sm rounded-[32px] p-6 sm:p-8 text-center transform scale-90 transition-all duration-300 overflow-hidden flex flex-col items-center mx-4">
+        
+        <!-- Ambient Glowing Aura Behind Icon -->
+        <div id="transition-aura" class="absolute -top-12 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full blur-3xl pointer-events-none transition-all duration-500" style="background-color: rgba(46, 204, 113, 0.3);"></div>
+
+        <!-- Floating Icon Badge -->
+        <div id="transition-badge" class="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-400 to-teal-600 text-white flex items-center justify-center text-3xl mb-5 transition-all duration-500 shadow-lg shadow-emerald-500/30">
+            <i id="transition-icon" class="fas fa-print"></i>
+        </div>
+
+        <!-- Sub-Header Badge Mode -->
+        <span id="transition-mode-tag" class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full text-emerald-800 bg-emerald-100 border border-emerald-200 mb-2 transition-colors">
+            MENGHUBUNGKAN UNIT
+        </span>
+
+        <!-- Judul Unit Kerja (Teks Gelap & Tegas) -->
+        <h3 id="transition-title" class="text-lg sm:text-xl font-black text-slate-800 uppercase tracking-tight mb-4">
+            NURJAYA ABADI PHOTOCOPY
+        </h3>
+
+        <!-- Fluid Progress Bar Neon -->
+        <div class="w-full h-2 rounded-full overflow-hidden mb-3 relative bg-slate-100">
+            <div id="transition-bar" class="h-full w-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 rounded-full transition-all duration-500 ease-out shadow-sm"></div>
+        </div>
+
+        <!-- Status Loading Text -->
+        <p id="transition-loading" class="text-xs font-bold text-slate-500 animate-pulse tracking-wide">
+            Memverifikasi hak akses...
+        </p>
+
+    </div>
+</div>
 </body>
 </html>
