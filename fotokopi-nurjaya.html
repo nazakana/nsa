@@ -2394,10 +2394,10 @@ function toggleGatePass() {
                 <i class="fas fa-flask text-sm md:text-lg flex-shrink-0"></i>
                 <div class="flex flex-col items-start gap-y-0.5 leading-none">
                     <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight opacity-95 whitespace-nowrap">
-                        Beralih Ke
+                        Kembali Ke
                     </span>
                     <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-tight whitespace-nowrap">
-                        Mode Apotek
+                        Portal
                     </span>
                 </div>
             </button>
@@ -4602,7 +4602,6 @@ function pemicuTombolSinkronasi() {
 </div>
 
 
-
 			
 <script>
 // GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
@@ -4661,7 +4660,7 @@ function setTombolAktif() {
         sessionStorage.setItem('nsa_active_mode', 'apotek');
         
         // Alihkan browser langsung ke file apotek-nurjaya.html dalam folder yang sama
-        window.location.href = 'apotek-nurjaya.html';
+        window.location.href = 'index.html';
     }
 </script>
 
@@ -8831,6 +8830,99 @@ window.addEventListener('click', function(e) {
     });
 });
 </script>
+
+
+<script>
+// =========================================================================
+// AUTOMATIC GLOBAL MODAL BACK MANAGER (POPUP CLOSE ONLY)
+// =========================================================================
+(function AutomaticModalBackManager() {
+    let openModalsStack = [];
+    let isHandlingBack = false;
+
+    // 1. Helper Deteksi Apakah Suatu Modal/Popup Sedang Terlihat di Layar
+    function isModalVisible(el) {
+        if (!el) return false;
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+        
+        const hasHiddenClass = el.classList.contains('hidden') || el.classList.contains('opacity-0') || el.classList.contains('pointer-events-none');
+        const hasActiveClass = el.classList.contains('active');
+
+        if (hasHiddenClass && !hasActiveClass && style.display === 'none') return false;
+        return el.offsetWidth > 0 && el.offsetHeight > 0;
+    }
+
+    // 2. Helper Otomatis Menutup Modal Teratas saat Back Ditekan
+    function tutupModalOtomatis(el) {
+        if (!el) return;
+        
+        // Cari tombol close internal jika ada (klik otomatis)
+        const closeBtn = el.querySelector('.nsa-modal-close, button[onclick*="tutup"], button[onclick*="Tutup"], button[onclick*="close"], button[onclick*="Close"]');
+        if (closeBtn) {
+            closeBtn.click();
+            return;
+        }
+
+        // Sembunyikan via style CSS jika tidak ada tombol close
+        el.classList.remove('active', 'opacity-100');
+        el.classList.add('hidden', 'opacity-0', 'pointer-events-none');
+        
+        const innerBox = el.querySelector('.transform');
+        if (innerBox) innerBox.classList.add('scale-95');
+    }
+
+    // 3. MutationObserver: Memantau Muncul/Sembunyinya Popup Secara Otomatis
+    const observer = new MutationObserver(() => {
+        if (isHandlingBack) return;
+
+        const candidates = document.querySelectorAll('.nsa-modal-overlay, [id*="modal"], [id*="wrapper_form"], [id*="modalBelanjaBarang"]');
+        
+        candidates.forEach(el => {
+            if (el.id === 'portal-transition' || el.id === 'toast-back-notification') return;
+
+            const visible = isModalVisible(el);
+            const inStackIndex = openModalsStack.indexOf(el);
+
+            if (visible && inStackIndex === -1) {
+                // Modal TERBUKA -> Tambahkan ke tumpukan & riwayat browser
+                openModalsStack.push(el);
+                history.pushState({ autoModalId: el.id || 'modal_' + Date.now() }, document.title, window.location.href);
+            } else if (!visible && inStackIndex !== -1) {
+                // Modal DITUTUP manual oleh user -> Hapus dari tumpukan
+                openModalsStack.splice(inStackIndex, 1);
+                
+                // Sinkronkan riwayat browser jika ditutup via tombol X internal
+                if (history.state && history.state.autoModalId) {
+                    isHandlingBack = true;
+                    history.back();
+                    setTimeout(() => { isHandlingBack = false; }, 100);
+                }
+            }
+        });
+    });
+
+    // Jalankan pemantau DOM
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style'],
+        subtree: true
+    });
+
+    // 4. Tangkap Navigasi Tombol Back HP
+    window.addEventListener('popstate', function (event) {
+        if (openModalsStack.length > 0) {
+            isHandlingBack = true;
+            const topModal = openModalsStack.pop();
+            tutupModalOtomatis(topModal);
+            
+            setTimeout(() => { isHandlingBack = false; }, 100);
+        }
+        // Jika openModalsStack kosong (Home), tombol Back HP akan berfungsi normal bawaan HP/browser.
+    });
+})();
+</script>
+
 
 </body>
 </html>
