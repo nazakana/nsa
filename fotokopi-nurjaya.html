@@ -3786,24 +3786,24 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
     try {
         // 1. Dapatkan Tanggal & Bulan Hari Ini
         const sekarang = new Date();
-        const d = String(sekarang.getDate()).padStart(2, '0');
+        const tglHariIni = sekarang.getDate(); // Contoh: 13
+        const d = String(tglHariIni).padStart(2, '0');
         const m = String(sekarang.getMonth() + 1).padStart(2, '0');
         const y = sekarang.getFullYear();
         
-        const tanggalHariIniStr = `${d}/${m}/${y}`; // Format: "13/10/2026"
-        const tanggalTampilModal = `${d}.${m}.${y}`; // Format UI: "13.10.2026"
-        
+        const tanggalHariIniStr = `${d}/${m}/${y}`; // "13/10/2026"
+        const tanggalTampilModal = `${d}.${m}.${y}`; // "13.10.2026"
+        const targetRowIndex = tglHariIni + 1;       // Baris 14 di Spreadsheet B
+
         const daftarBulan = [
             "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
             "Juli", "Agustus", "September", "Oktober", "November", "Desember"
         ];
         
-        // Spreadsheet B butuh nama sheet DENGAN SPASI (contoh: "Oktober 2026")
         const bulanB = (namaBulanTarget && namaBulanTarget.trim()) 
             ? namaBulanTarget.trim() 
             : `${daftarBulan[sekarang.getMonth()]} ${y}`;
 
-        // Spreadsheet A butuh nama sheet TANPA SPASI (contoh: "Oktober2026")
         const bulanA = bulanB.replace(/\s+/g, '');
 
         // Tampilkan Modal Progress
@@ -3815,7 +3815,7 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
             modalProgress.classList.remove("hidden");
         }
 
-        // 2. Tarik data dari Spreadsheet B menggunakan nama "Oktober 2026"
+        // 2. Tarik data rekap dari Spreadsheet B
         const responseB = await fetch(`${API_URL_SPREADSHEET_B}?bulan=${encodeURIComponent(bulanB)}`);
         const resultB = await responseB.json();
 
@@ -3825,14 +3825,28 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
             return;
         }
 
-        // 3. CEK CERDAS: Cari baris transaksi yang tanggalnya sama dengan HARI INI
+        // 3. CEK FLEKSIBEL: Deteksi berdasarkan indeks baris ATAU variasi format tanggal
         const itemHariIni = resultB.data.find(item => {
+            // Cek 1: Berdasarkan posisi baris tetap di Spreadsheet B (Tanggal 13 = Baris 14)
+            if (item.row_index === targetRowIndex) return true;
+
             if (!item.hari_tanggal) return false;
-            const tglClean = String(item.hari_tanggal).trim();
-            return tglClean === tanggalHariIniStr || tglClean === `${Number(d)}/${Number(m)}/${y}`;
+            const strTgl = String(item.hari_tanggal).trim();
+
+            // Cek 2: Variasi string tanggal (13/10/2026, 13, 2026-10-13, dll)
+            if (strTgl === tanggalHariIniStr || strTgl === `${tglHariIni}/${m}/${y}` || strTgl === String(tglHariIni)) return true;
+            if (strTgl.startsWith(`${y}-${m}-${d}`) || strTgl.startsWith(`${d}-${m}-${y}`)) return true;
+
+            // Cek 3: Pembacaan objek Date
+            const dObj = new Date(strTgl);
+            if (!isNaN(dObj.getTime())) {
+                return dObj.getDate() === tglHariIni && (dObj.getMonth() + 1) === Number(m);
+            }
+
+            return false;
         });
 
-        // JIKA DATA HARI INI BELUM ADA DI SPREADSHEET B -> HENTIKAN & BERI WARNING
+        // JIKA DATA HARI INI BELUM ADA -> HENTIKAN
         if (!itemHariIni) {
             if (modalProgress) modalProgress.classList.add("hidden");
             bukaAlertFotokopi(
@@ -3843,7 +3857,7 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
             return;
         }
 
-        // 4. JIKA DATA DITEMUKAN -> OLAH DATA 1 BARIS HARI INI SAJA
+        // 4. JIKA DATA DITEMUKAN -> OLAH DATA HARI INI
         if (modalProgress) {
             barProgress.style.width = "60%";
             persenProgress.innerText = "60%";
@@ -3867,9 +3881,14 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
         const tabunganAVal = Number(itemHariIni.tabungan_a) || 0;
         const tabunganBVal = Number(itemHariIni.tabungan_b) || 0;
 
+        // Tentukan nilai tanggal standar untuk dikirim ke Spreadsheet A
+        const tglFixKirim = (itemHariIni.hari_tanggal && String(itemHariIni.hari_tanggal).includes('/')) 
+            ? itemHariIni.hari_tanggal 
+            : tanggalHariIniStr;
+
         const payloadData = new URLSearchParams();
-        payloadData.append("tanggal", itemHariIni.hari_tanggal);
-        payloadData.append("bulan_target", bulanA); // Dikirim ke Spreadsheet A TANPA SPASI
+        payloadData.append("tanggal", tglFixKirim);
+        payloadData.append("bulan_target", bulanA);
         payloadData.append("pendapatan_kotor", pendapatanKotorVal);
         payloadData.append("meterai_terjual", meteraiTerjualVal);
         payloadData.append("meterai_terjual_qris", meteraiQrisVal);
