@@ -16,24 +16,24 @@
 	
     
   <style>
-    /* ========================================================================= */
-    /* LOCK TOTAL 1 SCREEN (GLOBAL & MOBILE DEFAULT)                            */
+/* ========================================================================= */
+    /* LOCK TOTAL LAYAR FULLSCREEN (TANPA LAYER CHIP MELAYANG)                   */
     /* ========================================================================= */
     html, body {
         height: 100%;
+        width: 100%;
         min-height: 100vh;
-        overflow: hidden; /* Mengunci scroll bar vertikal & horizontal secara total */
+        overflow: hidden;
         margin: 0;
         padding: 0;
     }
     
     body {
-        background: #2ecc71; 
+        background: #047857; 
         font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 16px 35px; /* DIPERBESAR: Kiri-kanan kini 24px agar tidak mepet layar HP */
         position: relative;
         box-sizing: border-box;
     }
@@ -45,97 +45,401 @@
     }
 
     /* ========================================================================= */
-    /* LAYOUT UTAMA KONTEN (OPTIMAL DI MOBILE LALU DESKTOP)                      */
+    /* LAYOUT FULLSCREEN FULL WIDTH & HEIGHT (TOP GREEN & BOTTOM WHITE)         */
     /* ========================================================================= */
     .nsa-portal-wrapper {
-        width: 100%;
-        max-width: 1050px;
-        height: 100%; /* Memaksimalkan tinggi ruang HP yang tersedia */
-        max-height: 580px; /* Batas atas agar proporsi kotak tetap kokoh di HP panjang */
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 24px; /* DISESUAIKAN: 24px agar lekukan selaras dengan jarak tepi layar */
-        box-shadow: 0 35px 80px rgba(0, 0, 0, 0.2);
+        width: 100vw;
+        height: 100vh;
+        max-width: 100%;
+        max-height: 100%;
+        background: transparent;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
         display: flex;
         flex-direction: column; 
         overflow: hidden;
         z-index: 10;
+        position: relative;
         animation: portalMasuk 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Sisi Atas (Mobile) / Kiri (Desktop) */
+    /* Sisi Atas (42% Tinggi Layar - Gradasi Hijau Langit) */
     .nsa-left-panel {
-        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
-        padding: 24px 20px; 
+        background: linear-gradient(180deg, #34d399 0%, #10b981 40%, #047857 100%);
+        height: 50vh;
+        padding: 20px; 
         display: flex;
         flex-direction: column;
         align-items: center; 
         justify-content: center;
         text-align: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         position: relative;
         flex-shrink: 0; 
+        z-index: 1;
     }
 
-    /* Sisi Bawah (Mobile) / Kanan (Desktop) */
-    .nsa-right-panel {
+    .nsa-liquid-blob {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        pointer-events: none;
+        z-index: 1;
+    }
+    .blob-1 { width: 180px; height: 180px; top: -40px; right: -40px; filter: blur(8px); }
+    .blob-2 { width: 130px; height: 130px; bottom: 20px; left: -30px; filter: blur(8px); }
+
+    .nsa-wave-divider-wrapper {
+        display: none !important;
+    }
+
+    /* Sisi Bawah (Shape Putih iOS Style dengan Rounded Top & Side Padding Proporsional) */
+.nsa-right-panel {
         background: #ffffff;
-        padding: 24px 24px; 
+        border-radius: 36px 36px 0 0;
+        margin-top: -30px;
+        padding: 20px 40px 16px; 
         display: flex;
         flex-direction: column;
-        justify-content: space-between; 
         flex-grow: 1; 
+        height: calc(100vh - 42vh + 30px);
         overflow: hidden; 
+        position: relative;
+        z-index: 5;
+        box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.08);
     }
+
+    /* Style Text Welcome iOS Style */
+    /* Style Text Welcome iOS Style */
+    .welcome-header-group {
+        margin-bottom: 16px;
+        flex-shrink: 0;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .welcome-logo-img {
+        height: 64px;
+        width: auto;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
+    }
+    .welcome-text-black {
+        font-size: 30px;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
+    .welcome-text-green {
+        font-size: 35px;
+        font-weight: 800;
+        color: #059669;
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+        margin-top: 2px;
+    }
+
+    /* Scrollable Container Khusus Tombol Menu */
+    .nsa-menu-scroll-container {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-right: 2px;
+    }
+    .nsa-menu-scroll-container::-webkit-scrollbar {
+        width: 0px;
+        display: none;
+    }
+
+    /* Animated SVG Archive Icon */
+/* Animated SVG Archive Icon Interaktif & Lebih Besar */
+    .archive-svg-icon-box {
+        position: relative;
+        width: 180px;
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        animation: iconContainerBounce 4s ease-in-out infinite;
+    }
+    .archive-svg-icon-box svg {
+        width: 170px;
+        height: 170px;
+        filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.25));
+    }
+    .glow-ring-pulse {
+        animation: pulseGlow 2.5s ease-in-out infinite alternate;
+        transform-origin: center;
+    }
+    .floating-doc-1 {
+        animation: docFloatInteraktif1 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        transform-origin: center;
+    }
+    .floating-doc-2 {
+        animation: docFloatInteraktif2 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.4s;
+        transform-origin: center;
+    }
+    .sparkle-twinkle-1 {
+        animation: sparkleTwinkle 1.8s ease-in-out infinite alternate;
+        transform-origin: center;
+    }
+    .sparkle-twinkle-2 {
+        animation: sparkleTwinkle 2.2s ease-in-out infinite alternate 0.6s;
+        transform-origin: center;
+    }
+    .folder-front-bounce {
+        animation: folderBounce 3.5s ease-in-out infinite;
+        transform-origin: center;
+    }
+
+    @keyframes iconContainerBounce {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-8px) rotate(1.5deg); }
+    }
+    @keyframes pulseGlow {
+        0% { r: 36px; opacity: 0.2; }
+        100% { r: 44px; opacity: 0.45; }
+    }
+    @keyframes docFloatInteraktif1 {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(-3deg); }
+    }
+    @keyframes docFloatInteraktif2 {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-14px) rotate(4deg); }
+    }
+    @keyframes sparkleTwinkle {
+        0% { transform: scale(0.6) rotate(0deg); opacity: 0.3; }
+        100% { transform: scale(1.2) rotate(45deg); opacity: 1; }
+    }
+    @keyframes folderBounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+    }
+
+    /* Text Welcome Header */
+    .welcome-header {
+        margin-bottom: 12px;
+        flex-shrink: 0;
+        text-align: left;
+    }
+    .welcome-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+    }
+    .welcome-brand {
+        font-size: 32px;
+        font-weight: 900;
+        color: #059669;
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+    }
+
+    /* Wrapper Khusus Tombol Menu (Scrollable) */
+    .nsa-menu-scroll-wrapper {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-right: 2px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Custom Scrollbar Ramping untuk Wrapper Menu */
+    .nsa-menu-scroll-wrapper::-webkit-scrollbar {
+        width: 4px;
+    }
+    .nsa-menu-scroll-wrapper::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    /* Menu Carousel Horizontal Game Interface */
+    .menu-slider-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin: auto 0;
+    }
+
+    .menu-slider-container {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px 42px;
+        width: 100%;
+        scrollbar-width: none;
+    }
+
+    .menu-slider-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .btn-unit-slide {
+        flex: 0 0 100%;
+        scroll-snap-align: center;
+        box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.15);
+        padding: 14px 16px !important;
+        border-radius: 50px !important;
+    }
+
+    .slider-arrow-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #0f172a;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 25;
+        transition: all 0.2s ease;
+        font-size: 12px;
+    }
+    .slider-arrow-btn:active {
+        transform: translateY(-50%) scale(0.9);
+    }
+    .slider-arrow-btn.prev { left: 2px; }
+    .slider-arrow-btn.next { right: 2px; }
 
     .nsa-text-group {
         display: flex;
         flex-direction: column;
         align-items: center;
+        z-index: 2;
     }
+
+    /* ========================================================================= */
+    /* CAROUSEL MENU GULIR HORIZONTAL (GAME INTERFACE STYLE)                   */
+    /* ========================================================================= */
+    .menu-slider-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin: 12px 0;
+    }
+
+    .menu-slider-container {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding: 12px 6px;
+        width: 100%;
+        scrollbar-width: none; /* Firefox */
+    }
+
+    .menu-slider-container::-webkit-scrollbar {
+        display: none; /* Hide Scrollbar Chrome/Safari */
+    }
+
+    .btn-unit-slide {
+        flex: 0 0 85%; /* Menampilkan 1 kartu utama + secuil kartu berikutnya */
+        max-width: 310px;
+        scroll-snap-align: center;
+        box-shadow: 0 10px 22px -6px rgba(0, 0, 0, 0.18);
+        padding: 14px 16px !important;
+    }
+
+    /* Tombol Navigasi Panah Kiri & Kanan */
+    .slider-arrow-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #0f172a;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 25;
+        transition: all 0.2s ease;
+        font-size: 11px;
+    }
+    .slider-arrow-btn:active {
+        transform: translateY(-50%) scale(0.9);
+    }
+    .slider-arrow-btn.prev { left: -6px; }
+    .slider-arrow-btn.next { right: -6px; }
 
     /* ========================================================================= */
     /* LOGO FRAME DENGAN KILATAN SHINING                                         */
     /* ========================================================================= */
+/* ========================================================================= */
+    /* LOGO NSA (HILANGKAN CHIP BACKGROUND PUTIH)                               */
+    /* ========================================================================= */
     .nsa-logo-frame {
-        width: 70px; 
-        height: 70px;
-        background: #ffffff;
-        border-radius: 20px;
+        width: 80px; 
+        height: 80px;
+        background: transparent !important;
+        border-radius: 0 !important;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 12px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        margin-bottom: 8px;
+        box-shadow: none !important;
         position: relative;
-        overflow: hidden;
     }
 
     .nsa-logo-frame::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -60%;
-        width: 30%;
-        height: 200%;
-        background: linear-gradient(
-            to right, 
-            rgba(255, 255, 255, 0) 0%, 
-            rgba(255, 255, 255, 0.6) 50%, 
-            rgba(255, 255, 255, 0) 100%
-        );
-        transform: rotate(30deg);
-        animation: logoShine 4s ease-in-out infinite;
+        display: none !important;
     }
 
     .nsa-logo-frame img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
     }
 
+    /* ========================================================================= */
+    /* MENU LIST VERTIKAL (TERURAI KE BAWAH DI MOBILE)                          */
+    /* ========================================================================= */
+    .menu-grid-vertical {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        width: 100%;
+        margin: auto 0;
+    }
+
+    .btn-unit-vertical {
+        width: 100%;
+        padding: 9px 16px !important;
+        border-radius: 50px !important;
+        box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.12);
+    }
     .nsa-main-title {
         color: #ffffff;
         font-size: 18px; 
@@ -337,80 +641,75 @@
         50% { transform: translateY(-3px); }
     }
 
-    /* ========================================================================= */
-    /* RESPONSIVE LAYOUT BREAKPOINT: DESKTOP MONITOR                             */
+/* ========================================================================= */
+    /* RESPONSIVE LAYOUT BREAKPOINT: DESKTOP MONITOR (SIDE-BY-SIDE)              */
     /* ========================================================================= */
     @media (min-width: 769px) {
         body {
-            padding: 0; /* Dikembalikan ke nol untuk desktop agar presisi di tengah */
+            padding: 0;
+            background: #047857;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .nsa-portal-wrapper {
-            flex-direction: row;
-            height: 85vh;        
-            max-height: 650px;   
-            width: 90%;
-            border-radius: 40px; /* Di layar besar pakai kelengkungan penuh asli */
+            flex-direction: row !important;
+            width: 90% !important;
+            max-width: 1050px !important;
+            height: 85vh !important;
+            max-height: 650px !important;
+            border-radius: 40px !important;
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.4) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            overflow: hidden !important;
         }
-        
+
         .nsa-left-panel {
-            width: 45%;
-            height: 100%;        
-            padding: 45px;
-            border-bottom: none;
-            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            width: 45% !important;
+            height: 100% !important;
+            padding: 45px !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+            justify-content: center !important;
         }
-        
-        .nsa-logo-frame {
-            width: 95px;
-            height: 95px;
-            margin-bottom: 24px;
-            border-radius: 26px;
+
+        .nsa-main-title { font-size: 28px !important; }
+        .nsa-main-subtitle { font-size: 14px !important; }
+        .nsa-brand-tagline { display: block !important; }
+
+        .nsa-wave-divider-wrapper {
+            display: none !important;
         }
-        
-        .nsa-main-title { font-size: 30px; }
-        .nsa-main-subtitle { font-size: 14px; margin-top: 6px; }
-        .nsa-brand-tagline { display: block; }
-        
+
         .nsa-right-panel {
-            width: 55%;
-            height: 100%;        
-            padding: 35px 45px; /* Dikecilkan dari 50px 55px agar muat 5 tombol & footer */
+            width: 55% !important;
+            height: 100% !important;
+            margin-top: 0 !important;
+            border-radius: 0 !important;
+            background: #ffffff !important;
+            padding: 35px 45px !important;
+            justify-content: space-between !important;
         }
 
         .panel-section-title {
-            text-align: left;
-            font-size: 11px;
-            margin-bottom: 4px;
+            text-align: left !important;
+            font-size: 11px !important;
+            margin-bottom: 8px !important;
         }
 
-        .menu-grid { 
-            gap: 10px; /* Diperketat dari 16px ke 10px agar 5 tombol muat sempurna */
-        }
-        
-        .btn-unit { 
-            padding: 11px 20px; /* Diperkecil dari 18px ke 11px agar tombol lebih slim */
-            border-radius: 18px; 
-            gap: 14px; 
-        }
-        
-        .icon-wrapper { 
-            width: 32px; 
-            height: 32px; 
-            border-radius: 12px; 
+        .menu-grid-vertical {
+            gap: 10px !important;
         }
 
-        .style-icon { font-size: 14px; }
-        .btn-text { font-size: 12px; }
-        .btn-desc { font-size: 9.5px; margin-top: 2px; }
-        .chevron-right { font-size: 11px; }
-        
-        .nsa-cloud-embed { padding: 18px 20px; border-radius: 24px; gap: 14px; }
-        .embed-cloud-icon { font-size: 24px; }
-        .embed-cloud-title { font-size: 11px; }
-        .embed-cloud-text { font-size: 10px; }
-        
-        .copyright-text { text-align: left; font-size: 9px; }
+        .btn-unit-vertical {
+            border-radius: 18px !important;
+            padding: 11px 20px !important;
+        }
+
+        .copyright-text {
+            text-align: left !important;
+            font-size: 9px !important;
+        }
 
         .icon-pos-5 { display: block; bottom: 25%; left: 8%; font-size: 4rem; animation: floatLoopA 8s infinite; }
         .icon-pos-6 { display: block; bottom: 10%; left: 22%; font-size: 3rem; animation: floatLoopB 7s infinite; }
@@ -994,6 +1293,156 @@
     border: 1px solid rgba(226, 232, 240, 0.9) !important;
     box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.12) !important;
 }
+
+/* Style & Animasi Awan Mengapung */
+    .nsa-animated-cloud {
+        position: absolute;
+        color: rgba(255, 255, 255, 0.45);
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+
+    .cloud-top-right {
+        top: 26%;
+        right: 26%;
+        font-size: 6rem;
+        animation: driftCloudRight 7s ease-in-out infinite alternate;
+    }
+    .cloud-bottom-left {
+        bottom: 28%;
+        left: 30%;
+        font-size: 6rem;
+        animation: driftCloudRight 8s ease-in-out infinite alternate;
+    }
+
+
+    @keyframes driftCloudLeft {
+        0% { transform: translateX(-15px) translateY(0); }
+        100% { transform: translateX(15px) translateY(-5px); }
+    }
+    @keyframes driftCloudRight {
+        0% { transform: translateX(18px) translateY(0); }
+        100% { transform: translateX(-18px) translateY(6px); }
+    }
+	
+	/* ========================================================================= */
+    /* DYNAMIC ISLAND NOTCH (IOS STYLE)                                          */
+    /* ========================================================================= */
+    .nsa-dynamic-island {
+        position: fixed;
+        top: 32px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 99999;
+        background: #000000;
+        color: #ffffff;
+        border-radius: 22px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        user-select: none;
+        
+        /* Ukuran awal saat ringkas (Compact Mode) */
+        width: 145px;
+        height: 36px;
+        padding: 0 14px;
+    }
+
+    /* Tampilan Ringkas (Idle State) */
+    .island-compact-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        color: #ffffff;
+        white-space: nowrap;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    .island-compact-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 10px #10b981;
+        flex-shrink: 0;
+    }
+
+    /* Tampilan Terbuka / Notifikasi (Expanded Mode) */
+    .nsa-dynamic-island.expanded {
+        width: 90vw;
+        max-width: 350px;
+        height: auto;
+        min-height: 62px;
+        border-radius: 28px;
+        padding: 12px 18px;
+        justify-content: flex-start;
+    }
+
+    .island-expanded-content {
+        display: none;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        opacity: 0;
+        transition: opacity 0.3s ease 0.15s;
+    }
+
+    .nsa-dynamic-island.expanded .island-compact-content {
+        display: none;
+        opacity: 0;
+    }
+
+    .nsa-dynamic-island.expanded .island-expanded-content {
+        display: flex;
+        opacity: 1;
+    }
+
+    .island-icon-box {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: #ffffff;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .island-text-group {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        min-width: 0;
+    }
+
+    .island-title {
+        font-size: 11px;
+        font-weight: 900;
+        color: #34d399;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        line-height: 1.2;
+    }
+
+    .island-desc {
+        font-size: 11px;
+        font-weight: 600;
+        color: #e2e8f0;
+        line-height: 1.3;
+        margin-top: 2px;
+    }
 </style>
 </head>
 <body>
@@ -1010,87 +1459,129 @@
     <i class="fas fa-copy decor-icon icon-pos-8"></i>
 </div>
 
-<!-- Container Split-Screen Utama -->
+<!-- Container Split-Screen Utama (Full Screen) -->
 <div class="nsa-portal-wrapper">
     
-    <!-- PANEL ATAS/KIRI: LOGO & JUDUL -->
+   <!-- PANEL ATAS: GRADASI HIJAU LANGIT (50%) -->
     <div class="nsa-left-panel">
-        <div class="nsa-logo-frame">
-            <img src="https://lh3.googleusercontent.com/d/1YzO1wQlp14cnaME86W-WD-TaNLEsLi85" alt="NSA Logo">
+        <!-- Awan Bergerak Atas -->
+        <i class="fas fa-cloud nsa-animated-cloud cloud-top-left"></i>
+        <i class="fas fa-cloud nsa-animated-cloud cloud-top-right"></i>
+
+        <div class="archive-svg-icon-box">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Inner SVG Elements tetap sama -->
+                <circle class="glow-ring-pulse" cx="50" cy="50" r="40" fill="white" fill-opacity="0.15" />
+                <circle cx="50" cy="50" r="32" fill="white" fill-opacity="0.2" />
+                
+                <path class="sparkle-twinkle-1" d="M22 26L24 21L29 19L24 17L22 12L20 17L15 19L20 21L22 26Z" fill="#FDE047" />
+                <path class="sparkle-twinkle-2" d="M78 30L79.5 26L83.5 24.5L79.5 23L78 19L76.5 23L72.5 24.5L76.5 26L78 30Z" fill="#FDE047" />
+
+                <g class="floating-doc-2">
+                    <rect x="34" y="20" width="36" height="46" rx="6" fill="#A7F3D0" />
+                    <rect x="40" y="26" width="20" height="3" rx="1.5" fill="#059669" opacity="0.5" />
+                    <rect x="40" y="32" width="14" height="3" rx="1.5" fill="#059669" opacity="0.3" />
+                </g>
+                
+                <g class="floating-doc-1">
+                    <rect x="26" y="26" width="38" height="48" rx="6" fill="#6EE7B7" />
+                    <rect x="32" y="32" width="22" height="3.5" rx="1.5" fill="#047857" opacity="0.6" />
+                    <rect x="32" y="39" width="16" height="3.5" rx="1.5" fill="#047857" opacity="0.4" />
+                </g>
+                
+                <g class="folder-front-bounce">
+                    <path d="M18 38C18 34.134 21.134 31 25 31H38.5858C39.6466 31 40.664 31.4214 41.4142 32.1716L46.5858 37.3431C47.336 38.0933 48.3534 38.5147 49.4142 38.5147H75C78.866 38.5147 82 41.6487 82 45.5147V68C82 72.9706 77.9706 77 73 77H27C22.0294 77 18 72.9706 18 68V38Z" fill="#ffffff" />
+                    <rect x="28" y="48" width="30" height="4.5" rx="2.25" fill="#059669" />
+                    <rect x="28" y="57" width="20" height="4.5" rx="2.25" fill="#10B981" />
+                    <circle cx="70" cy="63" r="4.5" fill="#047857" />
+                    <path d="M68 63L69.5 64.5L72.5 61.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+            </svg>
         </div>
-        <div class="nsa-text-group">
-            <h2 class="nsa-main-title">SELAMAT DATANG DI</h2>
-            <p class="nsa-main-subtitle">Nurjaya Smart Archive</p>
-            <p class="nsa-brand-tagline">Portal arsip digital terintegrasi untuk efisiensi pelaporan operasional, laporan harian, penutupan pembukuan, dan arsip digital NURJAYA.</p>
-        </div>
+
+        <!-- Awan Bergerak Bawah -->
+        <i class="fas fa-cloud nsa-animated-cloud cloud-bottom-left"></i>
+        <i class="fas fa-cloud nsa-animated-cloud cloud-bottom-right"></i>
     </div>
-    
-    <!-- PANEL BAWAH/KANAN: MENU SELEKSI & DATA INTEGRASI -->
+
+    <!-- PANEL BAWAH: SHAPE PUTIH ROUNDED TOP DENGAN WELCOME TEXT & SCROLLABLE MENU WRAPPER -->
     <div class="nsa-right-panel">
-        <p class="panel-section-title">Silakan Pilih Menu</p>
         
-        <!-- KUMPULAN 5 TOMBOL DALAM 1 DIV KESATUAN -->
-        <div class="menu-grid">
-            <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-fotokopi">
-                <div class="icon-wrapper">
-                    <i class="fas fa-print style-icon fa-bounce" style="--fa-animation-duration: 2.5s;"></i>
-                </div>
-                <div class="btn-content">
-                    <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
-                    <span class="btn-desc">Data Operasional & Arsip Digital</span>
-                </div>
-                <i class="fas fa-chevron-right chevron-right"></i>
-            </button>
-
-            <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-apotek">
-                <div class="icon-wrapper">
-                    <i class="fas fa-flask style-icon fa-bounce" style="--fa-animation-duration: 2.2s;"></i>
-                </div>
-                <div class="btn-content">
-                    <span class="btn-text">APOTEK NURJAYA</span>
-                    <span class="btn-desc">Data Operasional & Arsip Digital</span>
-                </div>
-                <i class="fas fa-chevron-right chevron-right"></i>
-            </button>
-
-            <button onclick="bukaModalFaceScanner()" class="btn-unit bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg hover:shadow-emerald-500/20">
-                <div class="icon-wrapper bg-white/20 text-white">
-                    <i class="fas fa-user-check style-icon fa-beat" style="--fa-animation-duration: 2s;"></i>
-                </div>
-                <div class="btn-content">
-                    <span class="btn-text">PRESENSI KARYAWAN</span>
-                    <span class="btn-desc">Absen Cepat via Pemindaian Wajah</span>
-                </div>
-                <i class="fas fa-camera chevron-right"></i>
-            </button>
-
-            <button onclick="bukaModalAksesCepat()" class="btn-unit btn-akses-cepat">
-                <div class="icon-wrapper">
-                    <i class="fas fa-bolt style-icon fa-beat-fade" style="--fa-animation-duration: 1.8s;"></i>
-                </div>
-                <div class="btn-content">
-                    <span class="btn-text">AKSES CEPAT</span>
-                    <span class="btn-desc">Buka fitur pilihan dengan efisien</span>
-                </div>
-                <i class="fas fa-chevron-right chevron-right"></i>
-            </button>
-
-            <button onclick="bukaModalSemuaApp()" class="btn-unit btn-semua-app">
-                <div class="icon-wrapper">
-                    <i class="fas fa-th-large style-icon fa-pulse" style="--fa-animation-duration: 3s;"></i>
-                </div>
-                <div class="btn-content">
-                    <span class="btn-text">SEMUA APP NJA</span>
-                    <span class="btn-desc">Ekosistem aplikasi Nurjaya</span>
-                </div>
-                <i class="fas fa-chevron-right chevron-right"></i>
-            </button>
+        <!-- TEKS WELCOME (PADDING SEJAJAR DENGAN CONTAINER CONTAINER) -->
+        <!-- TEKS WELCOME (PADDING SEJAJAR DENGAN CONTAINER CONTAINER) -->
+        <div class="welcome-header-group">
+            <div>
+                <h1 class="welcome-text-black">Welcome to</h1>
+                <h1 class="welcome-text-green">NSA</h1>
+            </div>
+            <img src="https://lh3.googleusercontent.com/d/1YzO1wQlp14cnaME86W-WD-TaNLEsLi85" alt="NSA Logo" class="welcome-logo-img">
         </div>
 
-        <!-- Footer Penutup -->
-        <div class="panel-footer">
-            <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
+       <!-- SCROLLABLE WRAPPER UNTUK DAFTAR TOMBOL MENU (UKURAN CHIP PAS & PROPORSIAL ALAN UI IOS) -->
+        <div class="nsa-menu-scroll-container">
+            <div class="menu-grid-vertical">
+                <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-unit-vertical btn-fotokopi">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-print style-icon fa-bounce" style="--fa-animation-duration: 2.5s;"></i>
+                    </div>
+                    <div class="btn-content">
+                        <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
+                        <span class="btn-desc">Data Operasional & Arsip Digital</span>
+                    </div>
+                    <i class="fas fa-chevron-right chevron-right"></i>
+                </button>
+
+                <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-unit-vertical btn-fotokopi">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-flask style-icon fa-bounce" style="--fa-animation-duration: 2.2s;"></i>
+                    </div>
+                    <div class="btn-content">
+                        <span class="btn-text">APOTEK NURJAYA</span>
+                        <span class="btn-desc">Data Operasional & Arsip Digital</span>
+                    </div>
+                    <i class="fas fa-chevron-right chevron-right"></i>
+                </button>
+
+                <button onclick="bukaModalFaceScanner()" class="btn-unit btn-unit-vertical btn-fotokopi">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-user-check style-icon fa-beat" style="--fa-animation-duration: 2s;"></i>
+                    </div>
+                    <div class="btn-content">
+                        <span class="btn-text">PRESENSI KARYAWAN</span>
+                        <span class="btn-desc">Absen Cepat via Pemindaian Wajah</span>
+                    </div>
+                    <i class="fas fa-camera chevron-right"></i>
+                </button>
+
+                <button onclick="bukaModalAksesCepat()" class="btn-unit btn-unit-vertical btn-fotokopi">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-bolt style-icon fa-beat-fade" style="--fa-animation-duration: 1.8s;"></i>
+                    </div>
+                    <div class="btn-content">
+                        <span class="btn-text">AKSES CEPAT</span>
+                        <span class="btn-desc">Buka fitur pilihan dengan efisien</span>
+                    </div>
+                    <i class="fas fa-chevron-right chevron-right"></i>
+                </button>
+
+                <button onclick="bukaModalSemuaApp()" class="btn-unit btn-unit-vertical btn-fotokopi">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-th-large style-icon fa-pulse" style="--fa-animation-duration: 3s;"></i>
+                    </div>
+                    <div class="btn-content">
+                        <span class="btn-text">SEMUA APP NJA</span>
+                        <span class="btn-desc">Ekosistem aplikasi Nurjaya</span>
+                    </div>
+                    <i class="fas fa-chevron-right chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Footer Penutup -->
+            <div class="panel-footer mt-4 pb-1">
+                <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
+            </div>
         </div>
+
     </div>
 </div> <!-- Penutup nsa-portal-wrapper -->
 
@@ -2350,6 +2841,14 @@ window.addEventListener('pageshow', function(event) {
         }
     }
 });
+
+function scrollMenuSlider(direction) {
+    const container = document.getElementById('menuSliderContainer');
+    if (container) {
+        const scrollAmount = container.clientWidth * 0.85 * direction;
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+}
 </script>
 
 
@@ -5599,5 +6098,67 @@ window.addEventListener('pageshow', function (event) {
 
     </div>
 </div>
+
+<script>
+function scrollMenuSlider(direction) {
+    const container = document.getElementById('menuSliderContainer');
+    if (container) {
+        const scrollAmount = container.clientWidth * 0.8 * direction;
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+}
+</script>
+
+
+<!-- Dynamic Island Notch iOS Style -->
+<div id="nsaDynamicIsland" class="nsa-dynamic-island" onclick="bukaNotifIslandManual()">
+    <!-- Status Ringkas (Idle State) -->
+    <div class="island-compact-content">
+        <span class="island-compact-dot"></span>
+        <span>Welcome back!</span>
+    </div>
+
+    <!-- Status Notifikasi Terbuka (Expanded State) -->
+    <div class="island-expanded-content">
+        <div class="island-icon-box">
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <div class="island-text-group">
+            <span class="island-title">NURJAYA SMART ARCHIVE</span>
+            <span class="island-desc">Halo! Selamat datang kembali di NSA.</span>
+        </div>
+    </div>
+</div>
+
+<script>
+// Logika Animasi Otomatis Dynamic Island
+window.addEventListener('DOMContentLoaded', () => {
+    const island = document.getElementById('nsaDynamicIsland');
+    if (!island) return;
+
+    // 1. Membuka/Expand animasi notifikasi otomatis saat portal dibuka
+    setTimeout(() => {
+        island.classList.add('expanded');
+    }, 400);
+
+    // 2. Menyembunyikan notifikasi & kembali ringkas ke "Welcome back!" setelah 4 detik
+    setTimeout(() => {
+        island.classList.remove('expanded');
+    }, 4400);
+});
+
+// Fitur Interaktif: Klik notch untuk memicu notifikasi muncul kembali
+function bukaNotifIslandManual() {
+    const island = document.getElementById('nsaDynamicIsland');
+    if (!island) return;
+    
+    if (!island.classList.contains('expanded')) {
+        island.classList.add('expanded');
+        setTimeout(() => {
+            island.classList.remove('expanded');
+        }, 3500);
+    }
+}
+</script>
 </body>
 </html>
