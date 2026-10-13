@@ -3775,8 +3775,7 @@ function siarkanNotifikasiLangsung() {
 const API_URL_FOTOKOPI = "https://script.google.com/macros/s/AKfycbysOqOqetjMttC9qyCLkOia9G4oor44nzyrlRN1TddAe7L0dJEMqHArXs0JQOLd6uKK/exec";
 const API_URL_SPREADSHEET_B = "https://script.google.com/macros/s/AKfycbwsB1-Pg5rewhEC_uAgoE52wqrDNWsTbMaj2t0QkqrY6-8UGqmGkeH0A9vOgdFtXP8z/exec";
 
-// Fungsi Sinkronisasi Full Sheet dari Spreadsheet B ke Spreadsheet A
-// Fungsi Sinkronisasi Full Sheet dari Spreadsheet B ke Spreadsheet A (Dengan Progress Bar Real-Time)
+// Fungsi Sinkronisasi Cerdas Khusus Data Hari Ini (Today Only)
 async function sinkronkanFullSheetBKeA(namaBulanTarget) {
     const modalProgress = document.getElementById("modal_progress_sinkron");
     const barProgress = document.getElementById("bar_progress_sinkron");
@@ -3785,103 +3784,113 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
     const angkaBaris = document.getElementById("angka_progress_baris");
 
     try {
-        // Tampilkan Modal Loading Progress
+        // 1. Dapatkan Tanggal & Bulan Hari Ini
+        const sekarang = new Date();
+        const d = String(sekarang.getDate()).padStart(2, '0');
+        const m = String(sekarang.getMonth() + 1).padStart(2, '0');
+        const y = sekarang.getFullYear();
+        
+        const tanggalHariIniStr = `${d}/${m}/${y}`; // Format baku: "13/10/2026"
+        const tanggalTampilModal = `${d}.${m}.${y}`; // Format tampilan: "13.10.2026"
+        
+        const daftarBulan = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        
+        // Tentukan nama sheet target jika parameter kosong
+        const sheetTargetBulan = (namaBulanTarget && namaBulanTarget.trim()) 
+            ? namaBulanTarget.replace(/\s+/g, '') 
+            : `${daftarBulan[sekarang.getMonth()]}${y}`;
+
+        // Tampilkan Modal Progress
         if (modalProgress) {
-            barProgress.style.width = "0%";
-            persenProgress.innerText = "0%";
-            teksDetail.innerText = "Membaca data rekap dari Kasir B...";
-            angkaBaris.innerText = "0 / 0";
+            barProgress.style.width = "20%";
+            persenProgress.innerText = "20%";
+            teksDetail.innerText = `Memeriksa data Kasir B tanggal ${tanggalTampilModal}...`;
+            angkaBaris.innerText = "0 / 1";
             modalProgress.classList.remove("hidden");
         }
 
-        // 1. Tarik seluruh rekap data bulan terbaru dari Spreadsheet B
-        const responseB = await fetch(`${API_URL_SPREADSHEET_B}?bulan=${encodeURIComponent(namaBulanTarget)}`);
+        // 2. Tarik data rekap bulan berjalan dari Spreadsheet B
+        const responseB = await fetch(`${API_URL_SPREADSHEET_B}?bulan=${encodeURIComponent(sheetTargetBulan)}`);
         const resultB = await responseB.json();
 
         if (resultB.status !== "success" || !resultB.data || resultB.data.length === 0) {
             if (modalProgress) modalProgress.classList.add("hidden");
-            bukaAlertFotokopi("error", "Gagal Sinkronisasi", "Data rekap dari Spreadsheet B tidak ditemukan!");
+            bukaAlertFotokopi("error", "Data Tidak Ditemukan", `Sheet rekap [${sheetTargetBulan}] di Spreadsheet B belum dibuat!`);
             return;
         }
 
-        const dataKoleksiB = resultB.data;
-        const totalBaris = dataKoleksiB.length;
-        let totalSukses = 0;
+        // 3. CEK CERDAS: Cari baris transaksi yang tanggalnya sama dengan HARI INI
+        const itemHariIni = resultB.data.find(item => {
+            if (!item.hari_tanggal) return false;
+            const tglClean = String(item.hari_tanggal).trim();
+            return tglClean === tanggalHariIniStr || tglClean === `${Number(d)}/${Number(m)}/${y}`;
+        });
 
-        // 2. Iterasi & hitung ulang setiap baris data dari Spreadsheet B
-        for (let i = 0; i < totalBaris; i++) {
-            const item = dataKoleksiB[i];
-
-            const lembar = Number(item.total_lembar_kasir) || 0;
-            const koin = Number(item.total_koin_kasir) || 0;
-            const pengeluaran = Number(item.pengeluaran_kasir) || 0;
-            const karyawan = Number(item.karyawan_masuk) || 1;
-            const meteraiPagi = Number(item.stok_meterai_pagi) || 0;
-            const meteraiMalam = Number(item.stok_meterai_malam) || 0;
-
-            const tglVal = item.hari_tanggal; // Tetap simpan tglVal asli agar payload ke GAS tidak error!
-            
-            // Format Tanggal Rapih (DD.MM.YYYY) KHUSUS TAMPILAN MODAL
-            let tglTampil = tglVal;
-            if (tglVal) {
-                if (typeof tglVal === 'string' && tglVal.includes('/')) {
-                    tglTampil = tglVal.replace(/\//g, '.');
-                } else {
-                    const dObj = new Date(tglVal);
-                    if (!isNaN(dObj.getTime())) {
-                        const d = String(dObj.getDate()).padStart(2, '0');
-                        const m = String(dObj.getMonth() + 1).padStart(2, '0');
-                        const y = dObj.getFullYear();
-                        tglTampil = `${d}.${m}.${y}`;
-                    }
-                }
-            }
-
-            const pendapatanKotorVal = lembar + koin + pengeluaran + (20000 * karyawan) - 170000;
-            const meteraiTerjualVal = meteraiPagi - meteraiMalam;
-            const meteraiQrisVal = Number(item.meterai_terjual_qris) || 0;
-            const pendapatanQrisVal = Number(item.pendapatan_qris) || 0;
-            const uangMakanVal = 20000 * karyawan;
-            const pengeluaranKasirVal = pengeluaran;
-            const tabunganAVal = Number(item.tabungan_a) || 0;
-            const tabunganBVal = Number(item.tabungan_b) || 0;
-
-            // UPDATE UI PROGRESS BARIS
-            const persentase = Math.round(((i + 1) / totalBaris) * 100);
-            if (modalProgress) {
-                barProgress.style.width = `${persentase}%`;
-                persenProgress.innerText = `${persentase}%`;
-                teksDetail.innerText = `Menyimpan Tanggal: ${tglTampil}...`;
-                angkaBaris.innerText = `${i + 1} / ${totalBaris}`;
-            }
-
-            const payloadData = new URLSearchParams();
-            payloadData.append("tanggal", tglVal);
-            payloadData.append("bulan_target", namaBulanTarget.replace(/\s+/g, ''));
-            payloadData.append("pendapatan_kotor", pendapatanKotorVal);
-            payloadData.append("meterai_terjual", meteraiTerjualVal);
-            payloadData.append("meterai_terjual_qris", meteraiQrisVal);
-            payloadData.append("pendapatan_qris", pendapatanQrisVal);
-            payloadData.append("uang_makan", uangMakanVal);
-            payloadData.append("pengeluaran_kasir", pengeluaranKasirVal);
-            payloadData.append("tabungan_a", tabunganAVal);
-            payloadData.append("tabungan_b", tabunganBVal);
-
-            // 3. Kirim hasil kalkulasi ke Spreadsheet A
-            await fetch(API_URL_FOTOKOPI, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: payloadData.toString()
-            });
-
-            totalSukses++;
+        // JIKA DATA HARI INI BELUM ADA DI SPREADSHEET B -> HENTIKAN & BERI WARNING
+        if (!itemHariIni) {
+            if (modalProgress) modalProgress.classList.add("hidden");
+            bukaAlertFotokopi(
+                "warning", 
+                "Data Belum Ada", 
+                `Data transaksi Kasir B untuk tanggal hari ini (${tanggalTampilModal}) belum diisi di Spreadsheet B!`
+            );
+            return;
         }
 
-        // Sembunyikan Modal saat selesai
-        if (modalProgress) modalProgress.classList.add("hidden");
+        // 4. JIKA DATA DITEMUKAN -> OLAH DATA 1 BARIS HARI INI SAJA
+        if (modalProgress) {
+            barProgress.style.width = "60%";
+            persenProgress.innerText = "60%";
+            teksDetail.innerText = `Mengolah data tanggal ${tanggalTampilModal}...`;
+            angkaBaris.innerText = "1 / 1";
+        }
 
-        bukaAlertFotokopi("sukses", "Sinkronisasi Berhasil", `Berhasil memproses & menyinkronkan ${totalSukses} baris data sheet [${namaBulanTarget}] dari Kasir B ke Spreadsheet A.`);
+        const lembar = Number(itemHariIni.total_lembar_kasir) || 0;
+        const koin = Number(itemHariIni.total_koin_kasir) || 0;
+        const pengeluaran = Number(itemHariIni.pengeluaran_kasir) || 0;
+        const karyawan = Number(itemHariIni.karyawan_masuk) || 1;
+        const meteraiPagi = Number(itemHariIni.stok_meterai_pagi) || 0;
+        const meteraiMalam = Number(itemHariIni.stok_meterai_malam) || 0;
+
+        const pendapatanKotorVal = lembar + koin + pengeluaran + (20000 * karyawan) - 170000;
+        const meteraiTerjualVal = meteraiPagi - meteraiMalam;
+        const meteraiQrisVal = Number(itemHariIni.meterai_terjual_qris) || 0;
+        const pendapatanQrisVal = Number(itemHariIni.pendapatan_qris) || 0;
+        const uangMakanVal = 20000 * karyawan;
+        const pengeluaranKasirVal = pengeluaran;
+        const tabunganAVal = Number(itemHariIni.tabungan_a) || 0;
+        const tabunganBVal = Number(itemHariIni.tabungan_b) || 0;
+
+        const payloadData = new URLSearchParams();
+        payloadData.append("tanggal", itemHariIni.hari_tanggal);
+        payloadData.append("bulan_target", sheetTargetBulan);
+        payloadData.append("pendapatan_kotor", pendapatanKotorVal);
+        payloadData.append("meterai_terjual", meteraiTerjualVal);
+        payloadData.append("meterai_terjual_qris", meteraiQrisVal);
+        payloadData.append("pendapatan_qris", pendapatanQrisVal);
+        payloadData.append("uang_makan", uangMakanVal);
+        payloadData.append("pengeluaran_kasir", pengeluaranKasirVal);
+        payloadData.append("tabungan_a", tabunganAVal);
+        payloadData.append("tabungan_b", tabunganBVal);
+
+        // 5. Kirim data hari ini ke Spreadsheet A
+        await fetch(API_URL_FOTOKOPI, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: payloadData.toString()
+        });
+
+        if (modalProgress) {
+            barProgress.style.width = "100%";
+            persenProgress.innerText = "100%";
+            modalProgress.classList.add("hidden");
+        }
+
+        bukaAlertFotokopi("sukses", "Sinkronisasi Berhasil", `Data transaksi hari ini (${tanggalTampilModal}) sukses disinkronkan ke Spreadsheet A.`);
         setTimeout(() => { location.reload(); }, 2000);
 
     } catch (err) {
@@ -3892,7 +3901,6 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
 }
 
 // Fungsi Utama: Memuat data spreadsheet dan mengisinya ke tabel & grafik
-// Fungsi Utama: Memuat data spreadsheet dan mengisinya ke tabel & grafik
 function muatStatistikBulanIni() {
     // --- 1. OTOMATISASI DETEKSI BULAN & TAHUN TANPA SPASI ---
     const daftarBulan = [
@@ -3901,13 +3909,10 @@ function muatStatistikBulanIni() {
     ];
     
     const waktuSekarang = new Date();
-    const namaBulanSekarang = daftarBulan[waktuSekarang.getMonth()]; // Hasil: "Mei"
-    const tahunSekarang = waktuSekarang.getFullYear();              // Hasil: 2026
+    const namaBulanSekarang = daftarBulan[waktuSekarang.getMonth()];
+    const tahunSekarang = waktuSekarang.getFullYear(); 
     
-    // Diperketat: Digabung langsung tanpa spasi agar cocok dengan "Mei2026"
     const namaSheetBulanIni = `${namaBulanSekarang}${tahunSekarang}`;
-    
-    // Menyisipkan parameter ?bulan=Mei2026 ke URL API
     const urlOtomatis = `${API_URL_FOTOKOPI}?bulan=${encodeURIComponent(namaSheetBulanIni)}`;
 
     // --- 2. JALANKAN FETCH DENGAN URL OTOMATIS ---
@@ -3939,22 +3944,22 @@ function muatStatistikBulanIni() {
 
         const dataPendapatan = dataMaster.map(item => item.pendapatan_kotor);
         
-        // --- MENGISI TABEL RINGKASAN KIRI (LANGSUNG ANGKA SAJA) ---
+        // --- MENGISI TABEL RINGKASAN KIRI (OPTIMASI BATCH RENDER DOM) ---
         const tabelBody = document.getElementById('tabel_ringkasan_bulan_ini');
         if (tabelBody) {
-            tabelBody.innerHTML = ""; 
+            let htmlBaris = ""; // Kumpulkan semua baris string dulu
             dataMaster.forEach((item, indeks) => {
                 let angkaTanggal = labelTanggal[indeks]; 
                 
-                let baris = `
+                htmlBaris += `
                     <tr style="border-bottom: 1px solid #eee;">
                         <td style="padding: 5px; color: #7f8c8d; font-weight: bold; text-align: left;">${angkaTanggal}</td>
                         <td style="padding: 5px; text-align: right; font-weight: bold; color: #2c3e50;">
                             ${Number(item.pendapatan_kotor).toLocaleString('id-ID')}
                         </td>
                     </tr>`;
-                tabelBody.innerHTML += baris;
             });
+            tabelBody.innerHTML = htmlBaris; // Inject ke DOM 1x saja agar ringan
         }
         
         // Gambar grafik harian dengan sumbu X yang sudah dikunci konfigurasinya
