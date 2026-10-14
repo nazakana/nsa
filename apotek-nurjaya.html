@@ -1689,7 +1689,7 @@ document.addEventListener('keydown', function(e) {
             <div class="w-full max-w-full flex justify-start sm:justify-center items-start overflow-x-auto p-2">
 
                 <!-- ELEMEN LEMBAR SLIP GAJI APOTEK (SAFE RENDER SVG INLINE) -->
-                <div id="elemen-slip-gaji-render-apotek" class="relative overflow-hidden lembar-slip-gaji-cetak shadow-xl rounded-xl border-2 border-pink-700 text-slate-800 bg-white p-4 sm:p-6 flex flex-col gap-4 box-border w-full max-w-[500px]" style="height: auto; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                <div id="elemen-slip-gaji-render-apotek" class="relative overflow-hidden lembar-slip-gaji-cetak shadow-xl rounded-xl border-2 border-pink-700 text-slate-800 bg-white p-3 sm:p-6 flex flex-col gap-3 sm:gap-4 box-border w-full max-w-[500px] mx-auto" style="height: auto; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
                     
                     <!-- ========================================================= -->
                     <!-- WATERMARK FARMASI & KEUANGAN (SVG INLINE - FIX ANTI-KOTAK)-->
@@ -1790,12 +1790,12 @@ document.addEventListener('keydown', function(e) {
         
         <!-- Box Gaji Bersih Diterima -->
         <div class="w-full bg-pink-900 rounded-xl p-2.5 sm:p-3 block box-border border border-pink-800 my-2 shadow-md">
-            <div class="flex flex-col gap-1 w-full">
-                <div class="text-left font-extrabold text-xs sm:text-sm uppercase tracking-wide text-amber-300">
+            <div class="flex flex-row justify-between items-center gap-2 w-full">
+                <div class="text-left font-extrabold text-xs sm:text-sm uppercase tracking-wide text-amber-300 whitespace-nowrap">
                     Gaji Bersih Diterima:
                 </div>
-                <div class="text-right">
-                    <span id="pv-rekap-final-apotek" class="font-extrabold text-base sm:text-lg tracking-tight text-white inline-block">
+                <div class="text-right shrink-0">
+                    <span id="pv-rekap-final-apotek" class="font-extrabold text-base sm:text-lg tracking-tight text-white whitespace-nowrap inline-block">
                         Rp 0
                     </span>
                 </div>
@@ -1807,15 +1807,15 @@ document.addEventListener('keydown', function(e) {
 <!-- ========================================================= -->
 <div class="flex flex-col gap-1 w-full pt-1">
     <!-- Header Row -->
-    <div class="flex justify-between items-center text-slate-700 font-bold">
-        <span>Tunjangan Makan*:</span>
-        <span id="pv-total-uang-makan-apotek" class="text-slate-900 tracking-tighter text-right whitespace-nowrap">
+    <div class="flex justify-between items-center text-slate-700 font-bold gap-2">
+        <span class="whitespace-nowrap shrink-0">Tunjangan Makan*:</span>
+        <span id="pv-total-uang-makan-apotek" class="text-slate-900 tracking-tighter text-right whitespace-nowrap shrink-0">
             Rp 0
         </span>
     </div>
 
     <!-- Container Rincian Per Baris -->
-    <div id="pv-makan-detail-rumus-apotek" class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] text-pink-800 font-semibold pl-2 border-l-2 border-pink-300 my-0.5">
+    <div id="pv-makan-detail-rumus-apotek" class="flex flex-col gap-0.5 text-[10px] sm:text-[11px] text-pink-800 font-semibold pl-2 border-l-2 border-pink-300 my-0.5 break-words">
         <!-- Generasi dinamis via JS -->
         <span>- 0 Shift</span>
     </div>
@@ -1826,14 +1826,14 @@ document.addEventListener('keydown', function(e) {
     *Catatan: Tunjangan makan harian telah diambil/diberikan secara harian langsung.
 </p>
 
-        <!-- Highlight Box: Total Akumulasi Pendapatan -->
+       <!-- Highlight Box: Total Akumulasi Pendapatan -->
         <div class="w-full bg-purple-50 rounded-xl p-2.5 sm:p-3 block box-border border-2 border-dashed border-purple-500 mt-2">
-            <div class="flex flex-col gap-1 w-full">
-                <div class="text-left font-bold text-xs sm:text-sm tracking-wide text-purple-900">
+            <div class="flex flex-row justify-between items-center gap-2 w-full">
+                <div class="text-left font-bold text-xs sm:text-sm tracking-wide text-purple-900 whitespace-nowrap">
                     Total Akumulasi Pendapatan:
                 </div>
-                <div class="text-right">
-                    <span id="pv-total-akumulasi-apotek" class="font-extrabold text-base sm:text-lg tracking-tight text-purple-700 inline-block">
+                <div class="text-right shrink-0">
+                    <span id="pv-total-akumulasi-apotek" class="font-extrabold text-base sm:text-lg tracking-tight text-purple-700 whitespace-nowrap inline-block">
                         Rp 0
                     </span>
                 </div>
@@ -5209,6 +5209,16 @@ function tutupAlertNarasi() {
   });
 </script>
 
+
+
+
+
+
+
+
+
+
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const API_URL_SLIP_APOTEK = "https://script.google.com/macros/s/AKfycby55pIwKb9kHh9ba2xmKD_scX7jzIj43ll5rpcGU5_AjpTwMnD42EN4140WZxhf0duL/exec";
@@ -5699,7 +5709,7 @@ if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
     // =========================================================================
     const btnKirimWaApotekReal = document.getElementById("nsa-btn-wa-kirim-slip-apotek");
 
-    if (btnKirimWaApotekReal) {
+if (btnKirimWaApotekReal) {
         btnKirimWaApotekReal.addEventListener("click", async function() {
             const karyawanTerpilih = selectKaryawanApotek?.value || "";
             if (!karyawanTerpilih) {
@@ -5737,6 +5747,10 @@ if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
             // B. Teks Pesan WhatsApp
             const teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji Asisten Apoteker untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja dan dedikasinya di Apotek Nurjaya, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Apotek Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
 
+            // Simpan style awal sebelum manipulasi render
+            const originalStyleWidth = targetRenderImage.style.width;
+            const originalStyleMinWidth = targetRenderImage.style.minWidth;
+
             try {
                 if (typeof domtoimage === 'undefined') {
                     alert("Library domtoimage belum terpasang atau gagal dimuat!");
@@ -5745,21 +5759,24 @@ if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
 
                 const namaFileJpg = `Slip_Gaji_Apotek_${namaLengkapKaryawan.replace(/\s+/g, '_')}_${periodeGaji.replace(/\s+/g, '_')}.jpg`;
 
-                // C. Render HD 2x tanpa penundaan setTimeout
-                const originalWidth = targetRenderImage.offsetWidth || 500;
-                const originalHeight = targetRenderImage.offsetHeight || 700;
+                // Kunci lebar elemen ke 500px presisi khusus untuk rendering domtoimage
+                targetRenderImage.style.width = '500px';
+                targetRenderImage.style.minWidth = '500px';
+
+                const targetWidth = 500;
+                const targetHeight = targetRenderImage.offsetHeight || 700;
                 const scaleFactor = 2;
 
                 const dataUrl = await domtoimage.toJpeg(targetRenderImage, {
                     quality: 0.95,
                     bgcolor: '#ffffff',
-                    width: originalWidth * scaleFactor,
-                    height: originalHeight * scaleFactor,
+                    width: targetWidth * scaleFactor,
+                    height: targetHeight * scaleFactor,
                     style: {
                         'transform': `scale(${scaleFactor})`,
                         'transform-origin': 'top left',
-                        'width': originalWidth + 'px',
-                        'height': originalHeight + 'px',
+                        'width': targetWidth + 'px',
+                        'height': targetHeight + 'px',
                         'backdrop-filter': 'none',
                         '-webkit-backdrop-filter': 'none'
                     }
@@ -5770,7 +5787,7 @@ if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
                 const blobGambar = await responBlob.blob();
                 const fileGambar = new File([blobGambar], namaFileJpg, { type: "image/jpeg" });
 
-                // E. Coba panggil Web Share API (Gunakan try-catch khusus agar tidak menggantung)
+                // E. Coba panggil Web Share API
                 let isSharedSuccess = false;
                 if (navigator.canShare && navigator.canShare({ files: [fileGambar] })) {
                     try {
@@ -5785,7 +5802,7 @@ if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
                     }
                 }
 
-                // F. Fallback Otomatis: Jika Web Share gagal/diblokir/di-cancel
+                // F. Fallback Otomatis
                 if (!isSharedSuccess) {
                     let linkDownload = document.createElement('a');
                     linkDownload.download = namaFileJpg;
@@ -5802,7 +5819,11 @@ if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
                 console.error('Gagal render slip gaji Apotek:', error);
                 alert("Gagal me-render slip gaji Apotek. Silakan periksa koneksi atau coba kembali.");
             } finally {
-                // G. Pastikan status tombol SELALU kembali normal
+                // Kembalikan style elemen web ke tampilan awal (responsive)
+                targetRenderImage.style.width = originalStyleWidth;
+                targetRenderImage.style.minWidth = originalStyleMinWidth;
+
+                // Restore status tombol
                 this.innerHTML = textAwalTombol;
                 this.disabled = false;
             }
