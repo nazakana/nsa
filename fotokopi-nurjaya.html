@@ -13,6 +13,7 @@
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
 	
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
@@ -374,7 +375,19 @@
         height: 220px !important; /* Sesuaikan tinggi grafik */
     }
 	
-	
+	<!-- STYLE TAMBAHAN UNTUK SEMBUNYIKAN SCROLLBAR -->
+
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+  .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+
+@keyframes spinBorder {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin-border {
+    animation: spinBorder 3.5s linear infinite;
+  }
 </style>
 
 <script>
@@ -506,62 +519,138 @@ document.addEventListener('keydown', function(event) {
 <!-- CONTAINER UTAMA DASHBOARD -->
 <div id="tab-dashboard" class="tab-content px-4 py-3 sm:p-6 md:p-10 fade-in" style="font-family: sans-serif;">
     
-    <!-- CARD KARTU DIGITAL: PENDAPATAN KOTOR HARI INI -->
-    <div class="max-w-md md:max-w-5xl mx-auto mb-6">
-        <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-6 sm:p-7 text-white shadow-[0_15px_35px_-5px_rgba(16,185,129,0.35)] border border-emerald-400/30">
-            
-            <!-- ORNAMEN LINGKARAN & POLA DEKORATIF BACKGROUND (GLASS EFFECT) -->
-            <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
-            <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-teal-400/20 blur-2xl pointer-events-none"></div>
-            <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
 
-            <!-- BAGIAN ATAS CARD: JUDUL & TANGGAL -->
-            <div class="relative z-10 flex justify-between items-start">
-                <div>
-                    <span class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-emerald-200/90 block">
-                        Pendapatan Kotor
-                    </span>
-                    <!-- ELEMENT TANGGAL (ID CARD) -->
-                    <span id="hari-terbaru-tgl-card" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
-                        ...
-                    </span>
-                </div>
-                <!-- LOGO/BADGE KECIL UTAMA -->
-                <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-emerald-200 uppercase">
-                    NURJAYA
-                </div>
-            </div>
 
-            <!-- BAGIAN ISI CARD: NOMINAL RUPIAH (ID CARD) -->
-            <div class="relative z-10 my-3 sm:my-4">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200/70 mb-1">
-                    Total Hari Ini
-                </p>
-                <!-- ELEMENT NOMINAL PENDAPATAN KOTOR -->
-                <div id="hari-terbaru-kotor-card" class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight drop-shadow-sm">
-                    Rp 0
-                </div>
-            </div>
-
-            <!-- BAGIAN BAWAH CARD: TOMBOL INFO LENGKAP & IKON KASIR -->
-            <div class="relative z-10 pt-4 border-t border-white/15 flex justify-between items-center">
+<!-- CONTAINER SLIDER KARTU DIGITAL (Native CSS Scroll Snap) -->
+<div class="max-w-md md:max-w-5xl mx-auto mb-6">
+    <!-- Kontainer Snap Carousel dengan ID cardSnapContainer -->
+    <div id="cardSnapContainer" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-4 pb-2 px-1 -mx-1">
+        
+        <!-- ================= CARD 1: PROGRES HARI INI ================= -->
+        <div class="snap-center shrink-0 w-full">
+            <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-6 sm:p-7 text-white shadow-[0_15px_35px_-5px_rgba(16,185,129,0.35)] border border-emerald-400/30 min-h-[220px] flex flex-col justify-between">
                 
-                <!-- TOMBOL INFO LENGKAP (ONCLICK UNTUK POPUP MODAL PENDAPATAN) -->
-                <button onclick="bukaModal('modal-pendapatan')" class="group px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 border border-white/25 backdrop-blur-md text-white font-bold text-xs flex items-center gap-2 transition-all duration-200 shadow-sm">
-                    <i class="fa-solid fa-circle-info text-emerald-300 group-hover:rotate-12 transition-transform"></i>
-                    <span>INFO LENGKAP</span>
-                    <i class="fa-solid fa-chevron-right text-[10px] opacity-75 group-hover:translate-x-0.5 transition-transform"></i>
-                </button>
+                <!-- ORNAMEN BACKGROUND -->
+                <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-teal-400/20 blur-2xl pointer-events-none"></div>
+                <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
 
-                <!-- IKON MESIN KASIR FONTAWESOME -->
-                <div class="flex items-center justify-center text-emerald-200/80 hover:text-emerald-100 transition-colors drop-shadow">
-                    <i class="fa-solid fa-cash-register text-3xl sm:text-4xl"></i>
+                <!-- ATAS CARD: JUDUL & TANGGAL TODAY -->
+                <div class="relative z-10 flex justify-between items-start">
+                    <div>
+                        <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-emerald-200/90 block">
+                            PROGRES HARI INI
+                        </span>
+                        <span id="progres-hari-ini-tgl" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
+                            Memuat ...
+                        </span>
+                    </div>
+                    <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-emerald-200 uppercase">
+                        NURJAYA
+                    </div>
+                </div>
+
+                <!-- ISI CARD -->
+                <div class="relative z-10 my-3 sm:my-4">
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200/80 mb-1">
+                        TOTAL PENDAPATAN
+                    </p>
+                    <div class="flex items-center gap-3 h-10 sm:h-12">
+                        <div id="progres-hari-ini-kotor" class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight drop-shadow-md flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                            <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                            <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                        </div>
+                        
+                        <button onclick="toggleNominalCard1(this)" class="text-emerald-200/70 hover:text-white p-1 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
+                            <i class="fa-solid fa-eye text-lg sm:text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BAWAH CARD 1: TOMBOL DENGAN OUTLINE CAHAYA MENGULAR -->
+                <div class="relative z-10 pt-4 border-t border-white/15 flex justify-between items-center">
+                    <div class="relative inline-flex overflow-hidden rounded-xl p-[1.5px] focus:outline-none">
+                        <!-- Lapisan cahaya mengular berputar (semi-transparan) -->
+                        <span class="absolute inset-[-500%] animate-spin-border bg-[conic-gradient(from_0deg,transparent_0_300deg,rgba(255,255,255,0.45)_360deg)]"></span>
+                        
+                        <!-- Tombol utama -->
+                        <button onclick="scrollKeCard2()" class="relative group px-4 py-2.5 rounded-[10.5px] bg-slate-900/60 hover:bg-slate-900/40 active:scale-95 backdrop-blur-md text-white font-bold text-xs flex items-center gap-2 transition-all duration-200 shadow-sm">
+                            <span>Lihat Tutup Kasir Terbaru</span>
+                            <i class="fa-solid fa-chevron-right text-[10px] opacity-75 group-hover:translate-x-0.5 transition-transform"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-center text-emerald-200/80 hover:text-emerald-100 transition-colors drop-shadow">
+                        <i class="fa-solid fa-chart-line text-3xl sm:text-4xl"></i>
+                    </div>
                 </div>
 
             </div>
-
         </div>
+
+        <!-- ================= CARD 2: TUTUP KASIR TERBARU ================= -->
+        <div id="card-2" class="snap-center shrink-0 w-full">
+            <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-amber-600 via-orange-600 to-slate-900 p-6 sm:p-7 text-white shadow-[0_15px_35px_-5px_rgba(245,158,11,0.35)] border border-amber-400/30 min-h-[220px] flex flex-col justify-between">
+                
+                <!-- ORNAMEN BACKGROUND -->
+                <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-amber-400/20 blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-orange-400/20 blur-2xl pointer-events-none"></div>
+                <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
+
+                <!-- ATAS CARD -->
+                <div class="relative z-10 flex justify-between items-start">
+                    <div>
+                        <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-amber-200/90 block">
+                            Tutup Kasir Terbaru
+                        </span>
+                        <span id="hari-terbaru-tgl-card" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
+                            Memuat ...
+                        </span>
+                    </div>
+                    <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-amber-200 uppercase">
+                        NURJAYA
+                    </div>
+                </div>
+
+                <!-- ISI CARD -->
+                <div class="relative z-10 my-3 sm:my-4">
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-amber-200/70 mb-1">
+                        Total
+                    </p>
+                    <div class="flex items-center gap-3 h-10 sm:h-12">
+                        <div id="hari-terbaru-kotor-card" class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                            <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                            <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                        </div>
+                        
+                        <button onclick="toggleNominalCard('hari-terbaru-kotor-card', this)" class="text-amber-200/70 hover:text-white p-1 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
+                            <i class="fa-solid fa-eye text-lg sm:text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BAWAH CARD -->
+                <div class="relative z-10 pt-4 border-t border-white/15 flex justify-between items-center">
+                    <button onclick="bukaModal('modal-pendapatan')" class="group px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 border border-white/25 backdrop-blur-md text-white font-bold text-xs flex items-center gap-2 transition-all duration-200 shadow-sm">
+                        <i class="fa-solid fa-circle-info text-amber-300 group-hover:rotate-12 transition-transform"></i>
+                        <span>INFO LENGKAP</span>
+                        <i class="fa-solid fa-chevron-right text-[10px] opacity-75 group-hover:translate-x-0.5 transition-transform"></i>
+                    </button>
+
+                    <div class="flex items-center justify-center text-amber-200/80 hover:text-amber-100 transition-colors drop-shadow">
+                        <i class="fa-solid fa-cash-register text-3xl sm:text-4xl"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
+
+
+</div>
 
 <!-- MENU TOMBOL GRAFIK PROGRES (SIDE-TO-SIDE 2 KOLOM DI HP & PC) -->
 <div class="max-w-md md:max-w-5xl mx-auto grid grid-cols-2 gap-2.5 sm:gap-3.5 my-2">
@@ -686,6 +775,19 @@ document.addEventListener('keydown', function(event) {
                     Kembali Ke Portal
                 </span>
             </button>
+			
+			<!-- 5. ARSIP SLIP GAJI (GRADASI EMERALD - CYAN) -->
+<button type="button" 
+        id="btnBukaArsipSlip" 
+        onclick="bukaModalArsipSlip()" 
+        class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-emerald-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+    <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-emerald-600 to-cyan-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-emerald-600/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+        <i class="fas fa-file-invoice-dollar"></i>
+    </div>
+    <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-emerald-600 tracking-tight leading-tight transition-colors">
+        Cek Slip Gaji
+    </span>
+</button>
 
         </div>
     </div>
@@ -698,7 +800,7 @@ document.addEventListener('keydown', function(event) {
 
 <!-- ==================== POPUP / MODAL CONTAINERS (DI LUAR FADE-IN) ==================== -->
 
-<!-- MODAL 1: PENDAPATAN TERBARU -->
+<!-- MODAL 1: TUTUP KASIR TERBARU -->
 <div id="modal-pendapatan" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4 transition-all duration-300">
     <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[28px] bg-white relative my-auto animate-in fade-in zoom-in-95 duration-200">
         <div class="sticky top-0 bg-white/90 backdrop-blur px-6 py-4 border-b border-green-100 flex justify-between items-center z-10 rounded-t-[28px]">
@@ -710,7 +812,7 @@ document.addEventListener('keydown', function(event) {
         
         <div class="p-6 md:p-8">
             <h4 class="text-xl md:text-2xl font-black text-gray-900 mb-6 uppercase leading-tight">
-                PENDAPATAN TERBARU <br> 
+                Tutup Kasir Terbaru <br> 
                 <span id="hari-terbaru-tgl" class="text-green-700 font-bold text-lg md:text-xl">...</span>
             </h4>
 
@@ -4868,8 +4970,6 @@ function pemicuTombolSinkronasi() {
         <p class="text-[10px] text-green-600/70 mt-4 uppercase tracking-widest font-bold">SISTEM PENGINGAT OTOMATIS NURJAYA ABADI</p>
     </div>
 </div>
-
-
 			
 <script>
 // GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
@@ -7466,192 +7566,172 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-   function prosesAkumulasiDataPresensi(rows) {
-    if (!rows || rows.length === 0) return;
+    function prosesAkumulasiDataPresensi(rows) {
+        if (!rows || rows.length === 0) return;
 
-    let j2 = 0; 
-    let j1 = 0; 
-    let libur = 0; 
-    let absenLain = 0; 
+        let j2 = 0; 
+        let j1 = 0; 
+        let libur = 0; 
+        let absenLain = 0; 
 
-    let totalMenitPotongan = 0;
-    let totalMenitTambahan = 0;
+        let totalMenitPotongan = 0;
+        let totalMenitTambahan = 0;
 
-    // --- VARIABEL: Untuk mengumpulkan elemen list HTML ---
-    let listHtmlPotongan = "";
-    let listHtmlTambahan = "";
+        let listHtmlPotongan = "";
+        let listHtmlTambahan = "";
 
-    // Helper Jam Kerja ditarik ke luar loop agar performa ringan & rapi
-    function dapatkanTotalMenit(nilaiJam) {
-        if (!nilaiJam) return 0;
-        let teksWaktu = String(nilaiJam).trim();
-        
-        if (teksWaktu.includes("1899") || teksWaktu.length > 15) {
-            const matchWaktu = teksWaktu.match(/(\d{2}):(\d{2}):(\d{2})/);
-            if (matchWaktu) {
-                const jam = parseInt(matchWaktu[1]) || 0;
-                const mnt = parseInt(matchWaktu[2]) || 0;
+        function dapatkanTotalMenit(nilaiJam) {
+            if (!nilaiJam) return 0;
+            let teksWaktu = String(nilaiJam).trim();
+            
+            if (teksWaktu.includes("1899") || teksWaktu.length > 15) {
+                const matchWaktu = teksWaktu.match(/(\d{2}):(\d{2}):(\d{2})/);
+                if (matchWaktu) {
+                    const jam = parseInt(matchWaktu[1]) || 0;
+                    const mnt = parseInt(matchWaktu[2]) || 0;
+                    return (jam * 60) + mnt;
+                }
+            }
+            
+            teksWaktu = teksWaktu.replace(".", ":");
+            if (teksWaktu.includes(":")) {
+                const splitWaktu = teksWaktu.split(":");
+                const jam = parseInt(splitWaktu[0]) || 0;
+                const mnt = parseInt(splitWaktu[1]) || 0;
                 return (jam * 60) + mnt;
             }
+            return 0;
         }
-        
-        teksWaktu = teksWaktu.replace(".", ":");
-        if (teksWaktu.includes(":")) {
-            const splitWaktu = teksWaktu.split(":");
-            const jam = parseInt(splitWaktu[0]) || 0;
-            const mnt = parseInt(splitWaktu[1]) || 0;
-            return (jam * 60) + mnt;
-        }
-        return 0;
-    }
 
-    rows.forEach(row => {
-        const hadirStatus = String(row.kehadiran || "").toUpperCase().trim();
-        
-        // Pemformatan tanggal agar rapi (DD/MM/YYYY)
-        let tanggalRapi = "-";
-        if (row.tanggal) {
-            const tglObj = new Date(row.tanggal);
-            if (!isNaN(tglObj)) {
-                tanggalRapi = String(tglObj.getDate()).padStart(2, '0') + '/' + 
-                              String(tglObj.getMonth() + 1).padStart(2, '0') + '/' + 
-                              tglObj.getFullYear();
+        rows.forEach(row => {
+            const hadirStatus = String(row.kehadiran || "").toUpperCase().trim();
+            
+            let tanggalRapi = "-";
+            if (row.tanggal) {
+                const tglObj = new Date(row.tanggal);
+                if (!isNaN(tglObj)) {
+                    tanggalRapi = String(tglObj.getDate()).padStart(2, '0') + '/' + 
+                                  String(tglObj.getMonth() + 1).padStart(2, '0') + '/' + 
+                                  tglObj.getFullYear();
+                } else {
+                    tanggalRapi = String(row.tanggal).split("T")[0]; 
+                }
+            }
+
+            if (hadirStatus === "YA") {
+                const jenisJadwal = parseInt(row.jenisjadwalkerja);
+                if (jenisJadwal === 2) {
+                    j2++;
+                } else if (jenisJadwal === 1) {
+                    j1++;
+                }
+            } else if (hadirStatus === "TIDAK") {
+                const alasan = String(row.alasantidakhadir || "");
+                if (alasan.toLowerCase().includes("libur")) {
+                    libur++;
+                } else {
+                    absenLain++;
+                }
+            }
+
+            if (row.potonganjam) {
+                const menitBiji = dapatkanTotalMenit(row.potonganjam);
+                if (menitBiji > 0) {
+                    totalMenitPotongan += menitBiji;
+                    const txtAlasanPot = row.alasanpotonganjam ? String(row.alasanpotonganjam).trim() : "Potongan jam kerja";
+                    listHtmlPotongan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanPot}</li>`;
+                }
+            }
+
+            if (row.tambahanjam) {
+                const menitBiji = dapatkanTotalMenit(row.tambahanjam);
+                if (menitBiji > 0) {
+                    totalMenitTambahan += menitBiji;
+                    const txtAlasanTam = row.alasantambahanjam ? String(row.alasantambahanjam).trim() : "Tambahan jam kerja";
+                    listHtmlTambahan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanTam}</li>`;
+                }
+            }
+        });
+
+        dataPresensiHitung.hariJadwal2 = j2;
+        dataPresensiHitung.hariJadwal1 = j1;
+        dataPresensiHitung.hariLibur = libur;
+        dataPresensiHitung.hariAbsenLain = absenLain;
+
+        if (lblJadwal2) lblJadwal2.innerText = j2 + " hari";
+        if (lblJadwal1) lblJadwal1.innerText = j1 + " hari";
+        if (outLibur) outLibur.innerText = libur + " hari";
+        if (outAbsenLain) outAbsenLain.innerText = absenLain + " hari";
+
+        const urIndikatorAbsen = document.getElementById("sg-ur-indikator-absen");
+        const pvHariAbsen = document.getElementById("pv-hari-absen");
+        const urPetunjukDinamis = document.getElementById("sg-ur-petunjuk-dinamis");
+
+        if (urIndikatorAbsen) urIndikatorAbsen.innerText = absenLain + " hari";
+        if (pvHariAbsen) pvHariAbsen.innerText = absenLain + " hari";
+
+        if (urPetunjukDinamis) {
+            if (absenLain === 0) {
+                urPetunjukDinamis.innerHTML = `
+                    <span class="text-green-600 font-bold">✔ Rekomendasi:</span> 
+                    Karyawan berhak mendapatkan Uang Rajin penuh (jika indikator absen bulan ini adalah 0 hari).
+                `;
             } else {
-                tanggalRapi = String(row.tanggal).split("T")[0]; 
+                urPetunjukDinamis.innerHTML = `
+                    <span class="text-amber-600 font-bold">⚠ Rekomendasi:</span> 
+                    Owner berhak menerapkan penyesuaian Uang Rajin karena karyawan memiliki absen <span class="text-rose-600 font-black">${absenLain} hari</span>.
+                `;
             }
         }
 
-        if (hadirStatus === "YA") {
-            const jenisJadwal = parseInt(row.jenisjadwalkerja);
-            if (jenisJadwal === 2) {
-                j2++;
-            } else if (jenisJadwal === 1) {
-                j1++;
-            }
-        } else if (hadirStatus === "TIDAK") {
-            const alasan = String(row.alasantidakhadir || "");
-            if (alasan.toLowerCase().includes("libur")) {
-                libur++;
+        const jamPot = Math.floor(totalMenitPotongan / 60);
+        const mntPot = totalMenitPotongan % 60;
+        if (lblPotonganJam) lblPotonganJam.innerText = `${jamPot} jam ${mntPot} menit`;
+
+        const jamTam = Math.floor(totalMenitTambahan / 60);
+        const mntTam = totalMenitTambahan % 60;
+        if (lblTambahanJam) lblTambahanJam.innerText = `${jamTam} jam ${mntTam} menit`;
+
+        const wrapperListPotongan = document.getElementById("sg-wrapper-alasan-potongan-list");
+        const ulPotongan = document.getElementById("sg-list-alasan-potongan");
+        if (wrapperListPotongan && ulPotongan) {
+            if (listHtmlPotongan !== "") {
+                ulPotongan.innerHTML = listHtmlPotongan;
+                wrapperListPotongan.classList.remove("hidden");
             } else {
-                absenLain++;
+                ulPotongan.innerHTML = "";
+                wrapperListPotongan.classList.add("hidden");
             }
         }
 
-        // --- CEK & AMBIL RINCIAN POTONGAN ---
-        if (row.potonganjam) {
-            const menitBiji = dapatkanTotalMenit(row.potonganjam);
-            if (menitBiji > 0) {
-                totalMenitPotongan += menitBiji;
-                const txtAlasanPot = row.alasanpotonganjam ? String(row.alasanpotonganjam).trim() : "Potongan jam kerja";
-                listHtmlPotongan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanPot}</li>`;
+        const wrapperListTambahan = document.getElementById("sg-wrapper-alasan-tambahan-list");
+        const ulTambahan = document.getElementById("sg-list-alasan-tambahan");
+        if (wrapperListTambahan && ulTambahan) {
+            if (listHtmlTambahan !== "") {
+                ulTambahan.innerHTML = listHtmlTambahan;
+                wrapperListTambahan.classList.remove("hidden");
+            } else {
+                ulTambahan.innerHTML = "";
+                wrapperListTambahan.classList.add("hidden");
             }
         }
 
-        // --- CEK & AMBIL RINCIAN TAMBAHAN ---
-        if (row.tambahanjam) {
-            const menitBiji = dapatkanTotalMenit(row.tambahanjam);
-            if (menitBiji > 0) {
-                totalMenitTambahan += menitBiji;
-                const txtAlasanTam = row.alasantambahanjam ? String(row.alasantambahanjam).trim() : "Tambahan jam kerja";
-                listHtmlTambahan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanTam}</li>`;
+        if (selUangRajin) {
+            selUangRajin.selectedIndex = 0; 
+            const outRajinStatus = document.getElementById("sg-out-rajin-status");
+            if (outRajinStatus) {
+                outRajinStatus.innerText = "Pilih status terlebih dahulu";
+                outRajinStatus.className = "text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic";
             }
+            const inputCustomLama = document.getElementById("sg-in-rajin-custom-wrapper");
+            if (inputCustomLama) inputCustomLama.remove();
         }
-    });
 
-    // Simpan State internal kalkulator
-    dataPresensiHitung.hariJadwal2 = j2;
-    dataPresensiHitung.hariJadwal1 = j1;
-    dataPresensiHitung.hariLibur = libur;
-    dataPresensiHitung.hariAbsenLain = absenLain;
-
-    // Cetak ke element UI Utama
-    if (lblJadwal2) lblJadwal2.innerText = j2 + " hari";
-    if (lblJadwal1) lblJadwal1.innerText = j1 + " hari";
-    if (outLibur) outLibur.innerText = libur + " hari";
-    if (outAbsenLain) outAbsenLain.innerText = absenLain + " hari";
-
-    // --- SINKRONISASI BARU KE INDIKATOR UANG RAJIN & TABEL PREVIEW ---
-    const urIndikatorAbsen = document.getElementById("sg-ur-indikator-absen");
-    const pvHariAbsen = document.getElementById("pv-hari-absen");
-    
-    // Ambil Elemen Teks Keterangan Dinamis Baru
-    const urPetunjukDinamis = document.getElementById("sg-ur-petunjuk-dinamis");
-
-    if (urIndikatorAbsen) urIndikatorAbsen.innerText = absenLain + " hari";
-    if (pvHariAbsen) pvHariAbsen.innerText = absenLain + " hari";
-
-    // --- LOGIKA INTELLIGENT PETUNJUK OWNER ---
-    if (urPetunjukDinamis) {
-        if (absenLain === 0) {
-            urPetunjukDinamis.innerHTML = `
-                <span class="text-green-600 font-bold">✔ Rekomendasi:</span> 
-                Karyawan berhak mendapatkan Uang Rajin penuh (jika indikator absen bulan ini adalah 0 hari).
-            `;
-        } else {
-            urPetunjukDinamis.innerHTML = `
-                <span class="text-amber-600 font-bold">⚠ Rekomendasi:</span> 
-                Owner berhak menerapkan penyesuaian Uang Rajin karena karyawan memiliki absen <span class="text-rose-600 font-black">${absenLain} hari</span>.
-            `;
-        }
+        hitungUlangSemuaKomponenGaji();
     }
-
-    if (urIndikatorAbsen) urIndikatorAbsen.innerText = absenLain + " hari";
-    if (pvHariAbsen) pvHariAbsen.innerText = absenLain + " hari";
-
-    // Konversi Hitungan Jam Menit Potongan
-    const jamPot = Math.floor(totalMenitPotongan / 60);
-    const mntPot = totalMenitPotongan % 60;
-    if (lblPotonganJam) lblPotonganJam.innerText = `${jamPot} jam ${mntPot} menit`;
-
-    // Konversi Hitungan Jam Menit Tambahan
-    const jamTam = Math.floor(totalMenitTambahan / 60);
-    const mntTam = totalMenitTambahan % 60;
-    if (lblTambahanJam) lblTambahanJam.innerText = `${jamTam} jam ${mntTam} menit`;
 
     // =========================================================================
-    // LOGIKA INJEKSI HTML DAN RENDER LIST POIN-POIN
-    // =========================================================================
-    const wrapperListPotongan = document.getElementById("sg-wrapper-alasan-potongan-list");
-    const ulPotongan = document.getElementById("sg-list-alasan-potongan");
-    if (wrapperListPotongan && ulPotongan) {
-        if (listHtmlPotongan !== "") {
-            ulPotongan.innerHTML = listHtmlPotongan;
-            wrapperListPotongan.classList.remove("hidden"); // Munculkan wrapper jika ada data
-        } else {
-            ulPotongan.innerHTML = "";
-            wrapperListPotongan.classList.add("hidden");    // Sembunyikan jika kosong
-        }
-    }
-
-    const wrapperListTambahan = document.getElementById("sg-wrapper-alasan-tambahan-list");
-    const ulTambahan = document.getElementById("sg-list-alasan-tambahan");
-    if (wrapperListTambahan && ulTambahan) {
-        if (listHtmlTambahan !== "") {
-            ulTambahan.innerHTML = listHtmlTambahan;
-            wrapperListTambahan.classList.remove("hidden"); // Munculkan wrapper jika ada data
-        } else {
-            ulTambahan.innerHTML = "";
-            wrapperListTambahan.classList.add("hidden");    // Sembunyikan jika kosong
-        }
-    }
-
-    // --- Bagian Penyesuaian Dropdown Uang Rajin Asli Milik Bos ---
-    if (selUangRajin) {
-        selUangRajin.selectedIndex = 0; 
-        const outRajinStatus = document.getElementById("sg-out-rajin-status");
-        if (outRajinStatus) {
-            outRajinStatus.innerText = "Pilih status terlebih dahulu";
-            outRajinStatus.className = "text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic";
-        }
-        const inputCustomLama = document.getElementById("sg-in-rajin-custom-wrapper");
-        if (inputCustomLama) inputCustomLama.remove();
-    }
-
-    hitungUlangSemuaKomponenGaji();
-}
-
-    // =========================================================================
-    // 3. INTERAKSI DINAMIS FORM POIN TAMBAHAN & UANG RAJIN (FIXED)
+    // 3. INTERAKSI DINAMIS FORM POIN TAMBAHAN & UANG RAJIN
     // =========================================================================
     if (selPoin) {
         selPoin.addEventListener("change", function() {
@@ -7660,7 +7740,6 @@ document.addEventListener("DOMContentLoaded", function() {
             
             wrapperPoin.innerHTML = "";
 
-            // 1. Render semua baris HTML sesuai jumlah opsi yang dipilih
             for (let i = 1; i <= jumlahPoin; i++) {
                 const barisHtml = `
                     <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-2 p-2 bg-slate-50 border border-slate-100 rounded-xl animate-fadeIn">
@@ -7678,18 +7757,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 wrapperPoin.insertAdjacentHTML("beforeend", barisHtml);
             }
 
-            // 2. SOLUSI: Cari SEMUA input rupiah (.sg-in-poin-rp) yang baru dibuat, lalu pasang masking
             const semuaInputPoinBaru = wrapperPoin.querySelectorAll(".sg-in-poin-rp");
             semuaInputPoinBaru.forEach(input => {
                 pasangMaskingFormatTitik(input);
             });
 
-            // 3. Hitung ulang total awal
             hitungUlangSemuaKomponenGaji();
         });
     }
 
-   // =========================================================================
+    // =========================================================================
     // 4. MESIN HITUNG OTOMATIS (REAL-TIME AUTO-CALCULATION)
     // =========================================================================
     pasangMaskingFormatTitik(inRateJadwal2);
@@ -7711,16 +7788,14 @@ document.addEventListener("DOMContentLoaded", function() {
         const rpMinusPotongan = inMinusPotongan ? bersihkanAngkaMurni(inMinusPotongan.value) : 0;
         const rpPlusTambahan  = inPlusTambahan ? bersihkanAngkaMurni(inPlusTambahan.value) : 0;
 
-        // 1. Ambil Data Nilai Poin Tambahan secara Aman
         let rpTotalPoinTambahan = 0;
         if (wrapperPoin) {
             const inputsPoinRp = wrapperPoin.querySelectorAll(".sg-in-poin-rp");
-            textInputsPoinRp = inputsPoinRp.forEach(input => {
+            inputsPoinRp.forEach(input => {
                 rpTotalPoinTambahan += bersihkanAngkaMurni(input.value);
             });
         }
 
-        // 2. Kalkulasi Nilai Uang Rajin & Perbarui Badge Status Visual secara Real-Time
         let rpUangRajin = 0;
         const outRajinStatus = document.getElementById("sg-out-rajin-status");
 
@@ -7728,7 +7803,6 @@ document.addEventListener("DOMContentLoaded", function() {
             const tipeRajin = selUangRajin.value;
             
             if (tipeRajin === "") {
-                // POSISI AWAL / NONE: Jika belum memilih apapun
                 rpUangRajin = 0;
                 if (outRajinStatus) {
                     outRajinStatus.innerText = "Pilih status terlebih dahulu";
@@ -7761,7 +7835,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        // 3. Akumulasi Total Awal Gaji Bersih Otomatis
         const totalGajiOtomatis = 
             rpTotalJadwal2 + 
             rpTotalJadwal1 - 
@@ -7772,7 +7845,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (outTotalGajiBersih) outTotalGajiBersih.innerText = formatRupiah(totalGajiOtomatis);
 
-        // 4. Logika Nota Pembulatan Manual / Final Gaji Diterima
         const rpPembulatan = inPembulatan ? bersihkanAngkaMurni(inPembulatan.value) : 0;
         let finalGajiDiterima = 0;
 
@@ -7786,17 +7858,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================================
-    // LISTENERS DROPDOWN INTERAKSI UANG RAJIN (FORM DINAMIS PENYESUAIAN)
+    // LISTENERS DROPDOWN INTERAKSI UANG RAJIN
     // =========================================================================
     if (selUangRajin) {
         selUangRajin.addEventListener("change", function() {
             const wrapperUangRajinDinamis = document.getElementById("sg-wrapper-uang-rajin-dinamis");
             
-            // Hapus input kustom lama jika sebelumnya ada
             const inputCustomLama = document.getElementById("sg-in-rajin-custom-wrapper");
             if (inputCustomLama) inputCustomLama.remove();
 
-            // Jika Owner memilih 'Penyesuaian', munculkan form input rupiah secara dinamis
             if (this.value === "penyesuaian") {
                 const htmlInputCustom = `
                     <div id="sg-in-rajin-custom-wrapper" class="relative rounded-xl shadow-inner w-32 animate-fadeIn">
@@ -7804,7 +7874,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         <input type="text" id="sg-in-rajin-custom" class="w-full bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-1.5 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
                     </div>
                 `;
-                // Sisipkan input baru tepat di sebelah kiri tulisan "Total ="
                 if (wrapperUangRajinDinamis) {
                     wrapperUangRajinDinamis.insertAdjacentHTML("afterbegin", htmlInputCustom);
                 }
@@ -7812,416 +7881,457 @@ document.addEventListener("DOMContentLoaded", function() {
                 const inputCustomRajin = document.getElementById("sg-in-rajin-custom");
                 if (inputCustomRajin) {
                     pasangMaskingFormatTitik(inputCustomRajin);
-                    // Saat owner mengetik angka penyesuaian, jalankan hitung otomatis secara real-time
                     inputCustomRajin.addEventListener("input", hitungUlangSemuaKomponenGaji);
                 }
             }
 
-            // Jalankan kalkulator utama untuk merespon perubahan dropdown
             hitungUlangSemuaKomponenGaji();
         });
     }
 
-   function resetFormSlipGaji() {
-    if (txtPeriode) txtPeriode.innerText = "-";
-    if (txtTotalHari) txtTotalHari.innerText = "-";
-    if (lblJadwal2) lblJadwal2.innerText = "0 hari";
-    if (lblJadwal1) lblJadwal1.innerText = "0 hari";
-    if (outTotalJadwal2) outTotalJadwal2.innerText = "Rp 0";
-    if (outTotalJadwal1) outTotalJadwal1.innerText = "Rp 0";
-    if (outLibur) outLibur.innerText = "0 hari";
-    if (outAbsenLain) outAbsenLain.innerText = "0 hari";
-    if (lblPotonganJam) lblPotonganJam.innerText = "0 jam 0 menit";
-    if (lblTambahanJam) lblTambahanJam.innerText = "0 jam 0 menit";
+    function resetFormSlipGaji() {
+        if (txtPeriode) txtPeriode.innerText = "-";
+        if (txtTotalHari) txtTotalHari.innerText = "-";
+        if (lblJadwal2) lblJadwal2.innerText = "0 hari";
+        if (lblJadwal1) lblJadwal1.innerText = "0 hari";
+        if (outTotalJadwal2) outTotalJadwal2.innerText = "Rp 0";
+        if (outTotalJadwal1) outTotalJadwal1.innerText = "Rp 0";
+        if (outLibur) outLibur.innerText = "0 hari";
+        if (outAbsenLain) outAbsenLain.innerText = "0 hari";
+        if (lblPotonganJam) lblPotonganJam.innerText = "0 jam 0 menit";
+        if (lblTambahanJam) lblTambahanJam.innerText = "0 jam 0 menit";
 
-    // --- SINKRONISASI RESET INDIKATOR UANG RAJIN & TABEL PREVIEW ---
-    const urIndikatorAbsen = document.getElementById("sg-ur-indikator-absen");
-    const pvHariAbsen = document.getElementById("pv-hari-absen");
-    const urPetunjukDinamis = document.getElementById("sg-ur-petunjuk-dinamis"); // Tambahkan ini
+        const urIndikatorAbsen = document.getElementById("sg-ur-indikator-absen");
+        const pvHariAbsen = document.getElementById("pv-hari-absen");
+        const urPetunjukDinamis = document.getElementById("sg-ur-petunjuk-dinamis");
 
-    if (urIndikatorAbsen) urIndikatorAbsen.innerText = "0 hari";
-    if (pvHariAbsen) pvHariAbsen.innerText = "-";
-    
-    // Kembalikan teks petunjuk ke posisi default awal saat reset
-    if (urPetunjukDinamis) urPetunjukDinamis.innerText = "Menunggu data karyawan...";
+        if (urIndikatorAbsen) urIndikatorAbsen.innerText = "0 hari";
+        if (pvHariAbsen) pvHariAbsen.innerText = "-";
+        if (urPetunjukDinamis) urPetunjukDinamis.innerText = "Menunggu data karyawan...";
 
-    // --- RESET ELEMENT LIST BARU SUPAYA BERSIH SAAT GANTI KARYAWAN ---
-    const wrapperListPotongan = document.getElementById("sg-wrapper-alasan-potongan-list");
-    const ulPotongan = document.getElementById("sg-list-alasan-potongan");
-    if (ulPotongan) ulPotongan.innerHTML = "";
-    if (wrapperListPotongan) wrapperListPotongan.classList.add("hidden");
+        const wrapperListPotongan = document.getElementById("sg-wrapper-alasan-potongan-list");
+        const ulPotongan = document.getElementById("sg-list-alasan-potongan");
+        if (ulPotongan) ulPotongan.innerHTML = "";
+        if (wrapperListPotongan) wrapperListPotongan.classList.add("hidden");
 
-    const wrapperListTambahan = document.getElementById("sg-wrapper-alasan-tambahan-list");
-    const ulTambahan = document.getElementById("sg-list-alasan-tambahan");
-    if (ulTambahan) ulTambahan.innerHTML = "";
-    if (wrapperListTambahan) wrapperListTambahan.classList.add("hidden");
+        const wrapperListTambahan = document.getElementById("sg-wrapper-alasan-tambahan-list");
+        const ulTambahan = document.getElementById("sg-list-alasan-tambahan");
+        if (ulTambahan) ulTambahan.innerHTML = "";
+        if (wrapperListTambahan) wrapperListTambahan.classList.add("hidden");
 
-    if (inRateJadwal2) inRateJadwal2.value = "";
-    if (inRateJadwal1) inRateJadwal1.value = "";
-    if (inMinusPotongan) inMinusPotongan.value = "";
-    if (inPlusTambahan) inPlusTambahan.value = "";
-    if (inPembulatan) inPembulatan.value = "";
-    if (selPoin) selPoin.value = "0";
-    if (wrapperPoin) wrapperPoin.innerHTML = "";
-    
-    // --- AMAN & REVISI BUG UANG RAJIN ---
-    // 1. Kembalikan indeks pilihan ke "Pilih Dahulu"
-    if (selUangRajin) selUangRajin.selectedIndex = 0; 
-    
-    // 2. Hapus input kustom penyesuaian jika ada sisa dari karyawan sebelumnya
-    const inputCustomLama = document.getElementById("sg-in-rajin-custom-wrapper");
-    if (inputCustomLama) inputCustomLama.remove();
-
-    // 3. Kembalikan teks status badge tanpa menimpa wadah HTML utama secara kasar
-    const outRajinStatus = document.getElementById("sg-out-rajin-status");
-    if (outRajinStatus) {
-        outRajinStatus.innerText = "Pilih status terlebih dahulu";
-        outRajinStatus.className = "text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic";
-    }
-    
-    if (outTotalGajiBersih) outTotalGajiBersih.innerText = "Rp 0";
-    if (outFinalGaji) outFinalGaji.innerText = "Rp 0";
-
-    dataPresensiHitung = { hariJadwal2: 0, hariJadwal1: 0, hariLibur: 0, hariAbsenLain: 0 };
-}
-
- // =========================================================================
-// 5. INTERAKSI MODAL POPUP & SINKRONISASI DATA PREVIEW SLIP GAJI
-// =========================================================================
-const modalPreviewSlip = document.getElementById("modal-preview-slip");
-const btnGenerateSlip   = document.getElementById("btn-generate-slip-gaji");
-const btnTutupPreview   = document.getElementById("btn-tutup-preview-slip");
-
-const ownerInputCatatan = document.getElementById("owner-input-catatan");
-
-// Elemen Target Utama Tabel Slip
-const containerBarisSlip = document.getElementById("container-baris-slip");
-
-// Elemen Output Dokumen Slip Preview
-const pvNamaKaryawan      = document.getElementById("pv-nama-karyawan");
-const pvPeriodeKerja      = document.getElementById("pv-periode-kerja");
-const pvHariJ2           = document.getElementById("pv-hari-j2");
-const pvRateJ2           = document.getElementById("pv-rate-j2");
-const pvTotalJ2          = document.getElementById("pv-total-j2");
-const pvHariJ1           = document.getElementById("pv-hari-j1");
-const pvRateJ1           = document.getElementById("pv-rate-j1");
-const pvTotalJ1          = document.getElementById("pv-total-j1");
-const pvHariLibur       = document.getElementById("pv-hari-libur");
-const pvHariAbsen       = document.getElementById("pv-hari-absen");
-const pvLblPotongan     = document.getElementById("pv-lbl-potongan");
-const pvTotalPotongan   = document.getElementById("pv-total-potongan");
-const pvLblTambahan     = document.getElementById("pv-lbl-tambahan");
-const pvTotalTambahan   = document.getElementById("pv-total-tambahan");
-const pvTotalRajin      = document.getElementById("pv-total-rajin");
-const pvRekapOtomatis   = document.getElementById("pv-rekap-otomatis");
-const pvRekapPembulatan = document.getElementById("pv-rekap-pembulatan");
-const pvRekapFinal      = document.getElementById("pv-rekap-final");
-const pvTanggalCetak    = document.getElementById("pv-tanggal-cetak");
-const urIndikatorAbsen = document.getElementById("sg-ur-indikator-absen");
-
-// --- TAMBAHAN BARU: ELEMEN TUNJANGAN MAKAN & AKUMULASI PENDAPATAN ---
-const pvHariMasukMakan = document.getElementById("pv-hari-masuk-makan");
-const pvTotalUangMakan  = document.getElementById("pv-total-uang-makan");
-const pvTotalAkumulasi  = document.getElementById("pv-total-akumulasi");
-
-// Elemen Render Catatan (Box & Text)
-const pvBoxCatatanRender = document.getElementById("pv-box-catatan-render");
-const pvTextCatatanOwner = document.getElementById("pv-text-catatan-owner");
-
-// Membuka Modal Preview dan Sinkronisasi Seluruh Data Real-Time
-if (btnGenerateSlip) {
-    btnGenerateSlip.addEventListener("click", function() {
-        const karyawanAktif = typeof selectGajiKaryawan !== 'undefined' ? selectGajiKaryawan.value : "";
-        if (!karyawanAktif) {
-            alert("Owner belum memilih nama karyawan! Silakan pilih terlebih dahulu di atas.");
-            return;
-        }
-
-        // 1. Tarik Nama Lengkap Karyawan Terpilih
-        let namaLengkap = "Karyawan";
-        if (karyawanAktif === "Dadan") namaLengkap = "Dadan Nurfaizal";
-        if (karyawanAktif === "Cahya") namaLengkap = "M. Cahya Ardiansyah";
-		if (karyawanAktif === "Syamsi") namaLengkap = "Syamsi Nurhakim";
-        if (pvNamaKaryawan) pvNamaKaryawan.innerText = namaLengkap;
-
-        // 2. Tarik Data Periode Dokumen
-        if (pvPeriodeKerja) pvPeriodeKerja.innerText = typeof txtPeriode !== 'undefined' ? txtPeriode.innerText : "-";
-
-        // 3. Tarik Angka Rincian Komponen Gaji Utama
-        if (pvHariJ2 && typeof dataPresensiHitung !== 'undefined') pvHariJ2.innerText = dataPresensiHitung.hariJadwal2 + " Hari";
-        if (pvRateJ2) {
-            const vRateJ2 = typeof inRateJadwal2 !== 'undefined' && inRateJadwal2.value ? bersihkanAngkaMurni(inRateJadwal2.value) : 0;
-            pvRateJ2.innerText = vRateJ2.toLocaleString("id-ID");
-        }
-        if (pvTotalJ2) {
-            const vTotalJ2 = typeof outTotalJadwal2 !== 'undefined' ? bersihkanAngkaMurni(outTotalJadwal2.innerText) : 0;
-            pvTotalJ2.innerText = vTotalJ2.toLocaleString("id-ID");
-        }
-
-        if (pvHariJ1 && typeof dataPresensiHitung !== 'undefined') pvHariJ1.innerText = dataPresensiHitung.hariJadwal1 + " Hari";
-        if (pvRateJ1) {
-            const vRateJ1 = typeof inRateJadwal1 !== 'undefined' && inRateJadwal1.value ? bersihkanAngkaMurni(inRateJadwal1.value) : 0;
-            pvRateJ1.innerText = vRateJ1.toLocaleString("id-ID");
-        }
-        if (pvTotalJ1) {
-            const vTotalJ1 = typeof outTotalJadwal1 !== 'undefined' ? bersihkanAngkaMurni(outTotalJadwal1.innerText) : 0;
-            pvTotalJ1.innerText = vTotalJ1.toLocaleString("id-ID");
-        }
-
-        if (pvHariLibur && typeof dataPresensiHitung !== 'undefined') pvHariLibur.innerText = dataPresensiHitung.hariLibur + " Hari";
-        if (pvHariAbsen && typeof dataPresensiHitung !== 'undefined') pvHariAbsen.innerText = dataPresensiHitung.hariAbsenLain + " Hari";
-
-        // 4. Sinkronisasi Jam & Biaya
-        if (pvLblPotongan) pvLblPotongan.innerText = typeof lblPotonganJam !== 'undefined' ? lblPotonganJam.innerText : '0 jam';
-        const minusPotonganValue = typeof inMinusPotongan !== 'undefined' && inMinusPotongan.value ? bersihkanAngkaMurni(inMinusPotongan.value) : 0;
-        if (pvTotalPotongan) pvTotalPotongan.innerText = minusPotonganValue.toLocaleString("id-ID");
-
-        if (pvLblTambahan) pvLblTambahan.innerText = typeof lblTambahanJam !== 'undefined' ? lblTambahanJam.innerText : '0 jam';
-        const plusTambahanValue = typeof inPlusTambahan !== 'undefined' && inPlusTambahan.value ? bersihkanAngkaMurni(inPlusTambahan.value) : 0;
-        if (pvTotalTambahan) pvTotalTambahan.innerText = plusTambahanValue.toLocaleString("id-ID");
-
-        let rpUangRajin = 0;
-        if (typeof selUangRajin !== 'undefined' && selUangRajin) {
-            if (selUangRajin.value === "full") rpUangRajin = 300000;
-            else if (selUangRajin.value === "penyesuaian") {
-                const inputCustomRajin = document.getElementById("sg-in-rajin-custom");
-                if (inputCustomRajin) rpUangRajin = bersihkanAngkaMurni(inputCustomRajin.value);
-            }
-        }
-        if (pvTotalRajin) pvTotalRajin.innerText = rpUangRajin.toLocaleString("id-ID");
-
-        // Ekstraksi baris kustom dinamis poin tambahan ke preview tabel
-        const barisLamaDinamis = containerBarisSlip.querySelectorAll(".baris-poin-dinamis-pv");
-        barisLamaDinamis.forEach(row => row.remove());
-
-        if (typeof wrapperPoin !== 'undefined' && wrapperPoin) {
-            const blokInputs = wrapperPoin.querySelectorAll(".flex-col, .sm\\:flex-row");
-            let nomorUrutTabel = 8;
-
-            blokInputs.forEach((blok) => {
-                const inputKet = blok.querySelector(".sg-in-poin-ket");
-                const inputRp  = blok.querySelector(".sg-in-poin-rp");
-
-                if (inputRp) {
-                    const nilaiRp = bersihkanAngkaMurni(inputRp.value);
-                    if (nilaiRp > 0) {
-                        const namaPoinKustom = inputKet && inputKet.value.trim() !== "" ? inputKet.value.trim() : `Poin Tambahan ${nomorUrutTabel - 7}`;
-
-                        const barisHtmlBaru = `
-                            <tr class="align-middle bg-white baris-poin-dinamis-pv">
-                                <td class="py-1.5 text-center text-slate-400 font-bold border-r border-slate-300">${nomorUrutTabel}</td>
-                                <td class="py-1.5 pl-1 sm:pl-2 break-words font-bold text-slate-900 leading-tight border-r border-slate-300">${namaPoinKustom}</td>
-                                <td class="py-1.5 text-center text-slate-300 border-r border-slate-300">-</td>
-                                <td class="py-1.5 text-center text-slate-300 border-r border-slate-300">-</td>
-                                <td class="py-1.5 text-right pr-1 sm:pr-2 text-slate-900 font-bold tracking-tighter">${nilaiRp.toLocaleString("id-ID")}</td>
-                            </tr>
-                        `;
-                        containerBarisSlip.insertAdjacentHTML("beforeend", barisHtmlBaru);
-                        nomorUrutTabel++;
-                    }
-                }
-            });
-        }
-
-        // 6. Sinkronisasi Blok Hasil Akhir Rekap Nota
-        if (pvRekapOtomatis) pvRekapOtomatis.innerText = typeof outTotalGajiBersih !== 'undefined' ? outTotalGajiBersih.innerText : "Rp 0";
-        const pembulatanValue = typeof inPembulatan !== 'undefined' && inPembulatan.value ? bersihkanAngkaMurni(inPembulatan.value) : 0;
-        if (pvRekapPembulatan) pvRekapPembulatan.innerText = "Rp " + pembulatanValue.toLocaleString("id-ID");
-        if (pvRekapFinal) pvRekapFinal.innerText = typeof outFinalGaji !== 'undefined' ? outFinalGaji.innerText : "Rp 0";
-
-        // --- HITUNG LOGIKA BARU: TUNJANGAN MAKAN & AKUMULASI PENDAPATAN ---
-        let totalHariMasuk = 0;
-        if (typeof dataPresensiHitung !== 'undefined') {
-            const hJ2 = dataPresensiHitung.hariJadwal2 || 0;
-            const hJ1 = dataPresensiHitung.hariJadwal1 || 0;
-            totalHariMasuk = hJ2 + hJ1;
-        }
-
-        const totalUangMakan = totalHariMasuk * 20000;
-        const nilaiGajiRiil = typeof outFinalGaji !== 'undefined' ? bersihkanAngkaMurni(outFinalGaji.innerText) : 0;
-        const totalAkumulasi = nilaiGajiRiil + totalUangMakan;
-
-       if (pvHariMasukMakan) pvHariMasukMakan.innerText = totalHariMasuk;
-       if (pvTotalUangMakan) pvTotalUangMakan.innerText = "Rp " + totalUangMakan.toLocaleString("id-ID");
-       if (pvTotalAkumulasi) pvTotalAkumulasi.innerText = "Rp " + totalAkumulasi.toLocaleString("id-ID"); 
-
-
-
-        // 7. Mengisi Tanggal Hari Ini Secara Otomatis
-        const hariIni = new Date();
-        if (pvTanggalCetak) pvTanggalCetak.innerText = hariIni.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
-
-        // --- PROSES TRANSFER CATATAN OWNER SECARA AMAN ---
-        if (ownerInputCatatan && pvTextCatatanOwner && pvBoxCatatanRender) {
-            const isiCatatan = ownerInputCatatan.value.trim();
-            if (isiCatatan !== "") {
-                pvTextCatatanOwner.innerText = isiCatatan;
-                pvBoxCatatanRender.classList.remove("hidden");
-            } else {
-                pvTextCatatanOwner.innerText = "";
-                pvBoxCatatanRender.classList.add("hidden");
-            }
-        }
-
-        // Tampilkan Modal Animasi Slide-In
-        if (modalPreviewSlip) {
-            modalPreviewSlip.classList.remove("opacity-0", "pointer-events-none");
-            modalPreviewSlip.querySelector(".transform").classList.remove("scale-95");
-            modalPreviewSlip.querySelector(".transform").classList.add("scale-100");
-        }
-    });
-}
-
-// Fungsi Pengamat Catatan Textarea
-if (ownerInputCatatan) {
-    ownerInputCatatan.addEventListener("input", function() {
-        if (pvTextCatatanOwner && pvBoxCatatanRender) {
-            const isiCatatan = this.value.trim();
-            if (isiCatatan === "") {
-                pvTextCatatanOwner.innerText = "";
-                pvBoxCatatanRender.classList.add("hidden");
-            } else {
-                pvTextCatatanOwner.innerText = isiCatatan;
-                pvBoxCatatanRender.classList.remove("hidden");
-            }
-        }
-    });
-}
-
-// Menutup Modal Preview Slip Gaji
-if (btnTutupPreview) {
-    btnTutupPreview.addEventListener("click", function() {
-        if (modalPreviewSlip) {
-            modalPreviewSlip.classList.add("opacity-0", "pointer-events-none");
-            modalPreviewSlip.querySelector(".transform").classList.add("scale-95");
-            modalPreviewSlip.querySelector(".transform").classList.remove("scale-100");
-        }
-    });
-}
-
-// =========================================================================
-// 6. INTEGRASI EMERALD BUTTON: RENDER HIGH-RES JPG + WEB SHARE API (MODERN)
-// =========================================================================
-const btnKirimWaReal = document.getElementById("nsa-btn-wa-kirim-slip");
-
-if (btnKirimWaReal) {
-    btnKirimWaReal.addEventListener("click", function() {
-        // A. Validasi Awal
-        const karyawanTerpilih = typeof selectGajiKaryawan !== 'undefined' ? selectGajiKaryawan.value : "";
-        if (!karyawanTerpilih || typeof txtPeriode === 'undefined' || txtPeriode.innerText === "-") {
-            alert("Silakan pilih karyawan dan akumulasikan data terlebih dahulu!");
-            return;
-        }
-
-        // B. Tarik Nama Lengkap & Database Nomor WA
-        let namaLengkapKaryawan = "";
-        let nomorWa = "";
-
-        if (karyawanTerpilih === "Cahya") {
-            namaLengkapKaryawan = "M. Cahya Ardiansyah";
-            nomorWa = "6285721962654";
-        } else if (karyawanTerpilih === "Dadan") {
-            namaLengkapKaryawan = "Dadan Nurfaizal";
-            nomorWa = "6283130578886";
-        } else if (karyawanTerpilih === "Syamsi") {
-            namaLengkapKaryawan = "Syamsi Nurhakim";
-            nomorWa = "6282126333381";
-        } else {
-            namaLengkapKaryawan = "Karyawan";
-            let inputNomor = prompt("Nomor WA karyawan tidak dikenal. Masukkan manual (Format: 628xxx):", "628");
-            if (!inputNomor) return;
-            nomorWa = inputNomor.replace(/[^0-9]/g, '');
-            if (nomorWa.startsWith("08")) nomorWa = "628" + nomorWa.slice(2);
-        }
-
-        const periodeGaji = txtPeriode.innerText;
-        const targetRenderImage = document.getElementById("elemen-slip-gaji-render");
+        if (inRateJadwal2) inRateJadwal2.value = "";
+        if (inRateJadwal1) inRateJadwal1.value = "";
+        if (inMinusPotongan) inMinusPotongan.value = "";
+        if (inPlusTambahan) inPlusTambahan.value = "";
+        if (inPembulatan) inPembulatan.value = "";
+        if (selPoin) selPoin.value = "0";
+        if (wrapperPoin) wrapperPoin.innerHTML = "";
         
-        if (!targetRenderImage) {
-            alert("Elemen '#elemen-slip-gaji-render' tidak ditemukan di DOM!");
-            return;
+        if (selUangRajin) selUangRajin.selectedIndex = 0; 
+        
+        const inputCustomLama = document.getElementById("sg-in-rajin-custom-wrapper");
+        if (inputCustomLama) inputCustomLama.remove();
+
+        const outRajinStatus = document.getElementById("sg-out-rajin-status");
+        if (outRajinStatus) {
+            outRajinStatus.innerText = "Pilih status terlebih dahulu";
+            outRajinStatus.className = "text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic";
         }
+        
+        if (outTotalGajiBersih) outTotalGajiBersih.innerText = "Rp 0";
+        if (outFinalGaji) outFinalGaji.innerText = "Rp 0";
 
-        // C. Efek Animasi Loading Spinner
-        const textAwalTombol = this.innerHTML;
-        this.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Slip Gaji...`;
-        this.disabled = true;
+        dataPresensiHitung = { hariJadwal2: 0, hariJadwal1: 0, hariLibur: 0, hariAbsenLain: 0 };
+    }
 
-        // D. Susun Pesan Teks Pendamping
-        let teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja bulan ini untuk Nurjaya Abadi Photocopy, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
+    // =========================================================================
+    // 5. INTERAKSI MODAL POPUP & SINKRONISASI DATA PREVIEW SLIP GAJI
+    // =========================================================================
+    const modalPreviewSlip = document.getElementById("modal-preview-slip");
+    const btnGenerateSlip   = document.getElementById("btn-generate-slip-gaji");
+    const btnTutupPreview   = document.getElementById("btn-tutup-preview-slip");
+    const ownerInputCatatan = document.getElementById("owner-input-catatan");
 
-        // E. Eksekusi Render High-Res HD (Presisi & Anti-Glitch Font) - FIXED VERSION
-        setTimeout(async () => {
-            try {
-                if (typeof domtoimage === 'undefined') {
-                    alert("Library domtoimage belum terpasang/gagal dimuat!");
+    const containerBarisSlip = document.getElementById("container-baris-slip");
+
+    const pvNamaKaryawan      = document.getElementById("pv-nama-karyawan");
+    const pvPeriodeKerja      = document.getElementById("pv-periode-kerja");
+    const pvHariJ2            = document.getElementById("pv-hari-j2");
+    const pvRateJ2            = document.getElementById("pv-rate-j2");
+    const pvTotalJ2           = document.getElementById("pv-total-j2");
+    const pvHariJ1            = document.getElementById("pv-hari-j1");
+    const pvRateJ1            = document.getElementById("pv-rate-j1");
+    const pvTotalJ1           = document.getElementById("pv-total-j1");
+    const pvHariLibur        = document.getElementById("pv-hari-libur");
+    const pvHariAbsen        = document.getElementById("pv-hari-absen");
+    const pvLblPotongan      = document.getElementById("pv-lbl-potongan");
+    const pvTotalPotongan    = document.getElementById("pv-total-potongan");
+    const pvLblTambahan      = document.getElementById("pv-lbl-tambahan");
+    const pvTotalTambahan    = document.getElementById("pv-total-tambahan");
+    const pvTotalRajin       = document.getElementById("pv-total-rajin");
+    const pvRekapOtomatis    = document.getElementById("pv-rekap-otomatis");
+    const pvRekapPembulatan  = document.getElementById("pv-rekap-pembulatan");
+    const pvRekapFinal       = document.getElementById("pv-rekap-final");
+    const pvTanggalCetak     = document.getElementById("pv-tanggal-cetak");
+
+    const pvHariMasukMakan  = document.getElementById("pv-hari-masuk-makan");
+    const pvTotalUangMakan  = document.getElementById("pv-total-uang-makan");
+    const pvTotalAkumulasi  = document.getElementById("pv-total-akumulasi");
+
+    const pvBoxCatatanRender = document.getElementById("pv-box-catatan-render");
+    const pvTextCatatanOwner = document.getElementById("pv-text-catatan-owner");
+
+    if (btnGenerateSlip) {
+        btnGenerateSlip.addEventListener("click", function() {
+            const karyawanAktif = typeof selectGajiKaryawan !== 'undefined' ? selectGajiKaryawan.value : "";
+            if (!karyawanAktif) {
+                alert("Owner belum memilih nama karyawan! Silakan pilih terlebih dahulu di atas.");
+                return;
+            }
+
+            let namaLengkap = "Karyawan";
+            if (karyawanAktif === "Dadan") namaLengkap = "Dadan Nurfaizal";
+            if (karyawanAktif === "Cahya") namaLengkap = "M. Cahya Ardiansyah";
+            if (karyawanAktif === "Syamsi") namaLengkap = "Syamsi Nurhakim";
+            if (pvNamaKaryawan) pvNamaKaryawan.innerText = namaLengkap;
+
+            if (pvPeriodeKerja) pvPeriodeKerja.innerText = typeof txtPeriode !== 'undefined' ? txtPeriode.innerText : "-";
+
+            if (pvHariJ2 && typeof dataPresensiHitung !== 'undefined') pvHariJ2.innerText = dataPresensiHitung.hariJadwal2 + " Hari";
+            if (pvRateJ2) {
+                const vRateJ2 = typeof inRateJadwal2 !== 'undefined' && inRateJadwal2.value ? bersihkanAngkaMurni(inRateJadwal2.value) : 0;
+                pvRateJ2.innerText = vRateJ2.toLocaleString("id-ID");
+            }
+            if (pvTotalJ2) {
+                const vTotalJ2 = typeof outTotalJadwal2 !== 'undefined' ? bersihkanAngkaMurni(outTotalJadwal2.innerText) : 0;
+                pvTotalJ2.innerText = vTotalJ2.toLocaleString("id-ID");
+            }
+
+            if (pvHariJ1 && typeof dataPresensiHitung !== 'undefined') pvHariJ1.innerText = dataPresensiHitung.hariJadwal1 + " Hari";
+            if (pvRateJ1) {
+                const vRateJ1 = typeof inRateJadwal1 !== 'undefined' && inRateJadwal1.value ? bersihkanAngkaMurni(inRateJadwal1.value) : 0;
+                pvRateJ1.innerText = vRateJ1.toLocaleString("id-ID");
+            }
+            if (pvTotalJ1) {
+                const vTotalJ1 = typeof outTotalJadwal1 !== 'undefined' ? bersihkanAngkaMurni(outTotalJadwal1.innerText) : 0;
+                pvTotalJ1.innerText = vTotalJ1.toLocaleString("id-ID");
+            }
+
+            if (pvHariLibur && typeof dataPresensiHitung !== 'undefined') pvHariLibur.innerText = dataPresensiHitung.hariLibur + " Hari";
+            if (pvHariAbsen && typeof dataPresensiHitung !== 'undefined') pvHariAbsen.innerText = dataPresensiHitung.hariAbsenLain + " Hari";
+
+            if (pvLblPotongan) pvLblPotongan.innerText = typeof lblPotonganJam !== 'undefined' ? lblPotonganJam.innerText : '0 jam';
+            const minusPotonganValue = typeof inMinusPotongan !== 'undefined' && inMinusPotongan.value ? bersihkanAngkaMurni(inMinusPotongan.value) : 0;
+            if (pvTotalPotongan) pvTotalPotongan.innerText = minusPotonganValue.toLocaleString("id-ID");
+
+            if (pvLblTambahan) pvLblTambahan.innerText = typeof lblTambahanJam !== 'undefined' ? lblTambahanJam.innerText : '0 jam';
+            const plusTambahanValue = typeof inPlusTambahan !== 'undefined' && inPlusTambahan.value ? bersihkanAngkaMurni(inPlusTambahan.value) : 0;
+            if (pvTotalTambahan) pvTotalTambahan.innerText = plusTambahanValue.toLocaleString("id-ID");
+
+            let rpUangRajin = 0;
+            if (typeof selUangRajin !== 'undefined' && selUangRajin) {
+                if (selUangRajin.value === "full") rpUangRajin = 300000;
+                else if (selUangRajin.value === "penyesuaian") {
+                    const inputCustomRajin = document.getElementById("sg-in-rajin-custom");
+                    if (inputCustomRajin) rpUangRajin = bersihkanAngkaMurni(inputCustomRajin.value);
+                }
+            }
+            if (pvTotalRajin) pvTotalRajin.innerText = rpUangRajin.toLocaleString("id-ID");
+
+            if (containerBarisSlip) {
+                const barisLamaDinamis = containerBarisSlip.querySelectorAll(".baris-poin-dinamis-pv");
+                barisLamaDinamis.forEach(row => row.remove());
+
+                if (typeof wrapperPoin !== 'undefined' && wrapperPoin) {
+                    const blokInputs = wrapperPoin.querySelectorAll(".flex-col, .sm\\:flex-row");
+                    let nomorUrutTabel = 8;
+
+                    blokInputs.forEach((blok) => {
+                        const inputKet = blok.querySelector(".sg-in-poin-ket");
+                        const inputRp  = blok.querySelector(".sg-in-poin-rp");
+
+                        if (inputRp) {
+                            const nilaiRp = bersihkanAngkaMurni(inputRp.value);
+                            if (nilaiRp > 0) {
+                                const namaPoinKustom = inputKet && inputKet.value.trim() !== "" ? inputKet.value.trim() : `Poin Tambahan ${nomorUrutTabel - 7}`;
+
+                                const barisHtmlBaru = `
+                                    <tr class="align-middle bg-white baris-poin-dinamis-pv">
+                                        <td class="py-1.5 text-center text-slate-400 font-bold border-r border-slate-300">${nomorUrutTabel}</td>
+                                        <td class="py-1.5 pl-1 sm:pl-2 break-words font-bold text-slate-900 leading-tight border-r border-slate-300">${namaPoinKustom}</td>
+                                        <td class="py-1.5 text-center text-slate-300 border-r border-slate-300">-</td>
+                                        <td class="py-1.5 text-center text-slate-300 border-r border-slate-300">-</td>
+                                        <td class="py-1.5 text-right pr-1 sm:pr-2 text-slate-900 font-bold tracking-tighter">${nilaiRp.toLocaleString("id-ID")}</td>
+                                    </tr>
+                                `;
+                                containerBarisSlip.insertAdjacentHTML("beforeend", barisHtmlBaru);
+                                nomorUrutTabel++;
+                            }
+                        }
+                    });
+                }
+            }
+
+            if (pvRekapOtomatis) pvRekapOtomatis.innerText = typeof outTotalGajiBersih !== 'undefined' ? outTotalGajiBersih.innerText : "Rp 0";
+            const pembulatanValue = typeof inPembulatan !== 'undefined' && inPembulatan.value ? bersihkanAngkaMurni(inPembulatan.value) : 0;
+            if (pvRekapPembulatan) pvRekapPembulatan.innerText = "Rp " + pembulatanValue.toLocaleString("id-ID");
+            if (pvRekapFinal) pvRekapFinal.innerText = typeof outFinalGaji !== 'undefined' ? outFinalGaji.innerText : "Rp 0";
+
+            let totalHariMasuk = 0;
+            if (typeof dataPresensiHitung !== 'undefined') {
+                const hJ2 = dataPresensiHitung.hariJadwal2 || 0;
+                const hJ1 = dataPresensiHitung.hariJadwal1 || 0;
+                totalHariMasuk = hJ2 + hJ1;
+            }
+
+            const totalUangMakan = totalHariMasuk * 20000;
+            const nilaiGajiRiil = typeof outFinalGaji !== 'undefined' ? bersihkanAngkaMurni(outFinalGaji.innerText) : 0;
+            const totalAkumulasi = nilaiGajiRiil + totalUangMakan;
+
+            if (pvHariMasukMakan) pvHariMasukMakan.innerText = totalHariMasuk;
+            if (pvTotalUangMakan) pvTotalUangMakan.innerText = "Rp " + totalUangMakan.toLocaleString("id-ID");
+            if (pvTotalAkumulasi) pvTotalAkumulasi.innerText = "Rp " + totalAkumulasi.toLocaleString("id-ID"); 
+
+            const hariIni = new Date();
+            if (pvTanggalCetak) pvTanggalCetak.innerText = hariIni.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+
+            if (ownerInputCatatan && pvTextCatatanOwner && pvBoxCatatanRender) {
+                const isiCatatan = ownerInputCatatan.value.trim();
+                if (isiCatatan !== "") {
+                    pvTextCatatanOwner.innerText = isiCatatan;
+                    pvBoxCatatanRender.classList.remove("hidden");
+                } else {
+                    pvTextCatatanOwner.innerText = "";
+                    pvBoxCatatanRender.classList.add("hidden");
+                }
+            }
+
+            if (modalPreviewSlip) {
+                modalPreviewSlip.classList.remove("opacity-0", "pointer-events-none");
+                modalPreviewSlip.querySelector(".transform").classList.remove("scale-95");
+                modalPreviewSlip.querySelector(".transform").classList.add("scale-100");
+            }
+        });
+    }
+
+    if (ownerInputCatatan) {
+        ownerInputCatatan.addEventListener("input", function() {
+            if (pvTextCatatanOwner && pvBoxCatatanRender) {
+                const isiCatatan = this.value.trim();
+                if (isiCatatan === "") {
+                    pvTextCatatanOwner.innerText = "";
+                    pvBoxCatatanRender.classList.add("hidden");
+                } else {
+                    pvTextCatatanOwner.innerText = isiCatatan;
+                    pvBoxCatatanRender.classList.remove("hidden");
+                }
+            }
+        });
+    }
+
+    if (btnTutupPreview) {
+        btnTutupPreview.addEventListener("click", function() {
+            if (modalPreviewSlip) {
+                modalPreviewSlip.classList.add("opacity-0", "pointer-events-none");
+                modalPreviewSlip.querySelector(".transform").classList.add("scale-95");
+                modalPreviewSlip.querySelector(".transform").classList.remove("scale-100");
+            }
+        });
+    }
+
+    // =========================================================================
+    // 6. INTEGRASI EMERALD BUTTON: RENDER HD + UPLOAD GOOGLE DRIVE + WEB SHARE
+    // =========================================================================
+    const btnKirimWaReal = document.getElementById("nsa-btn-wa-kirim-slip");
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
+
+    if (btnKirimWaReal) {
+        btnKirimWaReal.addEventListener("click", function() {
+            // A. Validasi Awal
+            const karyawanTerpilih = typeof selectGajiKaryawan !== 'undefined' ? selectGajiKaryawan.value : "";
+            if (!karyawanTerpilih || typeof txtPeriode === 'undefined' || txtPeriode.innerText === "-") {
+                alert("Silakan pilih karyawan dan akumulasikan data terlebih dahulu!");
+                return;
+            }
+
+            // B. Tarik Nama Lengkap & Database Nomor WA
+            let namaLengkapKaryawan = "";
+            let nomorWa = "";
+
+            if (karyawanTerpilih === "Cahya") {
+                namaLengkapKaryawan = "M. Cahya Ardiansyah";
+                nomorWa = "6285721962654";
+            } else if (karyawanTerpilih === "Dadan") {
+                namaLengkapKaryawan = "Dadan Nurfaizal";
+                nomorWa = "6283130578886";
+            } else if (karyawanTerpilih === "Syamsi") {
+                namaLengkapKaryawan = "Syamsi Nurhakim";
+                nomorWa = "6282126333381";
+            } else {
+                namaLengkapKaryawan = "Karyawan";
+                let inputNomor = prompt("Nomor WA karyawan tidak dikenal. Masukkan manual (Format: 628xxx):", "628");
+                if (!inputNomor) return;
+                nomorWa = inputNomor.replace(/[^0-9]/g, '');
+                if (nomorWa.startsWith("08")) nomorWa = "628" + nomorWa.slice(2);
+            }
+
+            const periodeGaji = txtPeriode.innerText;
+            const targetRenderImage = document.getElementById("elemen-slip-gaji-render");
+            
+            if (!targetRenderImage) {
+                alert("Elemen '#elemen-slip-gaji-render' tidak ditemukan di DOM!");
+                return;
+            }
+
+            // C. Efek Animasi Loading Spinner Awal
+            const textAwalTombol = this.innerHTML;
+            this.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Slip Gaji...`;
+            this.disabled = true;
+
+            // D. Susun Pesan Teks Pendamping WhatsApp
+            let teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja bulan ini untuk Nurjaya Abadi Photocopy, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
+
+            // E. Eksekusi Render HD -> Upload ke Drive (Background) -> Share ke WA
+            setTimeout(async () => {
+                try {
+                    if (typeof domtoimage === 'undefined') {
+                        alert("Library domtoimage belum terpasang/gagal dimuat!");
+                        btnKirimWaReal.innerHTML = textAwalTombol;
+                        btnKirimWaReal.disabled = false;
+                        return;
+                    }
+
+                    if (document.fonts) {
+                        try {
+                            await document.fonts.ready;
+                        } catch (fontErr) {
+                            console.warn("Font loading timeout/error, melanjutkan render...", fontErr);
+                        }
+                    }
+
+                    // A. Ambil teks periode
+let teksPeriode = txtPeriode.innerText.trim();
+
+// B. Cek apakah di dalam teks periode sudah ada tahun 4 digit (misal: 2026)
+// Jika belum ada tahun, tambahkan tahun berjalan (misal: 2026) secara otomatis
+const regexTahun = /\b20\d{2}\b/;
+if (!regexTahun.test(teksPeriode)) {
+    const tahunSekarang = new Date().getFullYear(); // Menghasilkan 2026
+    teksPeriode = `${teksPeriode}_${tahunSekarang}`;
+}
+
+// C. Format karakter spasi & strip agar rapi
+const periodeFormatted = teksPeriode.replace(/\s+/g, '_');
+const namaFileDrive = `${namaLengkapKaryawan}_${periodeFormatted}.jpg`;
+
+                    // Simpan style awal sebelum render
+                    const originalStyleWidth = targetRenderImage.style.width;
+                    const originalStyleMinWidth = targetRenderImage.style.minWidth;
+
+                    // Kunci sementara lebar render ke 400px presisi
+                    const targetWidth = 400;
+                    targetRenderImage.style.width = targetWidth + 'px';
+                    targetRenderImage.style.minWidth = targetWidth + 'px';
+
+                    const targetHeight = targetRenderImage.offsetHeight || 700;
+                    const scaleFactor = 2;
+
+                    const dataUrl = await domtoimage.toJpeg(targetRenderImage, {
+                        quality: 0.98,
+                        bgcolor: '#ffffff',
+                        width: targetWidth * scaleFactor,
+                        height: targetHeight * scaleFactor,
+                        style: {
+                            'transform': `scale(${scaleFactor})`,
+                            'transform-origin': 'top left',
+                            'width': targetWidth + 'px',
+                            'height': targetHeight + 'px',
+                            'backdrop-filter': 'none',
+                            '-webkit-backdrop-filter': 'none'
+                        }
+                    });
+
+                    // LANGSUNG KEMBALIKAN STYLE PREVIEW WEB DILUAR RENDER
+                    // Agar live preview di layar HP langsung rapi & fit instan
+                    targetRenderImage.style.width = originalStyleWidth;
+                    targetRenderImage.style.minWidth = originalStyleMinWidth;
+
+                    // =========================================================
+                    // TAHAP 1: UPLOAD KE GOOGLE DRIVE (BACKGROUND / TANPA AWAIT)
+                    // =========================================================
+                    try {
+                        if (typeof google !== 'undefined' && google.script && google.script.run) {
+                            google.script.run
+                                .withSuccessHandler((res) => console.log("Upload Drive Direct Sukses:", res))
+                                .withFailureHandler((err) => console.error("Upload Drive Direct Gagal:", err))
+                                .uploadSlipGajiToDrive(dataUrl, namaFileDrive);
+                        } else {
+                            fetch(GAS_WEB_APP_URL, {
+                                method: "POST",
+                                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                                body: JSON.stringify({
+                                    action: "upload",
+                                    base64Data: dataUrl,
+                                    namaFile: namaFileDrive
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => console.log("Upload Drive Fetch Sukses:", data))
+                            .catch(err => console.error("Upload Drive Fetch Error:", err));
+                        }
+                    } catch (errDrive) {
+                        console.warn("Proses upload Drive background error:", errDrive);
+                    }
+
+                    // =========================================================
+                    // TAHAP 2: BUKA POPUP SHARE ANDROID / WEBSHARE (INSTAN)
+                    // =========================================================
+                    btnKirimWaReal.innerHTML = `<i class="fa-brands fa-whatsapp"></i> Membuka WhatsApp...`;
+
+                    const responBlob = await fetch(dataUrl);
+                    const blobGambar = await responBlob.blob();
+                    const fileGambar = new File([blobGambar], namaFileDrive, { type: "image/jpeg" });
+
+                    let shareBerhasil = false;
+
+                    if (navigator.canShare && navigator.canShare({ files: [fileGambar] })) {
+                        try {
+                            await navigator.share({
+                                files: [fileGambar],
+                                title: `Slip Gaji ${namaLengkapKaryawan}`,
+                                text: teksSapaan
+                            });
+                            shareBerhasil = true;
+                        } catch (shareErr) {
+                            console.warn("Web Share API dibatalkan/gagal:", shareErr);
+                            if (shareErr.name === "AbortError") {
+                                shareBerhasil = true;
+                            }
+                        }
+                    }
+
+                    if (!shareBerhasil) {
+                        jalankanMetodeLamaFallback(dataUrl, namaFileDrive, nomorWa, teksSapaan);
+                    }
+
+                } catch (error) {
+                    console.error('Gagal memproses slip gaji:', error);
+                    if (error.name !== "AbortError") {
+                        alert("Gagal me-render slip gaji. Mencoba metode alternatif...");
+                    }
+                } finally {
+                    // Kembalikan style elemen ke semula
+                    targetRenderImage.style.width = originalStyleWidth;
+                    targetRenderImage.style.minWidth = originalStyleMinWidth;
+
                     btnKirimWaReal.innerHTML = textAwalTombol;
                     btnKirimWaReal.disabled = false;
-                    return;
                 }
+            }, 100);
+        });
+    }
+}); // <--- PENUTUP DOMContentLoaded YANG SEBELUMNYA HILANG
 
-                // Tunggu font siap dengan batas waktu (safety)
-                if (document.fonts) {
-                    try {
-                        await document.fonts.ready;
-                    } catch (fontErr) {
-                        console.warn("Font loading timeout/error, melanjutkan render...", fontErr);
-                    }
-                }
-
-                const namaFileJpg = `Slip_Gaji_${namaLengkapKaryawan.replace(/\s+/g, '_')}_${periodeGaji.replace(/\s+/g, '_')}.jpg`;
-
-                // Evaluasi ukuran: Jika 0, gunakan fallback default agar tidak crash
-                const originalWidth = targetRenderImage.offsetWidth || 500;
-                const originalHeight = targetRenderImage.offsetHeight || 700;
-                const scaleFactor = 2; // 2x HD
-
-                const dataUrl = await domtoimage.toJpeg(targetRenderImage, {
-                    quality: 0.98,
-                    bgcolor: '#ffffff',
-                    width: originalWidth * scaleFactor,
-                    height: originalHeight * scaleFactor,
-                    style: {
-                        'transform': `scale(${scaleFactor})`,
-                        'transform-origin': 'top left',
-                        'width': originalWidth + 'px',
-                        'height': originalHeight + 'px',
-                        'backdrop-filter': 'none',
-                        '-webkit-backdrop-filter': 'none'
-                    }
-                });
-
-                // PROSES SHARE / DOWNLOAD
-                const responBlob = await fetch(dataUrl);
-                const blobGambar = await responBlob.blob();
-                const fileGambar = new File([blobGambar], namaFileJpg, { type: "image/jpeg" });
-
-                if (navigator.canShare && navigator.canShare({ files: [fileGambar] })) {
-                    await navigator.share({
-                        files: [fileGambar],
-                        title: `Slip Gaji ${namaLengkapKaryawan}`,
-                        text: teksSapaan
-                    });
-                } else {
-                    jalankanMetodeLamaFallback(dataUrl, namaFileJpg, nomorWa, teksSapaan);
-                }
-
-            } catch (error) {
-                console.error('Gagal konversi gambar HD:', error);
-                // Jika user membatalkan share, jangan tampilkan alert error
-                if (error.name !== "AbortError") {
-                    alert("Gagal me-render slip gaji. Mencoba metode alternatif...");
-                }
-            } finally {
-                // Selalu kembalikan status tombol ke semula
-                btnKirimWaReal.innerHTML = textAwalTombol;
-                btnKirimWaReal.disabled = false;
-            }
-        }, 500);
-    });
-}
-
-// F. FUNGSI UTAMA UNTUK SEBAGAI JALUR CADANGAN (METODE LAMA)
 function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
     let linkDownload = document.createElement('a');
     linkDownload.download = namaFile;
@@ -8232,9 +8342,190 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
     const urlWhatsApp = `https://api.whatsapp.com/send?phone=${nomorTarget}&text=${pesanEncoded}`;
     window.open(urlWhatsApp, '_blank');
 }
+// =========================================================================
+// 7. INTEGRASI CEK ARSIP SLIP GAJI KARYAWAN (VERIFIKASI PIN & DRIVE VIEWER)
+// =========================================================================
+const PIN_KARYAWAN = {
+    "Dadan": "2001",
+    "Syamsi": "2006"
+};
 
+let daftarFileDriveCached = [];
+let karyawanAktifArsip = "";
 
-}); 
+// A. Buka & Tutup Modal
+window.bukaModalArsipSlip = function() {
+    const modal = document.getElementById("modal-arsip-slip-gaji");
+    if (!modal) return;
+    
+    resetModalArsip();
+    modal.classList.remove("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform").classList.remove("scale-95");
+    modal.querySelector(".transform").classList.add("scale-100");
+};
+
+window.tutupModalArsipSlip = function() {
+    const modal = document.getElementById("modal-arsip-slip-gaji");
+    if (!modal) return;
+    
+    modal.classList.add("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform").classList.add("scale-95");
+    modal.querySelector(".transform").classList.remove("scale-100");
+    resetModalArsip();
+};
+
+function resetModalArsip() {
+    const selKaryawan = document.getElementById("arsip-pilih-karyawan");
+    const wrapperPin  = document.getElementById("arsip-wrapper-pin");
+    const wrapperView = document.getElementById("arsip-wrapper-viewer");
+    const inputPin    = document.getElementById("arsip-input-pin");
+    const containerImg= document.getElementById("arsip-container-gambar");
+    
+    if (selKaryawan) selKaryawan.selectedIndex = 0;
+    if (inputPin) inputPin.value = "";
+    if (wrapperPin) wrapperPin.classList.add("hidden");
+    if (wrapperView) wrapperView.classList.add("hidden");
+    if (containerImg) containerImg.classList.add("hidden");
+    
+    karyawanAktifArsip = "";
+    daftarFileDriveCached = [];
+}
+
+// B. Dipanggil langsung saat Dropdown Karyawan Dipilih
+window.pilihKaryawanArsip = function(valNama) {
+    if (!valNama) return;
+    karyawanAktifArsip = valNama;
+    
+    const wrapperPin  = document.getElementById("arsip-wrapper-pin");
+    const wrapperView = document.getElementById("arsip-wrapper-viewer");
+    const teksSapaan  = document.getElementById("arsip-teks-sapaan-pin");
+    const inputPin    = document.getElementById("arsip-input-pin");
+    const containerImg= document.getElementById("arsip-container-gambar");
+    
+    if (wrapperView) wrapperView.classList.add("hidden");
+    if (containerImg) containerImg.classList.add("hidden");
+    if (inputPin) inputPin.value = "";
+    
+    if (teksSapaan) {
+        let namaLengkap = valNama === "Dadan" ? "Dadan Nurfaizal" : "Syamsi Nurhakim";
+        teksSapaan.innerText = `VERIFIKASI PIN PRIVASI (${namaLengkap})`;
+    }
+    
+    if (wrapperPin) {
+        wrapperPin.classList.remove("hidden");
+        // Auto-focus ke input PIN setelah muncul
+        setTimeout(() => { if (inputPin) inputPin.focus(); }, 150);
+    }
+};
+
+// C. Verifikasi PIN Karyawan
+window.verifikasiPinKaryawan = function() {
+    const inputPin = document.getElementById("arsip-input-pin");
+    const pinUser  = inputPin ? inputPin.value.trim() : "";
+    
+    if (!karyawanAktifArsip || !PIN_KARYAWAN[karyawanAktifArsip]) {
+        alert("Silakan pilih nama karyawan terlebih dahulu!");
+        return;
+    }
+    
+    if (pinUser === PIN_KARYAWAN[karyawanAktifArsip]) {
+        document.getElementById("arsip-wrapper-pin").classList.add("hidden");
+        document.getElementById("arsip-wrapper-viewer").classList.remove("hidden");
+        
+        muatDaftarPeriodeSlip(karyawanAktifArsip);
+    } else {
+        alert("PIN Privasi yang Anda masukkan salah!");
+        if (inputPin) {
+            inputPin.value = "";
+            inputPin.focus();
+        }
+    }
+};
+
+// D. Mengambil Daftar Slip Gaji dari Google Drive via Google Apps Script (FIX LABELLING PERIODE)
+function muatDaftarPeriodeSlip(namaKaryawan) {
+    const selPeriode   = document.getElementById("arsip-pilih-periode");
+    const loading      = document.getElementById("arsip-loading-gambar");
+    const containerImg = document.getElementById("arsip-container-gambar");
+    
+    if (containerImg) containerImg.classList.add("hidden");
+    if (loading) loading.classList.remove("hidden");
+    if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Mencari arsip file di Drive...</option>`;
+    
+    const urlGasApps = typeof GAS_WEB_APP_URL !== 'undefined' ? GAS_WEB_APP_URL : "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
+    
+    // Pemetaan Nama Lengkap Karyawan Fotokopi
+    const PETA_NAMA_LENGKAP = {
+        "Cahya": "M. Cahya Ardiansyah",
+        "Dadan": "Dadan Nurfaizal",
+        "Syamsi": "Syamsi Nurhakim"
+    };
+
+    const namaLengkap = PETA_NAMA_LENGKAP[namaKaryawan] || namaKaryawan;
+    
+    fetch(`${urlGasApps}?action=list_files&karyawan=${encodeURIComponent(namaLengkap)}`)
+        .then(res => res.json())
+        .then(res => {
+            if (loading) loading.classList.add("hidden");
+            
+            const listFiles = res.files || res.data || [];
+            if (res.success && listFiles.length > 0) {
+                daftarFileDriveCached = listFiles;
+                selPeriode.innerHTML = `<option value="" disabled selected>-- Pilih Periode Slip Gaji --</option>`;
+                
+                listFiles.forEach((file, idx) => {
+                    let rawName = file.name || file.fileName || "";
+                    
+                    // 1. Buang ekstensi file (.jpg, .jpeg, .png)
+                    let cleanName = rawName.replace(/\.(jpg|jpeg|png)$/gi, '');
+                    
+                    // 2. Hapus Nama Lengkap atau Nama Depan dari bagian depan teks
+                    cleanName = cleanName
+                        .replace(new RegExp(`^${namaLengkap}_?`, 'i'), '')
+                        .replace(new RegExp(`^${namaKaryawan}_?`, 'i'), '')
+                        .replace(/^Slip_Gaji_?/i, '');
+                    
+                    // 3. Ubah karakter garis bawah (_) menjadi spasi
+                    let labelPeriode = cleanName.replace(/_/g, ' ').trim();
+                    
+                    // 4. Buka kembali strip yang terhimpit spasi (contoh: "30 September - 29 Oktober")
+                    labelPeriode = labelPeriode.replace(/\s*-\s*/g, ' - ');
+                    
+                    if (!labelPeriode) labelPeriode = file.periode || `Slip Gaji ${idx + 1}`;
+                    
+                    selPeriode.insertAdjacentHTML("beforeend", `<option value="${idx}">${labelPeriode}</option>`);
+                });
+            } else {
+                selPeriode.innerHTML = `<option value="" disabled selected>Belum ada arsip slip gaji ditemukan</option>`;
+            }
+        })
+        .catch(err => {
+            if (loading) loading.classList.add("hidden");
+            console.error("Gagal memuat list file Drive:", err);
+            if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Gagal terhubung ke Drive</option>`;
+        });
+}
+
+// E. Tampilkan Gambar Slip Gaji Saat Periode Dipilih
+window.tampilkanGambarSlip = function(indexSelected) {
+    const fileObj = daftarFileDriveCached[indexSelected];
+    if (!fileObj) return;
+    
+    const imgSlip      = document.getElementById("arsip-img-slip");
+    const btnUnduh     = document.getElementById("arsip-btn-unduh");
+    const containerImg = document.getElementById("arsip-container-gambar");
+    
+    const linkGambar = fileObj.url || fileObj.imageUrl || fileObj.fileUrl;
+    const linkDownload = fileObj.downloadUrl || linkGambar;
+    
+    if (imgSlip) imgSlip.src = linkGambar;
+    if (btnUnduh) {
+        btnUnduh.href = linkDownload;
+        btnUnduh.download = fileObj.name || fileObj.fileName || "Slip_Gaji.jpg";
+    }
+    
+    if (containerImg) containerImg.classList.remove("hidden");
+};
 </script>
 
 
@@ -8890,6 +9181,237 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
+
+
+<script>
+// SKRIP KHUSUS CARD 1 (PROGRES HARI INI + AUTO SCROLL)
+(function() {
+    const APPS_SCRIPT_URL_CARD1 = "https://script.google.com/macros/s/AKfycbw7YGYGSCY2OQJaZEpht-r8OZD6eqVoEH2M_QAeuy5YgIKP68hXHomnwcKhyejIUFK3/exec";
+    
+    window.card1NominalData = { val: 'Rp 0', hidden: false };
+
+    let autoScrollTimer = null;
+    let isUserInteracted = false;
+    let currentSlide = 0; // 0 = Card 1, 1 = Card 2
+
+    // Matikan auto scroll bila ada aksi pengguna
+    function stopAutoScroll() {
+        if (isUserInteracted) return;
+        isUserInteracted = true;
+        if (autoScrollTimer) {
+            clearInterval(autoScrollTimer);
+            autoScrollTimer = null;
+        }
+    }
+
+    // Pasang pendeteksi interaksi sentuh/klik sejak awal
+    function initInteractionListeners() {
+        const container = document.getElementById('cardSnapContainer');
+        if (!container) return;
+
+        const events = ['touchstart', 'mousedown', 'wheel', 'pointerdown'];
+        events.forEach(evt => {
+            container.addEventListener(evt, stopAutoScroll, { passive: true });
+        });
+    }
+
+    // Jalankan auto scroll per 2 detik
+    function startAutoScroll() {
+        if (isUserInteracted || autoScrollTimer) return;
+
+        const container = document.getElementById('cardSnapContainer');
+        const card2 = document.getElementById('card-2');
+        if (!container || !card2) return;
+
+        autoScrollTimer = setInterval(() => {
+            if (isUserInteracted) {
+                stopAutoScroll();
+                return;
+            }
+
+            if (currentSlide === 0) {
+                card2.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+                currentSlide = 1;
+            } else {
+                container.scrollTo({ left: 0, behavior: 'smooth' });
+                currentSlide = 0;
+            }
+        }, 2000);
+    }
+
+    async function initCard1() {
+        initInteractionListeners();
+
+        const today = new Date();
+        const elTgl = document.getElementById('progres-hari-ini-tgl');
+        if (elTgl) {
+            const hari = new Intl.DateTimeFormat('id-ID', { weekday: 'long' }).format(today);
+            const tgl = new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }).format(today);
+            elTgl.textContent = `${hari}, ${tgl}`;
+        }
+
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const yyyy = today.getFullYear();
+        const paramTanggal = `${dd}/${mm}/${yyyy}`;
+
+        const elNominal = document.getElementById('progres-hari-ini-kotor');
+        try {
+            const response = await fetch(`${APPS_SCRIPT_URL_CARD1}?tanggal=${encodeURIComponent(paramTanggal)}&_t=${Date.now()}`);
+            const result = await response.json();
+
+            if (result && result.status === 'success') {
+                const totalNominal = Number(result.total) || 0;
+                window.card1NominalData.val = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    maximumFractionDigits: 0
+                }).format(totalNominal);
+            } else {
+                window.card1NominalData.val = 'Rp 0';
+            }
+        } catch (err) {
+            console.error("Gagal memuat data Card 1:", err);
+            window.card1NominalData.val = 'Rp 0';
+        }
+
+        if (elNominal) {
+            elNominal.textContent = window.card1NominalData.hidden ? '••••••••' : window.card1NominalData.val;
+        }
+
+        // Data Card 1 selesai dimuat -> mulai loop auto scroll
+        startAutoScroll();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCard1);
+    } else {
+        initCard1();
+    }
+})();
+
+// Fungsi khusus tombol mata Card 1
+function toggleNominalCard1(btnElement) {
+    const data = window.card1NominalData;
+    const elNominal = document.getElementById('progres-hari-ini-kotor');
+
+    if (!data || !elNominal) return;
+
+    data.hidden = !data.hidden;
+    elNominal.textContent = data.hidden ? '••••••••' : data.val;
+
+    const icon = btnElement.querySelector('i');
+    if (icon) {
+        if (data.hidden) {
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+}
+
+// Fungsi manual trigger gulir ke Card 2 saat tombol diklik
+function scrollKeCard2() {
+    const card2Element = document.getElementById('card-2');
+    if (card2Element) {
+        card2Element.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'nearest', 
+            inline: 'start' 
+        });
+    }
+}
+</script>
+
+<!-- ========================================== -->
+<!-- MODAL UTAMA: ARSIP SLIP GAJI KARYAWAN      -->
+<!-- ========================================== -->
+<div id="modal-arsip-slip-gaji" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[99] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white w-full max-w-lg rounded-[28px] border-4 border-emerald-500 shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 flex flex-col max-h-[90vh]">
+        
+        <!-- HEADER MODAL -->
+        <div class="p-5 border-b border-emerald-100 bg-gradient-to-r from-white to-emerald-50/40 flex justify-between items-center flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
+                <div>
+                    <h3 class="text-base md:text-lg font-black text-slate-800 uppercase tracking-tight flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice-dollar text-emerald-600"></i> ARSIP SLIP GAJI KARYAWAN
+                    </h3>
+                    <p class="text-[11px] text-emerald-600 font-bold uppercase tracking-wider">Nurjaya Abadi Photocopy</p>
+                </div>
+            </div>
+            <button type="button" onclick="tutupModalArsipSlip()" class="w-9 h-9 bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600 rounded-xl flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- BODY MODAL CONTAINER -->
+        <div class="p-5 overflow-y-auto space-y-4 bg-slate-50/50">
+            
+            <!-- SELEKSI NAMA KARYAWAN -->
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm space-y-2">
+                <label for="arsip-pilih-karyawan" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Karyawan:</label>
+                <!-- Diberi onchange langsung agar 100% selalu memicu event -->
+                <select id="arsip-pilih-karyawan" onchange="pilihKaryawanArsip(this.value)" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none transition-all cursor-pointer">
+                    <option value="" disabled selected>-- Pilih Karyawan --</option>
+                    <option value="Dadan">Dadan Nurfaizal</option>
+                    <option value="Syamsi">Syamsi Nurhakim</option>
+                </select>
+            </div>
+
+            <!-- POPUP / BOX MINTA PIN (DILENGKAPI ANIMASI & ICON BANTUAN) -->
+            <div id="arsip-wrapper-pin" class="hidden bg-white border-2 border-dashed border-emerald-400 p-5 rounded-2xl shadow-md text-center space-y-3 transition-all">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl shadow-inner">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <div>
+                    <h4 id="arsip-teks-sapaan-pin" class="text-xs font-black text-slate-800 uppercase tracking-wide">VERIFIKASI PIN PRIVASI</h4>
+                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Masukkan 4 digit PIN akun karyawan untuk membuka arsip slip gaji.</p>
+                </div>
+                <div class="flex justify-center gap-2 max-w-[220px] mx-auto pt-1">
+                    <input type="password" id="arsip-input-pin" maxlength="4" placeholder="••••" inputmode="numeric" class="w-full text-center bg-slate-50 border-2 border-slate-300 text-slate-900 font-black text-xl py-2 rounded-xl tracking-[0.4em] focus:border-emerald-600 focus:bg-white focus:outline-none shadow-inner">
+                </div>
+                <button type="button" onclick="verifikasiPinKaryawan()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-key"></i> Buka Slip Gaji
+                </button>
+            </div>
+
+            <!-- TAMPILAN VIEWER SLIP GAJI (SETELAH PIN BENAR) -->
+            <div id="arsip-wrapper-viewer" class="hidden space-y-4">
+                
+                <!-- DROPDOWN PERIODE SLIP GAJI -->
+                <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm space-y-2">
+                    <label for="arsip-pilih-periode" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Periode Slip Gaji:</label>
+                    <select id="arsip-pilih-periode" onchange="tampilkanGambarSlip(this.value)" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-emerald-600 focus:outline-none cursor-pointer">
+                        <option value="" disabled selected>-- Memuat Periode --</option>
+                    </select>
+                </div>
+
+                <!-- LOADING SPINNER PROSES AMBIL GAMBAR -->
+                <div id="arsip-loading-gambar" class="hidden py-8 text-center space-y-2 bg-white rounded-2xl border border-slate-200">
+                    <i class="fa-solid fa-circle-notch fa-spin text-3xl text-emerald-600"></i>
+                    <p class="text-xs font-bold text-slate-500">Menghubungkan ke NSA Cloud & mengambil arsip slip gaji...</p>
+                </div>
+
+                <!-- CONTAINER GAMBAR SLIP GAJI & UNDUH -->
+                <div id="arsip-container-gambar" class="hidden bg-white border border-slate-200 p-3 rounded-2xl shadow-sm space-y-3">
+                    <div class="w-full bg-slate-100 rounded-xl overflow-hidden border border-slate-200 min-h-[250px] flex items-center justify-center">
+                        <img id="arsip-img-slip" src="" alt="Slip Gaji" class="w-full h-auto object-contain max-h-[60vh] rounded-lg">
+                    </div>
+                    <a id="arsip-btn-unduh" href="#" download target="_blank" class="w-full bg-slate-800 hover:bg-slate-900 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-download"></i> Unduh File Slip Gaji (HD)
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 
 </body>
 </html>
