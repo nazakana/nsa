@@ -282,12 +282,12 @@
         }
         
         .header-banner { 
-            height: 180px; /* Disesuaikan agar pendek di layar HP */
+            height: 130px; /* Disesuaikan agar pendek di layar HP */
             padding: 0 1.5rem 1.5rem; 
         }
         
         #page-title { 
-            font-size: 1.6rem !important; 
+            font-size: 1.4rem !important; 
             line-height: 1.2; 
         }
         #page-subtitle { 
@@ -488,13 +488,13 @@ document.addEventListener('keydown', function(event) {
 <div class="header-banner">
     <div class="flex flex-col md:flex-row md:items-end justify-between w-full">
         <div class="fade-in">
-            <h2 class="text-white/80 text-[10px] md:text-sm font-bold tracking-widest uppercase mb-1 md:mb-2">Dashboard System</h2>
+            <h2 class="text-white/80 text-[10px] md:text-sm font-bold tracking-widest uppercase mb-1 md:mb-2">NURJAYA SMART ARCHIVE</h2>
             
             <h1 id="page-title" class="text-white text-2xl md:text-4xl font-black leading-tight drop-shadow-md">
-                NSA (Nurjaya Smart Archive)
+                Dashboard
             </h1>
             
-            <p id="page-subtitle" class="text-white/70 font-bold mt-2 text-sm md:text-xl">Arsip Operasional Nurjaya Abadi</p>
+            <p id="page-subtitle" class="text-white/70 font-bold mt-2 text-sm md:text-xl">Ringkasan Keuangan Terbaru</p>
         </div>
     </div>
 </div>
@@ -508,7 +508,7 @@ document.addEventListener('keydown', function(event) {
     
     <!-- CARD KARTU DIGITAL: PENDAPATAN KOTOR HARI INI -->
     <div class="max-w-md md:max-w-5xl mx-auto mb-6">
-        <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-6 sm:p-8 text-white shadow-[0_15px_35px_-5px_rgba(16,185,129,0.35)] border border-emerald-400/30">
+        <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-6 sm:p-7 text-white shadow-[0_15px_35px_-5px_rgba(16,185,129,0.35)] border border-emerald-400/30">
             
             <!-- ORNAMEN LINGKARAN & POLA DEKORATIF BACKGROUND (GLASS EFFECT) -->
             <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
@@ -533,7 +533,7 @@ document.addEventListener('keydown', function(event) {
             </div>
 
             <!-- BAGIAN ISI CARD: NOMINAL RUPIAH (ID CARD) -->
-            <div class="relative z-10 my-5 sm:my-7">
+            <div class="relative z-10 my-3 sm:my-4">
                 <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200/70 mb-1">
                     Total Hari Ini
                 </p>
@@ -2067,7 +2067,7 @@ function closePdfModal() {
             document.getElementById('btn-' + tabId).classList.add('active');
 
             const pageData = {
-                'dashboard': ['NSA (Nurjaya Smart Archive)', 'Arsip Operasional Nurjaya Abadi'],
+                'dashboard': ['Dashboard', 'Ringkasan Keuangan Terbaru'],
                 'dailyinput': ['Daily Input', 'Formulir Laporan Operasional Harian'], // Data untuk tab baru
                 'archive': ['Arsip Digital Laporan', 'Pusat Dokumentasi Keuangan'],
                 'presensi': ['Asisten Slip Gaji', 'Menu Khusus Pembuatan Slip Gaji'],
@@ -4846,7 +4846,28 @@ function pemicuTombolSinkronasi() {
 
 
 <!-- POPUP REMINDER IZIN NOTIFIKASI (MODAL TENGAH) -->
+<div id="popupReminder" class="fixed inset-0 z-[100] flex items-center justify-center px-6 hidden">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    
+    <div class="relative bg-white w-full max-w-sm p-8 rounded-[32px] shadow-2xl text-center transform transition-all animate-pop-in">
+        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12">
+            <i class="fas fa-bell fa-2xl animate-bounce"></i>
+        </div>
+        
+        <h2 class="text-xl font-extrabold text-gray-900 mb-2">Notifikasi Wajib Aktif!</h2>
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+            Fitur <span class="font-bold text-green-700">Realtime NSA</span> memerlukan izin notifikasi untuk mendapatkan info operasional.<br>
+            Silakan klik tombol di bawah untuk mengaktifkan sistem pengingat.
+        </p>
 
+        <button onclick="eksekusiMintaIzinNotif(event)" 
+    class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+    <i class="fas fa-check-circle"></i> Izinkan Sekarang
+</button>
+        
+        <p class="text-[10px] text-green-600/70 mt-4 uppercase tracking-widest font-bold">SISTEM PENGINGAT OTOMATIS NURJAYA ABADI</p>
+    </div>
+</div>
 
 
 			
