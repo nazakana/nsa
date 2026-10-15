@@ -516,6 +516,18 @@ document.addEventListener('keydown', function(e) {
     </div>
 </button>
 
+<!-- 4. Tombol Cek Slip Gaji Asisten Apoteker (Pink Gradient) -->
+<button type="button" 
+        id="btn-buka-arsip-slip-apotek" 
+        onclick="bukaModalArsipSlipApotek(); toggleMenuApotekSidebar();" 
+        class="w-full h-12 px-4 bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-700 hover:to-rose-600 text-white rounded-2xl shadow-md flex items-center justify-center space-x-3 focus:outline-none transition-all duration-300 active:scale-[0.98]">
+    <i class="fas fa-file-invoice-dollar text-lg flex-shrink-0 text-white"></i>
+    <div class="flex flex-col items-start leading-tight">
+        <span class="text-[10px] font-extrabold uppercase tracking-tight text-pink-100">Arsip Digital</span>
+        <span class="text-xs font-black uppercase tracking-tight text-white">Cek Slip Gaji</span>
+    </div>
+</button>
+
         </div>
     </div>
 
@@ -5222,6 +5234,7 @@ function tutupAlertNarasi() {
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const API_URL_SLIP_APOTEK = "https://script.google.com/macros/s/AKfycby55pIwKb9kHh9ba2xmKD_scX7jzIj43ll5rpcGU5_AjpTwMnD42EN4140WZxhf0duL/exec";
+    const GAS_WEB_APP_URL_SLIP = "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
 
     // Database Karyawan Apotek & Nomor WhatsApp
     const DATABASE_WA_APOTEK = {
@@ -5312,9 +5325,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(result => {
                     if (statusLoadingApotek) statusLoadingApotek.classList.add("hidden");
                     if (result.status === "success") {
-                        prosesAkumulasiApotek(result.data, karyawan);
+                        prosesAkumulasiApotek(result.data || [], karyawan);
                     } else {
-                        alert("Gagal memuat presensi: " + result.message);
+                        alert("Gagal memuat presensi: " + (result.message || "Data tidak ditemukan"));
                     }
                 })
                 .catch(err => {
@@ -5324,7 +5337,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function prosesAkumulasiApotek(rows, karyawan) {
+    function prosesAkumulasiApotek(rowsData, karyawan) {
+        const rows = Array.isArray(rowsData) ? rowsData : [];
         let s1 = 0, s2 = 0, lbr = 0, lbrTerjadwal = 0, izinSakit = 0, absen = 0;
         let listKhusus = [];
 
@@ -5395,13 +5409,15 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
+        // Load Periode
         fetch(`${API_URL_SLIP_APOTEK}?sheetName=${karyawan}&action=getMetaData`)
             .then(r => r.json())
             .then(res => {
                 if (res.status === "success" && txtPeriodeApotek) {
                     txtPeriodeApotek.innerText = res.periode || "-";
                 }
-            });
+            })
+            .catch(err => console.error("Error metadata:", err));
 
         if (txtTotalHariApotek) txtTotalHariApotek.innerText = rows.length + " Hari";
 
@@ -5475,41 +5491,39 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-// Helper Function: Hitung Tunjangan Makan Khusus Apotek
+    // Helper Function: Hitung Tunjangan Makan Khusus Apotek
     function hitungTunjanganMakanApotek(dataPresensi) {
-    if (!dataPresensi) return { totalUangMakan: 0, htmlList: "<span>- 0 Shift</span>" };
+        if (!dataPresensi) return { totalUangMakan: 0, htmlList: "<span>- 0 Shift</span>" };
 
-    const s1 = Number(dataPresensi.shift1) || 0;
-    const s2 = Number(dataPresensi.shift2) || 0;
-    const totalShiftReguler = s1 + s2;
-    
-    const totalKhusus = Array.isArray(dataPresensi.khususList) ? dataPresensi.khususList.length : 0;
-    const totalLembur = Number(dataPresensi.lembur) || 0;
+        const s1 = Number(dataPresensi.shift1) || 0;
+        const s2 = Number(dataPresensi.shift2) || 0;
+        const totalShiftReguler = s1 + s2;
+        
+        const totalKhusus = Array.isArray(dataPresensi.khususList) ? dataPresensi.khususList.length : 0;
+        const totalLembur = Number(dataPresensi.lembur) || 0;
 
-    // Nominal
-    const nominalRegulerKhusus = (totalShiftReguler + totalKhusus) * 10000;
-    const nominalLembur = totalLembur * 20000;
-    const totalUangMakan = nominalRegulerKhusus + nominalLembur;
+        const nominalRegulerKhusus = (totalShiftReguler + totalKhusus) * 10000;
+        const nominalLembur = totalLembur * 20000;
+        const totalUangMakan = nominalRegulerKhusus + nominalLembur;
 
-    // Susun rincian per baris ke bawah
-    let listItems = [];
-    if (totalShiftReguler > 0) {
-        listItems.push(`<span>• Shift Reguler: ${totalShiftReguler} Hari × Rp 10.000</span>`);
+        let listItems = [];
+        if (totalShiftReguler > 0) {
+            listItems.push(`<span>• Shift Reguler: ${totalShiftReguler} Hari × Rp 10.000</span>`);
+        }
+        if (totalKhusus > 0) {
+            listItems.push(`<span>• Shift Khusus: ${totalKhusus} Event × Rp 10.000</span>`);
+        }
+        if (totalLembur > 0) {
+            listItems.push(`<span>• Shift Lembur: ${totalLembur} Hari × Rp 20.000</span>`);
+        }
+
+        const htmlList = listItems.length > 0 ? listItems.join("") : "<span>- 0 Shift</span>";
+
+        return {
+            totalUangMakan: totalUangMakan,
+            htmlList: htmlList
+        };
     }
-    if (totalKhusus > 0) {
-        listItems.push(`<span>• Shift Khusus: ${totalKhusus} Event × Rp 10.000</span>`);
-    }
-    if (totalLembur > 0) {
-        listItems.push(`<span>• Shift Lembur: ${totalLembur} Hari × Rp 20.000</span>`);
-    }
-
-    const htmlList = listItems.length > 0 ? listItems.join("") : "<span>- 0 Shift</span>";
-
-    return {
-        totalUangMakan: totalUangMakan,
-        htmlList: htmlList
-    };
-}
 
     // Generate Preview Slip Gaji Cetak
     document.getElementById("btn-generate-slip-gaji-apotek")?.addEventListener("click", function() {
@@ -5639,12 +5653,9 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("pv-rekap-pembulatan-apotek").innerText = formatRupiah(bersihkanAngkaMurni(inPembulatanApotek?.value));
         document.getElementById("pv-rekap-final-apotek").innerText = outFinalGajiApotek?.innerText || "Rp 0";
 
-        // =========================================================================
-        // PROSES OTOMATIS: TUNJANGAN MAKAN & TOTAL AKUMULASI PENDAPATAN
-        // =========================================================================
+        // Tunjangan Makan & Total Akumulasi
         const dataMakan = hitungTunjanganMakanApotek(dataPresensiApotekHitung);
 
-        // Hitung nilai murni Gaji Final
         let totalKhususRp = 0;
         if (wrapperKhususList) {
             wrapperKhususList.querySelectorAll(".sg-in-khusus-rp").forEach(inp => {
@@ -5666,17 +5677,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const rpPembulatan = bersihkanAngkaMurni(inPembulatanApotek?.value);
         const rpGajiFinal = rpPembulatan > 0 ? rpPembulatan : subtotalGaji;
-
         const totalAkumulasi = rpGajiFinal + dataMakan.totalUangMakan;
 
-      // Render ke Elemen Slip
-const elMakanRumus = document.getElementById("pv-makan-detail-rumus-apotek");
-const elMakanTotal = document.getElementById("pv-total-uang-makan-apotek");
-const elAkumulasi  = document.getElementById("pv-total-akumulasi-apotek");
+        // Render ke Elemen Slip
+        const elMakanRumus = document.getElementById("pv-makan-detail-rumus-apotek");
+        const elMakanTotal = document.getElementById("pv-total-uang-makan-apotek");
+        const elAkumulasi  = document.getElementById("pv-total-akumulasi-apotek");
 
-if (elMakanRumus) elMakanRumus.innerHTML = dataMakan.htmlList; // Ganti .innerText jadi .innerHTML & panggil .htmlList
-if (elMakanTotal) elMakanTotal.innerText = formatRupiah(dataMakan.totalUangMakan);
-if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
+        if (elMakanRumus) elMakanRumus.innerHTML = dataMakan.htmlList;
+        if (elMakanTotal) elMakanTotal.innerText = formatRupiah(dataMakan.totalUangMakan);
+        if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
 
         // Catatan Owner
         const catatan = document.getElementById("owner-input-catatan-apotek")?.value.trim();
@@ -5700,16 +5710,14 @@ if (elAkumulasi)  elAkumulasi.innerText  = formatRupiah(totalAkumulasi);
             }, 10);
         }
     });
+	
+	
+	
 
-    // =========================================================================
-    // REVISI TOTAL: KIRIM SLIP GAJI APOTEK KE WHATSAPP (RENDER HIGH-RES JPG)
-    // =========================================================================
-    // =========================================================================
-    // REVISI FIX: KIRIM SLIP GAJI APOTEK (ANTI-STUCK LOADING & ANTI-BLOCK SHARE)
-    // =========================================================================
+    // Kirim Slip Gaji ke WA (HD Render + Background Upload Drive)
     const btnKirimWaApotekReal = document.getElementById("nsa-btn-wa-kirim-slip-apotek");
 
-if (btnKirimWaApotekReal) {
+    if (btnKirimWaApotekReal) {
         btnKirimWaApotekReal.addEventListener("click", async function() {
             const karyawanTerpilih = selectKaryawanApotek?.value || "";
             if (!karyawanTerpilih) {
@@ -5739,55 +5747,79 @@ if (btnKirimWaApotekReal) {
                 return;
             }
 
-            // A. Animasi Loading Spinner
             const textAwalTombol = this.innerHTML;
             this.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Slip Apotek...`;
             this.disabled = true;
 
-            // B. Teks Pesan WhatsApp
             const teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji Asisten Apoteker untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja dan dedikasinya di Apotek Nurjaya, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Apotek Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
 
-            // Simpan style awal sebelum manipulasi render
             const originalStyleWidth = targetRenderImage.style.width;
             const originalStyleMinWidth = targetRenderImage.style.minWidth;
 
             try {
                 if (typeof domtoimage === 'undefined') {
                     alert("Library domtoimage belum terpasang atau gagal dimuat!");
+                    this.innerHTML = textAwalTombol;
+                    this.disabled = false;
                     return;
                 }
 
-                const namaFileJpg = `Slip_Gaji_Apotek_${namaLengkapKaryawan.replace(/\s+/g, '_')}_${periodeGaji.replace(/\s+/g, '_')}.jpg`;
+                const periodeFormatted = periodeGaji.trim().replace(/\s+/g, '_');
+const namaFileJpg = `${namaLengkapKaryawan}_${periodeFormatted}.jpg`;
 
-                // Kunci lebar elemen ke 500px presisi khusus untuk rendering domtoimage
-                targetRenderImage.style.width = '500px';
-                targetRenderImage.style.minWidth = '500px';
+                const targetWidth = 400;
+targetRenderImage.style.width = targetWidth + 'px';
+targetRenderImage.style.minWidth = targetWidth + 'px';
 
-                const targetWidth = 500;
-                const targetHeight = targetRenderImage.offsetHeight || 700;
-                const scaleFactor = 2;
+const targetHeight = targetRenderImage.offsetHeight || 700;
+const scaleFactor = 2;
 
-                const dataUrl = await domtoimage.toJpeg(targetRenderImage, {
-                    quality: 0.95,
-                    bgcolor: '#ffffff',
-                    width: targetWidth * scaleFactor,
-                    height: targetHeight * scaleFactor,
-                    style: {
-                        'transform': `scale(${scaleFactor})`,
-                        'transform-origin': 'top left',
-                        'width': targetWidth + 'px',
-                        'height': targetHeight + 'px',
-                        'backdrop-filter': 'none',
-                        '-webkit-backdrop-filter': 'none'
+const dataUrl = await domtoimage.toJpeg(targetRenderImage, {
+    quality: 0.95,
+    bgcolor: '#ffffff',
+    width: targetWidth * scaleFactor,
+    height: targetHeight * scaleFactor,
+    style: {
+        'transform': `scale(${scaleFactor})`,
+        'transform-origin': 'top left',
+        'width': targetWidth + 'px',
+        'height': targetHeight + 'px',
+        'backdrop-filter': 'none',
+        '-webkit-backdrop-filter': 'none'
+    }
+});
+                
+
+                // Background Upload Google Drive
+                try {
+                    if (typeof google !== 'undefined' && google.script && google.script.run) {
+                        google.script.run
+                            .withSuccessHandler((res) => console.log("Upload Drive Direct Sukses (Apotek):", res))
+                            .withFailureHandler((err) => console.error("Upload Drive Direct Gagal (Apotek):", err))
+                            .uploadSlipGajiToDrive(dataUrl, namaFileJpg);
+                    } else {
+                        fetch(GAS_WEB_APP_URL_SLIP, {
+                            method: "POST",
+                            headers: { "Content-Type": "text/plain;charset=utf-8" },
+                            body: JSON.stringify({
+                                action: "upload",
+                                base64Data: dataUrl,
+                                namaFile: namaFileJpg
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => console.log("Upload Drive Fetch Sukses (Apotek):", data))
+                        .catch(err => console.error("Upload Drive Fetch Error (Apotek):", err));
                     }
-                });
+                } catch (errDrive) {
+                    console.warn("Proses upload Drive background error (Apotek):", errDrive);
+                }
 
-                // D. Konversi ke Blob File
+                // Web Share / Fallback
                 const responBlob = await fetch(dataUrl);
                 const blobGambar = await responBlob.blob();
                 const fileGambar = new File([blobGambar], namaFileJpg, { type: "image/jpeg" });
 
-                // E. Coba panggil Web Share API
                 let isSharedSuccess = false;
                 if (navigator.canShare && navigator.canShare({ files: [fileGambar] })) {
                     try {
@@ -5799,10 +5831,12 @@ if (btnKirimWaApotekReal) {
                         isSharedSuccess = true;
                     } catch (shareErr) {
                         console.warn("Web Share dibatalkan atau diblokir browser:", shareErr);
+                        if (shareErr.name === "AbortError") {
+                            isSharedSuccess = true;
+                        }
                     }
                 }
 
-                // F. Fallback Otomatis
                 if (!isSharedSuccess) {
                     let linkDownload = document.createElement('a');
                     linkDownload.download = namaFileJpg;
@@ -5817,55 +5851,190 @@ if (btnKirimWaApotekReal) {
 
             } catch (error) {
                 console.error('Gagal render slip gaji Apotek:', error);
-                alert("Gagal me-render slip gaji Apotek. Silakan periksa koneksi atau coba kembali.");
+                if (error.name !== "AbortError") {
+                    alert("Gagal me-render slip gaji Apotek. Silakan periksa koneksi atau coba kembali.");
+                }
             } finally {
-                // Kembalikan style elemen web ke tampilan awal (responsive)
                 targetRenderImage.style.width = originalStyleWidth;
                 targetRenderImage.style.minWidth = originalStyleMinWidth;
 
-                // Restore status tombol
                 this.innerHTML = textAwalTombol;
                 this.disabled = false;
             }
         });
     }
-});
+	// =========================================================================
+// INTEGRASI CEK ARSIP SLIP GAJI ASISTEN APOTEKER (PIN & DRIVE VIEWER)
+// =========================================================================
+const PIN_KARYAWAN_APOTEK = {
+    "Eka": "1111",
+    "Dea": "2222",
+    "Fadilla": "3333"
+};
 
-function hitungTunjanganMakanApotek(dataPresensi) {
-    if (!dataPresensi) return { totalUangMakan: 0, htmlList: "<span>- 0 Shift</span>" };
+let daftarFileDriveCachedApotek = [];
+let karyawanAktifArsipApotek = "";
 
-    const s1 = Number(dataPresensi.shift1) || 0;
-    const s2 = Number(dataPresensi.shift2) || 0;
-    const totalShiftReguler = s1 + s2;
+// A. Buka & Tutup Modal Arsip Slip Apotek
+window.bukaModalArsipSlipApotek = function() {
+    const modal = document.getElementById("modal-arsip-slip-gaji-apotek");
+    if (!modal) return;
     
-    const totalKhusus = Array.isArray(dataPresensi.khususList) ? dataPresensi.khususList.length : 0;
-    const totalLembur = Number(dataPresensi.lembur) || 0;
+    resetModalArsipApotek();
+    modal.classList.remove("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform")?.classList.remove("scale-95");
+    modal.querySelector(".transform")?.classList.add("scale-100");
+};
 
-    // Nominal
-    const nominalRegulerKhusus = (totalShiftReguler + totalKhusus) * 10000;
-    const nominalLembur = totalLembur * 20000;
-    const totalUangMakan = nominalRegulerKhusus + nominalLembur;
+window.tutupModalArsipSlipApotek = function() {
+    const modal = document.getElementById("modal-arsip-slip-gaji-apotek");
+    if (!modal) return;
+    
+    modal.classList.add("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform")?.classList.add("scale-95");
+    modal.querySelector(".transform")?.classList.remove("scale-100");
+    resetModalArsipApotek();
+};
 
-    // Susun rincian per baris
-    let listItems = [];
-    if (totalShiftReguler > 0) {
-        listItems.push(`<span>• Shift Reguler: ${totalShiftReguler} Hari × Rp 10.000</span>`);
-    }
-    if (totalKhusus > 0) {
-        listItems.push(`<span>• Shift Khusus: ${totalKhusus} Event × Rp 10.000</span>`);
-    }
-    if (totalLembur > 0) {
-        listItems.push(`<span>• Shift Lembur: ${totalLembur} Hari × Rp 20.000</span>`);
-    }
-
-    const htmlList = listItems.length > 0 ? listItems.join("") : "<span>- 0 Shift</span>";
-
-    return {
-        totalUangMakan: totalUangMakan,
-        htmlList: htmlList
-    };
+function resetModalArsipApotek() {
+    const selKaryawan  = document.getElementById("arsip-pilih-karyawan-apotek");
+    const wrapperPin   = document.getElementById("arsip-wrapper-pin-apotek");
+    const wrapperView  = document.getElementById("arsip-wrapper-viewer-apotek");
+    const inputPin     = document.getElementById("arsip-input-pin-apotek");
+    const containerImg = document.getElementById("arsip-container-gambar-apotek");
+    
+    if (selKaryawan) selKaryawan.selectedIndex = 0;
+    if (inputPin) inputPin.value = "";
+    if (wrapperPin) wrapperPin.classList.add("hidden");
+    if (wrapperView) wrapperView.classList.add("hidden");
+    if (containerImg) containerImg.classList.add("hidden");
+    
+    karyawanAktifArsipApotek = "";
+    daftarFileDriveCachedApotek = [];
 }
 
+// B. Dipanggil saat Dropdown Karyawan Apotek Dipilih
+window.pilihKaryawanArsipApotek = function(valNama) {
+    if (!valNama) return;
+    karyawanAktifArsipApotek = valNama;
+    
+    const wrapperPin   = document.getElementById("arsip-wrapper-pin-apotek");
+    const wrapperView  = document.getElementById("arsip-wrapper-viewer-apotek");
+    const teksSapaan   = document.getElementById("arsip-teks-sapaan-pin-apotek");
+    const inputPin     = document.getElementById("arsip-input-pin-apotek");
+    const containerImg = document.getElementById("arsip-container-gambar-apotek");
+    
+    if (wrapperView) wrapperView.classList.add("hidden");
+    if (containerImg) containerImg.classList.add("hidden");
+    if (inputPin) inputPin.value = "";
+    
+    if (teksSapaan) {
+        let namaLengkap = DATABASE_WA_APOTEK[valNama] ? DATABASE_WA_APOTEK[valNama].namaLengkap : valNama;
+        teksSapaan.innerText = `VERIFIKASI PIN PRIVASI (${namaLengkap})`;
+    }
+    
+    if (wrapperPin) {
+        wrapperPin.classList.remove("hidden");
+        setTimeout(() => { if (inputPin) inputPin.focus(); }, 150);
+    }
+};
+
+// C. Verifikasi PIN Privasi
+window.verifikasiPinKaryawanApotek = function() {
+    const inputPin = document.getElementById("arsip-input-pin-apotek");
+    const pinUser  = inputPin ? inputPin.value.trim() : "";
+    
+    if (!karyawanAktifArsipApotek || !PIN_KARYAWAN_APOTEK[karyawanAktifArsipApotek]) {
+        alert("Silakan pilih nama karyawan Apotek terlebih dahulu!");
+        return;
+    }
+    
+    if (pinUser === PIN_KARYAWAN_APOTEK[karyawanAktifArsipApotek]) {
+        document.getElementById("arsip-wrapper-pin-apotek")?.classList.add("hidden");
+        document.getElementById("arsip-wrapper-viewer-apotek")?.classList.remove("hidden");
+        
+        let namaLengkapSearch = DATABASE_WA_APOTEK[karyawanAktifArsipApotek] 
+            ? DATABASE_WA_APOTEK[karyawanAktifArsipApotek].namaLengkap 
+            : karyawanAktifArsipApotek;
+            
+        muatDaftarPeriodeSlipApotek(namaLengkapSearch);
+    } else {
+        alert("PIN Privasi yang Anda masukkan salah!");
+        if (inputPin) {
+            inputPin.value = "";
+            inputPin.focus();
+        }
+    }
+};
+
+// D. Ambil Daftar File Slip Gaji Apotek dari Google Drive
+function muatDaftarPeriodeSlipApotek(namaKaryawan) {
+    const selPeriode   = document.getElementById("arsip-pilih-periode-apotek");
+    const loading      = document.getElementById("arsip-loading-gambar-apotek");
+    const containerImg = document.getElementById("arsip-container-gambar-apotek");
+    
+    if (containerImg) containerImg.classList.add("hidden");
+    if (loading) loading.classList.remove("hidden");
+    if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Mencari arsip file di Drive...</option>`;
+    
+    const urlGasApps = typeof GAS_WEB_APP_URL_SLIP !== 'undefined' 
+        ? GAS_WEB_APP_URL_SLIP 
+        : "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
+    
+    fetch(`${urlGasApps}?action=list_files&karyawan=${encodeURIComponent(namaKaryawan)}`)
+        .then(res => res.json())
+        .then(res => {
+            if (loading) loading.classList.add("hidden");
+            
+            const listFiles = res.files || res.data || [];
+            if (res.success && listFiles.length > 0) {
+                daftarFileDriveCachedApotek = listFiles;
+                selPeriode.innerHTML = `<option value="" disabled selected>-- Pilih Periode Slip Gaji --</option>`;
+                
+                listFiles.forEach((file, idx) => {
+                    let labelPeriode = file.name || file.fileName || "";
+                    labelPeriode = labelPeriode
+                        .replace(new RegExp(`^${namaKaryawan}_?`, 'i'), '')
+                        .replace(/^Slip_Gaji_Apotek_?/i, '')
+                        .replace(/\.(jpg|jpeg|png)$/gi, '')
+                        .replace(/_/g, ' ');
+                    
+                    if (!labelPeriode.trim()) labelPeriode = file.periode || `Slip Gaji ${idx + 1}`;
+                    
+                    selPeriode.insertAdjacentHTML("beforeend", `<option value="${idx}">${labelPeriode}</option>`);
+                });
+            } else {
+                selPeriode.innerHTML = `<option value="" disabled selected>Belum ada arsip slip gaji ditemukan</option>`;
+            }
+        })
+        .catch(err => {
+            if (loading) loading.classList.add("hidden");
+            console.error("Gagal memuat list file Drive Apotek:", err);
+            if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Gagal terhubung ke Drive</option>`;
+        });
+}
+
+// E. Render Gambar Slip Gaji Saat Periode Dipilih
+window.tampilkanGambarSlipApotek = function(indexSelected) {
+    const fileObj = daftarFileDriveCachedApotek[indexSelected];
+    if (!fileObj) return;
+    
+    const imgSlip      = document.getElementById("arsip-img-slip-apotek");
+    const btnUnduh     = document.getElementById("arsip-btn-unduh-apotek");
+    const containerImg = document.getElementById("arsip-container-gambar-apotek");
+    
+    const linkGambar = fileObj.url || fileObj.imageUrl || fileObj.fileUrl;
+    const linkDownload = fileObj.downloadUrl || linkGambar;
+    
+    if (imgSlip) imgSlip.src = linkGambar;
+    if (btnUnduh) {
+        btnUnduh.href = linkDownload;
+        btnUnduh.download = fileObj.name || fileObj.fileName || "Slip_Gaji_Apotek.jpg";
+    }
+    
+    if (containerImg) containerImg.classList.remove("hidden");
+};
+});
 </script>
 
 <script>
@@ -6140,5 +6309,94 @@ function toggleMenuApotekSidebar() {
     }
 }
 </script>
+
+<!-- ========================================================== -->
+<!-- MODAL UTAMA: ARSIP SLIP GAJI ASISTEN APOTEK NURJAYA       -->
+<!-- ========================================================== -->
+<div id="modal-arsip-slip-gaji-apotek" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[15000] flex items-center justify-center p-3 sm:p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white w-full max-w-lg rounded-[28px] border-4 border-pink-500 shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 flex flex-col max-h-[90vh]">
+        
+        <!-- HEADER MODAL -->
+        <div class="p-4 sm:p-5 border-b border-pink-100 bg-gradient-to-r from-white via-pink-50/40 to-pink-100/30 flex justify-between items-center flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-8 bg-pink-600 rounded-full"></div>
+                <div>
+                    <h3 class="text-sm sm:text-base font-black text-slate-800 uppercase tracking-tight flex items-center gap-2">
+                        <i class="fa-solid fa-prescription-bottle-medical text-pink-600"></i> ARSIP SLIP GAJI
+                    </h3>
+                    <p class="text-[10px] sm:text-[11px] text-pink-700 font-bold uppercase tracking-wider">Apotek Nurjaya</p>
+                </div>
+            </div>
+            <button type="button" onclick="tutupModalArsipSlipApotek()" class="w-9 h-9 bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600 rounded-xl flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-lg font-bold"></i>
+            </button>
+        </div>
+
+        <!-- BODY MODAL CONTAINER -->
+        <div class="p-4 sm:p-5 overflow-y-auto space-y-4 bg-slate-50/50">
+            
+            <!-- SELEKSI NAMA KARYAWAN -->
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm space-y-2">
+                <label for="arsip-pilih-karyawan-apotek" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Asisten Apoteker:</label>
+                <select id="arsip-pilih-karyawan-apotek" onchange="pilihKaryawanArsipApotek(this.value)" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-pink-600 focus:ring-1 focus:ring-pink-600 focus:outline-none transition-all cursor-pointer">
+                    <option value="" disabled selected>-- Pilih Karyawan Apotek --</option>
+                    <option value="Eka">Eka Ainun Nisa</option>
+                    <option value="Dea">Dea Nove Asyari</option>
+                    <option value="Fadilla">Fadilla Nailul Wafa</option>
+                </select>
+            </div>
+
+            <!-- BOX VERIFIKASI PIN PRIVASI -->
+            <div id="arsip-wrapper-pin-apotek" class="hidden bg-white border-2 border-dashed border-pink-400 p-5 rounded-2xl shadow-md text-center space-y-3 transition-all">
+                <div class="w-12 h-12 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mx-auto text-xl shadow-inner">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <div>
+                    <h4 id="arsip-teks-sapaan-pin-apotek" class="text-xs font-black text-slate-800 uppercase tracking-wide">VERIFIKASI PIN PRIVASI</h4>
+                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Masukkan 4 digit PIN privasi untuk membuka arsip slip gaji.</p>
+                </div>
+                <div class="flex justify-center gap-2 max-w-[220px] mx-auto pt-1">
+                    <input type="password" id="arsip-input-pin-apotek" maxlength="4" placeholder="••••" inputmode="numeric" class="w-full text-center bg-slate-50 border-2 border-slate-300 text-slate-900 font-black text-xl py-2 rounded-xl tracking-[0.4em] focus:border-pink-600 focus:bg-white focus:outline-none shadow-inner">
+                </div>
+                <button type="button" onclick="verifikasiPinKaryawanApotek()" class="w-full bg-pink-600 hover:bg-pink-700 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-key"></i> Buka Slip Gaji
+                </button>
+            </div>
+
+            <!-- TAMPILAN VIEWER SLIP GAJI -->
+            <div id="arsip-wrapper-viewer-apotek" class="hidden space-y-4">
+                
+                <!-- DROPDOWN PERIODE SLIP GAJI -->
+                <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm space-y-2">
+                    <label for="arsip-pilih-periode-apotek" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Periode Slip Gaji:</label>
+                    <select id="arsip-pilih-periode-apotek" onchange="tampilkanGambarSlipApotek(this.value)" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-pink-600 focus:outline-none cursor-pointer">
+                        <option value="" disabled selected>-- Memuat Periode --</option>
+                    </select>
+                </div>
+
+                <!-- LOADING SPINNER -->
+                <div id="arsip-loading-gambar-apotek" class="hidden py-8 text-center space-y-2 bg-white rounded-2xl border border-slate-200">
+                    <i class="fa-solid fa-circle-notch fa-spin text-3xl text-pink-600"></i>
+                    <p class="text-xs font-bold text-slate-500">Menghubungkan ke NSA Cloud & mengambil arsip slip gaji Apotek...</p>
+                </div>
+
+                <!-- CONTAINER GAMBAR SLIP GAJI & UNDUH -->
+                <div id="arsip-container-gambar-apotek" class="hidden bg-white border border-slate-200 p-3 rounded-2xl shadow-sm space-y-3">
+                    <div class="w-full bg-slate-100 rounded-xl overflow-hidden border border-slate-200 min-h-[250px] flex items-center justify-center">
+                        <img id="arsip-img-slip-apotek" src="" alt="Slip Gaji Apotek" class="w-full h-auto object-contain max-h-[60vh] rounded-lg">
+                    </div>
+                    <a id="arsip-btn-unduh-apotek" href="#" download target="_blank" class="w-full bg-slate-800 hover:bg-slate-900 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-download"></i> Unduh File Slip Gaji (HD)
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
 </body>
 </html>
