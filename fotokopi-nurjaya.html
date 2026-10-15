@@ -504,123 +504,190 @@ document.addEventListener('keydown', function(event) {
 
 <!-- KONTEN TAB: NURJAYA HOME -->
 <!-- CONTAINER UTAMA DASHBOARD -->
-<div id="tab-dashboard" class="tab-content px-4 py-2 sm:p-6 md:p-10 fade-in" style="font-family: sans-serif;">
+<div id="tab-dashboard" class="tab-content px-4 py-3 sm:p-6 md:p-10 fade-in" style="font-family: sans-serif;">
     
-    <!-- HEADER INFORMASI & NOTIFIKASI + BADGE BULAN DINAMIS -->
-    <div class="pt-2 pb-4 max-w-md md:max-w-5xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-100/80 mb-4">
-        
-        <!-- Sisi Kiri: Lonceng di Atas (HP) / Sejajar (PC) -->
-        <div class="flex flex-col md:flex-row items-center md:items-center gap-3.5 text-center md:text-left">
-            <!-- Wadah Ikon Notifikasi dengan Efek Radar Ping Loop -->
-            <div class="relative inline-flex flex-shrink-0 mb-1 md:mb-0">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-2xl bg-emerald-400/50 opacity-75"></span>
-                <div class="relative inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30">
-                    <i class="fa-solid fa-bell text-xl fa-shake" style="--fa-animation-duration: 2.5s;"></i>
-                    <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-rose-500 border-2 border-white"></span>
+    <!-- CARD KARTU DIGITAL: PENDAPATAN KOTOR HARI INI -->
+    <div class="max-w-md md:max-w-5xl mx-auto mb-6">
+        <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-6 sm:p-8 text-white shadow-[0_15px_35px_-5px_rgba(16,185,129,0.35)] border border-emerald-400/30">
+            
+            <!-- ORNAMEN LINGKARAN & POLA DEKORATIF BACKGROUND (GLASS EFFECT) -->
+            <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-teal-400/20 blur-2xl pointer-events-none"></div>
+            <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
+
+            <!-- BAGIAN ATAS CARD: JUDUL & TANGGAL -->
+            <div class="relative z-10 flex justify-between items-start">
+                <div>
+                    <span class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-emerald-200/90 block">
+                        Pendapatan Kotor
+                    </span>
+                    <!-- ELEMENT TANGGAL (ID CARD) -->
+                    <span id="hari-terbaru-tgl-card" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
+                        ...
                     </span>
                 </div>
-            </div>
-
-            <!-- Judul & Subtitle -->
-            <div>
-                <h3 class="text-xl md:text-2xl font-black uppercase tracking-tight text-slate-800">
-                    Informasi Terbaru
-                </h3>
-                <p class="text-xs text-slate-500 font-medium mt-0.5">Pilih menu di bawah untuk melihat rincian data</p>
-            </div>
-        </div>
-
-        <!-- Sisi Kanan: Badge Ikhtisar Bulan (Tone Senada / Emerald Soft) -->
-        <div class="self-center md:self-auto">
-            <div class="inline-flex items-center gap-2.5 px-4 py-2 bg-gradient-to-r from-emerald-50 via-teal-50/50 to-white border-2 border-emerald-400/80 rounded-2xl shadow-sm">
-                <div class="w-7 h-7 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xs shadow-sm flex-shrink-0">
-                    <i class="fa-solid fa-calendar-days"></i>
-                </div>
-                <div class="flex flex-col text-left leading-none">
-                    <span class="text-[9px] font-bold uppercase tracking-widest text-emerald-700/80">Periode Aktif</span>
-                    <span id="badgeBulanDinamis" class="text-xs md:text-sm font-black uppercase tracking-wide text-emerald-900 mt-0.5">
-                        Oktober 2026
-                    </span>
+                <!-- LOGO/BADGE KECIL UTAMA -->
+                <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-emerald-200 uppercase">
+                    NURJAYA
                 </div>
             </div>
-        </div>
 
+            <!-- BAGIAN ISI CARD: NOMINAL RUPIAH (ID CARD) -->
+            <div class="relative z-10 my-5 sm:my-7">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200/70 mb-1">
+                    Total Hari Ini
+                </p>
+                <!-- ELEMENT NOMINAL PENDAPATAN KOTOR -->
+                <div id="hari-terbaru-kotor-card" class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight drop-shadow-sm">
+                    Rp 0
+                </div>
+            </div>
+
+            <!-- BAGIAN BAWAH CARD: TOMBOL INFO LENGKAP & IKON KASIR -->
+            <div class="relative z-10 pt-4 border-t border-white/15 flex justify-between items-center">
+                
+                <!-- TOMBOL INFO LENGKAP (ONCLICK UNTUK POPUP MODAL PENDAPATAN) -->
+                <button onclick="bukaModal('modal-pendapatan')" class="group px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 border border-white/25 backdrop-blur-md text-white font-bold text-xs flex items-center gap-2 transition-all duration-200 shadow-sm">
+                    <i class="fa-solid fa-circle-info text-emerald-300 group-hover:rotate-12 transition-transform"></i>
+                    <span>INFO LENGKAP</span>
+                    <i class="fa-solid fa-chevron-right text-[10px] opacity-75 group-hover:translate-x-0.5 transition-transform"></i>
+                </button>
+
+                <!-- IKON MESIN KASIR FONTAWESOME -->
+                <div class="flex items-center justify-center text-emerald-200/80 hover:text-emerald-100 transition-colors drop-shadow">
+                    <i class="fa-solid fa-cash-register text-3xl sm:text-4xl"></i>
+                </div>
+
+            </div>
+
+        </div>
     </div>
 
-    <!-- MENU 3 TOMBOL UTAMA (RESPONSIF: 1 KOLOM DI HP, 3 KOLOM DI PC) -->
-    <div class="max-w-md md:max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-3.5 my-2">
+<!-- MENU TOMBOL GRAFIK PROGRES (SIDE-TO-SIDE 2 KOLOM DI HP & PC) -->
+<div class="max-w-md md:max-w-5xl mx-auto grid grid-cols-2 gap-2.5 sm:gap-3.5 my-2">
+    
+    <!-- Tombol 1: Progres Harian (Aksen Teal Forest) -->
+    <button onclick="bukaModal('modal-harian')" class="group relative overflow-hidden p-3 sm:p-4 rounded-[22px] sm:rounded-[24px] border-2 border-teal-400/90 bg-gradient-to-r from-teal-100/90 via-teal-50/70 to-white backdrop-blur-md shadow-[0_6px_20px_rgba(20,184,166,0.15)] hover:shadow-[0_8px_25px_rgba(20,184,166,0.25)] hover:border-teal-500 transition-all duration-300 text-left flex flex-col justify-between gap-3 active:scale-[0.98]">
         
-        <!-- Tombol 1: Pendapatan Terbaru (Aksen Emerald Mint) -->
-        <button onclick="bukaModal('modal-pendapatan')" class="group relative overflow-hidden p-4 rounded-[24px] border-2 border-emerald-400/90 bg-gradient-to-r from-emerald-100/90 via-emerald-50/70 to-white backdrop-blur-md shadow-[0_6px_20px_rgba(16,185,129,0.15)] hover:shadow-[0_8px_25px_rgba(16,185,129,0.25)] hover:border-emerald-500 transition-all duration-300 text-left flex items-center gap-3.5 active:scale-[0.98]">
-            <div class="w-12 h-12 rounded-[18px] bg-gradient-to-br from-emerald-500 to-green-600 text-white flex-shrink-0 flex items-center justify-center text-xl shadow-md shadow-emerald-500/30 group-hover:scale-105 transition-transform duration-300">
-                <i class="fa-solid fa-wallet fa-bounce" style="--fa-animation-duration: 2.5s;"></i>
-            </div>
-            <div class="flex-grow min-w-0 pr-1">
-                <h4 class="text-sm sm:text-base font-black text-gray-900 leading-tight group-hover:text-emerald-700 transition-colors">
-                    Pendapatan Terbaru
-                </h4>
-                <p class="text-[11px] text-gray-600 font-medium leading-snug mt-0.5">
-                    Cek rincian pemasukan, meterai & tabungan
-                </p>
-            </div>
-            <div class="flex flex-col items-end justify-center gap-1.5 flex-shrink-0">
-                <span class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-emerald-600 text-white rounded-lg shadow-sm">
-                    LAPORAN
-                </span>
-                <div class="w-6 h-6 rounded-full bg-emerald-200/70 text-emerald-800 flex items-center justify-center text-[10px] group-hover:translate-x-0.5 transition-transform">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-            </div>
-        </button>
-
-        <!-- Tombol 2: Progres Harian (Aksen Teal Forest) -->
-        <button onclick="bukaModal('modal-harian')" class="group relative overflow-hidden p-4 rounded-[24px] border-2 border-teal-400/90 bg-gradient-to-r from-teal-100/90 via-teal-50/70 to-white backdrop-blur-md shadow-[0_6px_20px_rgba(20,184,166,0.15)] hover:shadow-[0_8px_25px_rgba(20,184,166,0.25)] hover:border-teal-500 transition-all duration-300 text-left flex items-center gap-3.5 active:scale-[0.98]">
-            <div class="w-12 h-12 rounded-[18px] bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex-shrink-0 flex items-center justify-center text-xl shadow-md shadow-teal-500/30 group-hover:scale-105 transition-transform duration-300">
+        <!-- Baris Atas: Ikon + Badge Grafik -->
+        <div class="flex items-center justify-between w-full">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex-shrink-0 flex items-center justify-center text-lg sm:text-xl shadow-md shadow-teal-500/30 group-hover:scale-105 transition-transform duration-300">
                 <i class="fa-solid fa-chart-line fa-beat" style="--fa-animation-duration: 2s;"></i>
             </div>
+            <span class="text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-2 py-0.5 sm:py-1 bg-teal-600 text-white rounded-lg shadow-sm">
+                GRAFIK
+            </span>
+        </div>
+
+        <!-- Baris Bawah: Judul, Subtitle & Arrow -->
+        <div class="flex items-end justify-between w-full min-w-0 pt-1">
             <div class="flex-grow min-w-0 pr-1">
-                <h4 class="text-sm sm:text-base font-black text-gray-900 leading-tight group-hover:text-teal-700 transition-colors">
+                <h4 class="text-xs sm:text-base font-black text-gray-900 leading-tight group-hover:text-teal-700 transition-colors truncate">
                     Progres Harian
                 </h4>
-                <p class="text-[11px] text-gray-600 font-medium leading-snug mt-0.5">
-                    Statistik pendapatan kotor bulan ini
+                <p class="text-[9px] sm:text-[11px] text-gray-600 font-medium leading-tight mt-0.5 line-clamp-2">
+                    Statistik kotor bulan ini
                 </p>
             </div>
-            <div class="flex flex-col items-end justify-center gap-1.5 flex-shrink-0">
-                <span class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-teal-600 text-white rounded-lg shadow-sm">
-                    GRAFIK
-                </span>
-                <div class="w-6 h-6 rounded-full bg-teal-200/70 text-teal-800 flex items-center justify-center text-[10px] group-hover:translate-x-0.5 transition-transform">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
+            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-teal-200/70 text-teal-800 flex-shrink-0 flex items-center justify-center text-[9px] sm:text-[10px] group-hover:translate-x-0.5 transition-transform">
+                <i class="fa-solid fa-chevron-right"></i>
             </div>
-        </button>
+        </div>
 
-        <!-- Tombol 3: Progres Bulanan (Aksen Bright Lime-Green) -->
-        <button onclick="bukaModal('modal-bulanan')" class="group relative overflow-hidden p-4 rounded-[24px] border-2 border-green-400/90 bg-gradient-to-r from-green-100/90 via-green-50/70 to-white backdrop-blur-md shadow-[0_6px_20px_rgba(34,197,94,0.15)] hover:shadow-[0_8px_25px_rgba(34,197,94,0.25)] hover:border-green-500 transition-all duration-300 text-left flex items-center gap-3.5 active:scale-[0.98]">
-            <div class="w-12 h-12 rounded-[18px] bg-gradient-to-br from-green-500 to-lime-600 text-white flex-shrink-0 flex items-center justify-center text-xl shadow-md shadow-green-500/30 group-hover:scale-105 transition-transform duration-300">
+    </button>
+
+    <!-- Tombol 2: Progres Bulanan (Aksen Bright Lime-Green) -->
+    <button onclick="bukaModal('modal-bulanan')" class="group relative overflow-hidden p-3 sm:p-4 rounded-[22px] sm:rounded-[24px] border-2 border-green-400/90 bg-gradient-to-r from-green-100/90 via-green-50/70 to-white backdrop-blur-md shadow-[0_6px_20px_rgba(34,197,94,0.15)] hover:shadow-[0_8px_25px_rgba(34,197,94,0.25)] hover:border-green-500 transition-all duration-300 text-left flex flex-col justify-between gap-3 active:scale-[0.98]">
+        
+        <!-- Baris Atas: Ikon + Badge Grafik -->
+        <div class="flex items-center justify-between w-full">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-green-500 to-lime-600 text-white flex-shrink-0 flex items-center justify-center text-lg sm:text-xl shadow-md shadow-green-500/30 group-hover:scale-105 transition-transform duration-300">
                 <i class="fa-solid fa-chart-column fa-bounce" style="--fa-animation-duration: 2.8s;"></i>
             </div>
+            <span class="text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-2 py-0.5 sm:py-1 bg-green-600 text-white rounded-lg shadow-sm">
+                GRAFIK
+            </span>
+        </div>
+
+        <!-- Baris Bawah: Judul, Subtitle & Arrow -->
+        <div class="flex items-end justify-between w-full min-w-0 pt-1">
             <div class="flex-grow min-w-0 pr-1">
-                <h4 class="text-sm sm:text-base font-black text-gray-900 leading-tight group-hover:text-green-700 transition-colors">
+                <h4 class="text-xs sm:text-base font-black text-gray-900 leading-tight group-hover:text-green-700 transition-colors truncate">
                     Progres Bulanan
                 </h4>
-                <p class="text-[11px] text-gray-600 font-medium leading-snug mt-0.5">
-                    Tren akumulasi data spreadsheet
+                <p class="text-[9px] sm:text-[11px] text-gray-600 font-medium leading-tight mt-0.5 line-clamp-2">
+                    Tren data spreadsheet
                 </p>
             </div>
-            <div class="flex flex-col items-end justify-center gap-1.5 flex-shrink-0">
-                <span class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-green-600 text-white rounded-lg shadow-sm">
-                    GRAFIK
-                </span>
-                <div class="w-6 h-6 rounded-full bg-green-200/70 text-green-800 flex items-center justify-center text-[10px] group-hover:translate-x-0.5 transition-transform">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
+            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-200/70 text-green-800 flex-shrink-0 flex items-center justify-center text-[9px] sm:text-[10px] group-hover:translate-x-0.5 transition-transform">
+                <i class="fa-solid fa-chevron-right"></i>
             </div>
-        </button>
+        </div>
 
+    </button>
+
+</div>
+
+    <!-- SECTION FITUR UTAMA LAINNYA (TIPE GRID APP ICON 4 KOLOM) -->
+    <div class="max-w-md md:max-w-5xl mx-auto mt-6 pt-5 border-t border-slate-200/80">
+        <h4 class="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-4 px-1">
+            Layanan & Akses Cepat
+        </h4>
+
+        <div class="grid grid-cols-4 gap-2 sm:gap-4">
+            
+            <!-- 1. BARANG KOSONG (GRADASI ROSE - AMBER) -->
+            <button type="button" 
+                    id="btnBarangKosong" 
+                    onclick="bukaModalBK()" 
+                    class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-rose-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+                <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-500 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-rose-500/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-rose-600 tracking-tight leading-tight transition-colors">
+                    Barang Kosong
+                </span>
+            </button>
+
+            <!-- 2. KATALOG BARANG (GRADASI EMERALD - TEAL) -->
+            <button type="button" 
+                    id="btnBukaKatalog" 
+                    onclick="bukaModalKatalog()" 
+                    class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-emerald-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+                <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-emerald-500/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+                    <i id="iconKatalog" class="fas fa-book-open"></i>
+                </div>
+                <span id="textKatalog" class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-emerald-600 tracking-tight leading-tight transition-colors">
+                    Katalog Barang
+                </span>
+            </button>
+
+            <!-- 3. UPDATE KATALOG BARANG (GRADASI TEAL - GREEN) -->
+            <button type="button"
+                    onclick="openGateKatalog()" 
+                    class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-teal-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+                <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-teal-600 to-green-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-teal-600/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+                    <i class="fas fa-boxes-stacked"></i>
+                </div>
+                <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-teal-600 tracking-tight leading-tight transition-colors">
+                    Update Katalog
+                </span>
+            </button>
+
+            <!-- 4. KEMBALI KE PORTAL (GRADASI INDIGO - BLUE) -->
+            <button type="button"
+                    id="btn-switch-ke-apotek"
+                    onclick="navigasiKeApotek()" 
+                    class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-indigo-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+                <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-indigo-600 to-blue-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-indigo-600/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-indigo-600 tracking-tight leading-tight transition-colors">
+                    Kembali Ke Portal
+                </span>
+            </button>
+
+        </div>
     </div>
 
 </div> <!-- PENUTUP TAB DASHBOARD -->
@@ -648,52 +715,73 @@ document.addEventListener('keydown', function(event) {
             </h4>
 
             <div class="space-y-4 text-gray-700 text-sm md:text-base leading-relaxed font-medium">
+                <!-- 1. PENDAPATAN KOTOR -->
                 <div class="flex gap-4 items-center">
                     <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
                     <p>Pendapatan Kotor : <span id="hari-terbaru-kotor" class="font-bold text-gray-950">Rp 0</span></p>
                 </div>
                 
-                <div class="flex gap-4 items-start">
-                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm mt-0.5"><i class="fa-solid fa-circle-check"></i></div>
-                    <div>
-                        <p class="text-gray-800">Meterai Terjual : <span id="hari-terbaru-meterai" class="font-bold text-gray-950">0</span> PCS</p>
-                        <div class="text-xs text-gray-500 mt-1 space-y-0.5">
-                            <p>• Pokok : <span id="hari-terbaru-meterai-pokok" class="font-medium text-gray-700">Rp 0</span></p>
-                            <p>• Laba : <span id="hari-terbaru-meterai-laba" class="font-medium text-green-600">Rp 0</span></p>
+                <!-- 2. METERAI TERJUAL (DENGAN SUB-ITEM) -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex gap-4 items-center">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
+                        <p>Meterai Terjual : <span id="hari-terbaru-meterai" class="font-bold text-gray-950">0</span> PCS</p>
+                    </div>
+                    
+                    <!-- SUB-ITEM: POKOK & LABA (MENJOROK & FONT SERAGAM) -->
+                    <div class="ml-4 pl-4 sm:ml-5 sm:pl-5 border-l-2 border-green-100 space-y-3">
+                        <div class="flex gap-3 items-center">
+                            <div class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-600 text-xs">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                            <p>Pokok : <span id="hari-terbaru-meterai-pokok" class="font-bold text-gray-950">Rp 0</span></p>
+                        </div>
+                        <div class="flex gap-3 items-center">
+                            <div class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-600 text-xs">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                            <p>Laba : <span id="hari-terbaru-meterai-laba" class="font-bold text-green-600">Rp 0</span></p>
                         </div>
                     </div>
                 </div>
                 
+                <!-- 3. METERAI QRIS -->
                 <div class="flex gap-4 items-center">
                     <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
                     <p>Meterai Terjual (QRIS) : <span id="hari-terbaru-meterai-qris" class="font-bold text-gray-950">0</span> PCS</p>
                 </div>
                 
+                <!-- 4. PENDAPATAN QRIS -->
                 <div class="flex gap-4 items-center">
                     <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
                     <p>Pendapatan (QRIS) : <span id="hari-terbaru-qris" class="font-bold text-gray-950">Rp 0</span></p>
                 </div>
                 
+                <!-- 5. UANG MAKAN -->
                 <div class="flex gap-4 items-center">
                     <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
                     <p>Uang Makan : <span id="hari-terbaru-makan" class="font-bold text-gray-950">Rp 0</span></p>
                 </div>
                 
+                <!-- 6. PENGELUARAN KASIR -->
                 <div class="flex gap-4 items-center">
                     <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
                     <p>Pengeluaran Kasir : <span id="hari-terbaru-pengeluaran" class="font-bold text-gray-950">Rp 0</span></p>
                 </div>
                 
+                <!-- 7. TABUNGAN A -->
                 <div class="flex gap-4 items-center">
                     <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
                     <p>Tabungan (A) : <span id="hari-terbaru-tabungan-a" class="font-bold text-gray-950">Rp 0</span></p>
                 </div>
                 
+                <!-- 8. TABUNGAN B -->
                 <div class="flex gap-4 items-center">
                     <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-circle-check"></i></div>
                     <p>TABUNGAN (B) : <span id="hari-terbaru-tabungan-b" class="font-bold text-gray-950">Rp 0</span></p>
                 </div>
                 
+                <!-- 9. TARGET TERPENUHI -->
                 <div class="flex gap-4 items-center pt-3 border-t-2 border-green-100 mt-2">
                     <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-sm"><i class="fa-solid fa-flag-checkered"></i></div>
                     <p>TARGET TERPENUHI : <span id="hari-terbaru-target" class="font-black px-3 py-1 rounded-lg text-sm uppercase shadow-inner">...</span></p>
@@ -1300,8 +1388,10 @@ function closePdfModal() {
 </script>
 
 
-<!-- KONTEN TAB: SLIP GAJI -->
-<div id="tab-presensi" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
+<!-- ========================================== -->
+<!-- KONTEN TAB: ASISTEN SLIP GAJI              -->
+<!-- ========================================== -->
+<div id="tab-presensi" class="tab-content p-4 sm:p-6 md:p-10 lg:p-12 fade-in hidden">
     
     <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
         
@@ -1313,206 +1403,312 @@ function closePdfModal() {
                     <h3 class="text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight flex items-center gap-2">
                         <i class="fa-solid fa-id-card-clip text-green-600"></i> Asisten Slip Gaji
                     </h3>
-                    <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Nurjaya Abadi Photocopy</p>
+                    <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Nurjaya Abadi Photocopy • Mode Khusus Owner</p>
                 </div>
             </div>
-           
         </div>
 
-
-
-
-
-        <!-- MENU UTAMA SLIP GAJI -->
-<div class="px-6 md:px-8 pt-6 pb-6 space-y-4">
-    <div class="p-4 bg-gray-50 border-2 border-gray-200 rounded-[22px] flex flex-col gap-4">
-        <div>
-            <p class="text-[11px] text-gray-500 font-bold text-center sm:text-left">Menu khusus Owner untuk proses pembuatan Slip Gaji Karyawan.</p>
-        </div>
-        
-        <!-- Tombol dibuat full width (w-full) -->
-        <button type="button" id="btn-buka-modal-gaji" class="w-full group relative px-4 py-3.5 rounded-2xl bg-gradient-to-br from-rose-700 to-red-800 hover:from-rose-600 hover:to-red-700 text-white shadow-md hover:shadow-xl flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98] overflow-hidden dynamic-btn">
-            <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
-                <i class="fa-solid fa-file-invoice-dollar text-sm sm:text-base"></i>
-            </div>
-            <div class="flex flex-col text-left min-w-0">
-                <span class="font-black text-[12px] sm:text-[14px] tracking-wide truncate">Buat Slip Gaji</span>
-                <span class="text-[9px] sm:text-[10px] font-medium text-rose-200/75 tracking-wider uppercase block truncate">Untuk Owner</span>
-            </div>
-        </button>
-    </div>
-</div>
-
-
-
-
-        <!-- CONTAINER FORM PRESENSI (Secara default tersembunyi dengan class hidden & fade-in) -->
-        <div id="wrapper_form_presensi" class="p-6 md:px-8 md:pb-8 space-y-6 text-gray-700 hidden fade-in border-t border-gray-100">
+        <!-- FORM UTAMA ASISTEN SLIP GAJI -->
+        <div class="p-5 sm:p-7 bg-slate-50 flex flex-col gap-5">
             
-            <!-- BLOK SELECT NAMA & TARGET PERIODE -->
-            <div class="p-4 bg-slate-50 border-2 border-slate-200 rounded-[22px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                <div class="space-y-1">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-user-tie text-green-600"></i> Nama Karyawan
-                    </label>
-                    <div class="relative">
-                        <select id="presensi-karyawan" required 
-                            class="w-full pl-4 pr-12 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-sm appearance-none h-[48px]">
-                            <option value="" disabled selected hidden>-- Pilih Nama --</option>
-                            <option value="Cahya">Muhammad Cahya Ardiansyah</option>
-                            <option value="Dadan">Dadan Nurfaizal</option>
-                            <option value="Syamsi">Syamsi Nurhakim</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-green-600">
-                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-1">
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-calendar-week text-green-600"></i> Target Buku Periode
-                    </label>
-                    <div class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] text-sm text-gray-700 font-black tracking-wide flex items-center gap-2.5 min-h-[48px]">
-                        <i class="fa-solid fa-clock-rotate-left text-amber-500 animate-pulse"></i>
-                        <span id="label-periode-aktif" class="italic text-gray-500 font-normal">Pilih nama karyawan dahulu...</span>
-                    </div>
-                </div>
+            <!-- SELEKSI KARYAWAN -->
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex flex-col gap-2">
+                <label for="gaji-pilih-karyawan" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Karyawan:</label>
+                <select id="gaji-pilih-karyawan" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-green-600 focus:ring-1 focus:ring-green-600 focus:outline-none transition-all cursor-pointer shadow-inner">
+                    <option value="" disabled selected>-- Pilih Karyawan --</option>
+                    <option value="Dadan">Dadan Nurfaizal</option>
+                    <option value="Cahya">M. Cahya Ardiansyah</option>
+                    <option value="Syamsi">Syamsi Nurhakim</option>
+                </select>
             </div>
 
-            <form id="form-presensi-nsa" class="space-y-6">
-                <!-- DETAIL PRESENSI (TANGGAL, HADIR, JADWAL) -->
-                <div class="p-4 sm:p-5 bg-emerald-50 rounded-[24px] border border-emerald-200/80 shadow-md space-y-5">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div class="space-y-1.5">
-                            <label for="presensi-tanggal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-calendar-day text-green-600"></i> Hari / Tanggal Kerja
-                            </label>
-                            <input type="date" id="presensi-tanggal" required 
-                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-circle-check text-green-600"></i> Status Kehadiran
-                            </label>
-                            <div class="relative">
-                                <select id="presensi-kehadiran" required 
-                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                                    <option value="YA">YA (Hadir Kerja)</option>
-                                    <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="border-dashed border-emerald-200/60 my-2">
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div class="space-y-1.5">
-                            <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
-                            </label>
-                            <div class="relative">
-                                <select id="presensi-jadwal" required 
-                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                                    <option value="2">2 Karyawan (Full Team)</option>
-                                    <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
-                            <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus 1 Karyawan/Lembur)</span>
-                            </label>
-                            <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
-                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        </div>
-                    </div>
-
-                    <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
-                        <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-exclamation text-green-600"></i> Alasan Tidak Hadir <span class="text-[10px] text-amber-600 font-bold normal-case">(Khusus jika TIDAK HADIR)</span>
-                        </label>
-                        <input type="text" id="presensi-alasan-absen" placeholder="Contoh: jatah libur, izin, sakit" disabled 
-                            class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                    </div>
-                </div>
-
-                <!-- POTONGAN JAM KERJA -->
-                <div class="p-4 sm:p-5 bg-orange-500 rounded-[24px] border border-orange-600 shadow-md space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div class="space-y-1.5">
-                            <label for="presensi-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-business-time text-orange-100"></i> Potongan Jam Kerja <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
-                            </label>
-                            <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00 (jam.menit)(pakai titik)" 
-                                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        </div>
-                        
-                        <div class="space-y-1.5">
-                            <label for="presensi-alasan-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-comment-dots text-orange-100"></i> Alasan Potongan Jam <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
-                            </label>
-                            <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk pagi hari" 
-                                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAMBAHAN JAM KERJA -->
-                <div class="p-4 sm:p-5 bg-blue-500 rounded-[24px] border border-blue-600 shadow-md space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div class="space-y-1.5">
-                            <label for="presensi-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-user-clock text-blue-100"></i> Tambahan Jam / Overtime <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
-                            </label>
-                            <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00 (jam.menit)(pakai titik)" 
-                                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                            <small class="text-[10px] text-blue-100 font-bold italic block pl-1">Lebihan waktu di luar batas wajar</small>
-                        </div>
-                        
-                        <div class="space-y-1.5">
-                            <label for="presensi-alasan-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-file-signature text-blue-100"></i> Alasan Tambahan Jam <span class="text-[10px] text-blue-200 font-bold normal-case">(Opsional)</span>
-                            </label>
-                            <input type="text" id="presensi-alasan-tambahan" placeholder="Contoh: tutup toko jam 20.45" 
-                                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TOMBOL SUBMIT FORM -->
-                <div class="pt-4 border-t border-gray-100 flex justify-end">
-                    <button type="submit" id="btn-submit-presensi"
-                        class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i> KIRIM PRESENSI KE NSA CLOUD
-                    </button>
+            <!-- CONTAINER KARTU PRESENSI -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Kartu Presensi Terbaru</span>
+                    <span id="status-loading-pdf" class="text-[10px] font-bold text-green-600 hidden animate-pulse">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Mencari data kehadiran...
+                    </span>
                 </div>
                 
-                <!-- CHECK RIWAYAT PRESENSI -->
-                <div class="pt-2 border-t border-dashed border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
-                    <div class="text-center sm:text-left">
-                        <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Pengecekan Riwayat Pengisian</p>
-                        <p class="text-[12px] text-gray-600 font-black uppercase">Pratinjau Kartu Presensi</p>
+                <div class="bg-white border-2 border-dashed border-slate-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-xl w-full aspect-square max-w-md mx-auto">
+                    <div id="placeholder-pdf-text" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
+                        <i class="fa-solid fa-image text-4xl text-slate-300 mb-3"></i>
+                        <p class="text-xs font-bold">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
                     </div>
-                    <button type="button" id="btn-buka-modal" onclick="javascript:void(0)"
-                        class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs rounded-[16px] uppercase tracking-wider shadow-md shadow-blue-600/10 transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-address-card text-sm"></i> Tampilkan Presensi Bulan Ini
+
+                    <div id="loading-pdf-animation" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/90 z-50 select-none animate-pulse transition-all duration-200">
+                        <div class="relative mb-4">
+                            <div class="absolute -inset-4 bg-emerald-100 rounded-full blur-xl opacity-70 animate-ping"></div>
+                            <i class="fa-solid fa-file-invoice-dollar text-5xl text-emerald-500 relative animate-bounce"></i>
+                        </div>
+                        <div class="space-y-2 w-2/3 mx-auto">
+                            <p id="teks-progres-loading" class="text-xs font-black text-emerald-700 tracking-wide">Menghubungkan ke NSA Cloud...</p>
+                            <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
+                                <div class="h-full w-1/2 bg-emerald-500 rounded-full absolute top-0 left-0" style="animation: slide 1.5s infinite"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <img id="iframe-preview-pdf" 
+                         class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300" 
+                         src="" 
+                         alt="Preview Kartu Presensi">
+                </div>
+            </div>
+
+            <!-- RINCIAN & CALCULATOR FORM OWNER -->
+            <div id="sg-container-form-owner" class="flex flex-col gap-4 border-t border-slate-200 pt-4">
+                
+                <!-- SUMMARY PERIODE KERJA -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-center">
+                        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Periode Kerja</span>
+                        <span id="sg-text-periode" class="text-xs font-extrabold text-slate-700 block mt-1">-</span>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-center">
+                        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Hari Periode Kerja</span>
+                        <span id="sg-text-total-hari" class="text-xs font-extrabold text-slate-700 block mt-1">-</span>
+                    </div>
+                </div>
+
+                <h4 class="text-[11px] font-black text-green-700 uppercase tracking-widest mt-2 px-1">Rincian Hari Kerja:</h4>
+
+               <!-- CARD 1: JADWAL 2 KARYAWAN -->
+<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+    <!-- BARIS 1: JUDUL & HARI -->
+    <div class="flex items-center justify-between">
+        <span class="text-xs font-black text-slate-700 block">1. Jadwal 2 Karyawan</span>
+        <span id="sg-lbl-jadwal2" class="text-[11px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-md inline-block">0 hari</span>
+    </div>
+
+    <!-- BARIS 2: KALKULASI RATE & TOTAL -->
+    <div class="flex items-center justify-between gap-2 pt-2 border-t border-dashed border-slate-100">
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-400">X</span>
+            <div class="relative rounded-xl shadow-inner">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                <input type="text" id="sg-in-rate-jadwal2" class="sg-input-clean w-28 sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl">
+            <span class="text-xs font-bold text-slate-400">=</span>
+            <span id="sg-out-total-jadwal2" class="text-xs font-black text-slate-800">Rp 0</span>
+        </div>
+    </div>
+</div>
+
+<!-- CARD 2: JADWAL 1 KARYAWAN -->
+<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+    <!-- BARIS 1: JUDUL & HARI -->
+    <div class="flex items-center justify-between">
+        <span class="text-xs font-black text-slate-700 block">2. Jadwal 1 Karyawan</span>
+        <span id="sg-lbl-jadwal1" class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md inline-block">0 hari</span>
+    </div>
+
+    <!-- BARIS 2: KALKULASI RATE & TOTAL -->
+    <div class="flex items-center justify-between gap-2 pt-2 border-t border-dashed border-slate-100">
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-400">X</span>
+            <div class="relative rounded-xl shadow-inner">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                <input type="text" id="sg-in-rate-jadwal1" class="sg-input-clean w-28 sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl">
+            <span class="text-xs font-bold text-slate-400">=</span>
+            <span id="sg-out-total-jadwal1" class="text-xs font-black text-slate-800">Rp 0</span>
+        </div>
+    </div>
+</div>
+
+                <!-- CARD 3 & 4: LIBUR & ABSEN -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
+                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">3. Libur Wajib</span>
+                        <span id="sg-out-libur" class="text-xs font-extrabold text-indigo-600 block mt-1">0 hari</span>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
+                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">4. Absen Lainnya</span>
+                        <span id="sg-out-absen-lain" class="text-xs font-extrabold text-rose-600 block mt-1">0 hari</span>
+                    </div>
+                </div>
+
+                <!-- CARD 5: POTONGAN JAM KERJA -->
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div class="max-w-md">
+                            <span class="text-xs font-black text-slate-700 block">5. Potongan Jam Kerja <span class="text-slate-400 font-normal">(Opsional)</span></span>
+                            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                                (Potongan diberlakukan jika ada: Terlambat masuk sekian menit/jam, atau ada izin pribadi dalam menit/jam tertentu di waktu operasional)
+                            </p>
+                            <span id="sg-lbl-total-potongan-jam" class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md inline-block mt-2">0 jam 0 menit</span>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-center">
+                            <span class="text-rose-600 uppercase tracking-wider text-[10px] font-bold">Pengurangan (-)</span>
+                            <div class="relative rounded-xl shadow-inner">
+                                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                                <input type="text" id="sg-in-minus-potongan" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-rose-600 focus:outline-none text-right" placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="sg-wrapper-alasan-potongan-list" class="hidden border-t border-dashed border-slate-100 pt-2 flex flex-col gap-1">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Rincian/Alasan:</span>
+                        <ul id="sg-list-alasan-potongan" class="text-[11px] font-medium text-slate-600 list-disc list-inside space-y-0.5 pl-1">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CARD 6: TAMBAHAN JAM KERJA -->
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div class="max-w-md">
+                            <span class="text-xs font-black text-slate-700 block">6. Tambahan Jam Kerja <span class="text-slate-400 font-normal">(Opsional)</span></span>
+                            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                                (Tambahan diberikan jika ada: Jam Tutup Toko yang jauh melebihi batas wajar / overtime. Atau situasi lain yang memungkinkan, namun kembali lagi kepada kebijakan Owner Nurjaya)
+                            </p>
+                            <span id="sg-lbl-total-tambahan-jam" class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md inline-block mt-2">0 jam 0 menit</span>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-center">
+                            <span class="text-blue-600 uppercase tracking-wider text-[10px] font-bold">Penambahan (+)</span>
+                            <div class="relative rounded-xl shadow-inner">
+                                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                                <input type="text" id="sg-in-plus-tambahan" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-blue-600 focus:outline-none text-right" placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="sg-wrapper-alasan-tambahan-list" class="hidden border-t border-dashed border-slate-100 pt-2 flex flex-col gap-1">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Rincian/Alasan:</span>
+                        <ul id="sg-list-alasan-tambahan" class="text-[11px] font-medium text-slate-600 list-disc list-inside space-y-0.5 pl-1">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CARD 7: POIN TAMBAHAN -->
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div class="max-w-md">
+                            <span class="text-xs font-black text-slate-700 block">7. Poin Tambahan <span class="text-slate-400 font-normal">(Opsional)</span></span>
+                            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                                (Bersifat opsional dan hanya Owner Nurjaya yang menentukan, max 3 poin)
+                            </p>
+                        </div>
+                        <div class="self-end sm:self-start">
+                            <select id="sg-sel-poin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer w-24">
+                                <option value="0">0 Poin</option>
+                                <option value="1">1 Poin</option>
+                                <option value="2">2 Poin</option>
+                                <option value="3">3 Poin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="sg-wrapper-poin-dinamis" class="flex flex-col gap-2"></div>
+                </div>
+
+                <!-- CARD 8: UANG RAJIN -->
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-xs font-black text-slate-700">8. Uang Rajin</span>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-100 p-3 rounded-xl flex flex-col gap-2">
+                        <div class="text-[10px] uppercase font-black tracking-wider text-indigo-600">
+                            INDIKATOR KEDISIPLINAN:
+                        </div>
+                        <p class="text-[11px] font-medium text-slate-500 leading-relaxed">
+                            Uang Rajin adalah Reward yang diberikan jika karyawan <span class="font-bold text-slate-700">HADIR SECARA PENUH</span> tanpa ada absen (contoh: tanpa keterangan, izin, sakit, dll) (Yang tidak diberikan / diinstruksikan Owner).
+                        </p>
+                        
+                        <hr class="border-dashed border-slate-200 my-0.5">
+                        
+                        <div class="flex flex-col gap-1">
+                            <p class="text-[11px] font-bold text-slate-700">
+                                Absen Bulan Ini: 
+                                <span id="sg-ur-indikator-absen" class="font-black text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md text-xs">0 hari</span>
+                            </p>
+                            
+                            <p id="sg-ur-petunjuk-dinamis" class="text-[11px] font-medium text-slate-500 italic bg-white p-2 border border-slate-200 rounded-lg shadow-inner">
+                                Menunggu data karyawan...
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1 pt-1 border-t border-slate-50">
+                        <select id="sg-sel-uang-rajin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer w-full sm:w-auto" autocomplete="off">
+                            <option value="" selected disabled>Pilih Dahulu</option>
+                            <option value="full">Dapat Full</option>
+                            <option value="tidak">Tidak Dapat</option>
+                            <option value="penyesuaian">Penyesuaian</option>
+                        </select>
+
+                        <div id="sg-wrapper-uang-rajin-dinamis" class="flex items-center gap-2 justify-end">
+                            <span class="text-xs font-bold text-slate-400">Total =</span>
+                            <span id="sg-out-rajin-status" class="text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic">
+                                Pilih status terlebih dahulu
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HITUNGAN AKHIR & TOMBOL GENERATE -->
+                <div class="border-t-2 border-dashed border-slate-200 pt-4 mt-2 flex flex-col gap-3">
+                    <div class="bg-green-700 text-white p-4 rounded-2xl shadow-md flex justify-between items-center">
+                        <span class="text-xs font-black uppercase tracking-wider">Total Hitungan Gaji:</span>
+                        <span id="sg-out-total-gaji-bersih" class="text-xl font-black tracking-wide">Rp 0</span>
+                    </div>
+
+                    <!-- CARD PEMBULATAN KHUSUS -->
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+                        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div class="max-w-md">
+                                <span class="text-xs font-black text-slate-700 block">Pembulatan Khusus <span class="text-slate-400 font-normal">(Kebijakan Owner)</span></span>
+                                <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
+                                    (Bersifat opsional, jika tidak ingin menerapkan pembulatan, maka kosongkan)
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-2 self-end sm:self-start">
+                                <div class="relative rounded-xl shadow-inner">
+                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                                    <input type="text" id="sg-in-pembulatan" class="sg-input-clean w-44 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 text-amber-400 p-4 rounded-2xl shadow-md flex justify-between items-center">
+                        <span class="text-xs font-black uppercase tracking-wider">Gaji Bersih Diterima:</span>
+                        <span id="sg-out-final-gaji" class="text-xl font-black tracking-wide">Rp 0</span>
+                    </div>
+                    
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-1.5">
+                        <label for="owner-input-catatan" class="block text-[11px] font-black text-slate-700 uppercase tracking-wider">
+                            <i class="fa-solid fa-pen-to-square text-green-600 mr-1"></i> Catatan Khusus dari Owner:
+                        </label>
+                        <textarea id="owner-input-catatan" rows="4" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-medium text-xs p-3 rounded-xl focus:border-green-600 focus:outline-none transition-all resize-none placeholder-slate-400 min-h-[96px] leading-relaxed" placeholder="Contoh: Uang Rajin tidak full karena ada absen 1 hari. Tingkatkan kualitas pelayanan ke pelanggan."></textarea>
+                    </div>
+
+                    <button type="button" id="btn-generate-slip-gaji" class="w-full mt-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-black text-xs uppercase tracking-widest py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-receipt text-sm"></i> Generate Slip Gaji Karyawan
                     </button>
                 </div>
-            </form>
+
+            </div>
+
         </div>
 
     </div>
 </div>
+
+<style>
+@keyframes slide {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+</style>
 
        <!-- KONTEN TAB: JADWAL STAF -->
         <div id="tab-calendar" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
@@ -2614,7 +2810,7 @@ function toggleMenuSidebar() {
 
 
 <!-- MODAL EDITOR KATALOG (ID: modalEditorKatalog) -->
-<div id="modalEditorKatalog" style="display:none;" class="fixed inset-0 z-[10001] flex items-center justify-center p-4">
+<div id="modalEditorKatalog" style="display:none;" class="fixed inset-0 z-[90000] flex items-center justify-center p-4">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="tutupEditorKatalog()"></div>
 
     <div class="relative bg-white w-full max-w-md rounded-[30px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
@@ -3109,7 +3305,7 @@ function bukaModalInputHarian() {
 
 
 <!-- MODAL SIARAN NOTIFIKASI -->
-<div id="modalNotif" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-[100] p-4">
+<div id="modalNotif" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-[90000] p-4">
     <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl transform transition-all">
         <div class="p-6">
             <div class="flex items-center gap-3 mb-6">
@@ -4207,36 +4403,56 @@ window.onload = muatStatistikBulanIni;
                 
                 // --- PROSES INJEKSI DATA KE ID HTML ---
                 
-                // --- FIX BUG TANGGAL TERTUKAR (HARI/BULAN VS BULAN/HARI) ---
-                if (document.getElementById('hari-terbaru-tgl')) {
-                    let teksTanggalRaw = dataTerbaru.tanggal; // String seperti "01/06/2026"
-                    let teksTanggalFinal = teksTanggalRaw;
+               // --- FIX BUG TANGGAL TERTUKAR (HARI/BULAN VS BULAN/HARI) ---
+let teksTanggalRaw = dataTerbaru.tanggal; // String seperti "01/06/2026"
+let teksTanggalFinal = teksTanggalRaw;
 
-                    const bagian = teksTanggalRaw.split('/');
-                    
-                    if (bagian.length === 3) {
-                        const listBulanManual = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                        const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                        
-                        const tgl = parseInt(bagian[0], 10);
-                        const blnIndex = parseInt(bagian[1], 10) - 1;
-                        const thn = parseInt(bagian[2], 10);
-                        
-                        const blnNama = listBulanManual[blnIndex];
-                        
-                        const tglDibuat = new Date(thn, blnIndex, tgl);
-                        const hariNamaBenar = hariNama[tglDibuat.getDay()];
-                        
-                        teksTanggalFinal = `${hariNamaBenar}, ${tgl} ${blnNama} ${thn}`;
-                    }
-                    
-                    document.getElementById('hari-terbaru-tgl').innerText = teksTanggalFinal;
-                }
-                
-                // Angka nominal uang (format mata uang Rupiah)
-                if (document.getElementById('hari-terbaru-kotor')) {
-                    document.getElementById('hari-terbaru-kotor').innerText = 'Rp ' + Number(dataTerbaru.pendapatan_kotor).toLocaleString('id-ID');
-                }
+if (teksTanggalRaw) {
+    const bagian = teksTanggalRaw.split('/');
+    
+    if (bagian.length === 3) {
+        const listBulanManual = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        
+        const tgl = parseInt(bagian[0], 10);
+        const blnIndex = parseInt(bagian[1], 10) - 1;
+        const thn = parseInt(bagian[2], 10);
+        
+        const blnNama = listBulanManual[blnIndex];
+        
+        const tglDibuat = new Date(thn, blnIndex, tgl);
+        const hariNamaBenar = hariNama[tglDibuat.getDay()];
+        
+        teksTanggalFinal = `${hariNamaBenar}, ${tgl} ${blnNama} ${thn}`;
+    }
+}
+
+// 1. TAMPILKAN TANGGAL KE MODAL POPUP
+const elTglModal = document.getElementById('hari-terbaru-tgl');
+if (elTglModal) {
+    elTglModal.innerText = teksTanggalFinal;
+}
+
+// 2. TAMPILKAN TANGGAL KE UI CARD DASHBOARD
+const elTglCard = document.getElementById('hari-terbaru-tgl-card');
+if (elTglCard) {
+    elTglCard.innerText = teksTanggalFinal;
+}
+
+// --- ANGKA NOMINAL UANG (FORMAT MATA UANG RUPIAH) ---
+const teksNominalKotor = 'Rp ' + Number(dataTerbaru.pendapatan_kotor || 0).toLocaleString('id-ID');
+
+// 1. TAMPILKAN NOMINAL KE MODAL POPUP
+const elKotorModal = document.getElementById('hari-terbaru-kotor');
+if (elKotorModal) {
+    elKotorModal.innerText = teksNominalKotor;
+}
+
+// 2. TAMPILKAN NOMINAL KE UI CARD DASHBOARD
+const elKotorCard = document.getElementById('hari-terbaru-kotor-card');
+if (elKotorCard) {
+    elKotorCard.innerText = teksNominalKotor;
+}
                 if (document.getElementById('hari-terbaru-qris')) {
                     document.getElementById('hari-terbaru-qris').innerText = 'Rp ' + Number(dataTerbaru.pendapatan_qris).toLocaleString('id-ID');
                 }
@@ -4630,28 +4846,7 @@ function pemicuTombolSinkronasi() {
 
 
 <!-- POPUP REMINDER IZIN NOTIFIKASI (MODAL TENGAH) -->
-<div id="popupReminder" class="fixed inset-0 z-[100] flex items-center justify-center px-6 hidden">
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-    
-    <div class="relative bg-white w-full max-w-sm p-8 rounded-[32px] shadow-2xl text-center transform transition-all animate-pop-in">
-        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12">
-            <i class="fas fa-bell fa-2xl animate-bounce"></i>
-        </div>
-        
-        <h2 class="text-xl font-extrabold text-gray-900 mb-2">Notifikasi Wajib Aktif!</h2>
-        <p class="text-sm text-gray-500 leading-relaxed mb-8">
-            Fitur <span class="font-bold text-green-700">Realtime NSA</span> memerlukan izin notifikasi untuk mendapatkan info operasional.<br>
-            Silakan klik tombol di bawah untuk mengaktifkan sistem pengingat.
-        </p>
 
-        <button onclick="eksekusiMintaIzinNotif(event)" 
-    class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition-all active:scale-95 flex items-center justify-center gap-2">
-    <i class="fas fa-check-circle"></i> Izinkan Sekarang
-</button>
-        
-        <p class="text-[10px] text-green-600/70 mt-4 uppercase tracking-widest font-bold">SISTEM PENGINGAT OTOMATIS NURJAYA ABADI</p>
-    </div>
-</div>
 
 
 			
@@ -6680,319 +6875,7 @@ function tutupModalBK_Wrapper() {
     }
 </style>
 
-<!-- ========================================== -->
-<!-- MODAL 1: ASISTEN HITUNG SLIP GAJI (UTAMA)  -->
-<!-- ========================================== -->
-<div id="modal-slip-gaji" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[13000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
-    <div class="bg-white border border-green-200 w-full max-w-2xl h-[95vh] rounded-[24px] shadow-[0_20px_50px_-12px_rgba(22,163,74,0.15)] overflow-hidden flex flex-col transform scale-95 transition-all duration-300">
-        
-        <div class="p-4 border-b border-slate-100 bg-green-50 flex justify-between items-center flex-shrink-0">
-            <div class="flex items-center gap-2">
-                <div class="w-2 h-6 bg-green-600 rounded-full"></div>
-                <div>
-                    <h3 class="text-xs font-black text-green-700 uppercase tracking-widest leading-none">Asisten Pembuatan Slip Gaji</h3>
-                    <p class="text-[10px] text-slate-500 font-medium mt-1">Mode Khusus Owner</p>
-                </div>
-            </div>
-            <button type="button" id="btn-tutup-modal-gaji" class="w-8 h-8 flex items-center justify-center rounded-xl bg-white text-slate-400 hover:bg-rose-50 hover:text-rose-600 border border-slate-200 hover:border-rose-200 shadow-sm transition-all duration-200">
-                <i class="fa-solid fa-xmark text-xs font-black"></i>
-            </button>
-        </div>
 
-        <div class="p-5 overflow-y-auto flex-1 bg-slate-50 flex flex-col gap-5">
-            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex flex-col gap-2">
-                <label for="gaji-pilih-karyawan" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Karyawan:</label>
-               <select id="gaji-pilih-karyawan" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-green-600 focus:ring-1 focus:ring-green-600 focus:outline-none transition-all cursor-pointer shadow-inner">
-    <option value="" disabled selected>-- Pilih Karyawan --</option>
-    <option value="Dadan">Dadan Nurfaizal</option>
-    <option value="Cahya">M. Cahya Ardiansyah</option>
-    <option value="Syamsi">Syamsi Nurhakim</option> <!-- Tambahan opsi baru -->
-</select>
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <div class="flex justify-between items-center px-1">
-                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Kartu Presensi Terbaru</span>
-                    <span id="status-loading-pdf" class="text-[10px] font-bold text-green-600 hidden animate-pulse">
-                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Mencari data kehadiran...
-                    </span>
-                </div>
-				
-				
-				
-				<!-- CONTAINER Penampil Gambar Presensi dari Drive  -->
-				<div class="bg-white border-2 border-dashed border-slate-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-xl w-full aspect-square">
-    
-    <div id="placeholder-pdf-text" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
-        <i class="fa-solid fa-image text-4xl text-slate-300 mb-3"></i>
-        <p class="text-xs font-bold">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
-    </div>
-
-    <div id="loading-pdf-animation" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/90 z-50 select-none animate-pulse transition-all duration-200">
-        <div class="relative mb-4">
-            <div class="absolute -inset-4 bg-emerald-100 rounded-full blur-xl opacity-70 animate-ping"></div>
-            <i class="fa-solid fa-file-invoice-dollar text-5xl text-emerald-500 relative animate-bounce"></i>
-        </div>
-        <div class="space-y-2 w-2/3 mx-auto">
-            <p id="teks-progres-loading" class="text-xs font-black text-emerald-700 tracking-wide">Menghubungkan ke NSA Cloud...</p>
-            <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
-                <div class="h-full w-1/2 bg-emerald-500 rounded-full absolute top-0 left-0" style="animation: slide 1.5s infinite"></div>
-            </div>
-        </div>
-    </div>
-
-    <img id="iframe-preview-pdf" 
-         class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300" 
-         src="" 
-         alt="Preview Kartu Presensi">
-</div>
-
-
-
-
-<style>
-@keyframes slide {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(200%); }
-}
-</style>
-            </div>
-
-            <div id="sg-container-form-owner" class="flex flex-col gap-4 border-t border-slate-200 pt-4">
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-center">
-                        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Periode Kerja</span>
-                        <span id="sg-text-periode" class="text-xs font-extrabold text-slate-700 block mt-1">-</span>
-                    </div>
-                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-center">
-                        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Hari Periode Kerja</span>
-                        <span id="sg-text-total-hari" class="text-xs font-extrabold text-slate-700 block mt-1">-</span>
-                    </div>
-                </div>
-
-                <h4 class="text-[11px] font-black text-green-700 uppercase tracking-widest mt-2 px-1">Rincian Hari Kerja:</h4>
-
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                        <span class="text-xs font-black text-slate-700 block">1. Jadwal 2 Karyawan</span>
-                        <span id="sg-lbl-jadwal2" class="text-[11px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-md inline-block mt-1">0 hari</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-bold text-slate-400">X</span>
-                        <div class="relative rounded-xl shadow-inner">
-                            <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                            <input type="text" id="sg-in-rate-jadwal2" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
-                        </div>
-                        <span class="text-xs font-bold text-slate-400">=</span>
-                        <span id="sg-out-total-jadwal2" class="text-xs font-black text-slate-700 min-w-[100px] text-right">Rp 0</span>
-                    </div>
-                </div>
-
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                        <span class="text-xs font-black text-slate-700 block">2. Jadwal 1 Karyawan</span>
-                        <span id="sg-lbl-jadwal1" class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md inline-block mt-1">0 hari</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-bold text-slate-400">X</span>
-                        <div class="relative rounded-xl shadow-inner">
-                            <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                            <input type="text" id="sg-in-rate-jadwal1" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
-                        </div>
-                        <span class="text-xs font-bold text-slate-400">=</span>
-                        <span id="sg-out-total-jadwal1" class="text-xs font-black text-slate-700 min-w-[100px] text-right">Rp 0</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
-                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">3. Libur Wajib</span>
-                        <span id="sg-out-libur" class="text-xs font-extrabold text-indigo-600 block mt-1">0 hari</span>
-                    </div>
-                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
-                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">4. Absen Lainnya</span>
-                        <span id="sg-out-absen-lain" class="text-xs font-extrabold text-rose-600 block mt-1">0 hari</span>
-                    </div>
-                </div>
-
-               <!-- CARD 5: POTONGAN JAM KERJA -->
-<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-        <div class="max-w-md">
-            <span class="text-xs font-black text-slate-700 block">5. Potongan Jam Kerja <span class="text-slate-400 font-normal">(Opsional)</span></span>
-            <!-- Keterangan Aturan Potongan -->
-            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                (Potongan diberlakukan jika ada: Terlambat masuk sekian menit/jam, atau ada izin pribadi dalam menit/jam tertentu di waktu operasional)
-            </p>
-            <span id="sg-lbl-total-potongan-jam" class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md inline-block mt-2">0 jam 0 menit</span>
-        </div>
-        <div class="flex items-center gap-2 self-end sm:self-center">
-            <span class="text-rose-600 uppercase tracking-wider text-[10px] font-bold">Pengurangan (-)</span>
-            <div class="relative rounded-xl shadow-inner">
-                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                <input type="text" id="sg-in-minus-potongan" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-rose-600 focus:outline-none text-right" placeholder="0">
-            </div>
-        </div>
-    </div>
-    
-    <div id="sg-wrapper-alasan-potongan-list" class="hidden border-t border-dashed border-slate-100 pt-2 flex flex-col gap-1">
-        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Rincian/Alasan:</span>
-        <ul id="sg-list-alasan-potongan" class="text-[11px] font-medium text-slate-600 list-disc list-inside space-y-0.5 pl-1">
-        </ul>
-    </div>
-</div>
-
-<!-- CARD 6: TAMBAHAN JAM KERJA -->
-<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-        <div class="max-w-md">
-            <span class="text-xs font-black text-slate-700 block">6. Tambahan Jam Kerja <span class="text-slate-400 font-normal">(Opsional)</span></span>
-            <!-- Keterangan Aturan Tambahan -->
-            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                (Tambahan diberikan jika ada: Jam Tutup Toko yang jauh melebihi batas wajar / overtime. Atau situasi lain yang memungkinkan, namun kembali lagi kepada kebijakan Owner Nurjaya)
-            </p>
-            <span id="sg-lbl-total-tambahan-jam" class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md inline-block mt-2">0 jam 0 menit</span>
-        </div>
-        <div class="flex items-center gap-2 self-end sm:self-center">
-            <span class="text-blue-600 uppercase tracking-wider text-[10px] font-bold">Penambahan (+)</span>
-            <div class="relative rounded-xl shadow-inner">
-                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                <input type="text" id="sg-in-plus-tambahan" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-blue-600 focus:outline-none text-right" placeholder="0">
-            </div>
-        </div>
-    </div>
-    
-    <div id="sg-wrapper-alasan-tambahan-list" class="hidden border-t border-dashed border-slate-100 pt-2 flex flex-col gap-1">
-        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Rincian/Alasan:</span>
-        <ul id="sg-list-alasan-tambahan" class="text-[11px] font-medium text-slate-600 list-disc list-inside space-y-0.5 pl-1">
-            </ul>
-    </div>
-</div>
-
-                <!-- CARD 7: POIN TAMBAHAN -->
-<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-        <div class="max-w-md">
-            <span class="text-xs font-black text-slate-700 block">7. Poin Tambahan <span class="text-slate-400 font-normal">(Opsional)</span></span>
-            <!-- Keterangan Aturan Poin Tambahan -->
-            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                (Bersifat opsional dan hanya Owner Nurjaya yang menentukan, max 3 poin)
-            </p>
-        </div>
-        <div class="self-end sm:self-start">
-            <select id="sg-sel-poin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer w-24">
-                <option value="0">0 Poin</option>
-                <option value="1">1 Poin</option>
-                <option value="2">2 Poin</option>
-                <option value="3">3 Poin</option>
-            </select>
-        </div>
-    </div>
-    <!-- Wadah Input Baris Dinamis -->
-    <div id="sg-wrapper-poin-dinamis" class="flex flex-col gap-2"></div>
-</div>
-
-
-
-
-              <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-    
-    <div class="border-b border-slate-100 pb-2">
-        <span class="text-xs font-black text-slate-700">8. Uang Rajin</span>
-    </div>
-
-    <div class="bg-slate-50 border border-slate-100 p-3 rounded-xl flex flex-col gap-2">
-        <div class="text-[10px] uppercase font-black tracking-wider text-indigo-600">
-            INDIKATOR KEDISIPLINAN:
-        </div>
-        <p class="text-[11px] font-medium text-slate-500 leading-relaxed">
-            Uang Rajin adalah Reward yang diberikan jika karyawan <span class="font-bold text-slate-700">HADIR SECARA PENUH</span> tanpa ada absen (contoh: tanpa keterangan, izin, sakit, dll) (Yang tidak diberikan / diinstruksikan Owner).
-        </p>
-        
-        <hr class="border-dashed border-slate-200 my-0.5">
-        
-        <div class="flex flex-col gap-1">
-            <p class="text-[11px] font-bold text-slate-700">
-                Absen Bulan Ini: 
-                <span id="sg-ur-indikator-absen" class="font-black text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md text-xs">0 hari</span>
-            </p>
-            
-            <p id="sg-ur-petunjuk-dinamis" class="text-[11px] font-medium text-slate-500 italic bg-white p-2 border border-slate-200 rounded-lg shadow-inner">
-                Menunggu data karyawan...
-            </p>
-        </div>
-    </div>
-
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1 pt-1 border-t border-slate-50">
-        
-        <select id="sg-sel-uang-rajin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer w-full sm:w-auto" autocomplete="off">
-            <option value="" selected disabled>Pilih Dahulu</option>
-            <option value="full">Dapat Full</option>
-            <option value="tidak">Tidak Dapat</option>
-            <option value="penyesuaian">Penyesuaian</option>
-        </select>
-
-        <div id="sg-wrapper-uang-rajin-dinamis" class="flex items-center gap-2 justify-end">
-            <span class="text-xs font-bold text-slate-400">Total =</span>
-            <span id="sg-out-rajin-status" class="text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic">
-                Pilih status terlebih dahulu
-            </span>
-        </div>
-        
-    </div>
-</div>
-
-
-
-
-
-
-                <div class="border-t-2 border-dashed border-slate-200 pt-4 mt-2 flex flex-col gap-3">
-                    <div class="bg-green-700 text-white p-4 rounded-2xl shadow-md flex justify-between items-center">
-                        <span class="text-xs font-black uppercase tracking-wider">Total Hitungan Gaji:</span>
-                        <span id="sg-out-total-gaji-bersih" class="text-xl font-black tracking-wide">Rp 0</span>
-                    </div>
-
-                    <!-- CARD PEMBULATAN KHUSUS -->
-<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-        <div class="max-w-md">
-            <span class="text-xs font-black text-slate-700 block">Pembulatan Khusus <span class="text-slate-400 font-normal">(Kebijakan Owner)</span></span>
-            <!-- Keterangan Aturan Pembulatan -->
-            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                (Bersifat opsional, jika tidak ingin menerapkan pembulatan, maka kosongkan)
-            </p>
-        </div>
-        <div class="flex items-center gap-2 self-end sm:self-start">
-            <div class="relative rounded-xl shadow-inner">
-                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                <input type="text" id="sg-in-pembulatan" class="sg-input-clean w-44 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
-            </div>
-        </div>
-    </div>
-</div>
-
-                    <div class="bg-slate-900 text-amber-400 p-4 rounded-2xl shadow-md flex justify-between items-center">
-                        <span class="text-xs font-black uppercase tracking-wider">Gaji Bersih Diterima:</span>
-                        <span id="sg-out-final-gaji" class="text-xl font-black tracking-wide">Rp 0</span>
-                    </div>
-                    
-					<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-1.5">
-    <label for="owner-input-catatan" class="block text-[11px] font-black text-slate-700 uppercase tracking-wider">
-        <i class="fa-solid fa-pen-to-square text-green-600 mr-1"></i> Catatan Khusus dari Owner:
-    </label>
-    <textarea id="owner-input-catatan" rows="4" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-medium text-xs p-3 rounded-xl focus:border-green-600 focus:outline-none transition-all resize-none placeholder-slate-400 min-h-[96px] leading-relaxed" placeholder="Contoh: Uang Rajin tidak full karena ada absen 1 hari. Tingkatkan kualitas pelayanan ke pelanggan."></textarea>
-</div>
-
-                    <!-- REVISI: PENAMBAHAN TOMBOL GENERATE SLIP GAJI BARU -->
-                    <button type="button" id="btn-generate-slip-gaji" class="w-full mt-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-black text-xs uppercase tracking-widest py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-receipt text-sm"></i> Generate Slip Gaji Karyawan
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <!-- ========================================================== -->
