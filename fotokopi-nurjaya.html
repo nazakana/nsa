@@ -525,7 +525,7 @@ document.addEventListener('keydown', function(event) {
 <div class="max-w-md md:max-w-5xl mx-auto mb-6 space-y-3">
 
 
-<!-- ================= CARD 0: PROGRES BULAN INI (STATIS - COMPACT STACK) ================= -->
+<!-- ================= CARD 0: PROGRES BULAN INI (FOTOKOPI & LINGKARAN HARI) ================= -->
 <div id="card-0" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-800 to-slate-900 p-3 sm:p-3.5 text-white shadow-lg shadow-blue-900/20 border border-blue-400/30 min-h-[85px] flex items-center justify-between">
     
     <!-- ORNAMEN BACKGROUND CARD 0 -->
@@ -533,35 +533,45 @@ document.addEventListener('keydown', function(event) {
     <div class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-cyan-400/15 blur-xl pointer-events-none"></div>
     <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
 
-    <!-- KONTEN CARD 0 (STACK 3 BARIS) -->
-    <div class="relative z-10 flex-1">
-        <!-- BARIS 1: JUDUL PROGRES (1 BARIS) -->
-        <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] text-blue-200 block whitespace-nowrap truncate leading-tight">
-            PROGRES <span id="progres-bulan-ini-nama">BULAN INI</span>
-        </span>
+    <!-- KONTEN UTAMA -->
+    <div class="relative z-10 w-full flex items-center justify-between pr-3 sm:pr-4">
         
-        <!-- BARIS 2: KETERANGAN -->
-        <p class="text-[10px] sm:text-[11px] font-semibold text-blue-100/80 leading-tight">
-            Total Pendapatan Kotor
-        </p>
-        
-        <!-- BARIS 3: NOMINAL & TOMBOL MATA -->
-        <div class="flex items-center gap-2 mt-0.5">
-            <div id="progres-bulan-ini-kotor" class="text-lg sm:text-xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
-                <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
-                <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
-            </div>
+        <!-- Bagian Kiri: 3 Baris Konten -->
+        <div class="flex-1 pr-2">
+            <!-- BARIS 1: JUDUL PROGRES (1 BARIS) -->
+            <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] text-blue-200 block whitespace-nowrap truncate leading-tight">
+                PROGRES <span id="progres-bulan-ini-nama">BULAN INI</span>
+            </span>
             
-            <button onclick="toggleNominalCard0(this)" class="text-blue-200/70 hover:text-white p-0.5 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
-                <i class="fa-solid fa-eye text-xs sm:text-sm"></i>
-            </button>
+            <!-- BARIS 2: KETERANGAN -->
+            <p class="text-[10px] sm:text-[11px] font-semibold text-blue-100/80 leading-tight mt-0.5">
+                Total Pendapatan Kotor
+            </p>
+            
+            <!-- BARIS 3: NOMINAL & TOMBOL MATA -->
+            <div class="flex items-center gap-2 mt-0.5">
+                <div id="progres-bulan-ini-kotor" class="text-lg sm:text-xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                </div>
+                
+                <button onclick="toggleNominalCard0(this)" class="text-blue-200/70 hover:text-white p-0.5 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
+                    <i class="fa-solid fa-eye text-xs sm:text-sm"></i>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <!-- IKON KANAN CARD 0 -->
-    <div class="relative z-10 pl-2 flex items-center justify-center text-blue-200/80 drop-shadow">
-        <i class="fa-solid fa-wallet text-xl sm:text-2xl"></i>
+        <!-- Bagian Kanan: Lingkaran Putih Indikator Hari (Menggantikan Icon Dompet) -->
+        <div class="relative w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex flex-col items-center justify-center shrink-0 shadow-md ml-3 sm:ml-4">
+            <span id="angka-hari-tercatat-fotokopi" class="text-lg sm:text-xl font-black tracking-tight text-blue-900 leading-none">
+                0
+            </span>
+            <span class="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-blue-800 mt-0.5">
+                HARI
+            </span>
+        </div>
+
     </div>
 </div>
 
@@ -9464,8 +9474,9 @@ function scrollKeCard2() {
 </script>
 
 <script>
-// State penampung nominal & status sembunyi
+// State penampung nominal, hari tercatat & status sembunyi
 window.card0NominalData = { val: 'Rp 0', hidden: false };
+window.card0HariData = 0;
 window.card3NominalData = { val: 'Rp 0', hidden: false };
 
 (function() {
@@ -9497,6 +9508,7 @@ window.card3NominalData = { val: 'Rp 0', hidden: false };
 
         const elNominalCard0 = document.getElementById('progres-bulan-ini-kotor');
         const elNominalCard3 = document.getElementById('total-qris-bulan-card');
+        const elHariCard0 = document.getElementById('angka-hari-tercatat-fotokopi');
 
         try {
             const response = await fetch(urlFetch);
@@ -9507,6 +9519,9 @@ window.card3NominalData = { val: 'Rp 0', hidden: false };
             const hasil = await response.json();
 
             if (hasil && hasil.status === 'success' && Array.isArray(hasil.data)) {
+                // Hitung jumlah baris/hari valid yang sudah terisi data tanggal di sheet
+                const totalHariTercatat = hasil.data.length;
+
                 // Akumulasi Total Pendapatan Kotor (Kolom B / pendapatan_kotor)
                 const totalKotorBulan = hasil.data.reduce((sum, entri) => {
                     return sum + (Number(entri.pendapatan_kotor) || 0);
@@ -9525,21 +9540,27 @@ window.card3NominalData = { val: 'Rp 0', hidden: false };
                 }).format(val);
 
                 window.card0NominalData.val = formatRupiah(totalKotorBulan);
+                window.card0HariData = totalHariTercatat;
                 window.card3NominalData.val = formatRupiah(totalQrisBulan);
 
             } else {
                 window.card0NominalData.val = 'Rp 0';
+                window.card0HariData = 0;
                 window.card3NominalData.val = 'Rp 0';
             }
         } catch (err) {
             console.error("Gagal memuat data Card 0 / Card 3 (QRIS):", err);
             window.card0NominalData.val = 'Rp 0';
+            window.card0HariData = 0;
             window.card3NominalData.val = 'Rp 0';
         }
 
-        // Render Tampilan Nominal ke UI
+        // Render Tampilan Nominal & Hari ke UI
         if (elNominalCard0) {
             elNominalCard0.textContent = window.card0NominalData.hidden ? '••••••••' : window.card0NominalData.val;
+        }
+        if (elHariCard0) {
+            elHariCard0.textContent = window.card0HariData;
         }
         if (elNominalCard3) {
             elNominalCard3.textContent = window.card3NominalData.hidden ? '••••••••' : window.card3NominalData.val;
