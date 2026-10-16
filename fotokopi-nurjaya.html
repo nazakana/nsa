@@ -13,6 +13,8 @@
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1hPgmkU4MertGor-v5QOCQ9sLM2tyYamk">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<!-- Library Panzoom (Ultra ringan untuk Zoom & Drag) -->
+	<script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 
 	
 <style>
@@ -866,17 +868,17 @@ document.addEventListener('keydown', function(event) {
                 </span>
             </button>
 
-            <!-- 3. UPDATE KATALOG BARANG (GRADASI TEAL - GREEN) -->
-            <button type="button"
-                    onclick="openGateKatalog()" 
-                    class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-teal-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
-                <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-teal-600 to-green-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-teal-600/25 group-hover:scale-110 transition-transform duration-200 mb-2">
-                    <i class="fas fa-boxes-stacked"></i>
-                </div>
-                <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-teal-600 tracking-tight leading-tight transition-colors">
-                    Update Katalog
-                </span>
-            </button>
+            <!-- 3. UPDATE KATALOG BARANG (GRADASI MERAH CERAH) -->
+<button type="button"
+        onclick="openGateKatalog()" 
+        class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-rose-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+    <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-rose-500/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+        <i class="fas fa-boxes-stacked"></i>
+    </div>
+    <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-rose-600 tracking-tight leading-tight transition-colors">
+        Update Katalog
+    </span>
+</button>
 
             <!-- 4. KEMBALI KE PORTAL (GRADASI INDIGO - BLUE) -->
             <button type="button"
@@ -891,16 +893,55 @@ document.addEventListener('keydown', function(event) {
                 </span>
             </button>
 			
-			<!-- 5. ARSIP SLIP GAJI (GRADASI EMERALD - CYAN) -->
+			<!-- 5. ARSIP SLIP GAJI (GRADASI ROSAS CERAH) -->
 <button type="button" 
         id="btnBukaArsipSlip" 
         onclick="bukaModalArsipSlip()" 
-        class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-emerald-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
-    <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-emerald-600 to-cyan-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-emerald-600/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+        class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-pink-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+    <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-400 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-pink-500/25 group-hover:scale-110 transition-transform duration-200 mb-2">
         <i class="fas fa-file-invoice-dollar"></i>
     </div>
-    <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-emerald-600 tracking-tight leading-tight transition-colors">
+    <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-pink-600 tracking-tight leading-tight transition-colors">
         Cek Slip Gaji
+    </span>
+</button>
+
+<!-- 6. LAPORAN PENDAPATAN (GRADASI SKY - BLUE) -->
+<button type="button" 
+        id="btnOpenRiwayat" 
+        onclick="bukaModalRiwayat()" 
+        class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-sky-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+    <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-sky-500/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+        <i class="fas fa-chart-line"></i>
+    </div>
+    <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-sky-600 tracking-tight leading-tight transition-colors">
+        Laporan Pendapatan
+    </span>
+</button>
+
+<!-- 7. RIWAYAT STRUK (GRADASI GOLD - AMBER) -->
+<button type="button" 
+        id="btnOpenRiwayatStruk" 
+        onclick="openRiwayatModal()" 
+        class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-amber-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+    <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-amber-500/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+        <i class="fas fa-receipt"></i>
+    </div>
+    <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-amber-600 tracking-tight leading-tight transition-colors">
+        Riwayat Struk
+    </span>
+</button>
+
+<!-- 8. APOTEK NURJAYA (DIRECT LINK) -->
+<button type="button" 
+        id="btnNavigasiApotek" 
+        onclick="window.location.href='apotek-nurjaya.html'" 
+        class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-lime-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+    <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-emerald-500 to-lime-500 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-emerald-500/25 group-hover:scale-110 transition-transform duration-200 mb-2">
+        <i class="fas fa-flask"></i>
+    </div>
+    <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-emerald-600 tracking-tight leading-tight transition-colors">
+        Apotek Nurjaya
     </span>
 </button>
 
@@ -1103,6 +1144,8 @@ document.addEventListener('keydown', function(event) {
         </div>
     </div>
 </div>
+
+
 		
 
 <!-- KONTEN TAB: DAILY INPUT -->
@@ -9611,6 +9654,783 @@ function updateIconMata(btnElement, isHidden) {
 }
 </script>
 
+<script>
+// ==========================================
+// KONFIGURASI API GOOGLE APPS SCRIPT
+// ==========================================
+const API_URL_LAPORAN = "https://script.google.com/macros/s/AKfycbyqCNYl_CAwdfXRa3It-r99yZnSyC6jXgxzGNgICTCQJtxhZiQu88cuCvBVRjhWFkGdFw/exec";
+
+// FLAG SAKTI: Mencegah efek klik tembus saat fullscreen baru saja ditutup
+let isZoomModalJustClosed = false;
+
+// ==========================================
+// KONTROL MODAL UTAMA
+// ==========================================
+function bukaModalRiwayat() {
+    const modal = document.getElementById('modalRiwayatOverlay');
+    if (!modal) return;
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    setTimeout(() => {
+        const card = modal.querySelector('.modal-card-content');
+        if (card) {
+            card.classList.remove('scale-95', 'opacity-0');
+            card.classList.add('scale-100', 'opacity-100');
+        }
+    }, 10);
+}
+
+function tutupModalRiwayat() {
+    // JIKA MODAL FULLSCREEN BARU DITUTUP, BANTALKAN PENUTUPAN MODAL UTAMA!
+    if (isZoomModalJustClosed) return;
+
+    const modal = document.getElementById('modalRiwayatOverlay');
+    if (!modal) return;
+    
+    const card = modal.querySelector('.modal-card-content');
+    if (card) {
+        card.classList.remove('scale-100', 'opacity-100');
+        card.classList.add('scale-95', 'opacity-0');
+    }
+    
+    setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+    }, 200);
+}
+
+// Event listener click overlay modal induk
+document.addEventListener('DOMContentLoaded', () => {
+    const modalRiwayatOverlay = document.getElementById('modalRiwayatOverlay');
+    if (modalRiwayatOverlay) {
+        modalRiwayatOverlay.addEventListener('click', function(e) {
+            // Jika baru saja tutup modal zoom, abaikan klik ini
+            if (isZoomModalJustClosed) return;
+
+            if (e.target === this) {
+                tutupModalRiwayat();
+            }
+        });
+    }
+});
+
+function updateTanggalDisplay(input) {
+    const display = document.getElementById('dateDisplayRiwayat');
+    if (!input.value) {
+        display.innerText = "Pilih Tanggal";
+        return;
+    }
+    const [yyyy, mm, dd] = input.value.split('-');
+    display.innerText = `${dd}-${mm}-${yyyy}`;
+}
+
+// ==========================================
+// PROMISE HELPER PRELOAD GAMBAR
+// ==========================================
+function preloadImage(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => resolve(url);
+        img.onerror = () => reject(new Error("Gagal mengunduh gambar dari Drive/CDN"));
+    });
+}
+
+// ==========================================
+// FETCH LAPORAN PENDAPATAN
+// ==========================================
+async function cariDataRiwayat() {
+    const datePicker = document.getElementById('datePickerRiwayat');
+    const btnCari = document.getElementById('btnCariRiwayat');
+    const btnText = document.getElementById('btnCariRiwayatText');
+    const placeholder = document.getElementById('viewerPlaceholder');
+    const imgViewer = document.getElementById('imgViewerRiwayat');
+    const badgeZoom = document.getElementById('badgeClickZoom');
+
+    const rawDate = datePicker.value;
+    if (!rawDate) {
+        alert("Silakan pilih tanggal terlebih dahulu!");
+        return;
+    }
+
+    const [yyyy, mm, dd] = rawDate.split('-');
+    const searchTarget = `${dd}-${mm}-${yyyy}`;
+
+    btnCari.disabled = true;
+    btnText.innerHTML = `<i class="fas fa-spinner fa-spin text-xs"></i> Memuat...`;
+
+    imgViewer.classList.add('hidden');
+    if (badgeZoom) {
+        badgeZoom.classList.add('hidden');
+        badgeZoom.classList.remove('flex');
+    }
+    
+    placeholder.classList.remove('hidden');
+    placeholder.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-6 gap-2">
+            <i class="fas fa-spinner fa-spin text-sky-600 text-2xl"></i>
+            <p class="text-slate-600 font-medium">Mencari & Memuat Laporan Pendapatan tanggal <b class="text-slate-800">${searchTarget}</b>...</p>
+        </div>
+    `;
+
+    try {
+        const response = await fetch(`${API_URL_LAPORAN}?search=${encodeURIComponent(searchTarget)}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.status === 'success' && result.data && result.data.length > 0) {
+            const imageUrl = result.data[0].imageUrl;
+
+            await preloadImage(imageUrl);
+
+            imgViewer.src = imageUrl;
+            placeholder.classList.add('hidden');
+            imgViewer.classList.remove('hidden');
+            if (badgeZoom) {
+                badgeZoom.classList.remove('hidden');
+                badgeZoom.classList.add('flex');
+            }
+
+        } else {
+            placeholder.classList.remove('hidden');
+            placeholder.innerHTML = `<span class="text-amber-600 font-bold"><i class="fas fa-search-minus mr-1"></i> Data Laporan Pendapatan tanggal <b>${searchTarget}</b> tidak ditemukan.</span>`;
+        }
+
+    } catch (error) {
+        console.error("Error Fetching Riwayat:", error);
+        placeholder.classList.remove('hidden');
+        placeholder.innerHTML = `<span class="text-rose-500 font-bold"><i class="fas fa-exclamation-circle mr-1"></i> Terjadi kesalahan: ${error.message}</span>`;
+    } finally {
+        btnCari.disabled = false;
+        btnText.innerText = "Cari Data";
+    }
+}
+
+// ==========================================
+// KONTROL FULLSCREEN VIEWER & PANZOOM
+// ==========================================
+let panzoomInstance = null;
+
+function inisialisasiPanzoom() {
+    const elem = document.getElementById('panzoomWrapper');
+    if (!elem) return;
+
+    if (panzoomInstance) {
+        panzoomInstance.destroy();
+        panzoomInstance = null;
+    }
+
+    elem.style.transform = '';
+
+    panzoomInstance = Panzoom(elem, {
+        maxScale: 6,
+        minScale: 0.5,
+        step: 0.3,
+        cursor: 'move',
+        disablePan: false,
+        disableZoom: false
+    });
+
+    elem.addEventListener('panzoomchange', (e) => {
+        const zoomText = document.getElementById('zoomPercentage');
+        if (zoomText) {
+            const currentScale = e.detail.scale;
+            zoomText.innerText = `${Math.round(currentScale * 100)}%`;
+        }
+    });
+
+    const zoomContainer = document.getElementById('zoomContainer');
+    if (zoomContainer) {
+        zoomContainer.addEventListener('wheel', panzoomInstance.zoomWithWheel, { passive: false });
+    }
+}
+
+function bukaFullscreenImage() {
+    const imgViewer = document.getElementById('imgViewerRiwayat');
+    const zoomModal = document.getElementById('modalZoomViewer');
+    const imgTarget = document.getElementById('imgZoomTarget');
+
+    if (!imgViewer || !imgViewer.src || imgViewer.classList.contains('hidden')) return;
+
+    imgTarget.src = imgViewer.src;
+    
+    zoomModal.classList.remove('hidden');
+    zoomModal.classList.add('flex');
+
+    setTimeout(() => {
+        inisialisasiPanzoom();
+    }, 50);
+}
+
+function tutupFullscreenImage(e) {
+    if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+    }
+
+    const zoomModal = document.getElementById('modalZoomViewer');
+    if (!zoomModal) return;
+    
+    // AKTIFKAN BENTENG PERTAHANAN (FLAG)
+    isZoomModalJustClosed = true;
+
+    if (panzoomInstance) {
+        panzoomInstance.destroy();
+        panzoomInstance = null;
+    }
+
+    zoomModal.classList.remove('flex');
+    zoomModal.classList.add('hidden');
+    
+    // Pertahankan scroll lock
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
+    // RESET FLAG SETELAH 300 MS (Setelah sisa efek klik hilang total)
+    setTimeout(() => {
+        isZoomModalJustClosed = false;
+    }, 300);
+}
+
+function zoomInPanzoom() {
+    if (panzoomInstance) {
+        panzoomInstance.zoomIn();
+    }
+}
+
+function zoomOutPanzoom() {
+    if (panzoomInstance) {
+        panzoomInstance.zoomOut();
+    }
+}
+
+function resetPanzoom() {
+    if (panzoomInstance) {
+        panzoomInstance.reset();
+    }
+}
+</script>
+
+<script>
+// ==========================================
+// KONFIGURASI API TRANSAKSI STRUK
+// ==========================================
+const APPS_SCRIPT_TRANSAKSI_URL = "https://script.google.com/macros/s/AKfycbxintpF-YxUIhtIJUKsHR06CYwt07m5NTbFTN67pRdUfXPRPdT7bLa3s2OXO5LAk3eB/exec";
+
+let rawRiwayatData = []; 
+let selectedTransaction = null; 
+let selectedNoStruk = null; 
+let isPreviewModalJustClosed = false; // Flag sakti cegah ghost-click ke modal induk
+
+// Helper 1: Format Tanggal Indikator Indo (DD/MM/YYYY)
+function formatTanggalIndo(dateStr) {
+    if (!dateStr) return '-';
+    if (typeof dateStr === 'string' && dateStr.includes('T')) {
+        const d = new Date(dateStr);
+        if (!isNaN(d.getTime())) {
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+    }
+    return dateStr;
+}
+
+// Helper 2: Decrypt String Barang Berdasarkan Indikator Angka dalam Kurung "(qty)"
+function parseNamaBarang(rawString) {
+    if (!rawString) return [];
+    
+    const regex = /(.*?\(\d+\))/g;
+    const matches = rawString.match(regex);
+
+    if (matches && matches.length > 0) {
+        return matches.map(item => {
+            let cleanItem = item.trim().replace(/^,\s*/, '');
+            const qtyMatch = cleanItem.match(/(.*)\((\d+)\)$/);
+            if (qtyMatch) {
+                return {
+                    nama: qtyMatch[1].trim(),
+                    qty: qtyMatch[2]
+                };
+            }
+            return { nama: cleanItem, qty: '1' };
+        });
+    }
+
+    return rawString.split(',').map(str => ({ nama: str.trim(), qty: '1' }));
+}
+
+// Helper Pencarian Key Case-Insensitive
+function getValueCaseInsensitive(obj, keyName) {
+    if (!obj) return '';
+    const foundKey = Object.keys(obj).find(k => k.trim().toLowerCase() === keyName.trim().toLowerCase());
+    return foundKey ? obj[foundKey] : '';
+}
+
+// ==========================================
+// KONTROL MODAL RIWAYAT (INDUK)
+// ==========================================
+async function openRiwayatModal() {
+    const modal = document.getElementById('modal-riwayat');
+    if (!modal) return;
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    setTimeout(() => {
+        const card = modal.querySelector('.modal-card-content');
+        if (card) {
+            card.classList.remove('scale-95', 'opacity-0');
+            card.classList.add('scale-100', 'opacity-100');
+        }
+    }, 10);
+
+    const searchInput = document.getElementById('search-riwayat');
+    if (searchInput) searchInput.value = '';
+
+    resetPreviewPanel();
+    await loadDropdownBulan();
+}
+
+function closeRiwayatModal() {
+    if (isPreviewModalJustClosed) return;
+
+    const modal = document.getElementById('modal-riwayat');
+    if (!modal) return;
+
+    const card = modal.querySelector('.modal-card-content');
+    if (card) {
+        card.classList.remove('scale-100', 'opacity-100');
+        card.classList.add('scale-95', 'opacity-0');
+    }
+
+    setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+    }, 200);
+}
+
+// Close saat klik Backdrop Modal Riwayat
+document.addEventListener('DOMContentLoaded', () => {
+    const modalRiwayat = document.getElementById('modal-riwayat');
+    if (modalRiwayat) {
+        modalRiwayat.addEventListener('click', function(e) {
+            if (isPreviewModalJustClosed) return;
+            if (e.target === this) closeRiwayatModal();
+        });
+    }
+});
+
+// ==========================================
+// FETCH & RENDER DATA STRUK
+// ==========================================
+async function loadDropdownBulan() {
+    const selectBulan = document.getElementById('select-bulan-riwayat');
+    selectBulan.innerHTML = '<option value="">Memuat Bulan...</option>';
+
+    try {
+        const res = await fetch(`${APPS_SCRIPT_TRANSAKSI_URL}?action=getSheets`);
+        const result = await res.json();
+
+        if (result.status === 'success' && result.sheets && result.sheets.length > 0) {
+            selectBulan.innerHTML = '';
+            
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            const now = new Date();
+            const currentMonthSheet = monthNames[now.getMonth()] + " " + now.getFullYear();
+
+            let isCurrentMonthFound = false;
+
+            result.sheets.forEach(sheetName => {
+                const option = document.createElement('option');
+                option.value = sheetName;
+                option.textContent = sheetName;
+                
+                if (sheetName === currentMonthSheet) {
+                    option.selected = true;
+                    isCurrentMonthFound = true;
+                }
+                selectBulan.appendChild(option);
+            });
+
+            const targetSheet = isCurrentMonthFound ? currentMonthSheet : result.sheets[0];
+            if (!isCurrentMonthFound && result.sheets.length > 0) {
+                selectBulan.value = result.sheets[0];
+            }
+            
+            fetchRiwayatByMonth(targetSheet);
+        } else {
+            selectBulan.innerHTML = '<option value="">Gagal memuat bulan</option>';
+        }
+    } catch (err) {
+        console.error('Error load sheets:', err);
+        selectBulan.innerHTML = '<option value="">Gagal koneksi server</option>';
+    }
+}
+
+async function fetchRiwayatByMonth(sheetName) {
+    if (!sheetName) return;
+
+    const container = document.getElementById('container-list-riwayat');
+    container.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-12 gap-2">
+            <i class="fas fa-spinner fa-spin text-emerald-600 text-2xl"></i>
+            <p class="text-slate-600 text-xs font-medium">Memuat riwayat transaksi <b>${sheetName}</b>...</p>
+        </div>`;
+    
+    resetPreviewPanel();
+
+    try {
+        const res = await fetch(`${APPS_SCRIPT_TRANSAKSI_URL}?month=${encodeURIComponent(sheetName)}`);
+        const result = await res.json();
+
+        if (result.status === 'success') {
+            rawRiwayatData = (result.data || []).reverse();
+            renderTableRiwayat(rawRiwayatData);
+        } else {
+            container.innerHTML = `<div class="text-center text-rose-500 py-10 text-xs font-bold">Gagal mengambil data: ${result.message}</div>`;
+        }
+    } catch (err) {
+        console.error('Error fetch riwayat:', err);
+        container.innerHTML = `<div class="text-center text-rose-500 py-10 text-xs font-bold">Terjadi kesalahan koneksi server.</div>`;
+    }
+}
+
+// Render Data ke Tampilan Mobile Card List (Dioptimalkan untuk HP)
+function renderTableRiwayat(data) {
+    const container = document.getElementById('container-list-riwayat');
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = `<div class="text-center text-slate-400 py-12 text-xs font-medium">Tidak ada data transaksi di bulan ini.</div>`;
+        return;
+    }
+
+    window.currentRiwayatList = data;
+    let html = '';
+
+    data.forEach((item) => {
+        const rawTgl = getValueCaseInsensitive(item, "Tanggal");
+        const jam = getValueCaseInsensitive(item, "Jam");
+        const kasir = getValueCaseInsensitive(item, "Kasir");
+        const noStruk = getValueCaseInsensitive(item, "No Struk");
+        const pelanggan = getValueCaseInsensitive(item, "Nama Pelanggan");
+        const rawBarang = getValueCaseInsensitive(item, "Nama Barang");
+        const metode = getValueCaseInsensitive(item, "Metode Pembayaran");
+        const total = Number(getValueCaseInsensitive(item, "Total Belanja")) || 0;
+
+        const tglFormatted = formatTanggalIndo(rawTgl);
+        const totalFormatted = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(total);
+
+        const safeNoStruk = String(noStruk).replace(/'/g, "\\'");
+
+        html += `
+            <div onclick="selectRowPreview('${safeNoStruk}')" 
+                 class="bg-white border border-slate-200/80 rounded-2xl p-3 shadow-sm hover:border-emerald-300 active:scale-[0.98] transition-all cursor-pointer space-y-2">
+                
+                <!-- Row 1: Header No Struk & Total -->
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-xs font-black text-sky-600">${noStruk || '-'}</span>
+                        <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">${metode || 'CASH'}</span>
+                    </div>
+                    <span class="text-xs font-black text-emerald-600">${totalFormatted}</span>
+                </div>
+
+                <!-- Row 2: Info Pelanggan & Barang -->
+                <div class="space-y-1">
+                    <div class="text-[11px] font-bold text-slate-800 flex items-center justify-between">
+                        <span>👤 ${pelanggan || 'Umum'}</span>
+                        <span class="text-[10px] text-slate-400 font-normal">${tglFormatted} ${jam || ''}</span>
+                    </div>
+                    <div class="text-[11px] text-slate-600 bg-slate-50 p-2 rounded-xl line-clamp-2 leading-relaxed">
+                        📦 ${rawBarang || '-'}
+                    </div>
+                </div>
+
+                <!-- Row 3: Action Button -->
+                <div class="flex items-center justify-between pt-1 text-[10px]">
+                    <span class="text-slate-400 font-medium">Kasir: ${kasir || '-'}</span>
+                    <button type="button" 
+                            onclick="event.stopPropagation(); selectRowPreview('${safeNoStruk}')" 
+                            class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-3 py-1 rounded-lg border border-emerald-200/60 transition-colors">
+                        Lihat Struk <i class="fas fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function filterRiwayatTable() {
+    const keyword = document.getElementById('search-riwayat').value.toLowerCase();
+    
+    if (!keyword) {
+        renderTableRiwayat(rawRiwayatData);
+        return;
+    }
+
+    const filtered = rawRiwayatData.filter(item => {
+        const noStruk = String(getValueCaseInsensitive(item, "No Struk")).toLowerCase();
+        const pelanggan = String(getValueCaseInsensitive(item, "Nama Pelanggan")).toLowerCase();
+        const barang = String(getValueCaseInsensitive(item, "Nama Barang")).toLowerCase();
+        const kasir = String(getValueCaseInsensitive(item, "Kasir")).toLowerCase();
+
+        return noStruk.includes(keyword) || pelanggan.includes(keyword) || barang.includes(keyword) || kasir.includes(keyword);
+    });
+
+    renderTableRiwayat(filtered);
+}
+
+// ==========================================
+// PREVIEW STRUK THERMAL & STANDALONE MODAL
+// ==========================================
+function selectRowPreview(targetNoStruk) {
+    if (!window.currentRiwayatList) return;
+    
+    const foundItem = window.currentRiwayatList.find(item => String(getValueCaseInsensitive(item, "No Struk")) === String(targetNoStruk));
+    if (!foundItem) return;
+
+    selectedNoStruk = targetNoStruk;
+    selectedTransaction = foundItem;
+
+    const previewBox = document.getElementById('preview-struk-box');
+    const btnSimpanHeader = document.getElementById('btn-simpan-struk-header');
+
+    const rawTgl = getValueCaseInsensitive(selectedTransaction, "Tanggal");
+    const jam = getValueCaseInsensitive(selectedTransaction, "Jam");
+    const kasir = getValueCaseInsensitive(selectedTransaction, "Kasir");
+    const noStruk = getValueCaseInsensitive(selectedTransaction, "No Struk");
+    const pelanggan = getValueCaseInsensitive(selectedTransaction, "Nama Pelanggan");
+    const rawBarang = getValueCaseInsensitive(selectedTransaction, "Nama Barang");
+    const metode = getValueCaseInsensitive(selectedTransaction, "Metode Pembayaran");
+    const total = Number(getValueCaseInsensitive(selectedTransaction, "Total Belanja")) || 0;
+
+    const tglFormatted = formatTanggalIndo(rawTgl);
+    const totalFormatted = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(total);
+
+    const itemsList = parseNamaBarang(rawBarang);
+    let itemsHtml = '';
+    let totalQtySum = 0;
+
+    itemsList.forEach(item => {
+        const qtyNum = parseInt(item.qty, 10) || 1;
+        totalQtySum += qtyNum;
+
+        itemsHtml += `
+            <tr style="vertical-align: top;">
+                <td style="padding: 2px 0; word-break: break-word;">${item.nama}</td>
+                <td style="padding: 2px 0; text-align: center; width: 30px;">x${item.qty}</td>
+                <td style="padding: 2px 0; text-align: right; width: 50px;">-</td>
+            </tr>
+        `;
+    });
+
+    // Template Struk Thermal Kompak
+    previewBox.innerHTML = `
+        <div id="struk-to-download" style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #000; line-height: 1.3; background: #ffffff; padding: 14px; border-radius: 6px; width: 100%; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+            
+            <div style="text-align: center;">
+                <strong style="font-size: 13px;">NURJAYA ABADI PHOTOCOPY</strong><br>
+                Jl. Bantar Cieunteung No. 145, Argasari<br>
+                Cihideung, Kota Tasikmalaya<br>
+                082126162025 - 085211029598
+            </div>
+
+            <div style="border-top: 1px dashed #000; margin: 6px 0;"></div>
+
+            <div style="display: flex; justify-content: space-between;"><span>No. Struk</span><span>${noStruk || '-'}</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>Kasir</span><span>${kasir || '-'}</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>Pelanggan</span><span>${pelanggan || 'Umum'}</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>Tgl/Jam</span><span>${tglFormatted} ${jam || ''}</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>Bayar Via</span><span style="font-weight: bold;">${metode || 'CASH'}</span></div>
+
+            <div style="border-top: 1px dashed #000; margin: 6px 0;"></div>
+
+            <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin: 4px 0;">
+                <thead>
+                    <tr style="border-bottom: 1px dashed #000; text-align: left;">
+                        <th>Item</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: right;">Harga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${itemsHtml}
+                </tbody>
+            </table>
+
+            <div style="border-top: 1px dashed #000; margin: 6px 0;"></div>
+
+            <div style="display: flex; justify-content: space-between;">
+                <span>Subtotal</span>
+                <span>${totalFormatted}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; margin-top: 4px;">
+                <span>TOTAL</span>
+                <span>${totalFormatted}</span>
+            </div>
+
+            <div style="border-top: 1px dashed #000; margin: 6px 0;"></div>
+            <div>Total barang: <span>${totalQtySum}</span> qty</div>
+            <div style="border-top: 1px dashed #000; margin: 6px 0;"></div>
+
+            <div style="text-align: center; margin-top: 6px; font-size: 10px;">
+                Barang yang sudah dibeli tidak dapat dikembalikan/ditukarkan.<br><br>
+                Terima Kasih Atas Kunjungan Anda.<br>
+                Salam Hangat Nurjaya :)
+            </div>
+
+        </div>
+    `;
+
+    if (btnSimpanHeader) {
+        btnSimpanHeader.disabled = false;
+    }
+
+    // Buka Modal Standalone Struk
+    openPreviewStrukModal();
+}
+
+function resetPreviewPanel() {
+    selectedTransaction = null;
+    selectedNoStruk = null;
+    
+    const previewBox = document.getElementById('preview-struk-box');
+    const btnSimpanHeader = document.getElementById('btn-simpan-struk-header');
+
+    if (previewBox) {
+        previewBox.innerHTML = `<div class="text-center text-slate-400 py-12 text-xs">Pilih salah satu baris transaksi untuk melihat struk</div>`;
+    }
+
+    if (btnSimpanHeader) {
+        btnSimpanHeader.disabled = true;
+    }
+}
+
+// Open & Close Standalone Struk Preview Modal
+function openPreviewStrukModal() {
+    const modal = document.getElementById('modal-preview-struk');
+    if (!modal) return;
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    setTimeout(() => {
+        const card = modal.querySelector('.modal-card-content');
+        if (card) {
+            card.classList.remove('scale-95', 'opacity-0');
+            card.classList.add('scale-100', 'opacity-100');
+        }
+    }, 10);
+}
+
+function closePreviewStrukModal(e) {
+    if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+    }
+
+    const modal = document.getElementById('modal-preview-struk');
+    if (!modal) return;
+
+    isPreviewModalJustClosed = true;
+
+    const card = modal.querySelector('.modal-card-content');
+    if (card) {
+        card.classList.remove('scale-100', 'opacity-100');
+        card.classList.add('scale-95', 'opacity-0');
+    }
+
+    setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        
+        // Pertahankan scroll lock untuk modal riwayat utama
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
+    }, 200);
+
+    setTimeout(() => {
+        isPreviewModalJustClosed = false;
+    }, 300);
+}
+
+// Unduh Struk Sebagai Gambar JPG
+async function unduhStrukTerpilih() {
+    if (!selectedTransaction) {
+        alert("Pilih salah satu transaksi terlebih dahulu!");
+        return;
+    }
+
+    const node = document.getElementById('struk-to-download');
+    if (!node) {
+        alert("Elemen struk tidak ditemukan!");
+        return;
+    }
+
+    if (typeof html2canvas === 'undefined') {
+        alert("Library html2canvas belum dimuat! Pastikan script html2canvas sudah dipasang di HTML.");
+        return;
+    }
+
+    const btnSimpanHeader = document.getElementById('btn-simpan-struk-header');
+    const originalText = btnSimpanHeader ? btnSimpanHeader.innerHTML : '📥 Simpan JPG';
+
+    try {
+        if (btnSimpanHeader) {
+            btnSimpanHeader.disabled = true;
+            btnSimpanHeader.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i> Memproses...';
+        }
+
+        const noStruk = getValueCaseInsensitive(selectedTransaction, "No Struk") || 'Struk';
+        const fileName = `Struk-${String(noStruk).replace(/[/\\?%*:|"<>]/g, '_')}.jpg`;
+
+        const canvas = await html2canvas(node, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff'
+        });
+
+        const imageJpeg = canvas.toDataURL('image/jpeg', 0.95);
+        const link = document.createElement('a');
+        link.download = fileName;
+        link.href = imageJpeg;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    } catch (error) {
+        console.error('Gagal mengunduh gambar struk:', error);
+        alert('Terjadi kesalahan saat mengunduh gambar struk.');
+    } finally {
+        if (btnSimpanHeader) {
+            btnSimpanHeader.disabled = false;
+            btnSimpanHeader.innerHTML = originalText;
+        }
+    }
+}
+</script>
+
 <!-- ========================================== -->
 <!-- MODAL UTAMA: ARSIP SLIP GAJI KARYAWAN      -->
 <!-- ========================================== -->
@@ -9698,6 +10518,284 @@ function updateIconMata(btnElement, isHidden) {
     </div>
 </div>
 
+<!-- 1. MODAL RIWAYAT LAPORAN PENDAPATAN (INDUK) -->
+<div id="modalRiwayatOverlay" 
+     class="fixed inset-0 w-screen h-screen bg-slate-900/60 backdrop-blur-sm z-[9999] hidden items-center justify-center p-3 sm:p-4 transition-all duration-200 overscroll-none touch-none"
+     style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;">
+    
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden transform transition-all duration-300 scale-95 opacity-0 modal-card-content flex flex-col max-h-[85vh] my-auto">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 bg-slate-50/50 shrink-0">
+            <div class="flex items-center gap-2.5 overflow-hidden">
+                <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold shrink-0">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <h3 class="font-black text-slate-800 text-base sm:text-lg tracking-tight truncate">
+                    Riwayat Laporan Pendapatan
+                </h3>
+            </div>
+            <button type="button" 
+                    id="btnCloseRiwayat" 
+                    onclick="tutupModalRiwayat()" 
+                    class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center text-sm font-bold transition-colors shrink-0 ml-2">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
+        <!-- Modal Body -->
+        <div class="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 overscroll-contain">
+            
+            <!-- Date Filter Section -->
+            <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200/60 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <i class="far fa-calendar-alt text-sky-600 text-sm"></i>
+                    <span id="dateDisplayRiwayat" class="text-xs sm:text-sm font-extrabold text-slate-800">
+                        Pilih Tanggal
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <!-- Date Picker Trigger Button -->
+                    <div class="relative inline-flex items-center gap-1.5 bg-sky-600 hover:bg-sky-700 active:scale-95 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm shadow-sky-600/30 cursor-pointer transition-all">
+                        <input type="date" 
+                               id="datePickerRiwayat" 
+                               class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
+                               onchange="updateTanggalDisplay(this)">
+                        <i class="fas fa-calendar-day text-xs"></i>
+                        <span>Pilih</span>
+                    </div>
+
+                    <!-- Search Button -->
+                    <button type="button" 
+                            id="btnCariRiwayat" 
+                            onclick="cariDataRiwayat()" 
+                            class="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-search text-xs"></i>
+                        <span id="btnCariRiwayatText">Cari Data</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Image Viewer Container -->
+            <div id="viewerJpgContainer" 
+                 onclick="bukaFullscreenImage()" 
+                 class="bg-slate-100 rounded-2xl border-2 border-dashed border-slate-200 min-h-[240px] flex items-center justify-center p-3 text-center overflow-hidden relative cursor-pointer group transition-all hover:border-sky-300">
+                
+                <!-- Placeholder / Loading Status -->
+                <div id="viewerPlaceholder" class="text-slate-500 text-xs sm:text-sm font-medium leading-relaxed px-4">
+                    Pilih tanggal dan klik <b class="text-slate-700">'Cari Data'</b> untuk menampilkan Laporan Pendapatan.
+                </div>
+
+                <!-- Preview Image -->
+                <img id="imgViewerRiwayat" 
+                     src="" 
+                     alt="Laporan Pendapatan" 
+                     class="hidden w-full h-auto max-h-[50vh] object-contain rounded-xl shadow-md border border-slate-200/50 transition-transform duration-200 group-hover:scale-[1.02]">
+
+                <!-- Hover Overlay Badge -->
+                <div id="badgeClickZoom" class="hidden absolute bottom-3 right-3 bg-slate-900/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm pointer-events-none items-center gap-1.5 shadow-sm">
+                    <i class="fas fa-search-plus text-sky-400"></i> Klik untuk Perbesar
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 2. FULLSCREEN IMAGE VIEWER MODAL (INDEPENDEN DI LUAR MODAL UTAMA) -->
+<div id="modalZoomViewer" 
+     class="fixed inset-0 bg-slate-950/95 z-[10000] hidden flex-col items-center justify-between p-3 sm:p-4 touch-none transition-opacity duration-200">
+    
+    <!-- Header Control Bar Responsif -->
+    <div class="w-full flex items-center justify-between gap-2 z-20 pointer-events-auto bg-slate-900/90 p-2.5 rounded-2xl border border-slate-800 backdrop-blur-md shadow-2xl">
+        
+        <!-- Title & Percentage Indicator -->
+        <div class="flex items-center gap-2 overflow-hidden">
+            <div class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold shrink-0 text-sm">
+                <i class="fas fa-file-invoice"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-white text-xs font-black tracking-tight leading-tight truncate">Laporan Pendapatan</span>
+                <span id="zoomPercentage" class="text-[10px] font-bold text-sky-400">100%</span>
+            </div>
+        </div>
+
+        <!-- Tombol Kontrol Zoom (+, -, Reset, Tutup) -->
+        <div class="flex items-center gap-1 sm:gap-1.5 ml-auto">
+            <!-- Zoom Out (-) -->
+            <button type="button" 
+                    onclick="zoomOutPanzoom()" 
+                    title="Perkecil"
+                    class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white flex items-center justify-center text-xs sm:text-sm font-bold transition-all border border-slate-700">
+                <i class="fas fa-search-minus pointer-events-none"></i>
+            </button>
+
+            <!-- Reset (100%) -->
+            <button type="button" 
+                    onclick="resetPanzoom()" 
+                    title="Reset Ukuran"
+                    class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white flex items-center justify-center text-xs sm:text-sm font-bold transition-all border border-slate-700">
+                <i class="fas fa-undo pointer-events-none"></i>
+            </button>
+
+            <!-- Zoom In (+) -->
+            <button type="button" 
+                    onclick="zoomInPanzoom()" 
+                    title="Perbesar"
+                    class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 text-white flex items-center justify-center text-xs sm:text-sm font-bold transition-all border border-sky-400 shadow-md shadow-sky-600/30">
+                <i class="fas fa-search-plus pointer-events-none"></i>
+            </button>
+
+            <div class="w-[1px] h-5 bg-slate-700 mx-0.5"></div>
+
+            <!-- Tutup Modal Fullscreen -->
+            <button type="button" 
+                    onclick="tutupFullscreenImage(event)" 
+                    title="Tutup"
+                    class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white flex items-center justify-center text-sm font-bold transition-all border border-rose-500 shadow-md shadow-rose-600/30">
+                <i class="fas fa-times pointer-events-none"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Zoomable Viewport Outer Container -->
+    <div id="zoomContainer" class="w-full flex-1 flex items-center justify-center overflow-hidden my-2 cursor-grab active:cursor-grabbing relative">
+        <!-- Wrapper Khusus untuk Elemen Panzoom -->
+        <div id="panzoomWrapper" class="flex items-center justify-center max-w-full max-h-full">
+            <img id="imgZoomTarget" 
+                 src="" 
+                 alt="Fullscreen Laporan" 
+                 class="max-w-full max-h-[75vh] w-auto h-auto object-contain pointer-events-none select-none">
+        </div>
+    </div>
+
+    <!-- Footer Guide -->
+    <div class="z-20 text-center text-slate-400 text-[10px] sm:text-[11px] font-semibold bg-slate-900/80 px-3.5 py-1.5 rounded-full backdrop-blur-sm pointer-events-none border border-slate-800/80 shadow-lg">
+        <i class="fas fa-hand-pointer text-sky-400 mr-1"></i> Gunakan tombol + / - untuk zoom, lalu geser
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL 1: TABEL RIWAYAT TRANSAKSI STRUK    -->
+<!-- ========================================== -->
+<div id="modal-riwayat" 
+     class="fixed inset-0 w-screen h-screen bg-slate-900/60 backdrop-blur-sm z-[9999] hidden items-center justify-center p-2 sm:p-4 transition-all duration-200 overscroll-none touch-none"
+     style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;">
+    
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 modal-card-content flex flex-col max-h-[90vh] my-auto">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-3.5 sm:p-4 border-b border-slate-100 bg-slate-50/80 shrink-0">
+            <div class="flex items-center gap-2.5 overflow-hidden">
+                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold shrink-0">
+                    <i class="fas fa-history text-sm sm:text-base"></i>
+                </div>
+                <h3 class="font-black text-slate-800 text-sm sm:text-base tracking-tight truncate">
+                    Riwayat Struk Penjualan
+                </h3>
+            </div>
+            <button type="button" 
+                    onclick="closeRiwayatModal()" 
+                    class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center text-sm font-bold transition-colors shrink-0 ml-2">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Filter Bar: Pilih Bulan & Cari -->
+        <div class="p-3 sm:p-4 bg-slate-50 border-b border-slate-200/60 flex flex-col sm:flex-row gap-2.5 shrink-0">
+            <!-- Dropdown Bulan -->
+            <div class="relative flex-1">
+                <select id="select-bulan-riwayat" 
+                        onchange="fetchRiwayatByMonth(this.value)" 
+                        class="w-full bg-white border border-slate-200 text-slate-800 text-xs font-bold rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500 shadow-sm appearance-none pr-8">
+                    <option value="">Memuat Bulan...</option>
+                </select>
+                <div class="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <!-- Input Pencarian -->
+            <div class="relative flex-[1.5]">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" 
+                       id="search-riwayat" 
+                       onkeyup="filterRiwayatTable()" 
+                       placeholder="Cari No. Struk, Pelanggan, Barang..." 
+                       class="w-full bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-xs font-medium rounded-xl pl-8 pr-3 py-2.5 focus:outline-none focus:border-emerald-500 shadow-sm">
+            </div>
+        </div>
+
+        <!-- Body: Mobile Card List Container -->
+        <div class="p-3 sm:p-4 overflow-y-auto flex-1 overscroll-contain space-y-2.5" id="container-list-riwayat">
+            <div class="text-center text-slate-400 py-10 text-xs font-medium">
+                Klik "Riwayat Struk" untuk memuat data...
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="p-3 border-t border-slate-100 bg-slate-50/50 flex justify-end shrink-0">
+            <button type="button" 
+                    onclick="closeRiwayatModal()" 
+                    class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all active:scale-95">
+                Tutup
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL 2: STANDALONE PREVIEW STRUK THERMAL -->
+<!-- ========================================== -->
+<div id="modal-preview-struk" 
+     class="fixed inset-0 w-screen h-screen bg-slate-950/80 backdrop-blur-sm z-[10000] hidden items-center justify-center p-3 sm:p-4 transition-all duration-200 overscroll-none touch-none"
+     style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;">
+    
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-sm overflow-hidden transform transition-all duration-300 scale-95 opacity-0 modal-card-content flex flex-col max-h-[90vh] my-auto">
+        
+        <!-- Header Preview -->
+        <div class="flex items-center justify-between p-3.5 border-b border-slate-100 bg-slate-50 shrink-0">
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-black text-slate-700 uppercase tracking-wider">Preview Struk</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <!-- Tombol Simpan JPG -->
+                <button type="button" 
+                        id="btn-simpan-struk-header" 
+                        onclick="unduhStrukTerpilih()" 
+                        disabled 
+                        class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm shadow-emerald-600/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5">
+                    <i class="fas fa-download text-xs"></i> Simpan JPG
+                </button>
+                
+                <!-- Close Button -->
+                <button type="button" 
+                        onclick="closePreviewStrukModal(event)" 
+                        class="w-7 h-7 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center text-xs font-bold transition-colors">
+                    <i class="fas fa-times pointer-events-none"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Scrollable Thermal Receipt Wrapper -->
+        <div id="preview-struk-box" class="p-4 overflow-y-auto flex-1 bg-slate-100 flex items-start justify-center">
+            <div class="text-center text-slate-400 py-12 text-xs">
+                Pilih salah satu baris transaksi untuk melihat struk
+            </div>
+        </div>
+
+        <!-- Footer Preview -->
+        <div class="p-3 border-t border-slate-100 bg-slate-50 flex justify-end shrink-0">
+            <button type="button" 
+                    onclick="closePreviewStrukModal(event)" 
+                    class="w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2 rounded-xl transition-all active:scale-95">
+                Kembali ke Daftar
+            </button>
+        </div>
+
+    </div>
+</div>
 </body>
 </html>
