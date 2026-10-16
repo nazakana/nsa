@@ -15,1221 +15,1269 @@
     <script src="https://cdn.tailwindcss.com"></script>
 	
     
-  <style>
+<style>
 /* ========================================================================= */
-    /* LOCK TOTAL LAYAR FULLSCREEN (TANPA LAYER CHIP MELAYANG)                   */
-    /* ========================================================================= */
-    html, body {
-        height: 100%;
-        width: 100%;
-        min-height: 100vh;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-    }
-    
-    body {
-        background: #047857; 
-        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        box-sizing: border-box;
-    }
+/* LOCK TOTAL LAYAR FULLSCREEN                                               */
+/* ========================================================================= */
+html, body {
+    height: 100%;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+body {
+    background: #047857; 
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+}
 
-    /* ========================================================================= */
-    /* LAYOUT FULLSCREEN FULL WIDTH & HEIGHT (TOP GREEN & BOTTOM WHITE)         */
-    /* ========================================================================= */
-    .nsa-portal-wrapper {
-        width: 100vw;
-        height: 100vh;
-        max-width: 100%;
-        max-height: 100%;
-        background: transparent;
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-        display: flex;
-        flex-direction: column; 
-        overflow: hidden;
-        z-index: 10;
-        position: relative;
-        animation: portalMasuk 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    /* Sisi Atas (42% Tinggi Layar - Gradasi Hijau Langit) */
-    .nsa-left-panel {
-        background: linear-gradient(180deg, #34d399 0%, #10b981 40%, #047857 100%);
-        height: 50vh;
-        padding: 20px; 
-        display: flex;
-        flex-direction: column;
-        align-items: center; 
-        justify-content: center;
-        text-align: center;
-        position: relative;
-        flex-shrink: 0; 
-        z-index: 1;
-    }
+/* ========================================================================= */
+/* LAYOUT FULLSCREEN FULL WIDTH & HEIGHT                                    */
+/* ========================================================================= */
+.nsa-portal-wrapper {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 100%;
+    background: transparent;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column; 
+    overflow: hidden;
+    z-index: 10;
+    position: relative;
+    animation: portalMasuk 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
-    .nsa-liquid-blob {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.15);
-        pointer-events: none;
-        z-index: 1;
-    }
-    .blob-1 { width: 180px; height: 180px; top: -40px; right: -40px; filter: blur(8px); }
-    .blob-2 { width: 130px; height: 130px; bottom: 20px; left: -30px; filter: blur(8px); }
+/* Sisi Atas: Mode Lockscreen (100vh Memenuhi Layar Utama) */
+.nsa-left-panel {
+    background: linear-gradient(180deg, #34d399 0%, #10b981 40%, #047857 100%);
+    height: 100vh;
+    width: 100%;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    flex-shrink: 0; 
+    z-index: 1;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    .nsa-wave-divider-wrapper {
-        display: none !important;
-    }
+.nsa-liquid-blob {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+    z-index: 1;
+}
+.blob-1 { width: 180px; height: 180px; top: -40px; right: -40px; filter: blur(8px); }
+.blob-2 { width: 130px; height: 130px; bottom: 20px; left: -30px; filter: blur(8px); }
 
-    /* Sisi Bawah (Shape Putih iOS Style dengan Rounded Top & Side Padding Proporsional) */
+.nsa-wave-divider-wrapper {
+    display: none !important;
+}
+
+/* Sisi Bawah: Bottom Sheet Drawer (Swipe Up to Unlock) */
 .nsa-right-panel {
-        background: #ffffff;
-        border-radius: 36px 36px 0 0;
-        margin-top: -30px;
-        padding: 20px 40px 16px; 
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1; 
-        height: calc(100vh - 42vh + 30px);
-        overflow: hidden; 
-        position: relative;
-        z-index: 5;
-        box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.08);
-    }
+    background: #ffffff;
+    border-radius: 36px 36px 0 0;
+    padding: 10px 30px 0px !important; 
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 67vh;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+    box-shadow: 0 -15px 35px rgba(0, 0, 0, 0.25);
+    overflow: hidden !important;
+    
+    transform: translateY(calc(100% - 175px));
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+}
 
-    /* Style Text Welcome iOS Style */
-    /* Style Text Welcome iOS Style */
-    .welcome-header-group {
-        margin-bottom: 16px;
-        flex-shrink: 0;
-        text-align: left;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .welcome-logo-img {
-        height: 64px;
-        width: auto;
-        object-fit: contain;
-        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
-    }
-    .welcome-text-black {
-        font-size: 30px;
-        font-weight: 800;
-        color: #0f172a;
-        line-height: 1.1;
-        letter-spacing: -0.5px;
-        margin: 0;
-    }
-    .welcome-text-green {
-        font-size: 35px;
-        font-weight: 800;
-        color: #059669;
-        line-height: 1.1;
-        letter-spacing: -0.5px;
-        margin-top: 2px;
-    }
+/* State Unlocked: Naik penuh ke atas */
+.nsa-right-panel.unlocked {
+    transform: translateY(0);
+}
 
-    /* Scrollable Container Khusus Tombol Menu */
-    .nsa-menu-scroll-container {
-        flex: 1;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding-right: 2px;
-    }
-    .nsa-menu-scroll-container::-webkit-scrollbar {
-        width: 0px;
-        display: none;
-    }
-
-    /* Animated SVG Archive Icon */
-/* Animated SVG Archive Icon Interaktif & Lebih Besar */
-    .archive-svg-icon-box {
-        position: relative;
-        width: 180px;
-        height: 180px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2;
-        animation: iconContainerBounce 4s ease-in-out infinite;
-    }
-    .archive-svg-icon-box svg {
-        width: 170px;
-        height: 170px;
-        filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.25));
-    }
-    .glow-ring-pulse {
-        animation: pulseGlow 2.5s ease-in-out infinite alternate;
-        transform-origin: center;
-    }
-    .floating-doc-1 {
-        animation: docFloatInteraktif1 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        transform-origin: center;
-    }
-    .floating-doc-2 {
-        animation: docFloatInteraktif2 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.4s;
-        transform-origin: center;
-    }
-    .sparkle-twinkle-1 {
-        animation: sparkleTwinkle 1.8s ease-in-out infinite alternate;
-        transform-origin: center;
-    }
-    .sparkle-twinkle-2 {
-        animation: sparkleTwinkle 2.2s ease-in-out infinite alternate 0.6s;
-        transform-origin: center;
-    }
-    .folder-front-bounce {
-        animation: folderBounce 3.5s ease-in-out infinite;
-        transform-origin: center;
-    }
-
-    @keyframes iconContainerBounce {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-8px) rotate(1.5deg); }
-    }
-    @keyframes pulseGlow {
-        0% { r: 36px; opacity: 0.2; }
-        100% { r: 44px; opacity: 0.45; }
-    }
-    @keyframes docFloatInteraktif1 {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-10px) rotate(-3deg); }
-    }
-    @keyframes docFloatInteraktif2 {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-14px) rotate(4deg); }
-    }
-    @keyframes sparkleTwinkle {
-        0% { transform: scale(0.6) rotate(0deg); opacity: 0.3; }
-        100% { transform: scale(1.2) rotate(45deg); opacity: 1; }
-    }
-    @keyframes folderBounce {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.02); }
-    }
-
-    /* Text Welcome Header */
-    .welcome-header {
-        margin-bottom: 12px;
-        flex-shrink: 0;
-        text-align: left;
-    }
-    .welcome-title {
-        font-size: 26px;
-        font-weight: 800;
-        color: #0f172a;
-        line-height: 1.1;
-        letter-spacing: -0.5px;
-    }
-    .welcome-brand {
-        font-size: 32px;
-        font-weight: 900;
-        color: #059669;
-        line-height: 1.1;
-        letter-spacing: -0.5px;
-    }
-
-    /* Wrapper Khusus Tombol Menu (Scrollable) */
-    .nsa-menu-scroll-wrapper {
-        flex: 1;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-right: 2px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    /* Custom Scrollbar Ramping untuk Wrapper Menu */
-    .nsa-menu-scroll-wrapper::-webkit-scrollbar {
-        width: 4px;
-    }
-    .nsa-menu-scroll-wrapper::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 10px;
-    }
-
-    /* Menu Carousel Horizontal Game Interface */
-    .menu-slider-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        margin: auto 0;
-    }
-
-    .menu-slider-container {
-        display: flex;
-        flex-direction: row;
-        gap: 12px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        padding: 10px 42px;
-        width: 100%;
-        scrollbar-width: none;
-    }
-
-    .menu-slider-container::-webkit-scrollbar {
-        display: none;
-    }
-
-    .btn-unit-slide {
-        flex: 0 0 100%;
-        scroll-snap-align: center;
-        box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.15);
-        padding: 14px 16px !important;
-        border-radius: 50px !important;
-    }
-
-    .slider-arrow-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        color: #0f172a;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 25;
-        transition: all 0.2s ease;
-        font-size: 12px;
-    }
-    .slider-arrow-btn:active {
-        transform: translateY(-50%) scale(0.9);
-    }
-    .slider-arrow-btn.prev { left: 2px; }
-    .slider-arrow-btn.next { right: 2px; }
-
-    .nsa-text-group {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 2;
-    }
-
-    /* ========================================================================= */
-    /* CAROUSEL MENU GULIR HORIZONTAL (GAME INTERFACE STYLE)                   */
-    /* ========================================================================= */
-    .menu-slider-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        margin: 12px 0;
-    }
-
-    .menu-slider-container {
-        display: flex;
-        flex-direction: row;
-        gap: 12px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        padding: 12px 6px;
-        width: 100%;
-        scrollbar-width: none; /* Firefox */
-    }
-
-    .menu-slider-container::-webkit-scrollbar {
-        display: none; /* Hide Scrollbar Chrome/Safari */
-    }
-
-    .btn-unit-slide {
-        flex: 0 0 85%; /* Menampilkan 1 kartu utama + secuil kartu berikutnya */
-        max-width: 310px;
-        scroll-snap-align: center;
-        box-shadow: 0 10px 22px -6px rgba(0, 0, 0, 0.18);
-        padding: 14px 16px !important;
-    }
-
-    /* Tombol Navigasi Panah Kiri & Kanan */
-    .slider-arrow-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        color: #0f172a;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 25;
-        transition: all 0.2s ease;
-        font-size: 11px;
-    }
-    .slider-arrow-btn:active {
-        transform: translateY(-50%) scale(0.9);
-    }
-    .slider-arrow-btn.prev { left: -6px; }
-    .slider-arrow-btn.next { right: -6px; }
-
-    /* ========================================================================= */
-    /* LOGO FRAME DENGAN KILATAN SHINING                                         */
-    /* ========================================================================= */
 /* ========================================================================= */
-    /* LOGO NSA (HILANGKAN CHIP BACKGROUND PUTIH)                               */
-    /* ========================================================================= */
-    .nsa-logo-frame {
-        width: 80px; 
-        height: 80px;
-        background: transparent !important;
-        border-radius: 0 !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 8px;
-        box-shadow: none !important;
-        position: relative;
+/* KOMPONEN SWIPE HANDLE BAR & HINT TEXT                                    */
+/* ========================================================================= */
+.swipe-handle-bar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0 10px;
+    cursor: pointer;
+    touch-action: none;
+    flex-shrink: 0;
+}
+
+.drag-pill {
+    width: 42px;
+    height: 5px;
+    background: #cbd5e1;
+    border-radius: 10px;
+    margin-bottom: 6px;
+}
+
+.swipe-hint-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #059669;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: opacity 0.3s ease;
+}
+
+.swipe-arrow-icon {
+    font-size: 11px;
+    animation: swipeBounce 1.5s infinite;
+}
+
+@keyframes swipeBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.nsa-right-panel.unlocked .swipe-hint-group {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Style Text Welcome iOS Style */
+.welcome-header-group {
+    margin-bottom: 40px;
+    flex-shrink: 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.welcome-logo-img {
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
+}
+.welcome-text-black {
+    font-size: 30px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin: 0;
+}
+.welcome-text-green {
+    font-size: 35px;
+    font-weight: 800;
+    color: #059669;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin-top: 2px;
+}
+
+/* Scrollable Container Khusus Tombol Menu */
+.nsa-menu-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-right: 2px;
+    margin-left: -30px; 
+    margin-right: -30px;
+}
+.nsa-menu-scroll-container::-webkit-scrollbar {
+    width: 0px;
+    display: none;
+}
+
+/* ========================================================================= */
+/* ANIMATED SVG ARCHIVE ICON                                                */
+/* ========================================================================= */
+.archive-svg-icon-box {
+    position: relative;
+    width: 210px;
+    height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    will-change: transform;
+}
+
+.archive-svg-icon-box .icon-wrapper-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: iconContainerBounce 4s ease-in-out infinite;
+}
+
+.archive-svg-icon-box svg {
+    width: 190px;
+    height: 190px;
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.25));
+}
+
+/* EFEK SWIPE UP: Bergeser jauh naik ke area atas */
+.nsa-portal-wrapper:has(.nsa-right-panel.unlocked) .archive-svg-icon-box,
+.nsa-left-panel.shift-up .archive-svg-icon-box {
+    transform: translateY(-225px) scale(1) !important;
+}
+
+.nsa-portal-wrapper:has(.nsa-right-panel.unlocked) .cloud-top-right,
+.nsa-left-panel.shift-up .cloud-top-right {
+    transform: translateY(-80px);
+    opacity: 0.15;
+    transition: all 0.6s ease;
+}
+
+.glow-ring-pulse {
+    animation: pulseGlow 2.5s ease-in-out infinite alternate;
+    transform-origin: center;
+}
+.floating-doc-1 {
+    animation: docFloatInteraktif1 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    transform-origin: center;
+}
+.floating-doc-2 {
+    animation: docFloatInteraktif2 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.4s;
+    transform-origin: center;
+}
+.sparkle-twinkle-1 {
+    animation: sparkleTwinkle 1.8s ease-in-out infinite alternate;
+    transform-origin: center;
+}
+.sparkle-twinkle-2 {
+    animation: sparkleTwinkle 2.2s ease-in-out infinite alternate 0.6s;
+    transform-origin: center;
+}
+.folder-front-bounce {
+    animation: folderBounce 3.5s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes iconContainerBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(1.5deg); }
+}
+@keyframes pulseGlow {
+    0% { r: 36px; opacity: 0.2; }
+    100% { r: 44px; opacity: 0.45; }
+}
+@keyframes docFloatInteraktif1 {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(-3deg); }
+}
+@keyframes docFloatInteraktif2 {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(4deg); }
+}
+@keyframes sparkleTwinkle {
+    0% { transform: scale(0.6) rotate(0deg); opacity: 0.3; }
+    100% { transform: scale(1.2) rotate(45deg); opacity: 1; }
+}
+@keyframes folderBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+/* Header & Navigasi */
+.welcome-header {
+    margin-bottom: 12px;
+    flex-shrink: 0;
+    text-align: left;
+}
+.welcome-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+.welcome-brand {
+    font-size: 32px;
+    font-weight: 900;
+    color: #059669;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.nsa-menu-scroll-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.nsa-menu-scroll-wrapper::-webkit-scrollbar {
+    width: 4px;
+}
+.nsa-menu-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.menu-slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 12px 0;
+}
+
+.menu-slider-container {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 6px;
+    width: 100%;
+    scrollbar-width: none;
+}
+
+.menu-slider-container::-webkit-scrollbar {
+    display: none;
+}
+
+.btn-unit-slide {
+    flex: 0 0 85%;
+    max-width: 310px;
+    scroll-snap-align: center;
+    box-shadow: 0 10px 22px -6px rgba(0, 0, 0, 0.18);
+    padding: 14px 16px !important;
+}
+
+.slider-arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 25;
+    transition: all 0.2s ease;
+    font-size: 11px;
+}
+.slider-arrow-btn:active {
+    transform: translateY(-50%) scale(0.9);
+}
+.slider-arrow-btn.prev { left: -6px; }
+.slider-arrow-btn.next { right: -6px; }
+
+.nsa-text-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+}
+
+.nsa-logo-frame {
+    width: 80px; 
+    height: 80px;
+    background: transparent !important;
+    border-radius: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    box-shadow: none !important;
+    position: relative;
+}
+
+.nsa-logo-frame::after {
+    display: none !important;
+}
+
+.nsa-logo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+}
+
+/* ========================================================================= */
+/* MENU LIST VERTIKAL                                                       */
+/* ========================================================================= */
+.menu-grid-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: 100%;
+    padding: 0 30px;
+    margin: auto 0;
+}
+
+.btn-unit-vertical {
+    width: 100%;
+    padding: 9px 16px !important;
+    border-radius: 50px !important;
+    box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.12);
+}
+.nsa-main-title {
+    color: #ffffff;
+    font-size: 18px; 
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+.nsa-main-subtitle {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-top: 2px;
+}
+
+.nsa-brand-tagline {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    max-width: 340px;
+    margin-top: 15px;
+    display: none; 
+}
+
+.panel-section-title {
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.menu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-unit {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 8px 16px;
+    border: none;
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-unit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.btn-fotokopi {
+    background: linear-gradient(135deg, #19c54b 0%, #10b981 100%);
+    box-shadow: 0 8px 20px -6px rgba(25, 197, 75, 0.3);
+}
+.btn-apotek {
+    background: linear-gradient(135deg, #fb18a8 0%, #db2777 100%);
+    box-shadow: 0 8px 20px -6px rgba(251, 24, 168, 0.3);
+}
+
+.icon-wrapper {
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.style-icon { font-size: 12px; }
+
+.btn-semua-app {
+    background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 16px -4px rgba(153, 27, 27, 0.4);
+}
+
+.btn-semua-app .btn-text,
+.btn-semua-app .btn-desc,
+.btn-semua-app .chevron-right {
+    color: #ffffff !important;
+}
+
+.btn-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+.btn-text {
+    font-weight: 900;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.btn-desc {
+    font-size: 9px;
+    font-weight: 600;
+    opacity: 0.85;
+    margin-top: 1px;
+}
+
+.chevron-right {
+    margin-left: auto;
+    opacity: 0.6;
+    font-size: 11px;
+}
+
+.nsa-cloud-embed {
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.embed-cloud-icon {
+    font-size: 18px;
+    color: #2ecc71;
+    animation: cloudFloating 3s ease-in-out infinite;
+    flex-shrink: 0;
+}
+.embed-cloud-title {
+    font-size: 9px;
+    font-weight: 900;
+    color: #1e293b;
+}
+.embed-cloud-text {
+    font-size: 8px;
+    font-weight: 600;
+    color: #64748b;
+    margin-top: 1px;
+}
+
+/* ========================================================================= */
+/* FOOTER & WAVE GERAKAN HIJAU                                              */
+/* ========================================================================= */
+.panel-footer {
+    text-align: center;
+    position: relative;
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    line-height: 0;
+    flex-shrink: 0;
+}
+
+.nsa-bottom-wave-wrapper {
+    position: relative;
+    width: 100%;
+    height: 75px;
+    line-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.nsa-bottom-wave-wrapper svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.copyright-text {
+    position: absolute;
+    bottom: 17px;
+    left: 0;
+    right: 0;
+    color: #ffffff !important;
+    font-size: 8px;
+    font-weight: 700;
+    z-index: 10;
+    text-align: center;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================================================= */
+/* BACKGROUND ANIMATION DECORATIONS                                         */
+/* ========================================================================= */
+.nsa-bg-decorations {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+.decor-icon {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.35) !important;
+}
+.icon-pos-1 { top: 8%; left: 6%; font-size: 3rem; animation: floatLoopA 7s infinite; }
+.icon-pos-2 { top: 12%; right: 6%; font-size: 2.5rem; animation: floatLoopB 9s infinite; }
+.icon-pos-3 { bottom: 30%; left: 4%; font-size: 2.2rem; animation: floatLoopB 8s infinite; }
+.icon-pos-4 { top: 22%; right: 18%; font-size: 2.8rem; animation: floatLoopA 11s infinite; }
+.icon-pos-5 { display: none; } 
+.icon-pos-6 { display: none; }
+.icon-pos-7 { bottom: 15%; right: 6%; font-size: 3rem; animation: floatLoopB 9s infinite; }
+.icon-pos-8 { display: none; }
+
+@keyframes floatLoopA {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(3deg); }
+}
+@keyframes floatLoopB {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(10px) rotate(-4deg); }
+}
+@keyframes portalMasuk { 
+    0% { opacity: 0; transform: translateY(20px) scale(0.98); } 
+    100% { opacity: 1; transform: translateY(0) scale(1); } 
+}
+@keyframes logoShine {
+    0% { left: -60%; }
+    15%, 100% { left: 130%; }
+}
+@keyframes cloudFloating {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* ========================================================================= */
+/* RESPONSIVE LAYOUT BREAKPOINT: DESKTOP MONITOR                             */
+/* ========================================================================= */
+@media (min-width: 769px) {
+    .nsa-portal-wrapper {
+        flex-direction: row !important;
+        width: 90% !important;
+        max-width: 1050px !important;
+        height: 85vh !important;
+        max-height: 650px !important;
+        border-radius: 40px !important;
+        box-shadow: 0 35px 80px rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        overflow: hidden !important;
+    }
+	
+	
+	.welcome-header-group {
+        margin-top: 20px !important; /* <--- UBAH/TAMBAHKAN NILAI INI SESUAI KEBUTUHAN */
     }
 
-    .nsa-logo-frame::after {
+    .nsa-left-panel {
+        width: 45% !important;
+        height: 100% !important;
+        position: relative !important;
+        padding: 45px !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+        justify-content: center !important;
+    }
+
+    .nsa-main-title { font-size: 28px !important; }
+    .nsa-main-subtitle { font-size: 14px !important; }
+    .nsa-brand-tagline { display: block !important; }
+
+    .nsa-right-panel {
+        width: 55% !important;
+        height: 100% !important;
+        position: relative !important;
+        transform: translateY(0) !important;
+        margin-top: 0 !important;
+        border-radius: 0 40px 40px 0 !important;
+        background: #ffffff !important;
+        padding: 24px 32px 0px 32px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        overflow: hidden !important;
+    }
+
+    .swipe-handle-bar {
         display: none !important;
     }
 
-    .nsa-logo-frame img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+    .nsa-menu-scroll-container {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        overflow-y: auto !important;
+        margin-left: -32px !important;
+        margin-right: -32px !important;
     }
 
-    /* ========================================================================= */
-    /* MENU LIST VERTIKAL (TERURAI KE BAWAH DI MOBILE)                          */
-    /* ========================================================================= */
+    .panel-section-title {
+        text-align: left !important;
+        font-size: 11px !important;
+        margin-bottom: 6px !important;
+    }
+
     .menu-grid-vertical {
-        display: flex;
-        flex-direction: column;
-        gap: 9px;
-        width: 100%;
-        margin: auto 0;
+        gap: 8px !important;
+        margin: auto 0 !important;
+        padding: 0 32px !important;
     }
 
     .btn-unit-vertical {
-        width: 100%;
-        padding: 9px 16px !important;
-        border-radius: 50px !important;
-        box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.12);
-    }
-    .nsa-main-title {
-        color: #ffffff;
-        font-size: 18px; 
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        line-height: 1.2;
-    }
-    .nsa-main-subtitle {
-        color: rgba(255, 255, 255, 0.85);
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        margin-top: 2px;
+        border-radius: 16px !important;
+        padding: 7px 16px !important;
     }
 
-    .nsa-brand-tagline {
-        color: rgba(255, 255, 255, 0.75);
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 1.5;
-        max-width: 340px;
-        margin-top: 15px;
-        display: none; 
-    }
-
-    /* ========================================================================= */
-    /* UNIT KERJA SELECTION                                                      */
-    /* ========================================================================= */
-    .panel-section-title {
-        font-size: 10px;
-        color: #94a3b8;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .menu-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 8px; /* Diperketat agar 5 tombol pas & ramping di HP */
-    }
-
-    .btn-unit {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        width: 100%;
-        padding: 8px 16px; /* Padding atas-bawah diperkecil dari 14px ke 8px */
-        border: none;
-        color: white;
-        border-radius: 50px; /* Rounded Full agar melengkung lonjong rapi di HP */
-        cursor: pointer;
-        font-family: inherit;
-        text-decoration: none;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .btn-unit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn-fotokopi {
-        background: linear-gradient(135deg, #19c54b 0%, #10b981 100%);
-        box-shadow: 0 8px 20px -6px rgba(25, 197, 75, 0.3);
-    }
-    .btn-apotek {
-        background: linear-gradient(135deg, #fb18a8 0%, #db2777 100%);
-        box-shadow: 0 8px 20px -6px rgba(251, 24, 168, 0.3);
-    }
-
-    .icon-wrapper {
-        width: 30px; /* Ukuran diperkecil dari 34px ke 30px */
-        height: 30px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%; /* Dibuat bulat penuh melingkar */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .style-icon { font-size: 12px; }
-	
-    .btn-semua-app {
-        background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
-        color: #ffffff !important;
-        box-shadow: 0 6px 16px -4px rgba(153, 27, 27, 0.4);
-    }
-	
-    .btn-semua-app .btn-text,
-    .btn-semua-app .btn-desc,
-    .btn-semua-app .chevron-right {
-        color: #ffffff !important;
-    }
-
-    .btn-content {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
-    }
-    .btn-text {
-        font-weight: 900;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .btn-desc {
-        font-size: 9px;
-        font-weight: 600;
-        opacity: 0.85;
-        margin-top: 1px;
-    }
-
-    .chevron-right {
-        margin-left: auto;
-        opacity: 0.6;
-        font-size: 11px;
-    }
-
-    .nsa-cloud-embed {
-        padding: 12px 14px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .embed-cloud-icon {
-        font-size: 18px;
-        color: #2ecc71;
-        animation: cloudFloating 3s ease-in-out infinite;
-        flex-shrink: 0;
-    }
-    .embed-cloud-title {
-        font-size: 9px;
-        font-weight: 900;
-        color: #1e293b;
-    }
-    .embed-cloud-text {
-        font-size: 8px;
-        font-weight: 600;
-        color: #64748b;
-        margin-top: 1px;
-    }
-
+    /* REVISI FOOTER DESKTOP: Menempel sempurna & teks pas di tengah kartu */
     .panel-footer {
-        text-align: center;
+        position: relative !important;
+        width: 100% !important;
+        margin-top: 15px !important;
+        margin-bottom: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
     }
+
+    .nsa-bottom-wave-wrapper {
+        position: relative !important;
+        width: 100% !important;
+        height: 60px !important;
+    }
+
     .copyright-text {
-        color: #cbd5e1;
-        font-size: 8px;
-        font-weight: 700;
+        position: absolute !important;
+        top: auto !important;
+        bottom: 12px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        padding-left: 32px !important;
+        padding-right: 32px !important;
+        box-sizing: border-box !important;
+        transform: none !important;
+        text-align: center !important;
+        margin: 0 auto !important;
+        font-size: 9px !important;
+        color: #ffffff !important;
+        z-index: 10 !important;
     }
 
-    /* ========================================================================= */
-    /* BACKGROUND ANIMATION DECORATIONS                                         */
-    /* ========================================================================= */
-    .nsa-bg-decorations {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        pointer-events: none;
-    }
-    .decor-icon {
-        position: absolute;
-        color: rgba(255, 255, 255, 0.35) !important;
-    }
-    .icon-pos-1 { top: 8%; left: 6%; font-size: 3rem; animation: floatLoopA 7s infinite; }
-    .icon-pos-2 { top: 12%; right: 6%; font-size: 2.5rem; animation: floatLoopB 9s infinite; }
-    .icon-pos-3 { bottom: 30%; left: 4%; font-size: 2.2rem; animation: floatLoopB 8s infinite; }
-    .icon-pos-4 { top: 22%; right: 18%; font-size: 2.8rem; animation: floatLoopA 11s infinite; }
-    .icon-pos-5 { display: none; } 
-    .icon-pos-6 { display: none; }
-    .icon-pos-7 { bottom: 15%; right: 6%; font-size: 3rem; animation: floatLoopB 9s infinite; }
-    .icon-pos-8 { display: none; }
-
-    @keyframes floatLoopA {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-10px) rotate(3deg); }
-    }
-    @keyframes floatLoopB {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(10px) rotate(-4deg); }
-    }
-    @keyframes portalMasuk { 
-        0% { opacity: 0; transform: translateY(20px) scale(0.98); } 
-        100% { opacity: 1; transform: translateY(0) scale(1); } 
-    }
-    @keyframes logoShine {
-        0% { left: -60%; }
-        15%, 100% { left: 130%; }
-    }
-    @keyframes cloudFloating {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-3px); }
-    }
+    .icon-pos-5 { display: block; bottom: 25%; left: 8%; font-size: 4rem; animation: floatLoopA 8s infinite; }
+    .icon-pos-6 { display: block; bottom: 10%; left: 22%; font-size: 3rem; animation: floatLoopB 7s infinite; }
+    .icon-pos-8 { display: block; bottom: 8%; right: 22%; font-size: 3.5rem; animation: floatLoopA 12s infinite; }
+}
 
 /* ========================================================================= */
-    /* RESPONSIVE LAYOUT BREAKPOINT: DESKTOP MONITOR (SIDE-BY-SIDE)              */
-    /* ========================================================================= */
-    @media (min-width: 769px) {
-        body {
-            padding: 0;
-            background: #047857;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .nsa-portal-wrapper {
-            flex-direction: row !important;
-            width: 90% !important;
-            max-width: 1050px !important;
-            height: 85vh !important;
-            max-height: 650px !important;
-            border-radius: 40px !important;
-            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.4) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            overflow: hidden !important;
-        }
+/* ANIMASI TRANSISI PERPINDAHAN HALAMAN                                     */
+/* ========================================================================= */
+.nsa-transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
 
-        .nsa-left-panel {
-            width: 45% !important;
-            height: 100% !important;
-            padding: 45px !important;
-            border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
-            justify-content: center !important;
-        }
+.nsa-transition-overlay.show-layer {
+    opacity: 1;
+    pointer-events: auto;
+}
 
-        .nsa-main-title { font-size: 28px !important; }
-        .nsa-main-subtitle { font-size: 14px !important; }
-        .nsa-brand-tagline { display: block !important; }
+.nsa-transition-circle {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1;
+}
 
-        .nsa-wave-divider-wrapper {
-            display: none !important;
-        }
+.nsa-transition-overlay.active-fotokopi .nsa-transition-circle {
+    background: linear-gradient(135deg, #13a83f 0%, #0a9666 100%);
+    transform: scale(35);
+}
 
-        .nsa-right-panel {
-            width: 55% !important;
-            height: 100% !important;
-            margin-top: 0 !important;
-            border-radius: 0 !important;
-            background: #ffffff !important;
-            padding: 24px 32px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: space-between !important;
-            overflow: hidden !important;
-        }
+.nsa-transition-overlay.active-apotek .nsa-transition-circle {
+    background: linear-gradient(135deg, #e01194 0%, #be1b66 100%);
+    transform: scale(35);
+}
 
-        .nsa-menu-scroll-container {
-            flex: 1 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: space-between !important;
-            overflow-y: auto !important;
-        }
+.nsa-transition-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 30px;
+}
 
-        .panel-section-title {
-            text-align: left !important;
-            font-size: 11px !important;
-            margin-bottom: 6px !important;
-        }
+.nsa-transition-icon-box {
+    color: #ffffff;
+    font-size: 3.5rem;
+    opacity: 0;
+    transform: scale(0.4);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-bottom: 20px;
+}
+.nsa-transition-overlay.active .nsa-transition-icon-box {
+    opacity: 1;
+    transform: scale(1) rotate(360deg);
+}
 
-        .menu-grid-vertical {
-            gap: 6px !important;
-            margin: auto 0 !important;
-        }
+.nsa-transition-title {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease 0.2s;
+    margin-bottom: 8px;
+}
+.nsa-transition-overlay.active .nsa-transition-title {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-        .btn-unit-vertical {
-            border-radius: 16px !important;
-            padding: 7px 16px !important;
-        }
+.nsa-transition-loading-text {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease 0.4s;
+    animation: nsaPulseText 1.5s infinite ease-in-out;
+}
+.nsa-transition-overlay.active .nsa-transition-loading-text {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-        .copyright-text {
-            text-align: left !important;
-            font-size: 9px !important;
-        }
+@keyframes nsaPulseText {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
 
-        .icon-pos-5 { display: block; bottom: 25%; left: 8%; font-size: 4rem; animation: floatLoopA 8s infinite; }
-        .icon-pos-6 { display: block; bottom: 10%; left: 22%; font-size: 3rem; animation: floatLoopB 7s infinite; }
-        .icon-pos-8 { display: block; bottom: 8%; right: 22%; font-size: 3.5rem; animation: floatLoopA 12s infinite; }
-    }
-	
-    /* ========================================================================= */
-    /* ANIMASI TRANSISI PERPINDAHAN HALAMAN PREMIUM (ALA BOOTING OS)            */
-    /* ========================================================================= */
-    .nsa-transition-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 99999;
-        display: flex;
-        flex-direction: column; /* Menyusun konten secara vertikal ke bawah */
-        align-items: center;
-        justify-content: center;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
+.nsa-transition-overlay.fade-out {
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+}
 
-    /* Munculkan overlay utama saat fungsi dipicu */
-    .nsa-transition-overlay.show-layer {
-        opacity: 1;
-        pointer-events: auto;
-    }
+.btn-katalog {
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.3);
+}
 
-    /* Lingkaran ripple yang meluas menyapu layar */
-    .nsa-transition-circle {
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        transform: scale(0);
-        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        z-index: 1;
-    }
+/* ========================================================================= */
+/* MODAL POP-UP STYLING                                                      */
+/* ========================================================================= */
+.btn-akses-cepat {
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.3);
+}
 
-    .nsa-transition-overlay.active-fotokopi .nsa-transition-circle {
-        background: linear-gradient(135deg, #13a83f 0%, #0a9666 100%);
-        transform: scale(35);
-    }
+.nsa-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    .nsa-transition-overlay.active-apotek .nsa-transition-circle {
-        background: linear-gradient(135deg, #e01194 0%, #be1b66 100%);
-        transform: scale(35);
-    }
+.nsa-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
 
-    /* Wadah Konten Tengah (Ikon, Judul, Loading) */
-    .nsa-transition-content {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 0 30px;
-    }
+.nsa-modal-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 24px;
+    padding: 22px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    /* Animasi Ikon Membal */
-    .nsa-transition-icon-box {
-        color: #ffffff;
-        font-size: 3.5rem;
-        opacity: 0;
-        transform: scale(0.4);
-        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        margin-bottom: 20px;
-    }
-    .nsa-transition-overlay.active .nsa-transition-icon-box {
-        opacity: 1;
-        transform: scale(1) rotate(360deg);
-    }
+.nsa-modal-overlay.active .nsa-modal-card {
+    transform: scale(1) translateY(0);
+}
 
-    /* Teks Judul Unit */
-    .nsa-transition-title {
-        color: #ffffff;
-        font-size: 18px;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        opacity: 0;
-        transform: translateY(10px);
-        transition: all 0.5s ease 0.2s; /* Delay sedikit setelah ikon muncul */
-        margin-bottom: 8px;
-    }
-    .nsa-transition-overlay.active .nsa-transition-title {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.nsa-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 16px;
+}
 
-    /* Teks Subtitle / Loading Sistem */
-    .nsa-transition-loading-text {
-        color: rgba(255, 255, 255, 0.75);
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        opacity: 0;
-        transform: translateY(10px);
-        transition: all 0.5s ease 0.4s; /* Delay muncul paling terakhir */
-        animation: nsaPulseText 1.5s infinite ease-in-out; /* Efek kedip halus */
-    }
-    .nsa-transition-overlay.active .nsa-transition-loading-text {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.nsa-modal-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
-    /* Efek kedip teks ala OS loading */
-    @keyframes nsaPulseText {
-        0%, 100% { opacity: 0.5; }
-        50% { opacity: 1; }
-    }
+.nsa-modal-icon {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 6px 15px -4px rgba(46, 204, 113, 0.4);
+}
 
-    /* Fade out total sebelum pindah file HTML */
-    .nsa-transition-overlay.fade-out {
-        opacity: 0;
-        transition: opacity 0.4s ease-out;
-    }
+.nsa-modal-title {
+    font-size: 14px;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.2;
+}
 
-    .btn-katalog {
-        background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-        box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.3);
-    }
-	
-    /* ========================================================================= */
-    /* STYLING TOMBOL AKSES CEPAT & MODAL POP-UP                                */
-    /* ========================================================================= */
-    .btn-akses-cepat {
-        background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-        box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.3);
-    }
+.nsa-modal-subtitle {
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
-    /* Modal Overlay & Card */
-    .nsa-modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+.nsa-modal-close {
+    background: #f1f5f9;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    color: #64748b;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
 
-    .nsa-modal-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
+.nsa-modal-close:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
 
-    .nsa-modal-card {
-        background: #ffffff;
-        width: 100%;
-        max-width: 400px;
-        border-radius: 24px;
-        padding: 22px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-        transform: scale(0.9) translateY(20px);
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+.nsa-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-    .nsa-modal-overlay.active .nsa-modal-card {
-        transform: scale(1) translateY(0);
-    }
+.btn-modal-sub {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    color: #0f172a;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+}
 
-    /* Header Modal */
-    .nsa-modal-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 16px;
-        border-bottom: 1px solid #f1f5f9;
-        margin-bottom: 16px;
-    }
+.btn-modal-sub:hover {
+    background: #ffffff;
+    border-color: #2ecc71;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(46, 204, 113, 0.2);
+}
 
-    .nsa-modal-title-group {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
+.sub-icon-wrapper {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
 
-    .nsa-modal-icon {
-        width: 38px;
-        height: 38px;
-        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-        color: #ffffff;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        box-shadow: 0 6px 15px -4px rgba(46, 204, 113, 0.4);
-    }
+.btn-sub-qris .sub-icon-wrapper {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
 
-    .nsa-modal-title {
-        font-size: 14px;
-        font-weight: 900;
-        color: #0f172a;
-        line-height: 1.2;
-    }
+.sub-btn-content {
+    display: flex;
+    flex-direction: column;
+}
 
-    .nsa-modal-subtitle {
-        font-size: 10px;
-        font-weight: 700;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
+.sub-btn-text {
+    font-size: 11px;
+    font-weight: 800;
+    color: #0f172a;
+}
 
-    .nsa-modal-close {
-        background: #f1f5f9;
-        border: none;
-        width: 32px;
-        height: 32px;
-        border-radius: 10px;
-        color: #64748b;
-        font-size: 20px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-    }
+.sub-btn-desc {
+    font-size: 9px;
+    font-weight: 600;
+    color: #64748b;
+    margin-top: 1px;
+}
 
-    .nsa-modal-close:hover {
-        background: #e2e8f0;
-        color: #0f172a;
-    }
+.sub-chevron {
+    margin-left: auto;
+    font-size: 11px;
+    color: #94a3b8;
+}
 
-    /* Sub-Menu Tombol di Dalam Modal */
-    .nsa-modal-body {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+/* ========================================================================= */
+/* MODAL POPUP SEMUA APP NJA                                                 */
+/* ========================================================================= */
+.nsa-modal-large {
+    max-width: 680px !important;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow: hidden;
+}
 
-    .btn-modal-sub {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        width: 100%;
-        padding: 12px 14px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        color: #0f172a;
-        text-decoration: none;
-        cursor: pointer;
-        font-family: inherit;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        text-align: left;
-    }
+.nsa-modal-large .nsa-modal-header {
+    padding: 18px 24px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e2e8f0;
+    background: #ffffff;
+    flex-shrink: 0;
+}
 
-    .btn-modal-sub:hover {
-        background: #ffffff;
-        border-color: #2ecc71;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px -4px rgba(46, 204, 113, 0.2);
-    }
+.nsa-app-list-container {
+    padding: 20px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
 
-    .sub-icon-wrapper {
-        width: 32px;
-        height: 32px;
-        background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-        color: #ffffff;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        flex-shrink: 0;
-    }
+.nsa-app-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.25s ease;
+}
 
-    .btn-sub-qris .sub-icon-wrapper {
-        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-    }
+.nsa-app-card:hover {
+    border-color: #2ecc71;
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.12);
+    transform: translateY(-2px);
+}
 
-    .sub-btn-content {
-        display: flex;
-        flex-direction: column;
-    }
+.nsa-app-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-    .sub-btn-text {
-        font-size: 11px;
-        font-weight: 800;
-        color: #0f172a;
-    }
+.nsa-app-badge {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
 
-    .sub-btn-desc {
-        font-size: 9px;
-        font-weight: 600;
-        color: #64748b;
-        margin-top: 1px;
-    }
+.nsa-app-name {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.2px;
+}
 
-    .sub-chevron {
-        margin-left: auto;
-        font-size: 11px;
-        color: #94a3b8;
-    }
-	
-    .btn-semua-app {
-        background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
-        color: #ffffff !important;
-        box-shadow: 0 8px 20px -6px rgba(153, 27, 27, 0.4);
-    }
-    
-    .btn-semua-app .btn-text,
-    .btn-semua-app .btn-desc,
-    .btn-semua-app .chevron-right {
-        color: #ffffff !important;
-    }
-	
-    /* ========================================================================= */
-    /* MODAL POPUP SEMUA APP NJA (MATERIAL GREEN & SCROLLABLE LIST)              */
-    /* ========================================================================= */
-    .nsa-modal-large {
-        max-width: 680px !important; /* Ukuran proporsional/agak lebar */
-        max-height: 85vh;
-        display: flex;
-        flex-direction: column;
-        padding: 0 !important; /* Padding diatur internal agar header & body rapi */
-        overflow: hidden;
-    }
+.nsa-app-snapshot-frame {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f1f5f9;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    .nsa-modal-large .nsa-modal-header {
-        padding: 18px 24px;
-        margin-bottom: 0;
-        border-bottom: 1px solid #e2e8f0;
-        background: #ffffff;
-        flex-shrink: 0;
-    }
+.nsa-app-snapshot-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
 
-    /* Container Scrollable untuk Daftar Aplikasi */
-    .nsa-app-list-container {
-        padding: 20px 24px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
+.nsa-app-desc {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+}
 
-    /* Card Tiap Aplikasi */
-    .nsa-app-card {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 18px;
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        transition: all 0.25s ease;
-    }
+.nsa-modal-announcement {
+    max-width: 360px !important;
+    text-align: center;
+    padding: 28px 24px !important;
+    border-radius: 28px !important;
+    position: relative;
+}
 
-    .nsa-app-card:hover {
-        border-color: #2ecc71;
-        box-shadow: 0 8px 20px rgba(46, 204, 113, 0.12);
-        transform: translateY(-2px);
-    }
+.nsa-announcement-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(46, 204, 113, 0.12);
+    color: #16a34a;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+}
 
-    /* Header Card: Nomor & Nama App */
-    .nsa-app-title-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+.nsa-announcement-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #ffffff;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin: 0 auto 16px auto;
+    box-shadow: 0 10px 25px -5px rgba(46, 204, 113, 0.4);
+}
 
-    .nsa-app-badge {
-        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-        color: #ffffff;
-        font-size: 11px;
-        font-weight: 800;
-        width: 26px;
-        height: 26px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
+.nsa-announcement-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
 
-    .nsa-app-name {
-        font-size: 14px;
-        font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -0.2px;
-    }
+.nsa-announcement-desc {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
 
-    /* ========================================================================= */
-    /* REVISI FRAME SNAPSHOT: MENJAGA RASIO ASLI & TIDAK TERPOTONG               */
-    /* ========================================================================= */
-    .nsa-app-snapshot-frame {
-        width: 100%;
-        height: auto; /* Biarkan tinggi menyesuaikan rasio asli gambar */
-        max-height: none; /* Hapus batasan tinggi kaku */
-        border-radius: 16px; /* Tetap pertahankan iOS rounded style */
-        overflow: hidden;
-        background: #f1f5f9;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+.btn-announcement-action {
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -4px rgba(22, 163, 74, 0.4);
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
 
-    .nsa-app-snapshot-frame img {
-        width: 100%;
-        height: auto; /* Memastikan gambar selalu tampil utuh sesuai rasio */
-        display: block;
-        object-fit: contain; /* Mengunci agar seluruh detail foto terlihat tanpa ter-crop */
-    }
-
-    /* Teks Deskripsi */
-    .nsa-app-desc {
-        font-size: 11px;
-        font-weight: 600;
-        color: #475569;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    /* ========================================================================= */
-    /* MODAL POPUP BANNER: ADA YANG BARU!                                        */
-    /* ========================================================================= */
-    .nsa-modal-announcement {
-        max-width: 360px !important;
-        text-align: center;
-        padding: 28px 24px !important;
-        border-radius: 28px !important;
-        position: relative;
-    }
-
-    .nsa-announcement-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(46, 204, 113, 0.12);
-        color: #16a34a;
-        font-size: 10px;
-        font-weight: 800;
-        padding: 6px 14px;
-        border-radius: 50px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 14px;
-    }
-
-    .nsa-announcement-icon {
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-        color: #ffffff;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 26px;
-        margin: 0 auto 16px auto;
-        box-shadow: 0 10px 25px -5px rgba(46, 204, 113, 0.4);
-    }
-
-    .nsa-announcement-title {
-        font-size: 18px;
-        font-weight: 900;
-        color: #0f172a;
-        margin-bottom: 8px;
-    }
-
-    .nsa-announcement-desc {
-        font-size: 11px;
-        font-weight: 600;
-        color: #64748b;
-        line-height: 1.5;
-        margin-bottom: 20px;
-    }
-
-    .btn-announcement-action {
-        width: 100%;
-        padding: 12px 20px;
-        background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-        color: #ffffff;
-        border: none;
-        border-radius: 50px;
-        font-size: 12px;
-        font-weight: 800;
-        font-family: inherit;
-        cursor: pointer;
-        box-shadow: 0 8px 20px -4px rgba(22, 163, 74, 0.4);
-        transition: all 0.25s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .btn-announcement-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.5);
-    }
-
-/* ================================================================
-   MOBILE CARD VIEWER APOTEK
-   ================================================================ */
+.btn-announcement-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.5);
+}
 
 #wrapper-viewport-cetak-apotek {
     position: relative;
@@ -1245,15 +1293,12 @@
     -webkit-touch-callout: none;
 }
 
-/* Input catatan tetap bisa disentuh dan diketik */
 #area-cetak-pdf-apotek .input-catatan-chip-apotek {
     -webkit-user-select: text;
     user-select: text;
 }
 
-/* Hanya mobile */
 @media (max-width: 640px) {
-
     #wrapper-viewport-cetak-apotek {
         width: 100% !important;
         max-width: 756px !important;
@@ -1262,19 +1307,15 @@
     #area-cetak-pdf-apotek {
         touch-action: none;
     }
-}
-
-@media (max-width: 640px) {
 
     #area-cetak-pdf-apotek .input-catatan-chip-apotek {
         touch-action: auto !important;
         -webkit-user-select: text !important;
         user-select: text !important;
     }
-
 }
 
-/* PAKSA OVERLAY TRANSISI FRESH LIGHT GLASSMORPHISM */
+/* OVERLAY TRANSISI */
 #portal-transition {
     position: fixed !important;
     top: 0 !important;
@@ -1293,7 +1334,7 @@
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    background-color: rgba(255, 255, 255, 0.82) !important; /* Latar Putih Transparan Segar */
+    background-color: rgba(255, 255, 255, 0.82) !important;
     -webkit-backdrop-filter: blur(20px) !important;
     backdrop-filter: blur(20px) !important;
 }
@@ -1301,160 +1342,167 @@
 #transition-card {
     position: relative !important;
     z-index: 10 !important;
-    background-color: #ffffff !important; /* Kartu Putih Solid / Clean */
+    background-color: #ffffff !important;
     border: 1px solid rgba(226, 232, 240, 0.9) !important;
     box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.12) !important;
 }
 
-/* Style & Animasi Awan Mengapung */
-    .nsa-animated-cloud {
-        position: absolute;
-        color: rgba(255, 255, 255, 0.45);
-        pointer-events: none;
-        z-index: 1;
-    }
-    
+.nsa-animated-cloud {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.45);
+    pointer-events: none;
+    z-index: 1;
+}
 
-    .cloud-top-right {
-        top: 26%;
-        right: 26%;
-        font-size: 6rem;
-        animation: driftCloudRight 7s ease-in-out infinite alternate;
-    }
-    .cloud-bottom-left {
-        bottom: 28%;
-        left: 30%;
-        font-size: 6rem;
-        animation: driftCloudRight 8s ease-in-out infinite alternate;
-    }
+.cloud-top-right {
+    top: 26%;
+    right: 26%;
+    font-size: 6rem;
+    animation: driftCloudRight 7s ease-in-out infinite alternate;
+}
+.cloud-bottom-left {
+    bottom: 28%;
+    left: 30%;
+    font-size: 6rem;
+    animation: driftCloudRight 8s ease-in-out infinite alternate;
+}
 
+@keyframes driftCloudLeft {
+    0% { transform: translateX(-15px) translateY(0); }
+    100% { transform: translateX(15px) translateY(-5px); }
+}
+@keyframes driftCloudRight {
+    0% { transform: translateX(18px) translateY(0); }
+    100% { transform: translateX(-18px) translateY(6px); }
+}
 
-    @keyframes driftCloudLeft {
-        0% { transform: translateX(-15px) translateY(0); }
-        100% { transform: translateX(15px) translateY(-5px); }
-    }
-    @keyframes driftCloudRight {
-        0% { transform: translateX(18px) translateY(0); }
-        100% { transform: translateX(-18px) translateY(6px); }
-    }
-	
-	/* ========================================================================= */
-    /* DYNAMIC ISLAND NOTCH (IOS STYLE)                                          */
-    /* ========================================================================= */
-    .nsa-dynamic-island {
-        position: fixed;
-        top: 28px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 100;
-        background: #000000;
-        color: #ffffff;
-        border-radius: 22px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        cursor: pointer;
-        user-select: none;
-        
-        /* Ukuran awal saat ringkas (Compact Mode) */
-        width: 145px;
-        height: 36px;
-        padding: 0 14px;
-    }
+/* ========================================================================= */
+/* DYNAMIC ISLAND NOTCH                                                      */
+/* ========================================================================= */
+.nsa-dynamic-island {
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: #000000;
+    color: #ffffff;
+    border-radius: 22px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    user-select: none;
+    width: 125px;
+    height: 36px;
+    padding: 0 14px;
+}
 
-    /* Tampilan Ringkas (Idle State) */
-    .island-compact-content {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.2px;
-        color: #ffffff;
-        white-space: nowrap;
-        opacity: 1;
-        transition: opacity 0.3s ease;
-    }
+.island-compact-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    font-family: system-ui, -apple-system, sans-serif;
+}
 
-    .island-compact-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #10b981;
-        box-shadow: 0 0 10px #10b981;
-        flex-shrink: 0;
-    }
+.island-compact-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+    flex-shrink: 0;
+}
 
-    /* Tampilan Terbuka / Notifikasi (Expanded Mode) */
-    .nsa-dynamic-island.expanded {
-        width: 90vw;
-        max-width: 350px;
-        height: auto;
-        min-height: 62px;
-        border-radius: 28px;
-        padding: 12px 18px;
-        justify-content: flex-start;
-    }
+.island-clock-text {
+    text-align: center;
+    flex-grow: 1;
+}
 
-    .island-expanded-content {
-        display: none;
-        align-items: center;
-        gap: 12px;
-        width: 100%;
-        opacity: 0;
-        transition: opacity 0.3s ease 0.15s;
-    }
+.island-clock-icon {
+    font-size: 11px;
+    color: #10b981;
+    flex-shrink: 0;
+}
 
-    .nsa-dynamic-island.expanded .island-compact-content {
-        display: none;
-        opacity: 0;
-    }
+.nsa-dynamic-island.expanded {
+    width: 90vw;
+    max-width: 350px;
+    height: auto;
+    min-height: 62px;
+    border-radius: 28px;
+    padding: 12px 18px;
+    justify-content: flex-start;
+}
 
-    .nsa-dynamic-island.expanded .island-expanded-content {
-        display: flex;
-        opacity: 1;
-    }
+.island-expanded-content {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.15s;
+}
 
-    .island-icon-box {
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        color: #ffffff;
-        flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    }
+.nsa-dynamic-island.expanded .island-compact-content {
+    display: none;
+    opacity: 0;
+}
 
-    .island-text-group {
-        display: flex;
-        flex-direction: column;
-        text-align: left;
-        min-width: 0;
-    }
+.nsa-dynamic-island.expanded .island-expanded-content {
+    display: flex;
+    opacity: 1;
+}
 
-    .island-title {
-        font-size: 11px;
-        font-weight: 900;
-        color: #34d399;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        line-height: 1.2;
-    }
+.island-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #ffffff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
 
-    .island-desc {
-        font-size: 11px;
-        font-weight: 600;
-        color: #e2e8f0;
-        line-height: 1.3;
-        margin-top: 2px;
-    }
+.island-text-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    min-width: 0;
+}
+
+.island-title {
+    font-size: 11px;
+    font-weight: 900;
+    color: #34d399;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.island-desc {
+    font-size: 11px;
+    font-weight: 600;
+    color: #e2e8f0;
+    line-height: 1.3;
+    margin-top: 2px;
+}
 </style>
 </head>
 <body>
@@ -1471,36 +1519,30 @@
     <i class="fas fa-copy decor-icon icon-pos-8"></i>
 </div>
 
-<!-- Container Split-Screen Utama (Full Screen) -->
+<!-- Container Split-Screen Utama -->
 <div class="nsa-portal-wrapper">
     
-   <!-- PANEL ATAS: GRADASI HIJAU LANGIT (50%) -->
+    <!-- PANEL ATAS: LAYAR UTAMA LOCKSCREEN -->
     <div class="nsa-left-panel">
-        <!-- Awan Bergerak Atas -->
         <i class="fas fa-cloud nsa-animated-cloud cloud-top-left"></i>
         <i class="fas fa-cloud nsa-animated-cloud cloud-top-right"></i>
 
         <div class="archive-svg-icon-box">
             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Inner SVG Elements tetap sama -->
                 <circle class="glow-ring-pulse" cx="50" cy="50" r="40" fill="white" fill-opacity="0.15" />
                 <circle cx="50" cy="50" r="32" fill="white" fill-opacity="0.2" />
-                
                 <path class="sparkle-twinkle-1" d="M22 26L24 21L29 19L24 17L22 12L20 17L15 19L20 21L22 26Z" fill="#FDE047" />
                 <path class="sparkle-twinkle-2" d="M78 30L79.5 26L83.5 24.5L79.5 23L78 19L76.5 23L72.5 24.5L76.5 26L78 30Z" fill="#FDE047" />
-
                 <g class="floating-doc-2">
                     <rect x="34" y="20" width="36" height="46" rx="6" fill="#A7F3D0" />
                     <rect x="40" y="26" width="20" height="3" rx="1.5" fill="#059669" opacity="0.5" />
                     <rect x="40" y="32" width="14" height="3" rx="1.5" fill="#059669" opacity="0.3" />
                 </g>
-                
                 <g class="floating-doc-1">
                     <rect x="26" y="26" width="38" height="48" rx="6" fill="#6EE7B7" />
                     <rect x="32" y="32" width="22" height="3.5" rx="1.5" fill="#047857" opacity="0.6" />
                     <rect x="32" y="39" width="16" height="3.5" rx="1.5" fill="#047857" opacity="0.4" />
                 </g>
-                
                 <g class="folder-front-bounce">
                     <path d="M18 38C18 34.134 21.134 31 25 31H38.5858C39.6466 31 40.664 31.4214 41.4142 32.1716L46.5858 37.3431C47.336 38.0933 48.3534 38.5147 49.4142 38.5147H75C78.866 38.5147 82 41.6487 82 45.5147V68C82 72.9706 77.9706 77 73 77H27C22.0294 77 18 72.9706 18 68V38Z" fill="#ffffff" />
                     <rect x="28" y="48" width="30" height="4.5" rx="2.25" fill="#059669" />
@@ -1511,16 +1553,23 @@
             </svg>
         </div>
 
-        <!-- Awan Bergerak Bawah -->
         <i class="fas fa-cloud nsa-animated-cloud cloud-bottom-left"></i>
         <i class="fas fa-cloud nsa-animated-cloud cloud-bottom-right"></i>
     </div>
 
-    <!-- PANEL BAWAH: SHAPE PUTIH ROUNDED TOP DENGAN WELCOME TEXT & SCROLLABLE MENU WRAPPER -->
-    <div class="nsa-right-panel">
+    <!-- PANEL BOTTOM SHEET (PUTIH) SWIPE UP TO UNLOCK -->
+    <div class="nsa-right-panel" id="nsaRightPanel">
         
-        <!-- TEKS WELCOME (PADDING SEJAJAR DENGAN CONTAINER CONTAINER) -->
-        <!-- TEKS WELCOME (PADDING SEJAJAR DENGAN CONTAINER CONTAINER) -->
+        <!-- HANDLE BAR & INDIKATOR SWIPE UP -->
+        <div class="swipe-handle-bar" onclick="toggleUnlockMenu()">
+            <div class="drag-pill"></div>
+            <div class="swipe-hint-group">
+                
+                <span class="swipe-text-hint">SWIPE UP</span>
+            </div>
+        </div>
+
+        <!-- TEKS WELCOME -->
         <div class="welcome-header-group">
             <div>
                 <h1 class="welcome-text-black">Welcome to</h1>
@@ -1529,12 +1578,13 @@
             <img src="https://lh3.googleusercontent.com/d/1YzO1wQlp14cnaME86W-WD-TaNLEsLi85" alt="NSA Logo" class="welcome-logo-img">
         </div>
 
-       <!-- SCROLLABLE WRAPPER UNTUK DAFTAR TOMBOL MENU (UKURAN CHIP PAS & PROPORSIAL ALAN UI IOS) -->
+        <!-- SCROLLABLE WRAPPER UNTUK DAFTAR TOMBOL MENU -->
         <div class="nsa-menu-scroll-container">
+		
             <div class="menu-grid-vertical">
                 <button onclick="pilihUnitNSA('fotokopi', 'fotokopi-nurjaya.html')" class="btn-unit btn-unit-vertical btn-fotokopi">
                     <div class="icon-wrapper">
-                        <i class="fas fa-print style-icon fa-bounce" style="--fa-animation-duration: 2.5s;"></i>
+                        <i class="fas fa-print style-icon"></i>
                     </div>
                     <div class="btn-content">
                         <span class="btn-text">NURJAYA ABADI PHOTOCOPY</span>
@@ -1545,7 +1595,7 @@
 
                 <button onclick="pilihUnitNSA('apotek', 'apotek-nurjaya.html')" class="btn-unit btn-unit-vertical btn-fotokopi">
                     <div class="icon-wrapper">
-                        <i class="fas fa-flask style-icon fa-bounce" style="--fa-animation-duration: 2.2s;"></i>
+                        <i class="fas fa-flask style-icon"></i>
                     </div>
                     <div class="btn-content">
                         <span class="btn-text">APOTEK NURJAYA</span>
@@ -1556,7 +1606,7 @@
 
                 <button onclick="bukaModalFaceScanner()" class="btn-unit btn-unit-vertical btn-fotokopi">
                     <div class="icon-wrapper">
-                        <i class="fas fa-user-check style-icon fa-beat" style="--fa-animation-duration: 2s;"></i>
+                        <i class="fas fa-user-check style-icon"></i>
                     </div>
                     <div class="btn-content">
                         <span class="btn-text">PRESENSI KARYAWAN</span>
@@ -1567,7 +1617,7 @@
 
                 <button onclick="bukaModalAksesCepat()" class="btn-unit btn-unit-vertical btn-fotokopi">
                     <div class="icon-wrapper">
-                        <i class="fas fa-bolt style-icon fa-beat-fade" style="--fa-animation-duration: 1.8s;"></i>
+                        <i class="fas fa-bolt style-icon"></i>
                     </div>
                     <div class="btn-content">
                         <span class="btn-text">AKSES CEPAT</span>
@@ -1578,7 +1628,7 @@
 
                 <button onclick="bukaModalSemuaApp()" class="btn-unit btn-unit-vertical btn-fotokopi">
                     <div class="icon-wrapper">
-                        <i class="fas fa-th-large style-icon fa-pulse" style="--fa-animation-duration: 3s;"></i>
+                        <i class="fas fa-th-large style-icon"></i>
                     </div>
                     <div class="btn-content">
                         <span class="btn-text">SEMUA APP NJA</span>
@@ -1588,14 +1638,28 @@
                 </button>
             </div>
 
-            <!-- Footer Penutup -->
-            <div class="panel-footer mt-4 pb-1">
-                <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
-            </div>
+<!-- Footer Penutup Menempel Lengket ke Bawah -->
+<div class="panel-footer">
+    <div class="nsa-bottom-wave-wrapper">
+        <svg viewBox="0 0 500 80" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="nsaWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#10b981" />
+                    <stop offset="100%" stop-color="#047857" />
+                </linearGradient>
+            </defs>
+            <path d="M0,30 C150,60 350,0 500,30 L500,80 L0,80 Z" fill="url(#nsaWaveGrad)" opacity="0.85"></path>
+            <path d="M0,45 C200,15 300,55 500,35 L500,80 L0,80 Z" fill="#047857" opacity="0.6"></path>
+        </svg>
+
+        <!-- Teks Copyright Di dalam Wave -->
+        <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
+    </div>
+</div>
         </div>
 
     </div>
-</div> <!-- Penutup nsa-portal-wrapper -->
+</div>
 
 
 
@@ -6122,12 +6186,13 @@ function scrollMenuSlider(direction) {
 </script>
 
 
-<!-- Dynamic Island Notch iOS Style -->
+<!-- HTML Structure -->
 <div id="nsaDynamicIsland" class="nsa-dynamic-island" onclick="bukaNotifIslandManual()">
-    <!-- Status Ringkas (Idle State) -->
+    <!-- Status Ringkas (Titik Kiri | Jam Tengah | Icon Kanan) -->
     <div class="island-compact-content">
         <span class="island-compact-dot"></span>
-        <span>Welcome back!</span>
+        <span id="islandClock" class="island-clock-text">00:00</span>
+        <i class="far fa-clock island-clock-icon"></i>
     </div>
 
     <!-- Status Notifikasi Terbuka (Expanded State) -->
@@ -6142,24 +6207,40 @@ function scrollMenuSlider(direction) {
     </div>
 </div>
 
+<!-- JavaScript Logic -->
 <script>
+// Update Jam Digital Real-time
+function updateIslandClock() {
+    const clockElement = document.getElementById('islandClock');
+    if (!clockElement) return;
+
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    clockElement.textContent = `${hours}:${minutes}`;
+}
+
 // Logika Animasi Otomatis Dynamic Island
 window.addEventListener('DOMContentLoaded', () => {
+    updateIslandClock();
+    setInterval(updateIslandClock, 1000);
+
     const island = document.getElementById('nsaDynamicIsland');
     if (!island) return;
 
-    // 1. Membuka/Expand animasi notifikasi otomatis saat portal dibuka
+    // Membuka animasi notifikasi otomatis saat portal dibuka
     setTimeout(() => {
         island.classList.add('expanded');
     }, 400);
 
-    // 2. Menyembunyikan notifikasi & kembali ringkas ke "Welcome back!" setelah 4 detik
+    // Kembali ringkas ke tampilan jam setelah 4.4 detik
     setTimeout(() => {
         island.classList.remove('expanded');
     }, 4400);
 });
 
-// Fitur Interaktif: Klik notch untuk memicu notifikasi muncul kembali
+// Klik notch untuk pemicu manual
 function bukaNotifIslandManual() {
     const island = document.getElementById('nsaDynamicIsland');
     if (!island) return;
@@ -6171,6 +6252,70 @@ function bukaNotifIslandManual() {
         }, 3500);
     }
 }
+</script>
+
+<script>
+let startY = 0;
+let currentY = 0;
+let isDragging = false;
+
+// Fungsi helper untuk update class di panel kanan & panel kiri
+function updatePanelState(isUnlocked) {
+    const rightPanel = document.getElementById('nsaRightPanel');
+    const leftPanel = document.querySelector('.nsa-left-panel');
+    
+    if (rightPanel) {
+        rightPanel.classList.toggle('unlocked', isUnlocked);
+    }
+    if (leftPanel) {
+        leftPanel.classList.toggle('shift-up', isUnlocked);
+    }
+}
+
+// 1. Toggle Buka/Tutup lewat Klik pada Bar
+function toggleUnlockMenu() {
+    const rightPanel = document.getElementById('nsaRightPanel');
+    if (rightPanel) {
+        const willUnlock = !rightPanel.classList.contains('unlocked');
+        updatePanelState(willUnlock);
+    }
+}
+
+// 2. Deteksi Gesture Swipe Up & Swipe Down
+document.addEventListener('DOMContentLoaded', () => {
+    const rightPanel = document.getElementById('nsaRightPanel');
+    if (!rightPanel) return;
+
+    rightPanel.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        currentY = startY;
+        isDragging = true;
+    }, { passive: true });
+
+    rightPanel.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentY = e.touches[0].clientY;
+    }, { passive: true });
+
+    rightPanel.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        const diffY = startY - currentY;
+
+        // Swipe Up (minimal 40px) -> Buka Menu & geser folder naik
+        if (diffY > 40 && !rightPanel.classList.contains('unlocked')) {
+            updatePanelState(true);
+        } 
+        // Swipe Down (minimal 40px) -> Tutup & kembalikan folder
+        else if (diffY < -40 && rightPanel.classList.contains('unlocked')) {
+            const scrollContainer = rightPanel.querySelector('.nsa-menu-scroll-container');
+            if (!scrollContainer || scrollContainer.scrollTop <= 5) {
+                updatePanelState(false);
+            }
+        }
+        
+        isDragging = false;
+    });
+});
 </script>
 </body>
 </html>
