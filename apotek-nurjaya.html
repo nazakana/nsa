@@ -853,21 +853,21 @@ document.addEventListener('keydown', function(e) {
                 <div class="w-full">
                     <table id="tableShiftApotek" class="w-full table-fixed text-center border-collapse text-xs">
                         <thead>
-                            <tr class="bg-pink-50/80 text-slate-700 border-b border-pink-200">
-                                <th class="w-[28%] p-1.5 font-bold border-r border-pink-100 text-left text-[10px] sm:text-xs">
-                                    Hari, Tgl
-                                </th>
-                                <th class="w-[24%] p-1.5 font-bold border-r border-pink-100 text-[11px] sm:text-xs">
-                                    Dea<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Nove</span>
-                                </th>
-                                <th class="w-[24%] p-1.5 font-bold border-r border-pink-100 text-[11px] sm:text-xs">
-                                    Eka<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Ainun</span>
-                                </th>
-                                <th class="w-[24%] p-1.5 font-bold text-[11px] sm:text-xs">
-                                    Fadilla<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Nailul</span>
-                                </th>
-                            </tr>
-                        </thead>
+    <tr class="bg-pink-50/80 text-slate-700 border-b border-pink-200">
+        <th class="w-[28%] p-1.5 font-bold border-r border-pink-100 text-left text-[10px] sm:text-xs">
+            Hari, Tgl
+        </th>
+        <th class="w-[24%] p-1.5 font-bold border-r border-pink-100 text-[11px] sm:text-xs">
+            Dea<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Nove Asyari</span>
+        </th>
+        <th class="w-[24%] p-1.5 font-bold border-r border-pink-100 text-[11px] sm:text-xs">
+            Eka<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Ainun Nisa</span>
+        </th>
+        <th class="w-[24%] p-1.5 font-bold text-[11px] sm:text-xs">
+            Fadilla<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Nailul Wafa</span>
+        </th>
+    </tr>
+</thead>
                         <tbody id="tbodyShiftApotek" class="divide-y divide-slate-100">
                             <tr>
                                 <td colspan="4" class="py-8 text-slate-400 font-medium italic text-center">
@@ -7183,12 +7183,11 @@ const SHIFT_COLORS = {
   'Pagi': 'bg-emerald-100 text-emerald-800 border-emerald-200',
   'Siang': 'bg-amber-100 text-amber-800 border-amber-200',
   'Full': 'bg-purple-100 text-purple-800 border-purple-200',
-  'Libur': 'bg-rose-100 text-rose-800 border-rose-200', // Libur diubah jadi Merah
+  'Libur': 'bg-rose-100 text-rose-800 border-rose-200', // Libur warna Merah
   'Izin': 'bg-blue-100 text-blue-800 border-blue-200',
-  'Sakit': 'bg-amber-100 text-amber-800 border-amber-200', // Atau sesuaikan dengan kebutuhan
+  'Sakit': 'bg-amber-100 text-amber-800 border-amber-200',
   'Absen': 'bg-red-200 text-red-900 border-red-300'
 };
-
 
 // Global State
 let currentWeekData = null;
@@ -7200,7 +7199,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadShiftDataToday();
 });
 
-// Helper Format Tanggal Indonesia Lengkap (Contoh: Senin, 12 Oktober - Minggu, 18 Oktober)
+// Helper Format Tanggal Indonesia Lengkap
 function formatFullIndonesianRange(startDateStr, endDateStr) {
   const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
   
@@ -7222,7 +7221,7 @@ function formatFullIndonesianRange(startDateStr, endDateStr) {
 }
 
 // -----------------------------------------------------------------
-// HELPER AUTO RESIZE TEXTAREA (PRESISI BUKAN DISPLAY: NONE)
+// HELPER AUTO RESIZE TEXTAREA
 // -----------------------------------------------------------------
 function autoResizeTextarea(elem) {
   if (!elem) return;
@@ -7278,10 +7277,14 @@ function renderMainShiftTable(data) {
     tr.className = 'hover:bg-pink-50/40 transition-colors';
 
     const tglShort = item.dateStr.substring(0, 5);
+    // Format Nama Hari Biasa (Capitalize)
+    const namaHariBiasa = item.dayName.charAt(0).toUpperCase() + item.dayName.slice(1).toLowerCase();
+
+    // Kolom Hari & Tanggal Sama-Sama Font Bold
     let htmlContent = `
       <td class="p-1.5 text-left border-r border-pink-100 font-bold text-slate-700">
-        <div class="text-[10px] sm:text-xs">${item.dayName}</div>
-        <div class="text-[9px] sm:text-[10px] font-normal text-slate-400">${tglShort}</div>
+        <div class="text-[10px] sm:text-xs font-bold leading-tight">${namaHariBiasa}</div>
+        <div class="text-[9px] sm:text-[10px] font-bold text-slate-600 leading-tight">${tglShort}</div>
       </td>
     `;
 
@@ -7299,7 +7302,7 @@ function renderMainShiftTable(data) {
   });
 }
 
-// Generasi HTML Cell Shift (Jika Custom / IsCustom, Langsung Render Input Text)
+// Generasi HTML Cell Shift
 function createShiftCellHTML(assistantName, dateStr, shiftValue, editable) {
   const colorClass = SHIFT_COLORS[shiftValue] || (shiftValue ? 'bg-pink-100 text-pink-800 border-pink-200' : 'bg-slate-50 text-slate-400');
 
@@ -7315,7 +7318,6 @@ function createShiftCellHTML(assistantName, dateStr, shiftValue, editable) {
     const isStandardOption = SHIFT_OPTIONS.includes(shiftValue) && shiftValue !== 'Custom';
     
     if (shiftValue && !isStandardOption) {
-      // Jika bernilai custom, langsung tampilkan Input Text Typing
       return `
         <td class="p-0.5 border-r border-pink-100 last:border-r-0">
           <input type="text" data-asst="${assistantName}" data-date="${dateStr}" value="${shiftValue}"
@@ -7324,7 +7326,6 @@ function createShiftCellHTML(assistantName, dateStr, shiftValue, editable) {
         </td>
       `;
     } else {
-      // Tampilkan Dropdown Standard
       let optionsHTML = `<option value="">--</option>`;
       SHIFT_OPTIONS.forEach(opt => {
         const selected = (opt === shiftValue) ? 'selected' : '';
@@ -7353,7 +7354,6 @@ function showTableLoadingState() {
   `;
 }
 
-// METODE UTAMA: UBAH DROPDOWN MENJADI INPUT TEXT DI SEL SECARA INSTAN
 function handleSelectShiftChange(selectElem) {
   if (selectElem.value === 'Custom') {
     const parentTd = selectElem.parentElement;
@@ -7364,7 +7364,6 @@ function handleSelectShiftChange(selectElem) {
     const attrName = isNextWeek ? 'data-next-asst' : 'data-asst';
     const attrDate = isNextWeek ? 'data-next-date' : 'data-date';
 
-    // Replace isi TD langsung jadi Input Text
     parentTd.innerHTML = `
       <input type="text" ${attrName}="${asst}" ${attrDate}="${dateStr}" placeholder="Ketik shift..."
         class="w-full text-[10px] sm:text-xs font-bold p-0.5 text-center rounded border border-pink-400 bg-pink-50/50 text-pink-900 focus:outline-none focus:ring-1 focus:ring-pink-500">
@@ -7383,11 +7382,10 @@ function handleSelectShiftChange(selectElem) {
 
 function handleEditShiftToggle() {
   if (!isEditMode) {
-    // Masuk Mode Edit
     isEditMode = true;
     document.getElementById('badgeEditMode').classList.remove('hidden');
     document.getElementById('btnCancelEditShift').classList.remove('hidden');
-    document.getElementById('btnAutoNoteShift').classList.remove('hidden'); // <-- TAMPILKAN TOMBOL AUTO CATATAN
+    document.getElementById('btnAutoNoteShift').classList.remove('hidden');
     
     document.getElementById('txtCatatanShift').removeAttribute('readonly');
     document.getElementById('txtCatatanShift').classList.replace('bg-slate-50', 'bg-white');
@@ -7400,28 +7398,23 @@ function handleEditShiftToggle() {
     if (currentWeekData) renderMainShiftTable(currentWeekData);
 
   } else {
-    // Eksekusi Simpan
     saveMainShiftData();
   }
 }
 
-// FUNGSI BATAL EDIT (TIDAK ADA POST REQUEST)
 function cancelEditShift() {
   isEditMode = false;
   
-  // Sembunyikan Indicator Edit Mode, Tombol Batal, & Tombol Auto Catatan
   document.getElementById('badgeEditMode').classList.add('hidden');
   document.getElementById('btnCancelEditShift').classList.add('hidden');
-  document.getElementById('btnAutoNoteShift').classList.add('hidden'); // <-- SEMBUNYIKAN TOMBOL AUTO CATATAN
+  document.getElementById('btnAutoNoteShift').classList.add('hidden');
   
-  // Reset Textarea Catatan
   const txtNote = document.getElementById('txtCatatanShift');
   txtNote.setAttribute('readonly', 'true');
   txtNote.classList.replace('bg-white', 'bg-slate-50');
   txtNote.classList.remove('ring-2', 'ring-pink-400');
   if (currentWeekData) txtNote.value = currentWeekData.note || '';
 
-  // Reset Tombol Simpan Kembali ke "ISI / UBAH"
   document.getElementById('iconBtnEditShift').className = 'fa-solid fa-pen-to-square';
   document.getElementById('labelBtnEditShift').innerText = 'ISI / UBAH';
   document.getElementById('btnToggleEditShift').className = 'flex-1 py-2 px-4 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md active:scale-95';
@@ -7466,11 +7459,10 @@ function saveMainShiftData() {
     if (res.status === 'success') {
       alert('Jadwal shift & catatan berhasil disimpan!');
       
-     // Di dalam block `.then(res => { if (res.status === 'success') { ...`
-isEditMode = false;
-document.getElementById('badgeEditMode').classList.add('hidden');
-document.getElementById('btnCancelEditShift').classList.add('hidden');
-document.getElementById('btnAutoNoteShift').classList.add('hidden'); // <-- SEMBUNYIKAN TOMBOL AUTO CATATAN
+      isEditMode = false;
+      document.getElementById('badgeEditMode').classList.add('hidden');
+      document.getElementById('btnCancelEditShift').classList.add('hidden');
+      document.getElementById('btnAutoNoteShift').classList.add('hidden');
       
       document.getElementById('txtCatatanShift').setAttribute('readonly', 'true');
       document.getElementById('txtCatatanShift').classList.replace('bg-white', 'bg-slate-50');
@@ -7493,7 +7485,6 @@ document.getElementById('btnAutoNoteShift').classList.add('hidden'); // <-- SEMB
   });
 }
 
-// Fitur Kalkulasi Catatan Otomatis (Senin-Minggu)
 function generateAutoNote() {
   const assistantCounts = {
     'Dea': { Pagi: 0, Siang: 0, Full: 0 },
@@ -7570,22 +7561,71 @@ function onShiftDateSelected(dateVal) {
   }
 }
 
+// HELPER UNTUK MENDAPATKAN OPSI RENDER GAMBAR AREA PUTIH (JADWAL & CATATAN ONLY)
+function getHighResCaptureOptions(node) {
+  const scale = 4; // Scale 2x lipat agar sangat tajam & ringan
+  return {
+    width: node.offsetWidth * scale,
+    height: node.offsetHeight * scale,
+    quality: 0.92, // Kompresi JPEG optimal
+    style: {
+      transform: `scale(${scale})`,
+      transformOrigin: 'top left',
+      width: `${node.offsetWidth}px`,
+      height: `${node.offsetHeight}px`,
+      borderRadius: '16px'
+    },
+    filter: (domNode) => {
+      const hideIds = [
+        'inputPickerShift',
+        'btnAutoNoteShift',
+        'dropdownShiftMenu',
+        'btnCancelEditShift',
+        'btnToggleEditShift'
+      ];
+
+      if (domNode.id && hideIds.includes(domNode.id)) {
+        return false;
+      }
+
+      if (domNode.getAttribute && domNode.getAttribute('onclick') === 'openDatePickerShift()') {
+        return false;
+      }
+
+      if (domNode.getAttribute && domNode.getAttribute('onclick') === 'toggleMenuShiftOptions()') {
+        return false;
+      }
+
+      return true;
+    }
+  };
+}
+
 function shareShiftSchedule() {
   document.getElementById('dropdownShiftMenu').classList.add('hidden');
-  const captureNode = document.getElementById('captureAreaShift');
+  const captureNode = document.getElementById('expandableShiftBody');
 
-  if (typeof domtoimage !== 'undefined') {
-    domtoimage.toBlob(captureNode).then(blob => {
-      const file = new File([blob], `Jadwal-Shift-${currentWeekData.weekInfo.startDate}.png`, { type: 'image/png' });
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({
-          files: [file],
-          title: 'Jadwal Shift Asisten Apoteker',
-          text: `Jadwal Shift Asisten Apoteker ${currentWeekData.weekInfo.startDate} - ${currentWeekData.weekInfo.endDate}`
+  if (typeof domtoimage !== 'undefined' && captureNode) {
+    const options = getHighResCaptureOptions(captureNode);
+
+    domtoimage.toJpeg(captureNode, options).then(dataUrl => {
+      fetch(dataUrl)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], `Jadwal-Shift-${currentWeekData.weekInfo.startDate}.jpg`, { type: 'image/jpeg' });
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({
+              files: [file],
+              title: 'Jadwal Shift Asisten Apoteker',
+              text: `Jadwal Shift Asisten Apoteker ${currentWeekData.weekInfo.startDate} - ${currentWeekData.weekInfo.endDate}`
+            });
+          } else {
+            alert('Fitur bagikan media tidak didukung di perangkat ini. Silakan gunakan tombol unduh.');
+          }
         });
-      } else {
-        alert('Fitur bagikan media tidak didukung di perangkat ini. Silakan gunakan tombol unduh.');
-      }
+    }).catch(err => {
+      console.error(err);
+      alert('Gagal memproses gambar jadwal.');
     });
   } else {
     alert('Library pendukung render gambar belum dimuat.');
@@ -7594,14 +7634,19 @@ function shareShiftSchedule() {
 
 function downloadShiftSchedule() {
   document.getElementById('dropdownShiftMenu').classList.add('hidden');
-  const captureNode = document.getElementById('captureAreaShift');
+  const captureNode = document.getElementById('expandableShiftBody');
 
-  if (typeof domtoimage !== 'undefined') {
-    domtoimage.toPng(captureNode).then(dataUrl => {
+  if (typeof domtoimage !== 'undefined' && captureNode) {
+    const options = getHighResCaptureOptions(captureNode);
+
+    domtoimage.toJpeg(captureNode, options).then(dataUrl => {
       const link = document.createElement('a');
-      link.download = `Jadwal-Shift-${currentWeekData.weekInfo.startDate}.png`;
+      link.download = `Jadwal-Shift-${currentWeekData.weekInfo.startDate}.jpg`;
       link.href = dataUrl;
       link.click();
+    }).catch(err => {
+      console.error(err);
+      alert('Gagal mengunduh gambar jadwal.');
     });
   } else {
     alert('Library pendukung render gambar belum dimuat.');
@@ -7620,7 +7665,6 @@ function openModalNextWeek() {
     return;
   }
 
-  // 1. Tampilkan modal loading
   const loadingModal = document.getElementById('modalLoadingNextWeek');
   if (loadingModal) loadingModal.classList.remove('hidden');
 
@@ -7634,14 +7678,12 @@ function openModalNextWeek() {
   fetch(`${APPS_SCRIPT_URL}?action=getWeekData&date=${formattedNextMonday}`)
     .then(res => res.json())
     .then(res => {
-      // 2. Sembunyikan modal loading dulu
       if (loadingModal) loadingModal.classList.add('hidden');
 
       if (res.status === 'success') {
         nextWeekData = res;
         document.getElementById('nextWeekPeriodeText').innerText = formatFullIndonesianRange(res.weekInfo.startDate, res.weekInfo.endDate);
         
-        // Render tabel & isi catatan
         renderNextWeekTable(res);
         
         const noteNextElem = document.getElementById('txtCatatanNextWeek');
@@ -7649,7 +7691,6 @@ function openModalNextWeek() {
           noteNextElem.value = res.note || '';
         }
 
-        // 3. Pastikan modal dipindah ke root body (jika terselip) & tampilkan dengan delay tipis
         const targetModal = document.getElementById('modalNextWeekShift');
         if (targetModal) {
           if (targetModal.parentElement !== document.body) {
@@ -7691,11 +7732,12 @@ function renderNextWeekTable(data) {
   datesInfo.forEach(item => {
     const tr = document.createElement('tr');
     const tglShort = item.dateStr.substring(0, 5);
+    const namaHariBiasa = item.dayName.charAt(0).toUpperCase() + item.dayName.slice(1).toLowerCase();
 
     let htmlContent = `
       <td class="p-1 text-left border-r border-pink-100 font-bold text-slate-700">
-        <div class="text-[10px]">${item.dayName}</div>
-        <div class="text-[9px] font-normal text-slate-400">${tglShort}</div>
+        <div class="text-[10px] font-bold leading-tight">${namaHariBiasa}</div>
+        <div class="text-[9px] font-bold text-slate-600 leading-tight">${tglShort}</div>
       </td>
     `;
 
@@ -7827,18 +7869,15 @@ function toggleExpandShiftWidget() {
   const noteElem = document.getElementById('txtCatatanShift');
 
   if (bodyElem.classList.contains('hidden')) {
-    // Buka Widget
     bodyElem.classList.remove('hidden');
     labelElem.innerText = 'TUTUP JADWAL';
     iconElem.classList.replace('fa-chevron-down', 'fa-chevron-up');
     
-    // Recalculate scrollHeight setelah elemen muncul dari hidden
     setTimeout(() => {
       autoResizeTextarea(noteElem);
     }, 50);
 
   } else {
-    // Tutup Widget
     bodyElem.classList.add('hidden');
     labelElem.innerText = 'BUKA JADWAL';
     iconElem.classList.replace('fa-chevron-up', 'fa-chevron-down');
@@ -7865,13 +7904,19 @@ function toggleExpandShiftWidget() {
         <div class="w-full">
             <table class="w-full table-fixed text-center border-collapse text-xs">
                 <thead>
-                    <tr class="bg-pink-50 text-slate-700 border-b border-pink-200">
-                        <th class="w-[28%] p-1 font-bold border-r border-pink-100 text-left text-[10px]">Hari, Tgl</th>
-                        <th class="w-[24%] p-1 font-bold border-r border-pink-100 text-[10px]">Dea</th>
-                        <th class="w-[24%] p-1 font-bold border-r border-pink-100 text-[10px]">Eka</th>
-                        <th class="w-[24%] p-1 font-bold text-[10px]">Fadilla</th>
-                    </tr>
-                </thead>
+    <tr class="bg-pink-50 text-slate-700 border-b border-pink-200">
+        <th class="w-[28%] p-1 font-bold border-r border-pink-100 text-left text-[10px]">Hari, Tgl</th>
+        <th class="w-[24%] p-1 font-bold border-r border-pink-100 text-[10px]">
+            Dea<br><span class="text-[8px] font-normal text-slate-400 block -mt-0.5 truncate">Nove Asyari</span>
+        </th>
+        <th class="w-[24%] p-1 font-bold border-r border-pink-100 text-[10px]">
+            Eka<br><span class="text-[8px] font-normal text-slate-400 block -mt-0.5 truncate">Ainun Nisa</span>
+        </th>
+        <th class="w-[24%] p-1 font-bold text-[10px]">
+            Fadilla<br><span class="text-[8px] font-normal text-slate-400 block -mt-0.5 truncate">Nailul Wafa</span>
+        </th>
+    </tr>
+</thead>
                 <tbody id="tbodyNextWeekShift" class="divide-y divide-slate-100">
                     <!-- Rendered by JS -->
                 </tbody>
