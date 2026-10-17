@@ -17,9 +17,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js untuk grafik data -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<!-- Library Panzoom JS via CDN -->
+	<script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 
-<!-- Library dom-to-image CDN (Sama seperti Fotokopi) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+	<!-- Library dom-to-image CDN (Sama seperti Fotokopi) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -1957,11 +1959,7 @@ document.addEventListener('keydown', function(e) {
                     <p class="text-[10px] sm:text-[11px] text-slate-500 font-medium mt-1">Mode Khusus Owner (Apotek Nurjaya)</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="px-3 py-1 rounded-full bg-pink-50 text-pink-700 text-[10px] font-black uppercase tracking-wider border border-pink-100">
-                    <i class="fa-solid fa-user-shield mr-1"></i> Owner Only
-                </span>
-            </div>
+
         </div>
 
         <!-- Body Section -->
@@ -1980,7 +1978,7 @@ document.addEventListener('keydown', function(e) {
             <!-- Status Loading & Info Presensi -->
             <div class="flex flex-col gap-2">
                 <div class="flex justify-between items-center px-1">
-                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Status Koneksi Data Cloud</span>
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">KARTU PRESENSI</span>
                     <span id="status-loading-pdf-apotek" class="text-[10px] font-bold text-pink-600 hidden animate-pulse">
                         <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data presensi apotek...
                     </span>
@@ -1988,34 +1986,84 @@ document.addEventListener('keydown', function(e) {
             </div>
 			
 			<!-- CONTAINER Penampil Gambar Presensi dari Drive (Apotek) -->
-            <div class="bg-white border-2 border-dashed border-pink-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-2xl w-full aspect-square sm:aspect-[4/3]">
-                
-                <!-- Placeholder Awal -->
-                <div id="placeholder-pdf-text-apotek" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
-                    <i class="fa-solid fa-image text-4xl text-pink-200 mb-3"></i>
-                    <p class="text-xs font-bold text-slate-500">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
-                </div>
+<div class="bg-white border-2 border-dashed border-pink-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-2xl w-full aspect-square sm:aspect-[4/3] group">
+    
+    <!-- Placeholder Awal -->
+    <div id="placeholder-pdf-text-apotek" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
+        <i class="fa-solid fa-image text-4xl text-pink-200 mb-3"></i>
+        <p class="text-xs font-bold text-slate-500">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
+    </div>
 
-                <!-- Indikator Loading -->
-                <div id="loading-pdf-animation-apotek" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/95 z-50 select-none transition-all duration-200">
-                    <div class="relative mb-4">
-                        <div class="absolute -inset-4 bg-pink-100 rounded-full blur-xl opacity-70 animate-ping"></div>
-                        <i class="fa-solid fa-file-invoice-dollar text-5xl text-pink-600 relative animate-bounce"></i>
-                    </div>
-                    <div class="space-y-2 w-2/3 mx-auto">
-                        <p id="teks-progres-loading-apotek" class="text-xs font-black text-pink-700 tracking-wide">Menghubungkan ke Drive Cloud Apotek...</p>
-                        <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
-                            <div class="h-full w-1/2 bg-pink-600 rounded-full absolute top-0 left-0 animate-pulse"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Image Preview Output -->
-                <img id="iframe-preview-pdf-apotek" 
-                     class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300" 
-                     src="" 
-                     alt="Preview Kartu Presensi Apotek">
+    <!-- Indikator Loading -->
+    <div id="loading-pdf-animation-apotek" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/95 z-50 select-none transition-all duration-200">
+        <div class="relative mb-4">
+            <div class="absolute -inset-4 bg-pink-100 rounded-full blur-xl opacity-70 animate-ping"></div>
+            <i class="fa-solid fa-file-invoice-dollar text-5xl text-pink-600 relative animate-bounce"></i>
+        </div>
+        <div class="space-y-2 w-2/3 mx-auto">
+            <p id="teks-progres-loading-apotek" class="text-xs font-black text-pink-700 tracking-wide">Menghubungkan ke Drive Cloud Apotek...</p>
+            <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
+                <div class="h-full w-1/2 bg-pink-600 rounded-full absolute top-0 left-0 animate-pulse"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Output -->
+    <img id="iframe-preview-pdf-apotek" 
+         class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300 cursor-pointer" 
+         src="" 
+         alt="Preview Kartu Presensi Apotek"
+         onclick="bukaModalZoomApotek()">
+
+    <!-- Overlay Tombol Petunjuk Layar Penuh (Muncul jika gambar terisi) -->
+    <div id="btn-fullscreen-hint-apotek" 
+         onclick="bukaModalZoomApotek()" 
+         class="hidden absolute bottom-3 right-3 z-40 bg-slate-900/75 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg backdrop-blur-md cursor-pointer transition-all duration-200 flex items-center gap-2 border border-white/20 active:scale-95">
+        <i class="fa-solid fa-expand text-pink-400"></i>
+        <span>Klik untuk Layar Penuh</span>
+    </div>
+</div>
+
+<!-- MODAL VIEWER FULLSCREEN PANZOOM -->
+<div id="modal-zoom-apotek" class="fixed inset-0 z-[9999] hidden bg-slate-950/90 backdrop-blur-md flex flex-col justify-between overflow-hidden transition-all duration-300">
+    
+    <!-- Header Modal & Control Bar -->
+    <div class="flex items-center justify-between p-4 bg-slate-900/80 border-b border-slate-800 text-white select-none z-10 shrink-0">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-file-invoice text-pink-500"></i>
+            <span id="modal-zoom-title-apotek" class="text-sm font-bold tracking-wide">Kartu Presensi</span>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-1.5 sm:gap-2">
+            <button onclick="zoomInApotek()" title="Zoom In" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 transition-all text-xs sm:text-sm">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+            </button>
+            <button onclick="zoomOutApotek()" title="Zoom Out" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 transition-all text-xs sm:text-sm">
+                <i class="fa-solid fa-magnifying-glass-minus"></i>
+            </button>
+            <button onclick="resetZoomApotek()" title="Reset Zoom" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 transition-all text-xs sm:text-sm">
+                <i class="fa-solid fa-rotate-left"></i>
+            </button>
+            <button onclick="tutupModalZoomApotek()" title="Tutup (Esc)" class="p-2 ml-2 rounded-lg bg-pink-600 hover:bg-pink-700 text-white active:scale-95 transition-all text-xs sm:text-sm font-bold">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Canvas Parent Container -->
+    <div id="panzoom-parent-apotek" class="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center p-3 select-none">
+        <!-- Wrapper Panzoom (Elemen ini yang ditempel Panzoom JS) -->
+        <div id="panzoom-wrapper-apotek" class="w-full h-full flex items-center justify-center">
+            <img id="img-panzoom-target-apotek" src="" alt="Zoom Presensi" class="max-w-full max-h-full object-contain cursor-grab active:cursor-grabbing">
+        </div>
+    </div>
+
+    <!-- Footer Tip -->
+    <div class="p-2 text-center text-[11px] text-slate-400 bg-slate-900/80 border-t border-slate-800 select-none shrink-0">
+        <i class="fa-solid fa-hand-pointer text-pink-400 mr-1"></i> Gunakan mouse wheel / pinch gesture untuk Zoom, dan drag untuk menggeser.
+    </div>
+</div>
 			
 			
 			
@@ -2124,7 +2172,7 @@ document.addEventListener('keydown', function(e) {
             <div class="max-w-md">
                 <span class="text-xs font-black text-slate-700 block">8. Poin Tambahan <span class="text-slate-400 font-normal">(Opsional)</span></span>
                 <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                    (Bonus insentif khusus yang ditentukan Owner Apotek, max 4 poin)
+                    Insentif khusus yang ditentukan Owner Apotek. Contoh: Farmacare, Insentif A, dll (max 4 poin)
                 </p>
             </div>
             <div class="self-end sm:self-start">
@@ -6554,6 +6602,9 @@ const MAP_NAMA_DRIVE_APOTEK = {
     "Fadilla": "Fadilla_Nailul_Wafa"
 };
 
+// Variabel Global Instance Panzoom
+let panzoomInstanceApotek = null;
+
 /**
  * Reset penuh elemen UI penampil kartu presensi
  */
@@ -6562,12 +6613,17 @@ function resetUIPenampilKartuApotek() {
     const loadingAnim = document.getElementById("loading-pdf-animation-apotek");
     const imgPreview = document.getElementById("iframe-preview-pdf-apotek");
     const statusTextHeader = document.getElementById("status-loading-pdf-apotek");
+    const btnHint = document.getElementById("btn-fullscreen-hint-apotek");
 
     if (imgPreview) {
         imgPreview.onload = null;
         imgPreview.onerror = null;
         imgPreview.src = "";
         imgPreview.classList.add("hidden");
+    }
+
+    if (btnHint) {
+        btnHint.classList.add("hidden");
     }
     
     if (placeholder) {
@@ -6602,6 +6658,7 @@ function muatKartuPresensiApotekDrive() {
     const teksLoading = document.getElementById("teks-progres-loading-apotek");
     const imgPreview = document.getElementById("iframe-preview-pdf-apotek");
     const statusTextHeader = document.getElementById("status-loading-pdf-apotek");
+    const btnHint = document.getElementById("btn-fullscreen-hint-apotek");
 
     if (teksLoading) {
         teksLoading.textContent = `Mencari Kartu Presensi ${panggilName}...`;
@@ -6616,7 +6673,7 @@ function muatKartuPresensiApotekDrive() {
         .then(result => {
             if (result.status === "success" && Array.isArray(result.files) && result.files.length > 0) {
                 
-                // Filter pencarian nama (Cocokkan nama panggilan, nama underscore, maupun nama dengan spasi)
+                // Filter pencarian nama
                 const filesKaryawan = result.files.filter(f => {
                     const fn = (f.name || "").toLowerCase();
                     return fn.includes(panggilName.toLowerCase()) || 
@@ -6625,7 +6682,7 @@ function muatKartuPresensiApotekDrive() {
                 });
 
                 if (filesKaryawan.length > 0) {
-                    // Sortir berkas berdasarkan timestamp pembaharuan (terbaru di atas)
+                    // Sortir berkas berdasarkan timestamp pembaharuan
                     filesKaryawan.sort((a, b) => {
                         const timeA = a.updated ? new Date(a.updated).getTime() : 0;
                         const timeB = b.updated ? new Date(b.updated).getTime() : 0;
@@ -6636,15 +6693,15 @@ function muatKartuPresensiApotekDrive() {
                     });
 
                     const fileTerbaru = filesKaryawan[0];
-                    // Buat timestamp acak untuk membongkar cache browser jika gambar diperbarui
                     const cacheBuster = "&cb=" + new Date().getTime();
                     const urlGambar = (fileTerbaru.url || `https://drive.google.com/thumbnail?id=${fileTerbaru.id}&sz=w1000`) + cacheBuster;
 
-                    // Pasang handler onload dan onerror sebelum menetapkan src
+                    // Pasang handler onload dan onerror
                     imgPreview.onload = function() {
                         if (loadingAnim) loadingAnim.classList.add("hidden");
                         if (statusTextHeader) statusTextHeader.classList.add("hidden");
                         imgPreview.classList.remove("hidden");
+                        if (btnHint) btnHint.classList.remove("hidden");
                     };
 
                     imgPreview.onerror = function() {
@@ -6675,21 +6732,96 @@ function tampilkanGagalKartuDrive(pesanError) {
     const loadingAnim = document.getElementById("loading-pdf-animation-apotek");
     const statusTextHeader = document.getElementById("status-loading-pdf-apotek");
     const imgPreview = document.getElementById("iframe-preview-pdf-apotek");
+    const btnHint = document.getElementById("btn-fullscreen-hint-apotek");
 
-    if (imgPreview) {
-        imgPreview.classList.add("hidden");
-    }
-    if (loadingAnim) {
-        loadingAnim.classList.add("hidden");
-    }
-    if (statusTextHeader) {
-        statusTextHeader.classList.add("hidden");
-    }
+    if (imgPreview) imgPreview.classList.add("hidden");
+    if (btnHint) btnHint.classList.add("hidden");
+    if (loadingAnim) loadingAnim.classList.add("hidden");
+    if (statusTextHeader) statusTextHeader.classList.add("hidden");
+    
     if (placeholder) {
         placeholder.classList.remove("hidden");
         const teks = placeholder.querySelector("p");
         if (teks) teks.textContent = pesanError;
     }
+}
+
+// =========================================================
+// LOGIKA MODAL FULLSCREEN & INTERAKSI PANZOOM
+// =========================================================
+
+/**
+ * Membuka Modal Fullscreen dan Inisialisasi Panzoom (Auto Fit + Bebas Zoom)
+ */
+function bukaModalZoomApotek() {
+    const imgPreview = document.getElementById("iframe-preview-pdf-apotek");
+    const modal = document.getElementById("modal-zoom-apotek");
+    const targetImg = document.getElementById("img-panzoom-target-apotek");
+    const panzoomWrapper = document.getElementById("panzoom-wrapper-apotek");
+    const parentContainer = document.getElementById("panzoom-parent-apotek");
+    const selectElem = document.getElementById("gaji-pilih-karyawan-apotek");
+    const titleModal = document.getElementById("modal-zoom-title-apotek");
+
+    if (!imgPreview || !imgPreview.src || imgPreview.classList.contains("hidden")) return;
+
+    const namaKaryawan = selectElem ? selectElem.value : "";
+    if (titleModal) {
+        titleModal.textContent = `Kartu Presensi - ${namaKaryawan}`;
+    }
+
+    targetImg.src = imgPreview.src;
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden"; // Kunci scroll halaman belakang
+
+    // Inisialisasi Panzoom pada WRAPPER
+    if (typeof Panzoom !== "undefined" && panzoomWrapper) {
+        if (panzoomInstanceApotek) {
+            panzoomInstanceApotek.destroy();
+        }
+
+        panzoomInstanceApotek = Panzoom(panzoomWrapper, {
+            maxScale: 6,
+            minScale: 1,
+            startScale: 1,
+            cursor: "move"
+            // contain dihapus agar tidak me-lock zoom
+        });
+
+        // Hubungkan Scroll Wheel Mouse ke Panzoom
+        if (parentContainer) {
+            // Hapus listener lama jika ada
+            parentContainer.removeEventListener("wheel", panzoomInstanceApotek.zoomWithWheel);
+            parentContainer.addEventListener("wheel", panzoomInstanceApotek.zoomWithWheel);
+        }
+    }
+}
+
+/**
+ * Menutup Modal Fullscreen dan Destroy Instance
+ */
+function tutupModalZoomApotek() {
+    const modal = document.getElementById("modal-zoom-apotek");
+    modal.classList.add("hidden");
+    document.body.style.overflow = ""; // Kembalikan scroll halaman belakang
+
+    if (panzoomInstanceApotek) {
+        panzoomInstanceApotek.reset();
+        panzoomInstanceApotek.destroy();
+        panzoomInstanceApotek = null;
+    }
+}
+
+// Control Helpers untuk Tombol Modal
+function zoomInApotek() {
+    if (panzoomInstanceApotek) panzoomInstanceApotek.zoomIn();
+}
+
+function zoomOutApotek() {
+    if (panzoomInstanceApotek) panzoomInstanceApotek.zoomOut();
+}
+
+function resetZoomApotek() {
+    if (panzoomInstanceApotek) panzoomInstanceApotek.reset();
 }
 
 // Pasang Event Listener otomatis saat dokumen selesai dimuat
@@ -6698,6 +6830,13 @@ document.addEventListener("DOMContentLoaded", function() {
     if (selectElem) {
         selectElem.addEventListener("change", muatKartuPresensiApotekDrive);
     }
+
+    // Tutup modal menggunakan tombol ESC
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") {
+            tutupModalZoomApotek();
+        }
+    });
 });
 </script>
 
