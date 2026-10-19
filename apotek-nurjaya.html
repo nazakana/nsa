@@ -515,29 +515,25 @@ document.addEventListener('keydown', function(e) {
                 </button>
             </div>
 
-            <!-- 3. Tombol Kembali ke Portal / Fotokopi -->
-            <button type="button"
+           <!-- 3. Tombol Kembali ke Portal / Fotokopi -->
+<button type="button"
         id="btn-switch-ke-fotokopi"
         onclick="navigasiKeFotokopi()" 
-        class="w-full h-12 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-md flex items-center justify-center space-x-3 focus:outline-none transition-all duration-300">
-    <i class="fas fa-globe text-lg flex-shrink-0 text-white"></i>
-    <div class="flex flex-col items-start leading-tight">
-        <span class="text-[10px] font-bold uppercase tracking-tight text-white opacity-95">Kembali Ke</span>
-        <span class="text-xs font-bold uppercase tracking-tight text-white">Portal</span>
-    </div>
+        class="w-full h-12 px-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-md flex items-center justify-start gap-3 focus:outline-none transition-all duration-300">
+    <i class="fas fa-globe text-base w-5 text-center flex-shrink-0 text-white"></i>
+    <span class="text-xs font-black uppercase tracking-wider text-white">KEMBALI KE PORTAL</span>
 </button>
 
-<!-- 4. Tombol Cek Slip Gaji Asisten Apoteker (Pink Gradient) -->
-<button type="button" 
-        id="btn-buka-arsip-slip-apotek" 
-        onclick="bukaModalArsipSlipApotek(); toggleMenuApotekSidebar();" 
-        class="w-full h-12 px-4 bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-700 hover:to-rose-600 text-white rounded-2xl shadow-md flex items-center justify-center space-x-3 focus:outline-none transition-all duration-300 active:scale-[0.98]">
-    <i class="fas fa-file-invoice-dollar text-lg flex-shrink-0 text-white"></i>
-    <div class="flex flex-col items-start leading-tight">
-        <span class="text-[10px] font-extrabold uppercase tracking-tight text-pink-100">Arsip Digital</span>
-        <span class="text-xs font-black uppercase tracking-tight text-white">Cek Slip Gaji</span>
-    </div>
+<!-- 4. Tombol Ganti PIN Asisten Apotek -->
+<button type="button"
+        id="btn-ganti-pin-apotek"
+        onclick="bukaModalGantiPinApotek()" 
+        class="w-full h-12 px-5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl shadow-md flex items-center justify-start gap-3 focus:outline-none transition-all duration-300 mt-2.5">
+    <i class="fas fa-key text-base w-5 text-center flex-shrink-0 text-white"></i>
+    <span class="text-xs font-black uppercase tracking-wider text-white">UBAH PIN PRIVASI</span>
 </button>
+
+
 
         </div>
     </div>
@@ -6425,171 +6421,445 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Integrasi Cek Arsip Slip Gaji
-    const PIN_KARYAWAN_APOTEK = {
-        "Eka": "1111",
-        "Dea": "2222",
-        "Fadilla": "3333"
-    };
 
-    let daftarFileDriveCachedApotek = [];
-    let karyawanAktifArsipApotek = "";
 
-    window.bukaModalArsipSlipApotek = function() {
-        const modal = document.getElementById("modal-arsip-slip-gaji-apotek");
-        if (!modal) return;
-        
-        resetModalArsipApotek();
-        modal.classList.remove("opacity-0", "pointer-events-none");
-        modal.querySelector(".transform")?.classList.remove("scale-95");
-        modal.querySelector(".transform")?.classList.add("scale-100");
-    };
 
-    window.tutupModalArsipSlipApotek = function() {
-        const modal = document.getElementById("modal-arsip-slip-gaji-apotek");
-        if (!modal) return;
-        
-        modal.classList.add("opacity-0", "pointer-events-none");
-        modal.querySelector(".transform")?.classList.add("scale-95");
-        modal.querySelector(".transform")?.classList.remove("scale-100");
-        resetModalArsipApotek();
-    };
 
-    function resetModalArsipApotek() {
-        const selKaryawan   = document.getElementById("arsip-pilih-karyawan-apotek");
-        const wrapperPin    = document.getElementById("arsip-wrapper-pin-apotek");
-        const wrapperView   = document.getElementById("arsip-wrapper-viewer-apotek");
-        const inputPin      = document.getElementById("arsip-input-pin-apotek");
-        const containerImg  = document.getElementById("arsip-container-gambar-apotek");
-        
-        if (selKaryawan) selKaryawan.selectedIndex = 0;
-        if (inputPin) inputPin.value = "";
-        if (wrapperPin) wrapperPin.classList.add("hidden");
-        if (wrapperView) wrapperView.classList.add("hidden");
-        if (containerImg) containerImg.classList.add("hidden");
-        
-        karyawanAktifArsipApotek = "";
-        daftarFileDriveCachedApotek = [];
+
+
+
+
+
+
+    // Global Configuration & Cache Variables
+const URL_WEB_APP_PIN_NSA = "https://script.google.com/macros/s/AKfycbyF597NVC2ieRvrndrfrCITt1qoCZTuxQhQhk_OC9ghC04WLcsWWZ6F4x-vflh2HbyeFg/exec";
+
+let cachedPinDatabase = {}; // Menyimpan sementara PIN hasil pre-fetch dari Spreadsheet
+let isPinDatabaseLoaded = false;
+let daftarFileDriveCachedApotek = [];
+let karyawanAktifArsipApotek = "";
+
+// Map nama panggilan ke nama lengkap di Spreadsheet
+const NAMA_LENGKAP_MAP = {
+    "Eka": "Eka Ainun Nisa",
+    "Dea": "Dea Nove Asyari",
+    "Fadilla": "Fadilla Nailul Wafa"
+};
+
+// 1. Buka Modal & Pre-fetch PIN dari Spreadsheet
+window.bukaModalArsipSlipApotek = function() {
+    const modal = document.getElementById("modal-arsip-slip-gaji-apotek");
+    if (!modal) return;
+    
+    resetModalArsipApotek();
+    modal.classList.remove("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform")?.classList.remove("scale-95");
+    modal.querySelector(".transform")?.classList.add("scale-100");
+
+    // Jalankan Sinkronisasi / Fetch PIN di Latar Belakang
+    fetchPinDatabaseFromSheet();
+};
+
+window.tutupModalArsipSlipApotek = function() {
+    const modal = document.getElementById("modal-arsip-slip-gaji-apotek");
+    if (!modal) return;
+    
+    modal.classList.add("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform")?.classList.add("scale-95");
+    modal.querySelector(".transform")?.classList.remove("scale-100");
+    resetModalArsipApotek();
+};
+
+function resetModalArsipApotek() {
+    const selKaryawan   = document.getElementById("arsip-pilih-karyawan-apotek");
+    const wrapperPin    = document.getElementById("arsip-wrapper-pin-apotek");
+    const wrapperView   = document.getElementById("arsip-wrapper-viewer-apotek");
+    const inputPin      = document.getElementById("arsip-input-pin-apotek");
+    const containerImg  = document.getElementById("arsip-container-gambar-apotek");
+    const msgError      = document.getElementById("arsip-msg-error-pin");
+    const syncStatus    = document.getElementById("arsip-pin-sync-status");
+    
+    if (selKaryawan) selKaryawan.selectedIndex = 0;
+    if (inputPin) {
+        inputPin.value = "";
+        inputPin.classList.remove("border-rose-500");
+    }
+    if (msgError) {
+        msgError.innerText = "";
+        msgError.classList.add("hidden");
+    }
+    if (syncStatus) syncStatus.classList.add("hidden");
+    if (wrapperPin) wrapperPin.classList.add("hidden");
+    if (wrapperView) wrapperView.classList.add("hidden");
+    if (containerImg) containerImg.classList.add("hidden");
+    
+    karyawanAktifArsipApotek = "";
+    daftarFileDriveCachedApotek = [];
+}
+
+// 2. Fetch Data PIN dari Spreadsheet (Pre-fetching)
+function fetchPinDatabaseFromSheet() {
+    const syncStatus = document.getElementById("arsip-pin-sync-status");
+    
+    if (syncStatus) {
+        syncStatus.className = "text-center text-[11px] font-bold py-1.5 px-3 rounded-xl bg-amber-50 text-amber-700 border border-amber-200";
+        syncStatus.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Menyinkronkan database PIN...`;
+        syncStatus.classList.remove("hidden");
     }
 
-    window.pilihKaryawanArsipApotek = function(valNama) {
-        if (!valNama) return;
-        karyawanAktifArsipApotek = valNama;
-        
-        const wrapperPin    = document.getElementById("arsip-wrapper-pin-apotek");
-        const wrapperView   = document.getElementById("arsip-wrapper-viewer-apotek");
-        const teksSapaan    = document.getElementById("arsip-teks-sapaan-pin-apotek");
-        const inputPin      = document.getElementById("arsip-input-pin-apotek");
-        const containerImg  = document.getElementById("arsip-container-gambar-apotek");
-        
-        if (wrapperView) wrapperView.classList.add("hidden");
-        if (containerImg) containerImg.classList.add("hidden");
-        if (inputPin) inputPin.value = "";
-        
-        if (teksSapaan) {
-            let namaLengkap = DATABASE_WA_APOTEK[valNama] ? DATABASE_WA_APOTEK[valNama].namaLengkap : valNama;
-            teksSapaan.innerText = `VERIFIKASI PIN PRIVASI (${namaLengkap})`;
-        }
-        
-        if (wrapperPin) {
-            wrapperPin.classList.remove("hidden");
-            setTimeout(() => { if (inputPin) inputPin.focus(); }, 150);
-        }
-    };
+    fetch(`${URL_WEB_APP_PIN_NSA}?action=getUsers`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success" && Array.isArray(data.users)) {
+                // Fetch sukses, selanjutnya ambil nilai PIN masing-masing nama
+                // Untuk efisiensi, lakukan validasi kolektif / simpan status loaded
+                isPinDatabaseLoaded = true;
 
-    window.verifikasiPinKaryawanApotek = function() {
-        const inputPin = document.getElementById("arsip-input-pin-apotek");
-        const pinUser  = inputPin ? inputPin.value.trim() : "";
-        
-        if (!karyawanAktifArsipApotek || !PIN_KARYAWAN_APOTEK[karyawanAktifArsipApotek]) {
-            alert("Silakan pilih nama karyawan Apotek terlebih dahulu!");
-            return;
-        }
-        
-        if (pinUser === PIN_KARYAWAN_APOTEK[karyawanAktifArsipApotek]) {
-            document.getElementById("arsip-wrapper-pin-apotek")?.classList.add("hidden");
-            document.getElementById("arsip-wrapper-viewer-apotek")?.classList.remove("hidden");
-            
-            let namaLengkapSearch = DATABASE_WA_APOTEK[karyawanAktifArsipApotek] 
-                ? DATABASE_WA_APOTEK[karyawanAktifArsipApotek].namaLengkap 
-                : karyawanAktifArsipApotek;
-                
-            muatDaftarPeriodeSlipApotek(namaLengkapSearch);
-        } else {
-            alert("PIN Privasi yang Anda masukkan salah!");
-            if (inputPin) {
-                inputPin.value = "";
-                inputPin.focus();
-            }
-        }
-    };
-
-    function muatDaftarPeriodeSlipApotek(namaKaryawan) {
-        const selPeriode   = document.getElementById("arsip-pilih-periode-apotek");
-        const loading      = document.getElementById("arsip-loading-gambar-apotek");
-        const containerImg = document.getElementById("arsip-container-gambar-apotek");
-        
-        if (containerImg) containerImg.classList.add("hidden");
-        if (loading) loading.classList.remove("hidden");
-        if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Mencari arsip file di Drive...</option>`;
-        
-        const urlGasApps = typeof GAS_WEB_APP_URL_SLIP !== 'undefined' 
-            ? GAS_WEB_APP_URL_SLIP 
-            : "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
-        
-        fetch(`${urlGasApps}?action=list_files&karyawan=${encodeURIComponent(namaKaryawan)}`)
-            .then(res => res.json())
-            .then(res => {
-                if (loading) loading.classList.add("hidden");
-                
-                const listFiles = res.files || res.data || [];
-                if (res.success && listFiles.length > 0) {
-                    daftarFileDriveCachedApotek = listFiles;
-                    selPeriode.innerHTML = `<option value="" disabled selected>-- Pilih Periode Slip Gaji --</option>`;
-                    
-                    listFiles.forEach((file, idx) => {
-                        let labelPeriode = file.name || file.fileName || "";
-                        labelPeriode = labelPeriode
-                            .replace(new RegExp(`^${namaKaryawan}_?`, 'i'), '')
-                            .replace(/^Slip_Gaji_Apotek_?/i, '')
-                            .replace(/\.(jpg|jpeg|png)$/gi, '')
-                            .replace(/_/g, ' ');
-                        
-                        if (!labelPeriode.trim()) labelPeriode = file.periode || `Slip Gaji ${idx + 1}`;
-                        
-                        selPeriode.insertAdjacentHTML("beforeend", `<option value="${idx}">${labelPeriode}</option>`);
-                    });
-                } else {
-                    selPeriode.innerHTML = `<option value="" disabled selected>Belum ada arsip slip gaji ditemukan</option>`;
+                if (syncStatus) {
+                    syncStatus.className = "text-center text-[11px] font-bold py-1.5 px-3 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200";
+                    syncStatus.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> Database PIN siap & aman`;
+                    setTimeout(() => syncStatus.classList.add("hidden"), 2500);
                 }
-            })
-            .catch(err => {
-                if (loading) loading.classList.add("hidden");
-                console.error("Gagal memuat list file Drive Apotek:", err);
-                if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Gagal terhubung ke Drive</option>`;
-            });
+            }
+        })
+        .catch(err => {
+            console.error("Gagal sinkronisasi PIN:", err);
+            if (syncStatus) {
+                syncStatus.className = "text-center text-[11px] font-bold py-1.5 px-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200";
+                syncStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Gagal koneksi PIN Spreadsheet`;
+            }
+        });
+}
+
+// 3. Opsi Karyawan Dipilih
+window.pilihKaryawanArsipApotek = function(valNama) {
+    if (!valNama) return;
+    karyawanAktifArsipApotek = valNama;
+    
+    const wrapperPin    = document.getElementById("arsip-wrapper-pin-apotek");
+    const wrapperView   = document.getElementById("arsip-wrapper-viewer-apotek");
+    const teksSapaan    = document.getElementById("arsip-teks-sapaan-pin-apotek");
+    const inputPin      = document.getElementById("arsip-input-pin-apotek");
+    const containerImg  = document.getElementById("arsip-container-gambar-apotek");
+    const msgError      = document.getElementById("arsip-msg-error-pin");
+    
+    if (wrapperView) wrapperView.classList.add("hidden");
+    if (containerImg) containerImg.classList.add("hidden");
+    if (msgError) msgError.classList.add("hidden");
+    if (inputPin) {
+        inputPin.value = "";
+        inputPin.classList.remove("border-rose-500");
+    }
+    
+    const namaLengkap = NAMA_LENGKAP_MAP[valNama] || valNama;
+
+    if (teksSapaan) {
+        teksSapaan.innerText = `VERIFIKASI PIN PRIVASI (${namaLengkap})`;
+    }
+    
+    if (wrapperPin) {
+        wrapperPin.classList.remove("hidden");
+        setTimeout(() => { if (inputPin) inputPin.focus(); }, 150);
+    }
+};
+
+// 4. Verifikasi PIN via GET ke Apps Script
+window.verifikasiPinKaryawanApotek = function() {
+    const inputPin  = document.getElementById("arsip-input-pin-apotek");
+    const btnSubmit = document.getElementById("arsip-btn-verifikasi-pin");
+    const msgError  = document.getElementById("arsip-msg-error-pin");
+    const pinUser   = inputPin ? inputPin.value.trim() : "";
+    
+    if (!karyawanAktifArsipApotek) {
+        alert("Silakan pilih nama karyawan Apotek terlebih dahulu!");
+        return;
     }
 
-    window.tampilkanGambarSlipApotek = function(indexSelected) {
-        const fileObj = daftarFileDriveCachedApotek[indexSelected];
-        if (!fileObj) return;
-        
-        const imgSlip      = document.getElementById("arsip-img-slip-apotek");
-        const btnUnduh      = document.getElementById("arsip-btn-unduh-apotek");
-        const containerImg = document.getElementById("arsip-container-gambar-apotek");
-        
-        const linkGambar = fileObj.url || fileObj.imageUrl || fileObj.fileUrl;
-        const linkDownload = fileObj.downloadUrl || linkGambar;
-        
-        if (imgSlip) imgSlip.src = linkGambar;
-        if (btnUnduh) {
-            btnUnduh.href = linkDownload;
-            btnUnduh.download = fileObj.name || fileObj.fileName || "Slip_Gaji_Apotek.jpg";
-        }
-        
-        if (containerImg) containerImg.classList.remove("hidden");
-    };
+    if (!pinUser) {
+        tampilkanErrorPin("PIN tidak boleh kosong!");
+        return;
+    }
+
+    const namaLengkap = NAMA_LENGKAP_MAP[karyawanAktifArsipApotek] || karyawanAktifArsipApotek;
+
+    // Loading State Button
+    if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memeriksa...`;
+    }
+
+    if (msgError) msgError.classList.add("hidden");
+    if (inputPin) inputPin.classList.remove("border-rose-500");
+
+    // Hit Endpoint doGet untuk validasi PIN secara realtime & akurat
+    const fetchUrl = `${URL_WEB_APP_PIN_NSA}?action=validatePin&nama=${encodeURIComponent(namaLengkap)}&pin=${encodeURIComponent(pinUser)}`;
+
+    fetch(fetchUrl)
+        .then(res => res.json())
+        .then(res => {
+            if (btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-key"></i> Buka Slip Gaji`;
+            }
+
+            if (res.status === "success" && res.valid) {
+                // PIN Benar
+                document.getElementById("arsip-wrapper-pin-apotek")?.classList.add("hidden");
+                document.getElementById("arsip-wrapper-viewer-apotek")?.classList.remove("hidden");
+                
+                muatDaftarPeriodeSlipApotek(namaLengkap);
+            } else {
+                // PIN Salah
+                tampilkanErrorPin(res.message || "PIN Privasi yang Anda masukkan salah!");
+            }
+        })
+        .catch(err => {
+            console.error("Error Validasi PIN:", err);
+            if (btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-key"></i> Buka Slip Gaji`;
+            }
+            tampilkanErrorPin("Gagal terhubung ke server PIN!");
+        });
+};
+
+function tampilkanErrorPin(pesan) {
+    const inputPin = document.getElementById("arsip-input-pin-apotek");
+    const msgError = document.getElementById("arsip-msg-error-pin");
+
+    if (msgError) {
+        msgError.innerText = pesan;
+        msgError.classList.remove("hidden");
+    }
+    if (inputPin) {
+        inputPin.classList.add("border-rose-500");
+        inputPin.value = "";
+        inputPin.focus();
+    }
+}
+
+// 5. Muat Slip Gaji dari Drive
+function muatDaftarPeriodeSlipApotek(namaKaryawan) {
+    const selPeriode   = document.getElementById("arsip-pilih-periode-apotek");
+    const loading      = document.getElementById("arsip-loading-gambar-apotek");
+    const containerImg = document.getElementById("arsip-container-gambar-apotek");
+    
+    if (containerImg) containerImg.classList.add("hidden");
+    if (loading) loading.classList.remove("hidden");
+    if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Mencari arsip file di NSA...</option>`;
+    
+    const urlGasApps = typeof GAS_WEB_APP_URL_SLIP !== 'undefined' 
+        ? GAS_WEB_APP_URL_SLIP 
+        : "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
+    
+    fetch(`${urlGasApps}?action=list_files&karyawan=${encodeURIComponent(namaKaryawan)}`)
+        .then(res => res.json())
+        .then(res => {
+            if (loading) loading.classList.add("hidden");
+            
+            const listFiles = res.files || res.data || [];
+            if (res.success && listFiles.length > 0) {
+                daftarFileDriveCachedApotek = listFiles;
+                selPeriode.innerHTML = `<option value="" disabled selected>-- Pilih Periode Slip Gaji --</option>`;
+                
+                listFiles.forEach((file, idx) => {
+                    let labelPeriode = file.name || file.fileName || "";
+                    labelPeriode = labelPeriode
+                        .replace(new RegExp(`^${namaKaryawan}_?`, 'i'), '')
+                        .replace(/^Slip_Gaji_Apotek_?/i, '')
+                        .replace(/\.(jpg|jpeg|png)$/gi, '')
+                        .replace(/_/g, ' ');
+                    
+                    if (!labelPeriode.trim()) labelPeriode = file.periode || `Slip Gaji ${idx + 1}`;
+                    
+                    selPeriode.insertAdjacentHTML("beforeend", `<option value="${idx}">${labelPeriode}</option>`);
+                });
+            } else {
+                selPeriode.innerHTML = `<option value="" disabled selected>Belum ada arsip slip gaji ditemukan</option>`;
+            }
+        })
+        .catch(err => {
+            if (loading) loading.classList.add("hidden");
+            console.error("Gagal memuat list file Drive Apotek:", err);
+            if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Gagal terhubung ke Drive</option>`;
+        });
+}
+
+window.tampilkanGambarSlipApotek = function(indexSelected) {
+    const fileObj = daftarFileDriveCachedApotek[indexSelected];
+    if (!fileObj) return;
+    
+    const imgSlip      = document.getElementById("arsip-img-slip-apotek");
+    const btnUnduh     = document.getElementById("arsip-btn-unduh-apotek");
+    const containerImg = document.getElementById("arsip-container-gambar-apotek");
+    
+    const linkGambar = fileObj.url || fileObj.imageUrl || fileObj.fileUrl;
+    const linkDownload = fileObj.downloadUrl || linkGambar;
+    
+    if (imgSlip) imgSlip.src = linkGambar;
+    if (btnUnduh) {
+        btnUnduh.href = linkDownload;
+        btnUnduh.download = fileObj.name || fileObj.fileName || "Slip_Gaji_Apotek.jpg";
+    }
+    
+    if (containerImg) containerImg.classList.remove("hidden");
+};
 });
+</script>
+
+<script>
+// ==========================================================
+// INTEGRASI FITUR GANTI PIN ASISTEN APOTEK
+// ==========================================================
+
+const GAS_URL_GANTI_PIN_APOTEK = "https://script.google.com/macros/s/AKfycbyF597NVC2ieRvrndrfrCITt1qoCZTuxQhQhk_OC9ghC04WLcsWWZ6F4x-vflh2HbyeFg/exec";
+
+const MAP_NAMA_LENGKAP_GANTI_PIN = {
+    "Eka": "Eka Ainun Nisa",
+    "Dea": "Dea Nove Asyari",
+    "Fadilla": "Fadilla Nailul Wafa"
+};
+
+// Buka Modal Ganti PIN
+window.bukaModalGantiPinApotek = function() {
+    const modal = document.getElementById("modal-ganti-pin-apotek");
+    if (!modal) return;
+    
+    resetModalGantiPinApotek();
+    modal.classList.remove("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform")?.classList.remove("scale-95");
+    modal.querySelector(".transform")?.classList.add("scale-100");
+};
+
+// Tutup Modal Ganti PIN
+window.tutupModalGantiPinApotek = function() {
+    const modal = document.getElementById("modal-ganti-pin-apotek");
+    if (!modal) return;
+    
+    modal.classList.add("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform")?.classList.add("scale-95");
+    modal.querySelector(".transform")?.classList.remove("scale-100");
+    resetModalGantiPinApotek();
+};
+
+function resetModalGantiPinApotek() {
+    const form = document.getElementById("form-ganti-pin-apotek");
+    const msgStatus = document.getElementById("ganti-msg-status-pin");
+    const btnSubmit = document.getElementById("ganti-btn-simpan-pin");
+
+    if (form) form.reset();
+    if (msgStatus) {
+        msgStatus.className = "hidden text-center text-[11px] font-bold py-2.5 px-3 rounded-xl transition-all";
+        msgStatus.innerText = "";
+    }
+    if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan PIN Baru`;
+    }
+}
+
+// Proses Form Penggantian PIN (POST ke Apps Script)
+window.prosesGantiPinApotek = function(e) {
+    e.preventDefault();
+
+    const selKaryawan  = document.getElementById("ganti-pilih-karyawan-apotek");
+    const inputOldPin  = document.getElementById("ganti-input-pin-lama");
+    const inputNewPin  = document.getElementById("ganti-input-pin-baru");
+    const inputConfirm = document.getElementById("ganti-input-pin-konfirmasi");
+    const btnSubmit    = document.getElementById("ganti-btn-simpan-pin");
+
+    const valKaryawan = selKaryawan ? selKaryawan.value : "";
+    const oldPin      = inputOldPin ? inputOldPin.value.trim() : "";
+    const newPin      = inputNewPin ? inputNewPin.value.trim() : "";
+    const confirmPin  = inputConfirm ? inputConfirm.value.trim() : "";
+
+    // Validasi Form Client-Side
+    if (!valKaryawan) {
+        tampilkanStatusGantiPin("Pilih nama Anda terlebih dahulu!", "error");
+        return;
+    }
+
+    if (newPin.length !== 4) {
+        tampilkanStatusGantiPin("PIN Baru harus 4 digit angka/karakter!", "error");
+        if (inputNewPin) inputNewPin.focus();
+        return;
+    }
+
+    if (newPin !== confirmPin) {
+        tampilkanStatusGantiPin("Konfirmasi PIN baru tidak cocok!", "error");
+        if (inputConfirm) {
+            inputConfirm.value = "";
+            inputConfirm.focus();
+        }
+        return;
+    }
+
+    const namaLengkap = MAP_NAMA_LENGKAP_GANTI_PIN[valKaryawan] || valKaryawan;
+
+    // Loading State
+    if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memperbarui PIN...`;
+    }
+    tampilkanStatusGantiPin("Menghubungkan ke database NSA...", "info");
+
+    const payload = {
+        action: "changePin",
+        nama: namaLengkap,
+        oldPin: oldPin,
+        newPin: newPin
+    };
+
+    // Kirim POST Request ke Apps Script (Content-Type text/plain menghindari preflight CORS)
+    fetch(GAS_URL_GANTI_PIN_APOTEK, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (btnSubmit) btnSubmit.disabled = false;
+
+        if (res.status === "success") {
+            tampilkanStatusGantiPin("PIN Berhasil diperbarui! Silakan gunakan PIN baru Anda.", "success");
+            if (btnSubmit) btnSubmit.innerHTML = `<i class="fa-solid fa-check"></i> Berhasil Diperbarui`;
+            
+            // Auto close modal setelah 2.5 detik
+            setTimeout(() => {
+                tutupModalGantiPinApotek();
+            }, 2500);
+        } else {
+            tampilkanStatusGantiPin(res.message || "Gagal memperbarui PIN!", "error");
+            if (btnSubmit) btnSubmit.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan PIN Baru`;
+        }
+    })
+    .catch(err => {
+        console.error("Error Ganti PIN:", err);
+        if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan PIN Baru`;
+        }
+        tampilkanStatusGantiPin("Gagal terhubung ke server database!", "error");
+    });
+};
+
+function tampilkanStatusGantiPin(pesan, tipe) {
+    const msgStatus = document.getElementById("ganti-msg-status-pin");
+    if (!msgStatus) return;
+
+    msgStatus.classList.remove("hidden");
+
+    if (tipe === "error") {
+        msgStatus.className = "text-center text-[11px] font-bold py-2.5 px-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 animate-pulse";
+        msgStatus.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> ${pesan}`;
+    } else if (tipe === "success") {
+        msgStatus.className = "text-center text-[11px] font-bold py-2.5 px-3 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200";
+        msgStatus.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> ${pesan}`;
+    } else {
+        msgStatus.className = "text-center text-[11px] font-bold py-2.5 px-3 rounded-xl bg-amber-50 text-amber-700 border border-amber-200";
+        msgStatus.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> ${pesan}`;
+    }
+}
 </script>
 
 <script>
@@ -6957,7 +7227,7 @@ function toggleMenuApotekSidebar() {
 </script>
 
 <!-- ========================================================== -->
-<!-- MODAL UTAMA: ARSIP SLIP GAJI ASISTEN APOTEK NURJAYA       -->
+<!-- MODAL UTAMA: ARSIP SLIP GAJI ASISTEN APOTEK NURJAYA        -->
 <!-- ========================================================== -->
 <div id="modal-arsip-slip-gaji-apotek" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[15000] flex items-center justify-center p-3 sm:p-4 opacity-0 pointer-events-none transition-all duration-300">
     <div class="bg-white w-full max-w-lg rounded-[28px] border-4 border-pink-500 shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 flex flex-col max-h-[90vh]">
@@ -6981,6 +7251,11 @@ function toggleMenuApotekSidebar() {
         <!-- BODY MODAL CONTAINER -->
         <div class="p-4 sm:p-5 overflow-y-auto space-y-4 bg-slate-50/50">
             
+            <!-- INDIKATOR SYNC DATA PIN -->
+            <div id="arsip-pin-sync-status" class="hidden text-center text-[11px] font-bold py-1.5 px-3 rounded-xl transition-all">
+                <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Menyinkronkan keamanan PIN...
+            </div>
+
             <!-- SELEKSI NAMA KARYAWAN -->
             <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm space-y-2">
                 <label for="arsip-pilih-karyawan-apotek" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Asisten Apoteker:</label>
@@ -7001,10 +7276,14 @@ function toggleMenuApotekSidebar() {
                     <h4 id="arsip-teks-sapaan-pin-apotek" class="text-xs font-black text-slate-800 uppercase tracking-wide">VERIFIKASI PIN PRIVASI</h4>
                     <p class="text-[11px] text-slate-500 font-medium mt-0.5">Masukkan 4 digit PIN privasi untuk membuka arsip slip gaji.</p>
                 </div>
-                <div class="flex justify-center gap-2 max-w-[220px] mx-auto pt-1">
-                    <input type="password" id="arsip-input-pin-apotek" maxlength="4" placeholder="••••" inputmode="numeric" class="w-full text-center bg-slate-50 border-2 border-slate-300 text-slate-900 font-black text-xl py-2 rounded-xl tracking-[0.4em] focus:border-pink-600 focus:bg-white focus:outline-none shadow-inner">
+                
+                <div class="flex flex-col items-center gap-1 max-w-[220px] mx-auto pt-1">
+                    <input type="password" id="arsip-input-pin-apotek" maxlength="4" placeholder="••••" inputmode="numeric" class="w-full text-center bg-slate-50 border-2 border-slate-300 text-slate-900 font-black text-xl py-2 rounded-xl tracking-[0.4em] focus:border-pink-600 focus:bg-white focus:outline-none shadow-inner transition-all">
+                    <!-- Pesan Error / Validasi PIN -->
+                    <p id="arsip-msg-error-pin" class="hidden text-[11px] font-bold text-rose-600 animate-pulse mt-1"></p>
                 </div>
-                <button type="button" onclick="verifikasiPinKaryawanApotek()" class="w-full bg-pink-600 hover:bg-pink-700 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+
+                <button type="button" id="arsip-btn-verifikasi-pin" onclick="verifikasiPinKaryawanApotek()" class="w-full bg-pink-600 hover:bg-pink-700 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-key"></i> Buka Slip Gaji
                 </button>
             </div>
@@ -8092,6 +8371,87 @@ function toggleExpandShiftWidget() {
             <h5 class="text-xs font-black text-slate-800 uppercase tracking-wide">Memuat Data...</h5>
             <p class="text-[10px] text-slate-500 mt-0.5">Mengambil jadwal minggu selanjutnya dari Spreadsheet</p>
         </div>
+    </div>
+</div>
+
+<!-- ========================================================== -->
+<!-- MODAL: GANTI PIN PRIVASI ASISTEN APOTEK NURJAYA            -->
+<!-- ========================================================== -->
+<div id="modal-ganti-pin-apotek" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[15000] flex items-center justify-center p-3 sm:p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white w-full max-w-lg rounded-[28px] border-4 border-pink-500 shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 flex flex-col max-h-[90vh]">
+        
+        <!-- HEADER MODAL -->
+        <div class="p-4 sm:p-5 border-b border-pink-100 bg-gradient-to-r from-white via-pink-50/40 to-pink-100/30 flex justify-between items-center flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-8 bg-pink-600 rounded-full"></div>
+                <div>
+                    <h3 class="text-sm sm:text-base font-black text-slate-800 uppercase tracking-tight flex items-center gap-2">
+                        <i class="fa-solid fa-key text-pink-600"></i> GANTI PIN PRIVASI
+                    </h3>
+                    <p class="text-[10px] sm:text-[11px] text-pink-700 font-bold uppercase tracking-wider">Apotek Nurjaya</p>
+                </div>
+            </div>
+            <button type="button" onclick="tutupModalGantiPinApotek()" class="w-9 h-9 bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600 rounded-xl flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-lg font-bold"></i>
+            </button>
+        </div>
+
+        <!-- BODY MODAL CONTAINER -->
+        <div class="p-4 sm:p-5 overflow-y-auto space-y-4 bg-slate-50/50">
+            
+            <!-- INFORMASI SINGKAT -->
+            <div class="bg-pink-50/70 border border-pink-200 p-3.5 rounded-2xl flex items-start gap-3">
+                <i class="fa-solid fa-shield-halved text-pink-600 text-lg mt-0.5"></i>
+                <p class="text-[11px] text-slate-600 font-medium leading-relaxed">
+                    Perbarui PIN privasi secara berkala untuk menjaga kerahasiaan arsip slip gaji Anda di NSA Cloud.
+                </p>
+            </div>
+
+            <!-- FORM GANTI PIN -->
+            <form id="form-ganti-pin-apotek" onsubmit="prosesGantiPinApotek(event)" class="space-y-3.5">
+                
+                <!-- SELEKSI NAMA KARYAWAN -->
+                <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-sm space-y-1.5">
+                    <label for="ganti-pilih-karyawan-apotek" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Anda:</label>
+                    <select id="ganti-pilih-karyawan-apotek" required class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-pink-600 focus:ring-1 focus:ring-pink-600 focus:outline-none transition-all cursor-pointer">
+                        <option value="" disabled selected>-- Pilih Karyawan Apotek --</option>
+                        <option value="Eka">Eka Ainun Nisa</option>
+                        <option value="Dea">Dea Nove Asyari</option>
+                        <option value="Fadilla">Fadilla Nailul Wafa</option>
+                    </select>
+                </div>
+
+                <!-- INPUT PIN LAMA -->
+                <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-sm space-y-1.5">
+                    <label for="ganti-input-pin-lama" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">PIN Lama Saat Ini:</label>
+                    <input type="password" id="ganti-input-pin-lama" maxlength="4" placeholder="••••" inputmode="numeric" required class="w-full text-center bg-slate-50 border border-slate-300 text-slate-900 font-black text-lg py-2 rounded-xl tracking-[0.3em] focus:border-pink-600 focus:bg-white focus:outline-none shadow-inner transition-all">
+                </div>
+
+                <!-- INPUT PIN BARU & KONFIRMASI -->
+                <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-sm space-y-3">
+                    <div>
+                        <label for="ganti-input-pin-baru" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">PIN Baru (4 Digit):</label>
+                        <input type="password" id="ganti-input-pin-baru" maxlength="4" placeholder="••••" inputmode="numeric" required class="w-full text-center bg-slate-50 border border-slate-300 text-slate-900 font-black text-lg py-2 rounded-xl tracking-[0.3em] focus:border-pink-600 focus:bg-white focus:outline-none shadow-inner transition-all mt-1.5">
+                    </div>
+
+                    <div>
+                        <label for="ganti-input-pin-konfirmasi" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Konfirmasi PIN Baru:</label>
+                        <input type="password" id="ganti-input-pin-konfirmasi" maxlength="4" placeholder="••••" inputmode="numeric" required class="w-full text-center bg-slate-50 border border-slate-300 text-slate-900 font-black text-lg py-2 rounded-xl tracking-[0.3em] focus:border-pink-600 focus:bg-white focus:outline-none shadow-inner transition-all mt-1.5">
+                    </div>
+                </div>
+
+                <!-- PESAN STATUS / ERROR / SUKSES -->
+                <div id="ganti-msg-status-pin" class="hidden text-center text-[11px] font-bold py-2.5 px-3 rounded-xl transition-all"></div>
+
+                <!-- TOMBOL SUBMIT -->
+                <button type="submit" id="ganti-btn-simpan-pin" class="w-full bg-pink-600 hover:bg-pink-700 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan PIN Baru
+                </button>
+
+            </form>
+
+        </div>
+
     </div>
 </div>
 </body>
