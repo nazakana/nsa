@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-	<script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 	
     
 <style>
@@ -1951,6 +1950,7 @@ body {
                 <div class="pt-2 border-t border-dashed border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3 mt-3">
                     <div class="text-center sm:text-left">
                         <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Pengecekan Riwayat Pengisian</p>
+                        <p class="text-[12px] text-gray-600 font-black uppercase">Pratinjau Kartu Presensi</p>
                     </div>
                     <button type="button" id="btn-buka-modal" onclick="javascript:void(0)"
                         class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs rounded-[16px] uppercase tracking-wider shadow-md shadow-blue-600/10 transition-all duration-200 flex items-center justify-center gap-2">
@@ -3768,7 +3768,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const mirrorCatatanFinal = document.getElementById("mirror-catatan-final");
 
     let namaPeriodeTerdeteksi = "";
-    let panzoomInstance = null;
 
     if (inputTanggal) {
         inputTanggal.value = new Date().toISOString().split('T')[0];
@@ -3789,46 +3788,32 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================================
-    // INISIALISASI & FUNGSI PANZOOM JS
+    // FUNGSI RESPONSIVE AUTO-FIT SCALE
     // =========================================================================
-    const areaCetak = document.getElementById("area-cetak-pdf");
-    const wrapperViewport = document.getElementById("wrapper-viewport-cetak");
+    function paskanKartuKeLayarHP() {
+        const areaCetak = document.getElementById("area-cetak-pdf");
+        if (!areaCetak) return;
 
-    if (areaCetak && typeof Panzoom !== "undefined") {
-        panzoomInstance = Panzoom(areaCetak, {
-            maxScale: 3,
-            minScale: 0.3,
-            contain: 'outside',
-            startScale: 1,
-            cursor: 'move'
-        });
-
-        if (wrapperViewport) {
-            wrapperViewport.addEventListener('wheel', panzoomInstance.zoomWithWheel);
-        }
-    }
-
-    function autoFitPanzoom() {
-        if (!panzoomInstance || !wrapperViewport) return;
-        const lebarContainer = wrapperViewport.clientWidth;
+        const lebarContainerModal = areaCetak.parentElement.clientWidth - 16;
         const lebarAsliKartu = 756;
 
-        if (lebarContainer < lebarAsliKartu) {
-            const skalaOtomatis = lebarContainer / lebarAsliKartu;
-            panzoomInstance.zoom(skalaOtomatis, { animate: false });
-            panzoomInstance.pan(0, 0, { animate: false });
+        if (lebarContainerModal < lebarAsliKartu) {
+            const rasioSkala = lebarContainerModal / lebarAsliKartu;
+            areaCetak.style.transform = `scale(${rasioSkala})`;
+            areaCetak.style.transformOrigin = "top left";
+            
+            areaCetak.parentElement.style.height = `${756 * rasioSkala}px`;
+            areaCetak.parentElement.style.width = `${756 * rasioSkala}px`;
+            areaCetak.parentElement.style.margin = "0 auto";
         } else {
-            panzoomInstance.reset({ animate: false });
+            areaCetak.style.transform = "scale(1)";
+            areaCetak.style.transformOrigin = "top center";
+            areaCetak.parentElement.style.height = "756px";
+            areaCetak.parentElement.style.width = "756px";
         }
     }
 
-    function resetPanzoomMurni() {
-        if (panzoomInstance) {
-            panzoomInstance.reset({ animate: false });
-        }
-    }
-
-    window.addEventListener("resize", autoFitPanzoom);
+    window.addEventListener("resize", paskanKartuKeLayarHP);
 
     // =========================================================================
     // FUNGSI 1: LOGIKA TOGGLE FORM UTAMA (YA/TIDAK HADIR)
@@ -3958,6 +3943,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             mirrorCatatanFinal.innerHTML = adaIsi ? htmlListChips : `<li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- BELUM ADA CATATAN TAMBAHAN -</li>`;
         }
+        paskanKartuKeLayarHP();
     }
 
     function inisialisasiEventCatatanChip() {
@@ -4011,7 +3997,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
         if (tabelKananBody) tabelKananBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
         
-        setTimeout(autoFitPanzoom, 100);
+        setTimeout(paskanKartuKeLayarHP, 50);
 
         fetch(`${API_URL_PRESENSI}?karyawan=${karyawanTerpilih}`)
             .then(res => res.json())
@@ -4133,7 +4119,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             sinkronisasiTeksKeMirror();
-            resetPanzoomMurni();
 
             const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
             const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
@@ -4142,6 +4127,8 @@ document.addEventListener("DOMContentLoaded", function() {
             btnUnduhPdf.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> Merender PDF...`;
 
             const styleAsli = elementTarget.getAttribute("style") || "";
+            elementTarget.style.setProperty("transform", "none", "important");
+            elementTarget.style.setProperty("margin-bottom", "0px", "important");
 
             const opsiSetelan = {
                 margin:       0,
@@ -4154,13 +4141,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
             html2pdf().set(opsiSetelan).from(elementTarget).save().then(() => {
                 elementTarget.setAttribute("style", styleAsli);
-                autoFitPanzoom();
                 btnUnduhPdf.removeAttribute("disabled");
                 btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
             }).catch(err => {
                 console.error(err);
                 elementTarget.setAttribute("style", styleAsli);
-                autoFitPanzoom();
                 btnUnduhPdf.removeAttribute("disabled");
                 btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
             });
@@ -4180,7 +4165,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             sinkronisasiTeksKeMirror();
-            resetPanzoomMurni();
 
             const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
             const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
@@ -4192,6 +4176,8 @@ document.addEventListener("DOMContentLoaded", function() {
             btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Merender Gambar...`;
 
             const styleAsli = elementTarget.getAttribute("style") || "";
+            elementTarget.style.setProperty("transform", "none", "important");
+            elementTarget.style.setProperty("margin-bottom", "0px", "important");
 
             const opsiSetelan = {
                 margin:       0,
@@ -4204,7 +4190,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
             html2pdf().set(opsiSetelan).from(elementTarget).outputImg('dataurl').then(function(dataUri) {
                 elementTarget.setAttribute("style", styleAsli);
-                autoFitPanzoom();
                 
                 const base64String = dataUri.split(',')[1];
                 
@@ -4219,7 +4204,6 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(err => {
                 console.error("Error ekspor/upload gambar:", err);
                 elementTarget.setAttribute("style", styleAsli);
-                autoFitPanzoom();
                 alert("Gagal merender/mengirim Gambar: " + err.message);
                 resetStatusTombolUpload();
             });
@@ -5331,8 +5315,6 @@ window.alert = function(message) {
 
     </div>
 </div>
-
-
 <!-- MODAL PREVIEW KARTU PRESENSI PDF -->
 <div id="modal-kartu-presensi" class="fixed inset-0 bg-emerald-950/60 backdrop-blur-md z-[13000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
     
@@ -5352,7 +5334,7 @@ window.alert = function(message) {
 
         <div class="p-5 overflow-y-auto overflow-x-hidden modal-scroll-container flex-1 bg-slate-950 pattern-grid-lg flex justify-center items-start">
             
-            <div id="wrapper-viewport-cetak" class="relative overflow-hidden flex items-center justify-center w-full max-w-[756px] h-[756px] mx-auto rounded-[24px]">
+            <div id="wrapper-viewport-cetak" style="width: 100%; max-width: 756px;">
                 
                 <div id="area-cetak-pdf" class="bg-white text-slate-900 pt-4 px-6 pb-6 rounded-[24px] border border-slate-200 shadow-2xl flex flex-col justify-between [color-scheme:light]" style="width: 756px; height: 756px; min-width: 756px; min-height: 756px; font-family: 'Arial', sans-serif; box-sizing: border-box;">
                     
