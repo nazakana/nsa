@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 	
     
 <style>
@@ -1279,41 +1280,7 @@ body {
     box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.5);
 }
 
-#wrapper-viewport-cetak-apotek {
-    position: relative;
-    overflow: visible;
-    flex-shrink: 0;
-}
 
-#area-cetak-pdf-apotek {
-    will-change: transform;
-    transform-origin: top left;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-}
-
-#area-cetak-pdf-apotek .input-catatan-chip-apotek {
-    -webkit-user-select: text;
-    user-select: text;
-}
-
-@media (max-width: 640px) {
-    #wrapper-viewport-cetak-apotek {
-        width: 100% !important;
-        max-width: 756px !important;
-    }
-
-    #area-cetak-pdf-apotek {
-        touch-action: none;
-    }
-
-    #area-cetak-pdf-apotek .input-catatan-chip-apotek {
-        touch-action: auto !important;
-        -webkit-user-select: text !important;
-        user-select: text !important;
-    }
-}
 
 /* OVERLAY TRANSISI */
 #portal-transition {
@@ -1636,332 +1603,9 @@ body {
                     </div>
                     <i class="fas fa-chevron-right chevron-right"></i>
                 </button>
-				
-				<!-- Wrapper Modal Presensi Apotek Nurjaya -->
-<div id="wrapper_form_presensi_apotek" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[12000] flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300 hidden">
-    
-    <!-- Kartu Modal Utama -->
-    <div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-[28px] shadow-2xl border border-slate-100 flex flex-col overflow-hidden relative transform scale-95 transition-all duration-300">
-        
-        <!-- Header Modal Fixed -->
-        <div class="flex items-center justify-between bg-pink-50/90 p-4 px-6 border-b border-pink-100 flex-shrink-0">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-pink-600 text-white flex items-center justify-center font-black text-sm shadow-md">
-                    <i class="fa-solid fa-prescription-bottle-medical"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-black text-gray-800 uppercase">Presensi Apotek Nurjaya</p>
-                    <p class="text-[11px] text-pink-700 font-bold">Terverifikasi via Pemindaian Wajah</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <button type="button" onclick="bukaModalFaceScanner()" class="px-3 py-2 bg-pink-600 hover:bg-pink-700 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera"></i> Scan
-                </button>
-                <button type="button" onclick="tutupFormPresensiApotekModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-rose-100 hover:text-rose-600 text-slate-600 flex items-center justify-center transition-colors">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-        </div>
-            </div>
-			
-
-<!-- Footer Penutup Menempel Lengket ke Bawah -->
-<div class="panel-footer">
-    <div class="nsa-bottom-wave-wrapper">
-        <svg viewBox="0 0 500 80" preserveAspectRatio="none">
-            <defs>
-                <linearGradient id="nsaWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#10b981" />
-                    <stop offset="100%" stop-color="#047857" />
-                </linearGradient>
-            </defs>
-            <path d="M0,30 C150,60 350,0 500,30 L500,80 L0,80 Z" fill="url(#nsaWaveGrad)" opacity="0.85"></path>
-            <path d="M0,45 C200,15 300,55 500,35 L500,80 L0,80 Z" fill="#047857" opacity="0.6"></path>
-        </svg>
-
-        <!-- Teks Copyright Di dalam Wave -->
-        <div class="copyright-text">© 2026 NURJAYA SMART ARCHIVE. ALL RIGHTS RESERVED.</div>
-    </div>
-</div>
-        </div>
-
-
-
-    </div>
-	
-
-</div>
-
-
-
-<!-- Modal Pengenalan Wajah -->
-<div id="modal-face-scanner" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[30000] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-    <div class="bg-white w-full max-w-md rounded-[28px] p-6 shadow-2xl border border-slate-100 flex flex-col items-center space-y-4 relative transform scale-95 transition-all duration-300">
-        
-        <div class="w-full flex justify-between items-center pb-2 border-b border-slate-100">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-face-viewfinder text-emerald-600 text-xl animate-pulse"></i>
-                <h3 class="font-black text-slate-800 text-sm uppercase tracking-wider">Pemindaian Wajah Karyawan</h3>
-            </div>
-            <button type="button" onclick="tutupModalFaceScanner()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 hover:text-rose-600 text-slate-500 flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <div class="relative w-full aspect-square bg-slate-950 rounded-[20px] overflow-hidden flex items-center justify-center shadow-inner border-2 border-slate-200">
-            <video id="face-video" autoplay muted playsinline class="w-full h-full object-cover transform -scale-x-100"></video>
-            <canvas id="face-canvas" class="absolute inset-0 w-full h-full pointer-events-none transform -scale-x-100"></canvas>
-
-            <div id="face-loading" class="absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center text-white space-y-3 z-10">
-                <i class="fa-solid fa-circle-notch animate-spin text-3xl text-emerald-400"></i>
-                <span id="face-loading-text" class="text-xs font-bold tracking-wide">Memuat Model Deteksi Wajah...</span>
-            </div>
-        </div>
-
-        <div class="w-full text-center space-y-1">
-            <p id="face-status-text" class="text-xs font-black text-emerald-600 uppercase tracking-wide">Arahkan Wajah Anda ke Kamera</p>
-            <p class="text-[11px] text-slate-400 font-medium">Sistem akan mencocokkan identitas secara otomatis</p>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-<!-- Wrapper Pop-up Modal Presensi yang Sudah Diperbaiki (Fixed Full Overlay + Profile Card) -->
-<div id="wrapper_form_presensi" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[12000] flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300 hidden">
-    
-    <!-- Kartu Modal Utama -->
-    <div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-[28px] shadow-2xl border border-slate-100 flex flex-col overflow-hidden relative transform scale-95 transition-all duration-300">
-        
-        <!-- Header Modal Fixed -->
-        <div class="flex items-center justify-between bg-emerald-50/90 p-4 px-6 border-b border-emerald-100 flex-shrink-0">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-md">
-                    <i class="fa-solid fa-user-check"></i>
-                </div>
-                <div>
-                    <p class="text-xs font-black text-gray-800 uppercase">Presensi Nurjaya Abadi Photocopy</p>
-                    <p class="text-[11px] text-emerald-700 font-bold">Terverifikasi via Pemindaian Wajah</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <button type="button" onclick="bukaModalFaceScanner()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera"></i> Scan
-                </button>
-                <button type="button" onclick="tutupFormPresensiModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-rose-100 hover:text-rose-600 text-slate-600 flex items-center justify-center transition-colors">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Body Form (Scrollable) -->
-        <div class="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1 text-gray-700">
-            
-            <!-- AREA CARD PROFIL KARYAWAN TERDETEKSI (Menggantikan Dropdown) -->
-            <div class="space-y-2">
-                <p class="text-[11px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-solid fa-id-card text-emerald-600"></i> Identitas Karyawan Terverifikasi
-                </p>
-
-                <!-- Container Card Dadan (Hidden by default) -->
-                <div id="card-profile-Dadan" class="card-karyawan-profile hidden bg-[#E8F1EC] p-4 sm:p-5 rounded-[28px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
-                    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL')">
-                        <img src="https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL" 
-                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
-                        <div class="absolute bottom-0 right-0 bg-emerald-600 w-5 h-5 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px]">
-                            <i class="fa-solid fa-magnifying-glass-plus"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
-                        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Dadan Nurfaizal</h5>
-                        
-                        <div class="flex items-center gap-1.5 mt-2">
-                            <a href="https://wa.me/6283130578886" target="_blank"
-                               class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
-                               title="Hubungi WhatsApp">
-                                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
-                            </a>
-                            <span class="inline-flex items-center h-7 text-[10px] font-black text-emerald-800 uppercase tracking-widest bg-white border border-[#B3D3C4] px-3 rounded-xl shadow-xs">
-                                Staf / Operator
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
-                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
-                        <span id="label-periode-Dadan" class="text-xs font-black text-emerald-800">Memuat...</span>
-                    </div>
-                </div>
-
-                <!-- Container Card Syamsi (Hidden by default) -->
-                <div id="card-profile-Syamsi" class="card-karyawan-profile hidden bg-[#E8F1EC] p-4 sm:p-5 rounded-[28px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
-                    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ')">
-                        <img src="https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ" 
-                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
-                        <div class="absolute bottom-0 right-0 bg-emerald-600 w-5 h-5 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px]">
-                            <i class="fa-solid fa-magnifying-glass-plus"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
-                        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Syamsi Nurhakim</h5>
-                        
-                        <div class="flex items-center gap-1.5 mt-2">
-                            <a href="https://wa.me/6282126333381" target="_blank"
-                               class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
-                               title="Hubungi WhatsApp">
-                                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
-                            </a>
-                            <span class="inline-flex items-center h-7 text-[10px] font-black text-emerald-800 uppercase tracking-widest bg-white border border-[#B3D3C4] px-3 rounded-xl shadow-xs">
-                                Staf / Operator
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
-                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
-                        <span id="label-periode-Syamsi" class="text-xs font-black text-emerald-800">Memuat...</span>
-                    </div>
-                </div>
-
-                <!-- Input Hidden Nama Karyawan untuk Kebutuhan Kirim Form ke Google Apps Script -->
-                <input type="hidden" id="presensi-karyawan" name="presensi-karyawan" value="">
-            </div>
-
-            <!-- Form Isian Presensi -->
-            <form id="form-presensi-nsa" class="space-y-5">
-                <div class="p-4 sm:p-5 bg-emerald-50 rounded-[24px] border border-emerald-200/80 shadow-sm space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="space-y-1.5">
-                            <label for="presensi-tanggal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-calendar-day text-green-600"></i> Hari / Tanggal Kerja
-                            </label>
-                            <input type="date" id="presensi-tanggal" required 
-                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-circle-check text-green-600"></i> Status Kehadiran
-                            </label>
-                            <div class="relative">
-                                <select id="presensi-kehadiran" required 
-                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                                    <option value="YA">YA (Hadir Kerja)</option>
-                                    <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="border-dashed border-emerald-200/60 my-1">
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="space-y-1.5">
-                            <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
-                            </label>
-                            <div class="relative">
-                                <select id="presensi-jadwal" required 
-                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                                    <option value="2">2 Karyawan (Full Team)</option>
-                                    <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
-                            <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal
-                            </label>
-                            <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
-                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        </div>
-                    </div>
-
-                    <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
-                        <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-exclamation text-green-600"></i> Alasan Tidak Hadir
-                        </label>
-                        <input type="text" id="presensi-alasan-absen" placeholder="Contoh: jatah libur, izin, sakit" disabled 
-                            class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                    </div>
-                </div>
-
-                <div class="p-4 sm:p-5 bg-orange-500 rounded-[24px] border border-orange-600 shadow-md space-y-3">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="space-y-1.5">
-                            <label for="presensi-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-business-time text-orange-100"></i> Potongan Jam Kerja <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
-                            </label>
-                            <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00" 
-                                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        </div>
-                        
-                        <div class="space-y-1.5">
-                            <label for="presensi-alasan-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-comment-dots text-orange-100"></i> Alasan Potongan Jam
-                            </label>
-                            <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk" 
-                                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4 sm:p-5 bg-blue-500 rounded-[24px] border border-blue-600 shadow-md space-y-3">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="space-y-1.5">
-                            <label for="presensi-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-user-clock text-blue-100"></i> Tambahan Jam / Overtime
-                            </label>
-                            <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00" 
-                                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        </div>
-                        
-                        <div class="space-y-1.5">
-                            <label for="presensi-alasan-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-file-signature text-blue-100"></i> Alasan Tambahan Jam
-                            </label>
-                            <input type="text" id="presensi-alasan-tambahan" placeholder="Contoh: tutup toko jam 20.45" 
-                                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pt-3 border-t border-gray-100 flex justify-end">
-                    <button type="submit" id="btn-submit-presensi"
-                        class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi
-                    </button>
-                </div>
-                
-                <div class="pt-2 border-t border-dashed border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3 mt-3">
-                    <div class="text-center sm:text-left">
-                        <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Pengecekan Riwayat Pengisian</p>
-                        <p class="text-[12px] text-gray-600 font-black uppercase">Pratinjau Kartu Presensi</p>
-                    </div>
-                    <button type="button" id="btn-buka-modal" onclick="javascript:void(0)"
-                        class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs rounded-[16px] uppercase tracking-wider shadow-md shadow-blue-600/10 transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-address-card text-sm"></i> Tampilkan Presensi Bulan Ini
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+			</div>
+		</div>
+	</div>
 </div>
 
 
@@ -3768,6 +3412,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const mirrorCatatanFinal = document.getElementById("mirror-catatan-final");
 
     let namaPeriodeTerdeteksi = "";
+    let panzoomInstance = null;
 
     if (inputTanggal) {
         inputTanggal.value = new Date().toISOString().split('T')[0];
@@ -3787,33 +3432,106 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+// =========================================================================
+    // INISIALISASI & FUNGSI PANZOOM JS (SISTEM BOUNDS GALERI PRESISI)
     // =========================================================================
-    // FUNGSI RESPONSIVE AUTO-FIT SCALE
-    // =========================================================================
-    function paskanKartuKeLayarHP() {
-        const areaCetak = document.getElementById("area-cetak-pdf");
-        if (!areaCetak) return;
+    const areaCetak = document.getElementById("area-cetak-pdf");
+    const wrapperViewport = document.getElementById("wrapper-viewport-cetak");
+    let lebarLayarSebelumnya = window.innerWidth;
+    let skalaFitUtama = 1;
 
-        const lebarContainerModal = areaCetak.parentElement.clientWidth - 16;
-        const lebarAsliKartu = 756;
+    if (areaCetak && typeof Panzoom !== "undefined") {
+        panzoomInstance = Panzoom(areaCetak, {
+            maxScale: 4.0,
+            minScale: 0.1,
+            startScale: 1,
+            contain: 'none',
+            cursor: 'move'
+        });
 
-        if (lebarContainerModal < lebarAsliKartu) {
-            const rasioSkala = lebarContainerModal / lebarAsliKartu;
-            areaCetak.style.transform = `scale(${rasioSkala})`;
-            areaCetak.style.transformOrigin = "top left";
+        if (wrapperViewport) {
+            wrapperViewport.addEventListener('wheel', panzoomInstance.zoomWithWheel);
             
-            areaCetak.parentElement.style.height = `${756 * rasioSkala}px`;
-            areaCetak.parentElement.style.width = `${756 * rasioSkala}px`;
-            areaCetak.parentElement.style.margin = "0 auto";
-        } else {
-            areaCetak.style.transform = "scale(1)";
-            areaCetak.style.transformOrigin = "top center";
-            areaCetak.parentElement.style.height = "756px";
-            areaCetak.parentElement.style.width = "756px";
+            // Jaga pembatas geser hanya ketika menyentuh batas luar kartu
+            areaCetak.addEventListener('panzoomend', function() {
+                if (!panzoomInstance) return;
+                
+                const scale = panzoomInstance.getScale();
+                const pan = panzoomInstance.getPan();
+                
+                // Jika masih dalam skala awal (fit screen), kunci posisi ke tengah murni
+                if (Math.abs(scale - skalaFitUtama) < 0.02) {
+                    panzoomInstance.pan(0, 0, { animate: true });
+                    return;
+                }
+
+                // Jika sedang di-zoom, hitung batas area geser berdasarkan ukuran layar nyata
+                const containerW = wrapperViewport.clientWidth || (window.innerWidth - 32);
+                const containerH = wrapperViewport.clientHeight || (756 * skalaFitUtama);
+                
+                const currentW = 756 * scale;
+                const currentH = 756 * scale;
+
+                // Batas geser maksimum X dan Y (memberikan toleransi pembacaan detail)
+                const maxX = Math.max(0, (currentW - containerW) / 2);
+                const maxY = Math.max(0, (currentH - containerH) / 2);
+
+                let targetX = pan.x;
+                let targetY = pan.y;
+
+                // Hanya koreksi jika user menggeser melampaui tepi kartu (mencegah kartu hilang)
+                if (pan.x > maxX) targetX = maxX;
+                if (pan.x < -maxX) targetX = -maxX;
+                if (pan.y > maxY) targetY = maxY;
+                if (pan.y < -maxY) targetY = -maxY;
+
+                // Jika posisi melebihi batas tepi, balikan dengan halus (smooth snap-back)
+                if (targetX !== pan.x || targetY !== pan.y) {
+                    panzoomInstance.pan(targetX, targetY, { animate: true });
+                }
+            });
         }
     }
 
-    window.addEventListener("resize", paskanKartuKeLayarHP);
+    function autoFitPanzoom() {
+        if (!panzoomInstance || !wrapperViewport) return;
+
+        const lebarContainer = wrapperViewport.clientWidth || (window.innerWidth - 32);
+        const lebarAsliKartu = 756;
+
+        if (lebarContainer > 0) {
+            skalaFitUtama = lebarContainer / lebarAsliKartu;
+            
+            panzoomInstance.setOptions({
+                minScale: skalaFitUtama,
+                maxScale: 4.0
+            });
+
+            panzoomInstance.zoom(skalaFitUtama, { animate: false });
+            panzoomInstance.pan(0, 0, { animate: false });
+        }
+    }
+
+   function resetPanzoomMurni() {
+        if (panzoomInstance) {
+            panzoomInstance.setOptions({ minScale: 0.1 });
+            panzoomInstance.reset({ animate: false });
+        }
+        const elementTarget = document.getElementById("area-cetak-pdf");
+        if (elementTarget) {
+            // Paksa netralkan transform bawaan Panzoom agar tidak merusak html2canvas
+            elementTarget.style.setProperty("transform", "none", "important");
+        }
+    }
+
+    // Mencegah reset zoom otomatis saat address bar HP sembunyi/tampil
+    window.addEventListener("resize", function() {
+        const lebarLayarSekarang = window.innerWidth;
+        if (lebarLayarSekarang !== lebarLayarSebelumnya) {
+            lebarLayarSebelumnya = lebarLayarSekarang;
+            autoFitPanzoom();
+        }
+    });
 
     // =========================================================================
     // FUNGSI 1: LOGIKA TOGGLE FORM UTAMA (YA/TIDAK HADIR)
@@ -3943,7 +3661,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             mirrorCatatanFinal.innerHTML = adaIsi ? htmlListChips : `<li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- BELUM ADA CATATAN TAMBAHAN -</li>`;
         }
-        paskanKartuKeLayarHP();
     }
 
     function inisialisasiEventCatatanChip() {
@@ -3960,6 +3677,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     inisialisasiEventCatatanChip();
 
+    // =========================================================================
+    // FUNGSI 5: INJEKSI DATA API & PREVIEW MODAL
+    // =========================================================================
     // =========================================================================
     // FUNGSI 5: INJEKSI DATA API & PREVIEW MODAL
     // =========================================================================
@@ -3997,7 +3717,13 @@ document.addEventListener("DOMContentLoaded", function() {
         if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
         if (tabelKananBody) tabelKananBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
         
-        setTimeout(paskanKartuKeLayarHP, 50);
+        // Beri jeda 150ms agar animasi transisi modal selesai mekar sempurna
+        // sehingga Panzoom dapat menghitung presisi lebar layar HP
+        setTimeout(() => {
+            if (typeof autoFitPanzoom === "function") {
+                autoFitPanzoom();
+            }
+        }, 150);
 
         fetch(`${API_URL_PRESENSI}?karyawan=${karyawanTerpilih}`)
             .then(res => res.json())
@@ -4109,7 +3835,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // =========================================================================
     // FUNGSI 6: DOWNLOAD PDF LOKAL
     // =========================================================================
-    if (btnUnduhPdf) {
+if (btnUnduhPdf) {
         btnUnduhPdf.addEventListener("click", function() {
             const elementTarget = document.getElementById("area-cetak-pdf");
             if (!elementTarget) return alert("Elemen area cetak tidak ditemukan!");
@@ -4119,43 +3845,61 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             sinkronisasiTeksKeMirror();
+            
+            // Simpan style inline asli sebelum dinetralkan
+            const styleAsli = elementTarget.getAttribute("style") || "";
+            
+            // Reset Panzoom & paksa transform murni ke skala 1:1
+            resetPanzoomMurni();
 
             const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
             const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
             const namaFile = `Presensi_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.pdf`;
+            
             btnUnduhPdf.setAttribute("disabled", "disabled");
             btnUnduhPdf.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> Merender PDF...`;
 
-            const styleAsli = elementTarget.getAttribute("style") || "";
-            elementTarget.style.setProperty("transform", "none", "important");
-            elementTarget.style.setProperty("margin-bottom", "0px", "important");
-
             const opsiSetelan = {
-                margin:       0,
-                filename:     namaFile,
-                image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
-                jsPDF:        { unit: 'cm', format: [20, 20], orientation: 'portrait' }, 
-                pagebreak:    { mode: ['css', 'legacy'] }
+                margin:        0,
+                filename:      namaFile,
+                image:         { type: 'jpeg', quality: 1.0 },
+                html2canvas:   { 
+                    scale: 3, 
+                    useCORS: true, 
+                    logging: false, 
+                    scrollY: 0, 
+                    scrollX: 0, 
+                    width: 756, 
+                    height: 756,
+                    windowWidth: 756,
+                    windowHeight: 756
+                },
+                jsPDF:         { unit: 'px', format: [756, 756], orientation: 'portrait' }, 
+                pagebreak:     { mode: ['css', 'legacy'] }
             };
 
-            html2pdf().set(opsiSetelan).from(elementTarget).save().then(() => {
-                elementTarget.setAttribute("style", styleAsli);
-                btnUnduhPdf.removeAttribute("disabled");
-                btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
-            }).catch(err => {
-                console.error(err);
-                elementTarget.setAttribute("style", styleAsli);
-                btnUnduhPdf.removeAttribute("disabled");
-                btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
-            });
+            // Beri jeda 50ms agar browser sempat menerapkan transform: none sebelum ditangkap html2pdf
+            setTimeout(() => {
+                html2pdf().set(opsiSetelan).from(elementTarget).save().then(() => {
+                    elementTarget.setAttribute("style", styleAsli);
+                    autoFitPanzoom();
+                    btnUnduhPdf.removeAttribute("disabled");
+                    btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
+                }).catch(err => {
+                    console.error(err);
+                    elementTarget.setAttribute("style", styleAsli);
+                    autoFitPanzoom();
+                    btnUnduhPdf.removeAttribute("disabled");
+                    btnUnduhPdf.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
+                });
+            }, 50);
         });
     }
 
     // =========================================================================
     // FUNGSI 7: ARSIP KARTU PRESENSI KE GOOGLE DRIVE
     // =========================================================================
-    if (btnUploadPresensiCloud) {
+if (btnUploadPresensiCloud) {
         btnUploadPresensiCloud.addEventListener("click", function() {
             const elementTarget = document.getElementById("area-cetak-pdf");
             if (!elementTarget) return;
@@ -4166,47 +3910,59 @@ document.addEventListener("DOMContentLoaded", function() {
 
             sinkronisasiTeksKeMirror();
 
+            const styleAsli = elementTarget.getAttribute("style") || "";
+            resetPanzoomMurni();
+
             const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
             const txtPeriode = modalPeriodeKerja ? modalPeriodeKerja.textContent : "Periode";
-            
             const namaFile = `Presensi_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.jpg`;
             
             btnUploadPresensiCloud.setAttribute("disabled", "disabled");
             btnUploadPresensiCloud.classList.add("opacity-50", "cursor-not-allowed");
             btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Merender Gambar...`;
 
-            const styleAsli = elementTarget.getAttribute("style") || "";
-            elementTarget.style.setProperty("transform", "none", "important");
-            elementTarget.style.setProperty("margin-bottom", "0px", "important");
-
             const opsiSetelan = {
-                margin:       0,
-                filename:     namaFile,
-                image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { scale: 3, useCORS: true, logging: false, scrollY: 0, scrollX: 0, width: 756, height: 756 },
-                jsPDF:        { unit: 'cm', format: [20, 20], orientation: 'portrait' }, 
-                pagebreak:    { mode: ['css', 'legacy'] }
+                margin:        0,
+                filename:      namaFile,
+                image:         { type: 'jpeg', quality: 1.0 },
+                html2canvas:   { 
+                    scale: 3, 
+                    useCORS: true, 
+                    logging: false, 
+                    scrollY: 0, 
+                    scrollX: 0, 
+                    width: 756, 
+                    height: 756,
+                    windowWidth: 756,
+                    windowHeight: 756
+                },
+                jsPDF:         { unit: 'px', format: [756, 756], orientation: 'portrait' }, 
+                pagebreak:     { mode: ['css', 'legacy'] }
             };
 
-            html2pdf().set(opsiSetelan).from(elementTarget).outputImg('dataurl').then(function(dataUri) {
-                elementTarget.setAttribute("style", styleAsli);
-                
-                const base64String = dataUri.split(',')[1];
-                
-                if (!base64String || base64String.trim() === "") {
-                    throw new Error("Gagal mengambil data gambar presensi.");
-                }
-                
-                btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Mengupload Gambar...`;
-                
-                return kirimKeAppsScript(base64String, namaFile);
-            })
-            .catch(err => {
-                console.error("Error ekspor/upload gambar:", err);
-                elementTarget.setAttribute("style", styleAsli);
-                alert("Gagal merender/mengirim Gambar: " + err.message);
-                resetStatusTombolUpload();
-            });
+            setTimeout(() => {
+                html2pdf().set(opsiSetelan).from(elementTarget).outputImg('dataurl').then(function(dataUri) {
+                    elementTarget.setAttribute("style", styleAsli);
+                    autoFitPanzoom();
+                    
+                    const base64String = dataUri.split(',')[1];
+                    
+                    if (!base64String || base64String.trim() === "") {
+                        throw new Error("Gagal mengambil data gambar presensi.");
+                    }
+                    
+                    btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Mengupload Gambar...`;
+                    
+                    return kirimKeAppsScript(base64String, namaFile);
+                })
+                .catch(err => {
+                    console.error("Error ekspor/upload gambar:", err);
+                    elementTarget.setAttribute("style", styleAsli);
+                    autoFitPanzoom();
+                    alert("Gagal merender/mengirim Gambar: " + err.message);
+                    resetStatusTombolUpload();
+                });
+            }, 50);
         });
     }
 
@@ -4324,275 +4080,260 @@ const PEMETAAN_NAMA_APOTEK = {
 };
 
 // =========================================================================
-// MOBILE CARD VIEWER: FIT + PINCH ZOOM + DRAG
+// INISIALISASI & FUNGSI PANZOOM JS (PRESENSI APOTEK - AUTO-DETECT UNHIDE FIX)
 // =========================================================================
+let panzoomInstanceApotek = null;
+let skalaFitUtamaApotek = 1;
+let lebarLayarSebelumnyaApotek = window.innerWidth;
 
-let zoomKartuApotek = 1;
-let posisiXKartuApotek = 0;
-let posisiYKartuApotek = 0;
+function inisialisasiPanzoomApotek() {
+    const areaCetakApotek = document.getElementById("area-cetak-pdf-apotek");
+    const wrapperViewportApotek = document.getElementById("wrapper-viewport-cetak-apotek");
 
-let gestureKartuApotekAktif = false;
-let sedangDragKartuApotek = false;
+    if (!areaCetakApotek || typeof Panzoom === "undefined") return;
 
-let titikAwalXKartuApotek = 0;
-let titikAwalYKartuApotek = 0;
+    // Destroy instance lama jika ada
+    if (panzoomInstanceApotek) {
+        try { panzoomInstanceApotek.destroy(); } catch(e) {}
+    }
 
-let jarakAwalPinchApotek = 0;
-let zoomAwalPinchApotek = 1;
+    // Inisialisasi Panzoom dengan opsi gesture lengkap
+    panzoomInstanceApotek = Panzoom(areaCetakApotek, {
+        maxScale: 4.0,
+        minScale: 0.1,
+        startScale: 1,
+        contain: 'none',
+        canvas: true,
+        cursor: 'grab'
+    });
 
-function paskanKartuApotekKeLayarHP() {
-    const areaCetak = document.getElementById("area-cetak-pdf-apotek");
-    const wrapper = document.getElementById("wrapper-viewport-cetak-apotek");
+    if (wrapperViewportApotek) {
+        // Izinkan zoom menggunakan scroll wheel mouse / trackpad
+        wrapperViewportApotek.addEventListener('wheel', panzoomInstanceApotek.zoomWithWheel, { passive: false });
 
-    if (!areaCetak || !wrapper) return;
+        // Event listener gesture sentuhan/pointer pada layar HP
+        const parentTarget = areaCetakApotek.parentElement || wrapperViewportApotek;
+        parentTarget.addEventListener('pointerdown', panzoomInstanceApotek.handleDown);
+        parentTarget.addEventListener('pointermove', panzoomInstanceApotek.handleMove);
+        parentTarget.addEventListener('pointerup', panzoomInstanceApotek.handleUp);
+    }
+}
 
-    const lebarViewport = wrapper.clientWidth;
+function autoFitPanzoomApotek() {
+    const areaCetakApotek = document.getElementById("area-cetak-pdf-apotek");
+    const wrapperViewportApotek = document.getElementById("wrapper-viewport-cetak-apotek");
+
+    if (!wrapperViewportApotek || !areaCetakApotek) return;
+
+    if (!panzoomInstanceApotek) {
+        inisialisasiPanzoomApotek();
+    }
+
+    // Dapatkan lebar nyata dari wrapper viewport
+    let lebarContainer = wrapperViewportApotek.clientWidth;
+
+    // Fallback: Jika container masih 0px (modal belum sempurna terbuka), ambil estimasi lebar layar HP
+    if (!lebarContainer || lebarContainer <= 0) {
+        const paddingModal = 32;
+        lebarContainer = Math.min(window.innerWidth - paddingModal, 756);
+    }
+
     const lebarAsliKartu = 756;
+    skalaFitUtamaApotek = lebarContainer / lebarAsliKartu;
 
-    // Hanya menentukan ukuran awal / fit.
-    // Tidak pernah mengubah width wrapper.
-    if (lebarViewport < lebarAsliKartu) {
-        zoomKartuApotek = Math.max(
-            0.25,
-            Math.min(1, lebarViewport / lebarAsliKartu)
-        );
-    } else {
-        zoomKartuApotek = 1;
-    }
+    // Sesuaikan tinggi container wrapper agar pas proporsional (persegi 1:1)
+    wrapperViewportApotek.style.height = `${756 * skalaFitUtamaApotek}px`;
 
-    posisiXKartuApotek = 0;
-    posisiYKartuApotek = 0;
+    if (panzoomInstanceApotek) {
+        panzoomInstanceApotek.setOptions({
+            minScale: skalaFitUtamaApotek * 0.5,
+            maxScale: 4.0
+        });
 
-    terapkanTransformKartuApotek();
-}
-
-function terapkanTransformKartuApotek() {
-    const areaCetak = document.getElementById("area-cetak-pdf-apotek");
-    const wrapper = document.getElementById("wrapper-viewport-cetak-apotek");
-
-    if (!areaCetak || !wrapper) return;
-
-    areaCetak.style.transform =
-        `translate3d(${posisiXKartuApotek}px, ${posisiYKartuApotek}px, 0) ` +
-        `scale(${zoomKartuApotek})`;
-
-    areaCetak.style.transformOrigin = "top left";
-
-    // Wrapper tetap menggunakan ukuran asli viewport.
-    wrapper.style.width = "100%";
-    wrapper.style.maxWidth = "756px";
-
-    // Tinggi mengikuti zoom supaya scroll container tetap benar.
-    wrapper.style.height = `${756 * zoomKartuApotek}px`;
-}
-
-
-// -------------------------------------------------------------------------
-// JARAK 2 JARI
-// -------------------------------------------------------------------------
-
-function hitungJarakJariApotek(touch1, touch2) {
-    const dx = touch2.clientX - touch1.clientX;
-    const dy = touch2.clientY - touch1.clientY;
-
-    return Math.sqrt((dx * dx) + (dy * dy));
-}
-
-
-// -------------------------------------------------------------------------
-// TOUCH START
-// -------------------------------------------------------------------------
-
-function mulaiGestureKartuApotek(e) {
-    const areaCetak = document.getElementById("area-cetak-pdf-apotek");
-    if (!areaCetak) return;
-
-    if (e.touches.length === 2) {
-        e.preventDefault();
-
-        gestureKartuApotekAktif = true;
-        sedangDragKartuApotek = false;
-
-        jarakAwalPinchApotek = hitungJarakJariApotek(
-            e.touches[0],
-            e.touches[1]
-        );
-
-        zoomAwalPinchApotek = zoomKartuApotek;
-
-    } else if (e.touches.length === 1) {
-
-        sedangDragKartuApotek = true;
-
-        titikAwalXKartuApotek =
-            e.touches[0].clientX - posisiXKartuApotek;
-
-        titikAwalYKartuApotek =
-            e.touches[0].clientY - posisiYKartuApotek;
+        // Setel skala fit tepat di tengah
+        panzoomInstanceApotek.zoom(skalaFitUtamaApotek, { animate: false });
+        panzoomInstanceApotek.pan(0, 0, { animate: false });
     }
 }
 
-
-// -------------------------------------------------------------------------
-// TOUCH MOVE
-// -------------------------------------------------------------------------
-
-function gerakkanGestureKartuApotek(e) {
-    if (!e.touches.length) return;
-
-    // PINCH ZOOM
-    if (e.touches.length === 2) {
-        e.preventDefault();
-
-        const jarakSekarang = hitungJarakJariApotek(
-            e.touches[0],
-            e.touches[1]
-        );
-
-        if (!jarakAwalPinchApotek) return;
-
-        const faktorZoom =
-            jarakSekarang / jarakAwalPinchApotek;
-
-        zoomKartuApotek =
-            zoomAwalPinchApotek * faktorZoom;
-
-        // Batas zoom
-        zoomKartuApotek = Math.max(
-            0.25,
-            Math.min(3, zoomKartuApotek)
-        );
-
-        terapkanTransformKartuApotek();
-
-        return;
+function resetPanzoomMurniApotek() {
+    if (panzoomInstanceApotek) {
+        panzoomInstanceApotek.setOptions({ minScale: 0.1 });
+        panzoomInstanceApotek.reset({ animate: false });
     }
-
-    // DRAG 1 JARI
-    if (e.touches.length === 1 && sedangDragKartuApotek) {
-        e.preventDefault();
-
-        posisiXKartuApotek =
-            e.touches[0].clientX - titikAwalXKartuApotek;
-
-        posisiYKartuApotek =
-            e.touches[0].clientY - titikAwalYKartuApotek;
-
-        terapkanTransformKartuApotek();
+    const elTarget = document.getElementById("area-cetak-pdf-apotek");
+    if (elTarget) {
+        elTarget.style.setProperty("transform", "none", "important");
     }
 }
 
-
-// -------------------------------------------------------------------------
-// TOUCH END
-// -------------------------------------------------------------------------
-
-function selesaiGestureKartuApotek(e) {
-
-    if (e.touches.length === 0) {
-        gestureKartuApotekAktif = false;
-        sedangDragKartuApotek = false;
+// Window resize listener
+window.addEventListener("resize", function() {
+    const lebarLayarSekarang = window.innerWidth;
+    if (lebarLayarSekarang !== lebarLayarSebelumnyaApotek) {
+        lebarLayarSebelumnyaApotek = lebarLayarSekarang;
+        autoFitPanzoomApotek();
     }
+});
 
-    if (e.touches.length === 1) {
-        // Setelah pinch selesai, jangan langsung dianggap drag
-        sedangDragKartuApotek = false;
+// =========================================================================
+// AUTOMATIC OBSERVER (Mendeteksi saat modal dibuka secara otomatis)
+// =========================================================================
+document.addEventListener("DOMContentLoaded", function() {
+    const modalTarget = document.getElementById("modal-kartu-presensi-apotek");
+    
+    if (modalTarget) {
+        // Observer untuk memantau perubahan class 'hidden' atau 'opacity-100' pada modal
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === "class") {
+                    const isVisible = !modalTarget.classList.contains("hidden") && 
+                                      !modalTarget.classList.contains("opacity-0");
+                    if (isVisible) {
+                        requestAnimationFrame(() => {
+                            setTimeout(() => {
+                                autoFitPanzoomApotek();
+                            }, 60);
+                        });
+                    }
+                }
+            });
+        });
+
+        observer.observe(modalTarget, { attributes: true });
     }
-}
+});
 
+// =========================================================================
+// FUNGSI DOWNLOAD PDF LOKAL APOTEK (CLEAN & FIXED RENDER)
+// =========================================================================
+if (btnUnduhPdfApotek) {
+    btnUnduhPdfApotek.addEventListener("click", function() {
+        const elementTarget = document.getElementById("area-cetak-pdf-apotek");
+        if (!elementTarget) return alert("Elemen area cetak Apotek tidak ditemukan!");
 
-// -------------------------------------------------------------------------
-// DOUBLE TAP = RESET FIT
-// -------------------------------------------------------------------------
-
-let tapTerakhirKartuApotek = 0;
-
-function doubleTapKartuApotek(e) {
-    const sekarang = Date.now();
-
-    if (sekarang - tapTerakhirKartuApotek < 300) {
-        e.preventDefault();
-
-        paskanKartuApotekKeLayarHP();
-    }
-
-    tapTerakhirKartuApotek = sekarang;
-}
-
-
-// -------------------------------------------------------------------------
-// PASANG EVENT
-// -------------------------------------------------------------------------
-
-function aktifkanGestureKartuApotek() {
-    const areaCetak = document.getElementById("area-cetak-pdf-apotek");
-
-    if (!areaCetak) return;
-
-    // Mencegah browser mengambil alih gesture pinch.
-    areaCetak.style.touchAction = "none";
-
-    areaCetak.addEventListener(
-        "touchstart",
-        mulaiGestureKartuApotek,
-        { passive: false }
-    );
-
-    areaCetak.addEventListener(
-        "touchmove",
-        gerakkanGestureKartuApotek,
-        { passive: false }
-    );
-
-    areaCetak.addEventListener(
-        "touchend",
-        selesaiGestureKartuApotek,
-        { passive: false }
-    );
-
-    areaCetak.addEventListener(
-        "touchcancel",
-        selesaiGestureKartuApotek,
-        { passive: false }
-    );
-
-    areaCetak.addEventListener(
-        "touchend",
-        doubleTapKartuApotek,
-        { passive: false }
-    );
-}
-
-
-// -------------------------------------------------------------------------
-// RESIZE
-// -------------------------------------------------------------------------
-
-let timeoutResizeKartuApotek;
-
-window.addEventListener("resize", () => {
-    clearTimeout(timeoutResizeKartuApotek);
-
-    timeoutResizeKartuApotek = setTimeout(() => {
-
-        // Jangan reset zoom ketika keyboard HP sedang muncul.
-        if (document.activeElement &&
-            document.activeElement.classList.contains(
-                "input-catatan-chip-apotek"
-            )) {
-            return;
+        if (elementTarget.innerText.includes("Memuat data...")) {
+            return alert("Mohon tunggu, data riwayat presensi sedang dimuat!");
         }
 
-        paskanKartuApotekKeLayarHP();
+        sinkronisasiTeksKeMirrorApotek();
+        
+        const styleAsli = elementTarget.getAttribute("style") || "";
+        resetPanzoomMurniApotek();
 
-    }, 150);
-});
+        const txtNama = modalNamaKaryawanApotek ? modalNamaKaryawanApotek.textContent : "Karyawan";
+        const txtPeriode = modalPeriodeKerjaApotek ? modalPeriodeKerjaApotek.textContent : "Periode";
+        const namaFile = `Presensi_Apotek_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.pdf`;
+        
+        btnUnduhPdfApotek.setAttribute("disabled", "disabled");
+        btnUnduhPdfApotek.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> Merender PDF...`;
+
+        const opsiSetelan = {
+            margin:        0,
+            filename:      namaFile,
+            image:         { type: 'jpeg', quality: 1.0 },
+            html2canvas:   { 
+                scale: 3, 
+                useCORS: true, 
+                logging: false, 
+                scrollY: 0, 
+                scrollX: 0, 
+                width: 756, 
+                height: 756,
+                windowWidth: 756,
+                windowHeight: 756
+            },
+            jsPDF:         { unit: 'px', format: [756, 756], orientation: 'portrait' }, 
+            pagebreak:     { mode: ['css', 'legacy'] }
+        };
+
+        setTimeout(() => {
+            html2pdf().set(opsiSetelan).from(elementTarget).save().then(() => {
+                elementTarget.setAttribute("style", styleAsli);
+                autoFitPanzoomApotek();
+                btnUnduhPdfApotek.removeAttribute("disabled");
+                btnUnduhPdfApotek.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
+            }).catch(err => {
+                console.error(err);
+                elementTarget.setAttribute("style", styleAsli);
+                autoFitPanzoomApotek();
+                btnUnduhPdfApotek.removeAttribute("disabled");
+                btnUnduhPdfApotek.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
+            });
+        }, 50);
+    });
+}
 
 
-// Aktifkan gesture setelah DOM siap
-document.addEventListener("DOMContentLoaded", () => {
-    aktifkanGestureKartuApotek();
-});
+// =========================================================================
+// FUNGSI ARSIP KARTU PRESENSI APOTEK KE GOOGLE DRIVE
+// =========================================================================
+if (btnUploadPresensiCloudApotek) {
+    btnUploadPresensiCloudApotek.addEventListener("click", function() {
+        const elementTarget = document.getElementById("area-cetak-pdf-apotek");
+        if (!elementTarget) return;
+
+        if (elementTarget.innerText.includes("Memuat data...")) {
+            return alert("Mohon tunggu, data riwayat presensi belum selesai dimuat!");
+        }
+
+        sinkronisasiTeksKeMirrorApotek();
+
+        const styleAsli = elementTarget.getAttribute("style") || "";
+        resetPanzoomMurniApotek();
+
+        const txtNama = modalNamaKaryawanApotek ? modalNamaKaryawanApotek.textContent : "Karyawan";
+        const txtPeriode = modalPeriodeKerjaApotek ? modalPeriodeKerjaApotek.textContent : "Periode";
+        const namaFile = `Presensi_Apotek_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.jpg`;
+        
+        btnUploadPresensiCloudApotek.setAttribute("disabled", "disabled");
+        btnUploadPresensiCloudApotek.classList.add("opacity-50", "cursor-not-allowed");
+        btnUploadPresensiCloudApotek.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Merender Gambar...`;
+
+        const opsiSetelan = {
+            margin:        0,
+            filename:      namaFile,
+            image:         { type: 'jpeg', quality: 1.0 },
+            html2canvas:   { 
+                scale: 3, 
+                useCORS: true, 
+                logging: false, 
+                scrollY: 0, 
+                scrollX: 0, 
+                width: 756, 
+                height: 756,
+                windowWidth: 756,
+                windowHeight: 756
+            },
+            jsPDF:         { unit: 'px', format: [756, 756], orientation: 'portrait' }, 
+            pagebreak:     { mode: ['css', 'legacy'] }
+        };
+
+        setTimeout(() => {
+            html2pdf().set(opsiSetelan).from(elementTarget).outputImg('dataurl').then(function(dataUri) {
+                elementTarget.setAttribute("style", styleAsli);
+                autoFitPanzoomApotek();
+                
+                const base64String = dataUri.split(',')[1];
+                
+                if (!base64String || base64String.trim() === "") {
+                    throw new Error("Gagal mengambil data gambar presensi apotek.");
+                }
+                
+                btnUploadPresensiCloudApotek.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Mengupload Gambar...`;
+                
+                return kirimKeAppsScriptApotek(base64String, namaFile);
+            })
+            .catch(err => {
+                console.error("Error ekspor/upload gambar apotek:", err);
+                elementTarget.setAttribute("style", styleAsli);
+                autoFitPanzoomApotek();
+                alert("Gagal merender/mengirim Gambar: " + err.message);
+                resetStatusTombolUploadApotek();
+            });
+        }, 50);
+    });
+}
 
 
 function sinkronisasiCatatanApotek() {
@@ -5315,6 +5056,8 @@ window.alert = function(message) {
 
     </div>
 </div>
+
+
 <!-- MODAL PREVIEW KARTU PRESENSI PDF -->
 <div id="modal-kartu-presensi" class="fixed inset-0 bg-emerald-950/60 backdrop-blur-md z-[13000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
     
@@ -5334,7 +5077,7 @@ window.alert = function(message) {
 
         <div class="p-5 overflow-y-auto overflow-x-hidden modal-scroll-container flex-1 bg-slate-950 pattern-grid-lg flex justify-center items-start">
             
-            <div id="wrapper-viewport-cetak" style="width: 100%; max-width: 756px;">
+            <div id="wrapper-viewport-cetak" class="relative overflow-hidden flex items-center justify-center w-full max-w-[756px] h-[756px] mx-auto rounded-[24px]">
                 
                 <div id="area-cetak-pdf" class="bg-white text-slate-900 pt-4 px-6 pb-6 rounded-[24px] border border-slate-200 shadow-2xl flex flex-col justify-between [color-scheme:light]" style="width: 756px; height: 756px; min-width: 756px; min-height: 756px; font-family: 'Arial', sans-serif; box-sizing: border-box;">
                     
@@ -5852,166 +5595,167 @@ window.alert = function(message) {
         <!-- Body Scrollable Canvas -->
         <div class="p-5 overflow-y-auto overflow-x-hidden modal-scroll-container flex-1 bg-slate-950 pattern-grid-lg flex justify-center items-start">
             
-            <div id="wrapper-viewport-cetak-apotek" style="width: 100%; max-width: 756px;">
+<!-- Wrapper Viewport Cetak Apotek -->
+<div id="wrapper-viewport-cetak-apotek" class="relative overflow-hidden flex items-center justify-center w-full max-w-[756px] h-[756px] mx-auto rounded-[24px] touch-none select-none">
+    
+    <!-- AREA CANVAS CETAK 756x756px (TEMA PINK APOTEK) -->
+    <div id="area-cetak-pdf-apotek" class="bg-white text-slate-900 pt-4 px-6 pb-6 rounded-[24px] border border-slate-200 shadow-2xl flex flex-col justify-between [color-scheme:light]" style="width: 756px; height: 756px; min-width: 756px; min-height: 756px; font-family: 'Arial', sans-serif; box-sizing: border-box; transform-origin: center center; touch-action: none;">
+        
+        <!-- Header Kartu Cetak -->
+        <div class="text-center border-b-2 border-pink-900 pb-1.5 mb-2 flex-shrink-0">
+            <h2 class="text-xl font-black tracking-widest text-pink-950 m-0 leading-none">KARTU PRESENSI ASISTEN APOTEKER</h2>
+            <p class="text-[9px] text-pink-700 font-bold tracking-widest uppercase mt-0.5 mb-1">Apotek Nurjaya</p>
+            
+            <div class="grid grid-cols-3 text-[11px] font-medium text-slate-600 border-t border-pink-200 pt-1.5 max-w-2xl mx-auto">
+                <div class="text-left">Nama: <span id="modal-nama-karyawan-apotek" class="font-bold text-slate-900">--</span></div>
+                <div class="text-center">Unit: <span class="font-bold text-slate-900">Apotek Nurjaya</span></div>
+                <div class="text-right flex flex-col items-end leading-tight">
+                    <div>Periode: <span id="modal-periode-kerja-apotek" class="font-bold text-slate-900 italic">--</span></div>
+                    <div class="text-[10px] text-pink-800 font-bold mt-0.5">Jumlah Hari Kerja: <span id="modal-total-hari-kerja-apotek" class="font-black bg-pink-100 px-1.5 py-0.5 rounded-lg text-pink-900">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabel 2 Kolom Presensi -->
+        <div class="grid grid-cols-2 gap-3 items-stretch flex-1 mb-2">
+            <!-- Tabel Kiri -->
+            <div class="border border-pink-900 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
+                <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-pink-900">
+                    <thead>
+                        <tr class="bg-pink-700 font-black text-white uppercase text-[9px] tracking-tight">
+                            <th class="border-r border-b border-pink-900 py-1.5 w-[12%]">Hari</th>
+                            <th class="border-r border-b border-pink-900 py-1.5 w-[22%]">Tgl / Hari</th>
+                            <th class="border-r border-b border-pink-900 py-1.5 w-[26%]">Presensi</th>
+                            <th class="border-b border-pink-900 py-1.5 w-[40%]" colspan="2">
+                                <div class="border-b border-pink-500 pb-0.5 mb-0.5">Jam</div>
+                                <div class="grid grid-cols-2 text-[8px]">
+                                    <span class="border-r border-pink-500">Defisit</span>
+                                    <span>Ganti</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-kiri-body-apotek" class="font-bold text-slate-800 divide-y divide-pink-900 h-full"></tbody>
+                </table>
+            </div>
+
+            <!-- Tabel Kanan -->
+            <div class="border border-pink-900 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
+                <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-pink-900">
+                    <thead>
+                        <tr class="bg-pink-700 font-black text-white uppercase text-[9px] tracking-tight">
+                            <th class="border-r border-b border-pink-900 py-1.5 w-[12%]">Hari</th>
+                            <th class="border-r border-b border-pink-900 py-1.5 w-[22%]">Tgl / Hari</th>
+                            <th class="border-r border-b border-pink-900 py-1.5 w-[26%]">Presensi</th>
+                            <th class="border-b border-pink-900 py-1.5 w-[40%]" colspan="2">
+                                <div class="border-b border-pink-500 pb-0.5 mb-0.5">Jam</div>
+                                <div class="grid grid-cols-2 text-[8px]">
+                                    <span class="border-r border-pink-500">Defisit</span>
+                                    <span>Ganti</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-kanan-body-apotek" class="font-bold text-slate-800 divide-y divide-pink-900 h-full"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rekapitulasi Sisi Kiri & Kanan -->
+        <div class="grid grid-cols-2 gap-3 border-t-2 border-pink-900 pt-2 flex-shrink-0 items-stretch">
+            
+            <!-- SISI KIRI REKAP SHIFT -->
+            <div class="p-3 border border-pink-900 bg-pink-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
+                <h4 class="font-black text-pink-950 uppercase tracking-wider border-b border-pink-200 pb-1 mb-1.5 flex items-center gap-1.5 flex-shrink-0">
+                    <i class="fa-solid fa-square-poll-vertical text-pink-700"></i> Rekapitulasi Presensi
+                </h4>
                 
-                <!-- AREA CANVAS CETAK 756x756px (TEMA PINK APOTEK) -->
-                <div id="area-cetak-pdf-apotek" class="bg-white text-slate-900 pt-4 px-6 pb-6 rounded-[24px] border border-slate-200 shadow-2xl flex flex-col justify-between [color-scheme:light]" style="width: 756px; height: 756px; min-width: 756px; min-height: 756px; font-family: 'Arial', sans-serif; box-sizing: border-box;">
-                    
-                    <!-- Header Kartu Cetak -->
-                    <div class="text-center border-b-2 border-pink-900 pb-1.5 mb-2 flex-shrink-0">
-                        <h2 class="text-xl font-black tracking-widest text-pink-950 m-0 leading-none">KARTU PRESENSI ASISTEN APOTEKER</h2>
-                        <p class="text-[9px] text-pink-700 font-bold tracking-widest uppercase mt-0.5 mb-1">Apotek Nurjaya</p>
-                        
-                        <div class="grid grid-cols-3 text-[11px] font-medium text-slate-600 border-t border-pink-200 pt-1.5 max-w-2xl mx-auto">
-                            <div class="text-left">Nama: <span id="modal-nama-karyawan-apotek" class="font-bold text-slate-900">--</span></div>
-                            <div class="text-center">Unit: <span class="font-bold text-slate-900">Apotek Nurjaya</span></div>
-                            <div class="text-right flex flex-col items-end leading-tight">
-                                <div>Periode: <span id="modal-periode-kerja-apotek" class="font-bold text-slate-900 italic">--</span></div>
-                                <div class="text-[10px] text-pink-800 font-bold mt-0.5">Jumlah Hari Kerja: <span id="modal-total-hari-kerja-apotek" class="font-black bg-pink-100 px-1.5 py-0.5 rounded-lg text-pink-900">0</span></div>
-                            </div>
+                <ul class="space-y-0.5 font-semibold text-slate-700 flex-1 flex flex-col justify-between">
+                    <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                        <span class="font-bold text-slate-800 text-[9px]">Shift 1</span>
+                        <span id="rekap-shift1-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                    </li>
+                    <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                        <span class="font-bold text-slate-800 text-[9px]">Shift 2</span>
+                        <span id="rekap-shift2-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                    </li>
+                    <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                        <span class="font-bold text-slate-800 text-[9px]">Lembur</span>
+                        <span id="rekap-lembur-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                    </li>
+                    <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                        <span class="font-bold text-slate-800 text-[9px]">Khusus</span>
+                        <span id="rekap-khusus-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                    </li>
+                    <li class="flex justify-between items-center bg-pink-600 text-white rounded-lg px-2 py-0.5 shadow-2xs">
+                        <span class="font-black text-[9px] uppercase">TOTAL HARI KERJA</span>
+                        <span id="rekap-totalkERJA-apotek" class="font-black text-white bg-pink-800 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                    </li>
+                    <li class="flex justify-between items-center bg-white border border-amber-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                        <span class="font-bold text-amber-900 text-[9px]">Libur</span>
+                        <span id="rekap-libur-apotek" class="font-black text-amber-900 bg-amber-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                    </li>
+                    <li class="flex justify-between items-center bg-white border border-rose-200 rounded-lg px-2 py-0.5 shadow-2xs">
+                        <span class="font-bold text-rose-900 text-[9px]">Izin / Sakit / Absen</span>
+                        <span id="rekap-absen-apotek" class="font-black text-rose-900 bg-rose-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- SISI KANAN REKAP JAM & CATATAN ASISTEN -->
+            <div class="p-3 border border-pink-900 bg-pink-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
+                <div class="space-y-1">
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <div class="bg-white border border-amber-300 p-1 rounded-xl text-center">
+                            <span class="block text-[8px] font-black text-amber-900 uppercase">Total Defisit Jam</span>
+                            <span id="rekap-total-defisit-apotek" class="block text-[9.5px] font-black text-amber-700">0 jam 0 menit</span>
+                        </div>
+                        <div class="bg-white border border-emerald-300 p-1 rounded-xl text-center">
+                            <span class="block text-[8px] font-black text-emerald-900 uppercase">Total Penggantian Jam</span>
+                            <span id="rekap-total-ganti-apotek" class="block text-[9.5px] font-black text-emerald-700">0 jam 0 menit</span>
                         </div>
                     </div>
 
-                    <!-- Tabel 2 Kolom Presensi -->
-                    <div class="grid grid-cols-2 gap-3 items-stretch flex-1 mb-2">
-                        <!-- Tabel Kiri -->
-                        <div class="border border-pink-900 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
-                            <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-pink-900">
-                                <thead>
-                                    <tr class="bg-pink-700 font-black text-white uppercase text-[9px] tracking-tight">
-                                        <th class="border-r border-b border-pink-900 py-1.5 w-[12%]">Hari</th>
-                                        <th class="border-r border-b border-pink-900 py-1.5 w-[22%]">Tgl / Hari</th>
-                                        <th class="border-r border-b border-pink-900 py-1.5 w-[26%]">Presensi</th>
-                                        <th class="border-b border-pink-900 py-1.5 w-[40%]" colspan="2">
-                                            <div class="border-b border-pink-500 pb-0.5 mb-0.5">Jam</div>
-                                            <div class="grid grid-cols-2 text-[8px]">
-                                                <span class="border-r border-pink-500">Defisit</span>
-                                                <span>Ganti</span>
-                                            </div>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabel-kiri-body-apotek" class="font-bold text-slate-800 divide-y divide-pink-900 h-full"></tbody>
-                            </table>
-                        </div>
-
-                        <!-- Tabel Kanan -->
-                        <div class="border border-pink-900 bg-white rounded-xl overflow-hidden flex flex-col h-full shadow-sm">
-                            <table class="w-full text-[10px] text-center border-collapse flex-1 h-full border border-pink-900">
-                                <thead>
-                                    <tr class="bg-pink-700 font-black text-white uppercase text-[9px] tracking-tight">
-                                        <th class="border-r border-b border-pink-900 py-1.5 w-[12%]">Hari</th>
-                                        <th class="border-r border-b border-pink-900 py-1.5 w-[22%]">Tgl / Hari</th>
-                                        <th class="border-r border-b border-pink-900 py-1.5 w-[26%]">Presensi</th>
-                                        <th class="border-b border-pink-900 py-1.5 w-[40%]" colspan="2">
-                                            <div class="border-b border-pink-500 pb-0.5 mb-0.5">Jam</div>
-                                            <div class="grid grid-cols-2 text-[8px]">
-                                                <span class="border-r border-pink-500">Defisit</span>
-                                                <span>Ganti</span>
-                                            </div>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabel-kanan-body-apotek" class="font-bold text-slate-800 divide-y divide-pink-900 h-full"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Rekapitulasi Sisi Kiri & Kanan -->
-                    <div class="grid grid-cols-2 gap-3 border-t-2 border-pink-900 pt-2 flex-shrink-0 items-stretch">
-                        
-                        <!-- SISI KIRI REKAP SHIFT -->
-                        <div class="p-3 border border-pink-900 bg-pink-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
-                            <h4 class="font-black text-pink-950 uppercase tracking-wider border-b border-pink-200 pb-1 mb-1.5 flex items-center gap-1.5 flex-shrink-0">
-                                <i class="fa-solid fa-square-poll-vertical text-pink-700"></i> Rekapitulasi Presensi
-                            </h4>
-                            
-                            <ul class="space-y-0.5 font-semibold text-slate-700 flex-1 flex flex-col justify-between">
-                                <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
-                                    <span class="font-bold text-slate-800 text-[9px]">Shift 1</span>
-                                    <span id="rekap-shift1-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
-                                </li>
-                                <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
-                                    <span class="font-bold text-slate-800 text-[9px]">Shift 2</span>
-                                    <span id="rekap-shift2-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
-                                </li>
-                                <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
-                                    <span class="font-bold text-slate-800 text-[9px]">Lembur</span>
-                                    <span id="rekap-lembur-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
-                                </li>
-                                <li class="flex justify-between items-center bg-white border border-pink-200 rounded-lg px-2 py-0.5 shadow-2xs">
-                                    <span class="font-bold text-slate-800 text-[9px]">Khusus</span>
-                                    <span id="rekap-khusus-apotek" class="font-black text-pink-900 bg-pink-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
-                                </li>
-                                <li class="flex justify-between items-center bg-pink-600 text-white rounded-lg px-2 py-0.5 shadow-2xs">
-                                    <span class="font-black text-[9px] uppercase">TOTAL HARI KERJA</span>
-                                    <span id="rekap-totalkERJA-apotek" class="font-black text-white bg-pink-800 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
-                                </li>
-                                <li class="flex justify-between items-center bg-white border border-amber-200 rounded-lg px-2 py-0.5 shadow-2xs">
-                                    <span class="font-bold text-amber-900 text-[9px]">Libur</span>
-                                    <span id="rekap-libur-apotek" class="font-black text-amber-900 bg-amber-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
-                                </li>
-                                <li class="flex justify-between items-center bg-white border border-rose-200 rounded-lg px-2 py-0.5 shadow-2xs">
-                                    <span class="font-bold text-rose-900 text-[9px]">Izin / Sakit / Absen</span>
-                                    <span id="rekap-absen-apotek" class="font-black text-rose-900 bg-rose-100 px-1.5 py-0.2 rounded text-[9px]">0 hari</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- SISI KANAN REKAP JAM & CATATAN ASISTEN -->
-                        <div class="p-3 border border-pink-900 bg-pink-50/60 rounded-2xl flex flex-col justify-between text-[10px] shadow-sm">
-                            <div class="space-y-1">
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <div class="bg-white border border-amber-300 p-1 rounded-xl text-center">
-                                        <span class="block text-[8px] font-black text-amber-900 uppercase">Total Defisit Jam</span>
-                                        <span id="rekap-total-defisit-apotek" class="block text-[9.5px] font-black text-amber-700">0 jam 0 menit</span>
-                                    </div>
-                                    <div class="bg-white border border-emerald-300 p-1 rounded-xl text-center">
-                                        <span class="block text-[8px] font-black text-emerald-900 uppercase">Total Penggantian Jam</span>
-                                        <span id="rekap-total-ganti-apotek" class="block text-[9.5px] font-black text-emerald-700">0 jam 0 menit</span>
-                                    </div>
-                                </div>
-
-                                <!-- Indikator Lunas / Sisa Defisit -->
-                                <div id="status-indikator-defisit-apotek" class="w-full py-1 px-2 rounded-xl text-center font-black text-[9px] bg-slate-200 text-slate-700 border border-slate-300">
-                                    Mengecek status defisit...
-                                </div>
-                            </div>
-
-                            <!-- Sesi Catatan Tambahan (Asisten Apoteker) -->
-                            <div class="flex flex-col flex-1 justify-end pt-1">
-                                <label class="block font-black text-pink-950 uppercase text-[8px] tracking-tight mb-1">Catatan</label>
-                                <div class="print:hidden flex flex-col gap-1 flex-1 justify-between">
-                                    <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
-                                        <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
-                                    </div>
-                                    <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
-                                        <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
-                                    </div>
-                                    <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
-                                        <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
-                                    </div>
-									<div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
-                                        <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
-                                    </div>
-                                </div>
-
-                                <!-- Output Mirroring saat Dicetak -->
-                                <div class="hidden print:block w-full flex-1 text-left">
-                                    <ul id="mirror-catatan-final-apotek" class="space-y-0.5 text-[8.5px] font-bold text-slate-800 list-none p-0 m-0 [word-break:break-word]">
-                                        <li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- BELUM ADA CATATAN -</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
+                    <!-- Indikator Lunas / Sisa Defisit -->
+                    <div id="status-indikator-defisit-apotek" class="w-full py-1 px-2 rounded-xl text-center font-black text-[9px] bg-slate-200 text-slate-700 border border-slate-300">
+                        Mengecek status defisit...
                     </div>
                 </div>
-            </div> 
+
+                <!-- Sesi Catatan Tambahan (Asisten Apoteker) -->
+                <div class="flex flex-col flex-1 justify-end pt-1">
+                    <label class="block font-black text-pink-950 uppercase text-[8px] tracking-tight mb-1">Catatan</label>
+                    <div class="print:hidden flex flex-col gap-1 flex-1 justify-between">
+                        <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
+                            <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
+                            <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
+                            <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
+                            <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
+                            <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
+                            <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-white border border-pink-300 px-2 py-0 shadow-xs rounded-lg">
+                            <span class="w-1.5 h-1.5 rounded-full bg-pink-600 flex-shrink-0"></span>
+                            <input type="text" class="input-catatan-chip-apotek w-full bg-transparent text-[8.5px] font-bold text-slate-800 focus:outline-none h-4.5">
+                        </div>
+                    </div>
+
+                    <!-- Output Mirroring saat Dicetak -->
+                    <div class="hidden print:block w-full flex-1 text-left">
+                        <ul id="mirror-catatan-final-apotek" class="space-y-0.5 text-[8.5px] font-bold text-slate-800 list-none p-0 m-0 [word-break:break-word]">
+                            <li class="flex items-start gap-1.5 text-slate-400 italic font-normal">- BELUM ADA CATATAN -</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
         </div>
 
         <!-- Footer Tombol Aksi -->
@@ -6350,5 +6094,298 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
+
+<!-- Modal Pengenalan Wajah -->
+<div id="modal-face-scanner" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[30000] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white w-full max-w-md rounded-[28px] p-6 shadow-2xl border border-slate-100 flex flex-col items-center space-y-4 relative transform scale-95 transition-all duration-300">
+        
+        <div class="w-full flex justify-between items-center pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-face-viewfinder text-emerald-600 text-xl animate-pulse"></i>
+                <h3 class="font-black text-slate-800 text-sm uppercase tracking-wider">Pemindaian Wajah Karyawan</h3>
+            </div>
+            <button type="button" onclick="tutupModalFaceScanner()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 hover:text-rose-600 text-slate-500 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="relative w-full aspect-square bg-slate-950 rounded-[20px] overflow-hidden flex items-center justify-center shadow-inner border-2 border-slate-200">
+            <video id="face-video" autoplay muted playsinline class="w-full h-full object-cover transform -scale-x-100"></video>
+            <canvas id="face-canvas" class="absolute inset-0 w-full h-full pointer-events-none transform -scale-x-100"></canvas>
+
+            <div id="face-loading" class="absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center text-white space-y-3 z-10">
+                <i class="fa-solid fa-circle-notch animate-spin text-3xl text-emerald-400"></i>
+                <span id="face-loading-text" class="text-xs font-bold tracking-wide">Memuat Model Deteksi Wajah...</span>
+            </div>
+        </div>
+
+        <div class="w-full text-center space-y-1">
+            <p id="face-status-text" class="text-xs font-black text-emerald-600 uppercase tracking-wide">Arahkan Wajah Anda ke Kamera</p>
+            <p class="text-[11px] text-slate-400 font-medium">Sistem akan mencocokkan identitas secara otomatis</p>
+        </div>
+    </div>
+</div>
+
+
+
+				<!-- Wrapper Modal Presensi Apotek Nurjaya -->
+<div id="wrapper_form_presensi_apotek" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[12000] flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300 hidden">
+    
+    <!-- Kartu Modal Utama -->
+    <div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-[28px] shadow-2xl border border-slate-100 flex flex-col overflow-hidden relative transform scale-95 transition-all duration-300">
+        
+        <!-- Header Modal Fixed -->
+        <div class="flex items-center justify-between bg-pink-50/90 p-4 px-6 border-b border-pink-100 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-pink-600 text-white flex items-center justify-center font-black text-sm shadow-md">
+                    <i class="fa-solid fa-prescription-bottle-medical"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-black text-gray-800 uppercase">Presensi Apotek Nurjaya</p>
+                    <p class="text-[11px] text-pink-700 font-bold">Terverifikasi via Pemindaian Wajah</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="bukaModalFaceScanner()" class="px-3 py-2 bg-pink-600 hover:bg-pink-700 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-camera"></i> Scan
+                </button>
+                <button type="button" onclick="tutupFormPresensiApotekModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-rose-100 hover:text-rose-600 text-slate-600 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+            </div>
+			</div>
+
+
+
+<!-- Wrapper Pop-up Modal Presensi Fotokopi -->
+<div id="wrapper_form_presensi" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[12000] flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300 hidden">
+    
+    <!-- Kartu Modal Utama -->
+    <div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-[28px] shadow-2xl border border-slate-100 flex flex-col overflow-hidden relative transform scale-95 transition-all duration-300">
+        
+        <!-- Header Modal Fixed -->
+        <div class="flex items-center justify-between bg-emerald-50/90 p-4 px-6 border-b border-emerald-100 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-md">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-black text-gray-800 uppercase">Presensi Nurjaya Abadi Photocopy</p>
+                    <p class="text-[11px] text-emerald-700 font-bold">Terverifikasi via Pemindaian Wajah</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="bukaModalFaceScanner()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-camera"></i> Scan
+                </button>
+                <button type="button" onclick="tutupFormPresensiModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-rose-100 hover:text-rose-600 text-slate-600 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Body Form (Scrollable) -->
+        <div class="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1 text-gray-700">
+            
+            <!-- AREA CARD PROFIL KARYAWAN TERDETEKSI (Menggantikan Dropdown) -->
+            <div class="space-y-2">
+                <p class="text-[11px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-id-card text-emerald-600"></i> Identitas Karyawan Terverifikasi
+                </p>
+
+                <!-- Container Card Dadan (Hidden by default) -->
+                <div id="card-profile-Dadan" class="card-karyawan-profile hidden bg-[#E8F1EC] p-4 sm:p-5 rounded-[28px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
+                    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL')">
+                        <img src="https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL" 
+                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                        <div class="absolute bottom-0 right-0 bg-emerald-600 w-5 h-5 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px]">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+                        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Dadan Nurfaizal</h5>
+                        
+                        <div class="flex items-center gap-1.5 mt-2">
+                            <a href="https://wa.me/6283130578886" target="_blank"
+                               class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                               title="Hubungi WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                            </a>
+                            <span class="inline-flex items-center h-7 text-[10px] font-black text-emerald-800 uppercase tracking-widest bg-white border border-[#B3D3C4] px-3 rounded-xl shadow-xs">
+                                Staf / Operator
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
+                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
+                        <span id="label-periode-Dadan" class="text-xs font-black text-emerald-800">Memuat...</span>
+                    </div>
+                </div>
+
+                <!-- Container Card Syamsi (Hidden by default) -->
+                <div id="card-profile-Syamsi" class="card-karyawan-profile hidden bg-[#E8F1EC] p-4 sm:p-5 rounded-[28px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
+                    <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ')">
+                        <img src="https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ" 
+                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                        <div class="absolute bottom-0 right-0 bg-emerald-600 w-5 h-5 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px]">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0 flex flex-col items-center text-center sm:items-start sm:text-left justify-center">
+                        <h5 class="text-base sm:text-lg font-black text-gray-800 leading-tight break-words w-full">Syamsi Nurhakim</h5>
+                        
+                        <div class="flex items-center gap-1.5 mt-2">
+                            <a href="https://wa.me/6282126333381" target="_blank"
+                               class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
+                               title="Hubungi WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                            </a>
+                            <span class="inline-flex items-center h-7 text-[10px] font-black text-emerald-800 uppercase tracking-widest bg-white border border-[#B3D3C4] px-3 rounded-xl shadow-xs">
+                                Staf / Operator
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
+                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
+                        <span id="label-periode-Syamsi" class="text-xs font-black text-emerald-800">Memuat...</span>
+                    </div>
+                </div>
+
+                <!-- Input Hidden Nama Karyawan untuk Kebutuhan Kirim Form ke Google Apps Script -->
+                <input type="hidden" id="presensi-karyawan" name="presensi-karyawan" value="">
+            </div>
+
+            <!-- Form Isian Presensi -->
+            <form id="form-presensi-nsa" class="space-y-5">
+                <div class="p-4 sm:p-5 bg-emerald-50 rounded-[24px] border border-emerald-200/80 shadow-sm space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label for="presensi-tanggal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-day text-green-600"></i> Hari / Tanggal Kerja
+                            </label>
+                            <input type="date" id="presensi-tanggal" required 
+                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-green-600"></i> Status Kehadiran
+                            </label>
+                            <div class="relative">
+                                <select id="presensi-kehadiran" required 
+                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                                    <option value="YA">YA (Hadir Kerja)</option>
+                                    <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-dashed border-emerald-200/60 my-1">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
+                            </label>
+                            <div class="relative">
+                                <select id="presensi-jadwal" required 
+                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                                    <option value="2">2 Karyawan (Full Team)</option>
+                                    <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
+                            <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal
+                            </label>
+                            <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
+                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        </div>
+                    </div>
+
+                    <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
+                        <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-exclamation text-green-600"></i> Alasan Tidak Hadir
+                        </label>
+                        <input type="text" id="presensi-alasan-absen" placeholder="Contoh: jatah libur, izin, sakit" disabled 
+                            class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 bg-orange-500 rounded-[24px] border border-orange-600 shadow-md space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label for="presensi-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-business-time text-orange-100"></i> Potongan Jam Kerja <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
+                            </label>
+                            <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00" 
+                                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        </div>
+                        
+                        <div class="space-y-1.5">
+                            <label for="presensi-alasan-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-comment-dots text-orange-100"></i> Alasan Potongan Jam
+                            </label>
+                            <input type="text" id="presensi-alasan-potongan" placeholder="Contoh: terlambat masuk" 
+                                class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 bg-blue-500 rounded-[24px] border border-blue-600 shadow-md space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label for="presensi-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-clock text-blue-100"></i> Tambahan Jam / Overtime
+                            </label>
+                            <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00" 
+                                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        </div>
+                        
+                        <div class="space-y-1.5">
+                            <label for="presensi-alasan-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-signature text-blue-100"></i> Alasan Tambahan Jam
+                            </label>
+                            <input type="text" id="presensi-alasan-tambahan" placeholder="Contoh: tutup toko jam 20.45" 
+                                class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-gray-100 flex justify-end">
+                    <button type="submit" id="btn-submit-presensi"
+                        class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi
+                    </button>
+                </div>
+                
+                <div class="pt-2 border-t border-dashed border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3 mt-3">
+                    <div class="text-center sm:text-left">
+                        <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Pengecekan Riwayat Pengisian</p>
+                    </div>
+                    <button type="button" id="btn-buka-modal" onclick="javascript:void(0)"
+                        class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs rounded-[16px] uppercase tracking-wider shadow-md shadow-blue-600/10 transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-address-card text-sm"></i> Tampilkan Presensi Bulan Ini
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
