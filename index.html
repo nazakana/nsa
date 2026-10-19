@@ -3432,7 +3432,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-// =========================================================================
+    // =========================================================================
     // INISIALISASI & FUNGSI PANZOOM JS (SISTEM BOUNDS GALERI PRESISI)
     // =========================================================================
     const areaCetak = document.getElementById("area-cetak-pdf");
@@ -3452,40 +3452,34 @@ document.addEventListener("DOMContentLoaded", function() {
         if (wrapperViewport) {
             wrapperViewport.addEventListener('wheel', panzoomInstance.zoomWithWheel);
             
-            // Jaga pembatas geser hanya ketika menyentuh batas luar kartu
             areaCetak.addEventListener('panzoomend', function() {
                 if (!panzoomInstance) return;
                 
                 const scale = panzoomInstance.getScale();
                 const pan = panzoomInstance.getPan();
                 
-                // Jika masih dalam skala awal (fit screen), kunci posisi ke tengah murni
                 if (Math.abs(scale - skalaFitUtama) < 0.02) {
                     panzoomInstance.pan(0, 0, { animate: true });
                     return;
                 }
 
-                // Jika sedang di-zoom, hitung batas area geser berdasarkan ukuran layar nyata
                 const containerW = wrapperViewport.clientWidth || (window.innerWidth - 32);
                 const containerH = wrapperViewport.clientHeight || (756 * skalaFitUtama);
                 
                 const currentW = 756 * scale;
                 const currentH = 756 * scale;
 
-                // Batas geser maksimum X dan Y (memberikan toleransi pembacaan detail)
                 const maxX = Math.max(0, (currentW - containerW) / 2);
                 const maxY = Math.max(0, (currentH - containerH) / 2);
 
                 let targetX = pan.x;
                 let targetY = pan.y;
 
-                // Hanya koreksi jika user menggeser melampaui tepi kartu (mencegah kartu hilang)
                 if (pan.x > maxX) targetX = maxX;
                 if (pan.x < -maxX) targetX = -maxX;
                 if (pan.y > maxY) targetY = maxY;
                 if (pan.y < -maxY) targetY = -maxY;
 
-                // Jika posisi melebihi batas tepi, balikan dengan halus (smooth snap-back)
                 if (targetX !== pan.x || targetY !== pan.y) {
                     panzoomInstance.pan(targetX, targetY, { animate: true });
                 }
@@ -3512,19 +3506,17 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-   function resetPanzoomMurni() {
+    function resetPanzoomMurni() {
         if (panzoomInstance) {
             panzoomInstance.setOptions({ minScale: 0.1 });
             panzoomInstance.reset({ animate: false });
         }
         const elementTarget = document.getElementById("area-cetak-pdf");
         if (elementTarget) {
-            // Paksa netralkan transform bawaan Panzoom agar tidak merusak html2canvas
             elementTarget.style.setProperty("transform", "none", "important");
         }
     }
 
-    // Mencegah reset zoom otomatis saat address bar HP sembunyi/tampil
     window.addEventListener("resize", function() {
         const lebarLayarSekarang = window.innerWidth;
         if (lebarLayarSekarang !== lebarLayarSebelumnya) {
@@ -3680,9 +3672,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // =========================================================================
     // FUNGSI 5: INJEKSI DATA API & PREVIEW MODAL
     // =========================================================================
-    // =========================================================================
-    // FUNGSI 5: INJEKSI DATA API & PREVIEW MODAL
-    // =========================================================================
     function pemicuBukaModal() {
         const karyawanTerpilih = selectKaryawan ? selectKaryawan.value : "";
         const pemetaanNamaLengkap = { 
@@ -3717,8 +3706,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
         if (tabelKananBody) tabelKananBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
         
-        // Beri jeda 150ms agar animasi transisi modal selesai mekar sempurna
-        // sehingga Panzoom dapat menghitung presisi lebar layar HP
         setTimeout(() => {
             if (typeof autoFitPanzoom === "function") {
                 autoFitPanzoom();
@@ -3835,7 +3822,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // =========================================================================
     // FUNGSI 6: DOWNLOAD PDF LOKAL
     // =========================================================================
-if (btnUnduhPdf) {
+    if (btnUnduhPdf) {
         btnUnduhPdf.addEventListener("click", function() {
             const elementTarget = document.getElementById("area-cetak-pdf");
             if (!elementTarget) return alert("Elemen area cetak tidak ditemukan!");
@@ -3846,10 +3833,7 @@ if (btnUnduhPdf) {
 
             sinkronisasiTeksKeMirror();
             
-            // Simpan style inline asli sebelum dinetralkan
             const styleAsli = elementTarget.getAttribute("style") || "";
-            
-            // Reset Panzoom & paksa transform murni ke skala 1:1
             resetPanzoomMurni();
 
             const txtNama = modalNamaKaryawan ? modalNamaKaryawan.textContent : "Karyawan";
@@ -3878,7 +3862,6 @@ if (btnUnduhPdf) {
                 pagebreak:     { mode: ['css', 'legacy'] }
             };
 
-            // Beri jeda 50ms agar browser sempat menerapkan transform: none sebelum ditangkap html2pdf
             setTimeout(() => {
                 html2pdf().set(opsiSetelan).from(elementTarget).save().then(() => {
                     elementTarget.setAttribute("style", styleAsli);
@@ -3899,7 +3882,7 @@ if (btnUnduhPdf) {
     // =========================================================================
     // FUNGSI 7: ARSIP KARTU PRESENSI KE GOOGLE DRIVE
     // =========================================================================
-if (btnUploadPresensiCloud) {
+    if (btnUploadPresensiCloud) {
         btnUploadPresensiCloud.addEventListener("click", function() {
             const elementTarget = document.getElementById("area-cetak-pdf");
             if (!elementTarget) return;
@@ -4064,8 +4047,6 @@ if (btnUploadPresensiCloud) {
 });
 
 
-
-
 // =========================================================================
 // LOGIKA KARTU PRESENSI APOTEK NURJAYA (SEPARATE ID & ENGINE)
 // =========================================================================
@@ -4092,12 +4073,10 @@ function inisialisasiPanzoomApotek() {
 
     if (!areaCetakApotek || typeof Panzoom === "undefined") return;
 
-    // Destroy instance lama jika ada
     if (panzoomInstanceApotek) {
         try { panzoomInstanceApotek.destroy(); } catch(e) {}
     }
 
-    // Inisialisasi Panzoom dengan opsi gesture lengkap
     panzoomInstanceApotek = Panzoom(areaCetakApotek, {
         maxScale: 4.0,
         minScale: 0.1,
@@ -4108,10 +4087,8 @@ function inisialisasiPanzoomApotek() {
     });
 
     if (wrapperViewportApotek) {
-        // Izinkan zoom menggunakan scroll wheel mouse / trackpad
         wrapperViewportApotek.addEventListener('wheel', panzoomInstanceApotek.zoomWithWheel, { passive: false });
 
-        // Event listener gesture sentuhan/pointer pada layar HP
         const parentTarget = areaCetakApotek.parentElement || wrapperViewportApotek;
         parentTarget.addEventListener('pointerdown', panzoomInstanceApotek.handleDown);
         parentTarget.addEventListener('pointermove', panzoomInstanceApotek.handleMove);
@@ -4129,10 +4106,8 @@ function autoFitPanzoomApotek() {
         inisialisasiPanzoomApotek();
     }
 
-    // Dapatkan lebar nyata dari wrapper viewport
     let lebarContainer = wrapperViewportApotek.clientWidth;
 
-    // Fallback: Jika container masih 0px (modal belum sempurna terbuka), ambil estimasi lebar layar HP
     if (!lebarContainer || lebarContainer <= 0) {
         const paddingModal = 32;
         lebarContainer = Math.min(window.innerWidth - paddingModal, 756);
@@ -4141,7 +4116,6 @@ function autoFitPanzoomApotek() {
     const lebarAsliKartu = 756;
     skalaFitUtamaApotek = lebarContainer / lebarAsliKartu;
 
-    // Sesuaikan tinggi container wrapper agar pas proporsional (persegi 1:1)
     wrapperViewportApotek.style.height = `${756 * skalaFitUtamaApotek}px`;
 
     if (panzoomInstanceApotek) {
@@ -4150,7 +4124,6 @@ function autoFitPanzoomApotek() {
             maxScale: 4.0
         });
 
-        // Setel skala fit tepat di tengah
         panzoomInstanceApotek.zoom(skalaFitUtamaApotek, { animate: false });
         panzoomInstanceApotek.pan(0, 0, { animate: false });
     }
@@ -4167,7 +4140,6 @@ function resetPanzoomMurniApotek() {
     }
 }
 
-// Window resize listener
 window.addEventListener("resize", function() {
     const lebarLayarSekarang = window.innerWidth;
     if (lebarLayarSekarang !== lebarLayarSebelumnyaApotek) {
@@ -4176,14 +4148,11 @@ window.addEventListener("resize", function() {
     }
 });
 
-// =========================================================================
-// AUTOMATIC OBSERVER (Mendeteksi saat modal dibuka secara otomatis)
-// =========================================================================
+// AUTOMATIC OBSERVER APOTEK
 document.addEventListener("DOMContentLoaded", function() {
     const modalTarget = document.getElementById("modal-kartu-presensi-apotek");
     
     if (modalTarget) {
-        // Observer untuk memantau perubahan class 'hidden' atau 'opacity-100' pada modal
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.attributeName === "class") {
@@ -4204,138 +4173,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// =========================================================================
-// FUNGSI DOWNLOAD PDF LOKAL APOTEK (CLEAN & FIXED RENDER)
-// =========================================================================
-if (btnUnduhPdfApotek) {
-    btnUnduhPdfApotek.addEventListener("click", function() {
-        const elementTarget = document.getElementById("area-cetak-pdf-apotek");
-        if (!elementTarget) return alert("Elemen area cetak Apotek tidak ditemukan!");
-
-        if (elementTarget.innerText.includes("Memuat data...")) {
-            return alert("Mohon tunggu, data riwayat presensi sedang dimuat!");
-        }
-
-        sinkronisasiTeksKeMirrorApotek();
-        
-        const styleAsli = elementTarget.getAttribute("style") || "";
-        resetPanzoomMurniApotek();
-
-        const txtNama = modalNamaKaryawanApotek ? modalNamaKaryawanApotek.textContent : "Karyawan";
-        const txtPeriode = modalPeriodeKerjaApotek ? modalPeriodeKerjaApotek.textContent : "Periode";
-        const namaFile = `Presensi_Apotek_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.pdf`;
-        
-        btnUnduhPdfApotek.setAttribute("disabled", "disabled");
-        btnUnduhPdfApotek.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> Merender PDF...`;
-
-        const opsiSetelan = {
-            margin:        0,
-            filename:      namaFile,
-            image:         { type: 'jpeg', quality: 1.0 },
-            html2canvas:   { 
-                scale: 3, 
-                useCORS: true, 
-                logging: false, 
-                scrollY: 0, 
-                scrollX: 0, 
-                width: 756, 
-                height: 756,
-                windowWidth: 756,
-                windowHeight: 756
-            },
-            jsPDF:         { unit: 'px', format: [756, 756], orientation: 'portrait' }, 
-            pagebreak:     { mode: ['css', 'legacy'] }
-        };
-
-        setTimeout(() => {
-            html2pdf().set(opsiSetelan).from(elementTarget).save().then(() => {
-                elementTarget.setAttribute("style", styleAsli);
-                autoFitPanzoomApotek();
-                btnUnduhPdfApotek.removeAttribute("disabled");
-                btnUnduhPdfApotek.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
-            }).catch(err => {
-                console.error(err);
-                elementTarget.setAttribute("style", styleAsli);
-                autoFitPanzoomApotek();
-                btnUnduhPdfApotek.removeAttribute("disabled");
-                btnUnduhPdfApotek.innerHTML = `<i class="fa-solid fa-cloud-arrow-down text-sm"></i> Unduh Dokumen PDF`;
-            });
-        }, 50);
-    });
-}
-
-
-// =========================================================================
-// FUNGSI ARSIP KARTU PRESENSI APOTEK KE GOOGLE DRIVE
-// =========================================================================
-if (btnUploadPresensiCloudApotek) {
-    btnUploadPresensiCloudApotek.addEventListener("click", function() {
-        const elementTarget = document.getElementById("area-cetak-pdf-apotek");
-        if (!elementTarget) return;
-
-        if (elementTarget.innerText.includes("Memuat data...")) {
-            return alert("Mohon tunggu, data riwayat presensi belum selesai dimuat!");
-        }
-
-        sinkronisasiTeksKeMirrorApotek();
-
-        const styleAsli = elementTarget.getAttribute("style") || "";
-        resetPanzoomMurniApotek();
-
-        const txtNama = modalNamaKaryawanApotek ? modalNamaKaryawanApotek.textContent : "Karyawan";
-        const txtPeriode = modalPeriodeKerjaApotek ? modalPeriodeKerjaApotek.textContent : "Periode";
-        const namaFile = `Presensi_Apotek_${txtNama.replace(/\s+/g, '_')}_${txtPeriode.replace(/\s+/g, '_')}.jpg`;
-        
-        btnUploadPresensiCloudApotek.setAttribute("disabled", "disabled");
-        btnUploadPresensiCloudApotek.classList.add("opacity-50", "cursor-not-allowed");
-        btnUploadPresensiCloudApotek.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Merender Gambar...`;
-
-        const opsiSetelan = {
-            margin:        0,
-            filename:      namaFile,
-            image:         { type: 'jpeg', quality: 1.0 },
-            html2canvas:   { 
-                scale: 3, 
-                useCORS: true, 
-                logging: false, 
-                scrollY: 0, 
-                scrollX: 0, 
-                width: 756, 
-                height: 756,
-                windowWidth: 756,
-                windowHeight: 756
-            },
-            jsPDF:         { unit: 'px', format: [756, 756], orientation: 'portrait' }, 
-            pagebreak:     { mode: ['css', 'legacy'] }
-        };
-
-        setTimeout(() => {
-            html2pdf().set(opsiSetelan).from(elementTarget).outputImg('dataurl').then(function(dataUri) {
-                elementTarget.setAttribute("style", styleAsli);
-                autoFitPanzoomApotek();
-                
-                const base64String = dataUri.split(',')[1];
-                
-                if (!base64String || base64String.trim() === "") {
-                    throw new Error("Gagal mengambil data gambar presensi apotek.");
-                }
-                
-                btnUploadPresensiCloudApotek.innerHTML = `<i class="fa-solid fa-gear animate-spin text-xs"></i> Mengupload Gambar...`;
-                
-                return kirimKeAppsScriptApotek(base64String, namaFile);
-            })
-            .catch(err => {
-                console.error("Error ekspor/upload gambar apotek:", err);
-                elementTarget.setAttribute("style", styleAsli);
-                autoFitPanzoomApotek();
-                alert("Gagal merender/mengirim Gambar: " + err.message);
-                resetStatusTombolUploadApotek();
-            });
-        }, 50);
-    });
-}
-
-
+// SINKRONISASI CATATAN APOTEK
 function sinkronisasiCatatanApotek() {
     const listChipsInput = document.querySelectorAll('.input-catatan-chip-apotek');
     const mirrorCatatan = document.getElementById("mirror-catatan-final-apotek");
@@ -4366,7 +4204,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-
+// FUNGSI UTAMA MEMBUKA & MEMUAT DATA KARTU APOTEK
 function pemicuBukaKartuApotek() {
     const namaKaryawan = document.getElementById("presensi-karyawan-apotek")?.value;
     const modal = document.getElementById("modal-kartu-presensi-apotek");
@@ -4383,398 +4221,130 @@ function pemicuBukaKartuApotek() {
     const tabelKanan = document.getElementById("tabel-kanan-body-apotek");
 
     if (modalNama) {
-        modalNama.textContent =
-            PEMETAAN_NAMA_APOTEK[namaKaryawan] || namaKaryawan;
+        modalNama.textContent = PEMETAAN_NAMA_APOTEK[namaKaryawan] || namaKaryawan;
     }
 
-    if (modalPeriode) {
-        modalPeriode.textContent = "...";
-    }
+    if (modalPeriode) modalPeriode.textContent = "...";
+    if (modalTotalHari) modalTotalHari.textContent = "0";
 
-    if (modalTotalHari) {
-        modalTotalHari.textContent = "0";
-    }
-
-    tabelKiri.innerHTML = `
-        <tr>
-            <td colspan="5"
-                class="py-4 text-center text-gray-400 italic text-[10px]">
-                Memuat data...
-            </td>
-        </tr>
-    `;
-
-    tabelKanan.innerHTML = `
-        <tr>
-            <td colspan="5"
-                class="py-4 text-center text-gray-400 italic text-[10px]">
-                Memuat data...
-            </td>
-        </tr>
-    `;
-
-
-    // ================================================================
-    // BUKA MODAL
-    // ================================================================
+    tabelKiri.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
+    tabelKanan.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
 
     modal.classList.remove("hidden");
 
     setTimeout(() => {
-
-        modal.classList.remove(
-            "opacity-0",
-            "pointer-events-none"
-        );
-
+        modal.classList.remove("opacity-0", "pointer-events-none");
         const innerBox = modal.querySelector(".transform");
+        if (innerBox) innerBox.classList.remove("scale-95");
 
-        if (innerBox) {
-            innerBox.classList.remove("scale-95");
-        }
-
-        // Tunggu layout modal selesai dihitung browser
         requestAnimationFrame(() => {
-            paskanKartuApotekKeLayarHP();
+            autoFitPanzoomApotek();
         });
-
     }, 10);
 
-
-    // ================================================================
-    // AMBIL DATA KARTU
-    // ================================================================
-
-    fetch(
-        `${API_URL_KARTU_APOTEK}?sheetName=${encodeURIComponent(namaKaryawan)}&tanggal=${encodeURIComponent(tglInput)}`
-    )
+    // FETCH DATA API SPREADSHEET APOTEK
+    fetch(`${API_URL_KARTU_APOTEK}?sheetName=${encodeURIComponent(namaKaryawan)}&tanggal=${encodeURIComponent(tglInput)}`)
         .then(res => {
-            if (!res.ok) {
-                throw new Error(`HTTP ${res.status}`);
-            }
-
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return res.json();
         })
-
         .then(result => {
-
-            if (
-                result.status !== "success" ||
-                !result.data ||
-                result.data.length === 0
-            ) {
-
-                tabelKiri.innerHTML = `
-                    <tr>
-                        <td colspan="5"
-                            class="py-4 text-center text-amber-600 text-[10px]">
-                            Data Kosong
-                        </td>
-                    </tr>
-                `;
-
-                tabelKanan.innerHTML = `
-                    <tr>
-                        <td colspan="5"
-                            class="py-4 text-center text-amber-600 text-[10px]">
-                            Data Kosong
-                        </td>
-                    </tr>
-                `;
-
+            if (result.status !== "success" || !result.data || result.data.length === 0) {
+                tabelKiri.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
+                tabelKanan.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
                 return;
             }
 
+            // DETEKSI PERIODE AKTIF TERBARU & FILTER DATA
+            const totalDataAwal = result.data.length;
+            const barisTerakhir = result.data[totalDataAwal - 1];
+            const periodeAktif = barisTerakhir?.periode || result.data[0]?.periode;
 
-            const dataRows = result.data;
+            const dataRows = result.data.filter(row => row.periode === periodeAktif);
 
-            if (modalTotalHari) {
-                modalTotalHari.textContent = dataRows.length;
+            if (dataRows.length === 0) {
+                tabelKiri.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Periode Ini Kosong</td></tr>`;
+                tabelKanan.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Periode Ini Kosong</td></tr>`;
+                return;
             }
 
-            if (modalPeriode && dataRows[0]?.periode) {
-                modalPeriode.textContent = dataRows[0].periode;
-            }
-
+            if (modalTotalHari) modalTotalHari.textContent = dataRows.length;
+            if (modalPeriode) modalPeriode.textContent = periodeAktif;
 
             tabelKiri.innerHTML = "";
             tabelKanan.innerHTML = "";
 
-
-            let countShift1 = 0;
-            let countShift2 = 0;
-            let countLembur = 0;
-            let countKhusus = 0;
-            let countLibur = 0;
-            let countAbsen = 0;
-
-            let totalDefisitMenit = 0;
-            let totalGantiMenit = 0;
-
-
-            // ============================================================
-            // RENDER DATA
-            // ============================================================
+            let countShift1 = 0, countShift2 = 0, countLembur = 0, countKhusus = 0, countLibur = 0, countAbsen = 0;
+            let totalDefisitMenit = 0, totalGantiMenit = 0;
 
             dataRows.forEach((row, index) => {
-
                 const hariKe = index + 1;
-
-                const presensiStr =
-                    String(row.presensi || "").trim();
-
-                const jamKhususStr =
-                    String(row.jam_khusus || "").trim();
-
-                const defisitStr =
-                    String(row.defisit_jam || "00:00").trim();
-
-                const gantiStr =
-                    String(row.penggantian_jam || "00:00").trim();
-
+                const presensiStr = String(row.presensi || "").trim();
+                const jamKhususStr = String(row.jam_khusus || "").trim();
+                const defisitStr = String(row.defisit_jam || "00:00").trim();
+                const gantiStr = String(row.penggantian_jam || "00:00").trim();
 
                 let teksPresensiDisplay = presensiStr;
-
-                if (
-                    presensiStr === "Khusus" &&
-                    jamKhususStr !== ""
-                ) {
+                if (presensiStr === "Khusus" && jamKhususStr !== "") {
                     teksPresensiDisplay = jamKhususStr;
                 }
 
+                if (presensiStr.includes("Shift 1")) countShift1++;
+                else if (presensiStr.includes("Shift 2")) countShift2++;
+                else if (presensiStr.includes("Lembur")) countLembur++;
+                else if (presensiStr.includes("Khusus")) countKhusus++;
+                else if (presensiStr.includes("Libur")) countLibur++;
+                else countAbsen++;
 
-                // --------------------------------------------------------
-                // Kalkulasi Rekap
-                // --------------------------------------------------------
-
-                if (presensiStr.includes("Shift 1")) {
-                    countShift1++;
-                }
-
-                else if (presensiStr.includes("Shift 2")) {
-                    countShift2++;
-                }
-
-                else if (presensiStr.includes("Lembur")) {
-                    countLembur++;
-                }
-
-                else if (presensiStr.includes("Khusus")) {
-                    countKhusus++;
-                }
-
-                else if (presensiStr.includes("Libur")) {
-                    countLibur++;
-                }
-
-                else {
-                    countAbsen++;
-                }
-
-
-                // --------------------------------------------------------
-                // Kalkulasi Jam Defisit & Penggantian
-                // --------------------------------------------------------
-
-                totalDefisitMenit +=
-                    parseJamKeMenit(defisitStr);
-
-                totalGantiMenit +=
-                    parseJamKeMenit(gantiStr);
-
-
-                // --------------------------------------------------------
-                // Baris tabel
-                // --------------------------------------------------------
+                totalDefisitMenit += parseJamKeMenit(defisitStr);
+                totalGantiMenit += parseJamKeMenit(gantiStr);
 
                 const trHtml = `
                     <tr class="h-[18px] bg-white text-[8.5px]">
-
-                        <td class="border-r border-pink-900 py-0.5 text-center font-mono font-normal text-slate-500">
-                            ${hariKe}
-                        </td>
-
-                        <td class="border-r border-pink-900 py-0.5 text-center font-semibold">
-                            ${formatSingkatTanggalIndo(row.tanggal)}
-                        </td>
-
-                        <td class="border-r border-pink-900 py-0.5 text-center uppercase tracking-tighter text-[8px] font-black">
-                            ${teksPresensiDisplay}
-                        </td>
-
-                        <td class="border-r border-pink-900 py-0.5 text-center text-amber-700">
-                            ${defisitStr !== "00:00" ? defisitStr : "-"}
-                        </td>
-
-                        <td class="py-0.5 text-center text-emerald-700">
-                            ${gantiStr !== "00:00" ? gantiStr : "-"}
-                        </td>
-
+                        <td class="border-r border-pink-900 py-0.5 text-center font-mono font-normal text-slate-500">${hariKe}</td>
+                        <td class="border-r border-pink-900 py-0.5 text-center font-semibold">${formatSingkatTanggalIndo(row.tanggal)}</td>
+                        <td class="border-r border-pink-900 py-0.5 text-center uppercase tracking-tighter text-[8px] font-black">${teksPresensiDisplay}</td>
+                        <td class="border-r border-pink-900 py-0.5 text-center text-amber-700">${defisitStr !== "00:00" ? defisitStr : "-"}</td>
+                        <td class="py-0.5 text-center text-emerald-700">${gantiStr !== "00:00" ? gantiStr : "-"}</td>
                     </tr>
                 `;
 
-
-                if (hariKe <= 15) {
-                    tabelKiri.insertAdjacentHTML(
-                        "beforeend",
-                        trHtml
-                    );
-                }
-
-                else {
-                    tabelKanan.insertAdjacentHTML(
-                        "beforeend",
-                        trHtml
-                    );
-                }
-
+                if (hariKe <= 15) tabelKiri.insertAdjacentHTML("beforeend", trHtml);
+                else tabelKanan.insertAdjacentHTML("beforeend", trHtml);
             });
 
-
-            // ============================================================
-            // FILL BARIS KOSONG
-            // ============================================================
-
             while (tabelKiri.children.length < 15) {
-
-                tabelKiri.insertAdjacentHTML(
-                    "beforeend",
-                    `
-                    <tr class="h-[18px]">
-                        <td class="border-r border-pink-200">&nbsp;</td>
-                        <td class="border-r border-pink-200"></td>
-                        <td class="border-r border-pink-200"></td>
-                        <td class="border-r border-pink-200"></td>
-                        <td></td>
-                    </tr>
-                    `
-                );
-
+                tabelKiri.insertAdjacentHTML("beforeend", `<tr class="h-[18px]"><td class="border-r border-pink-200">&nbsp;</td><td class="border-r border-pink-200"></td><td class="border-r border-pink-200"></td><td class="border-r border-pink-200"></td><td></td></tr>`);
             }
-
 
             while (tabelKanan.children.length < 15) {
-
-                tabelKanan.insertAdjacentHTML(
-                    "beforeend",
-                    `
-                    <tr class="h-[18px]">
-                        <td class="border-r border-pink-200">&nbsp;</td>
-                        <td class="border-r border-pink-200"></td>
-                        <td class="border-r border-pink-200"></td>
-                        <td class="border-r border-pink-200"></td>
-                        <td></td>
-                    </tr>
-                    `
-                );
-
+                tabelKanan.insertAdjacentHTML("beforeend", `<tr class="h-[18px]"><td class="border-r border-pink-200">&nbsp;</td><td class="border-r border-pink-200"></td><td class="border-r border-pink-200"></td><td class="border-r border-pink-200"></td><td></td></tr>`);
             }
 
+            document.getElementById("rekap-shift1-apotek").textContent = `${countShift1} hari`;
+            document.getElementById("rekap-shift2-apotek").textContent = `${countShift2} hari`;
+            document.getElementById("rekap-lembur-apotek").textContent = `${countLembur} hari`;
+            document.getElementById("rekap-khusus-apotek").textContent = `${countKhusus} hari`;
+            document.getElementById("rekap-totalkERJA-apotek").textContent = `${countShift1 + countShift2 + countLembur + countKhusus} hari`;
+            document.getElementById("rekap-libur-apotek").textContent = `${countLibur} hari`;
+            document.getElementById("rekap-absen-apotek").textContent = `${countAbsen} hari`;
 
-            // ============================================================
-            // UPDATE REKAP KIRI
-            // ============================================================
+            document.getElementById("rekap-total-defisit-apotek").textContent = formatMenitKeTeksJam(totalDefisitMenit);
+            document.getElementById("rekap-total-ganti-apotek").textContent = formatMenitKeTeksJam(totalGantiMenit);
 
-            document.getElementById(
-                "rekap-shift1-apotek"
-            ).textContent = `${countShift1} hari`;
-
-            document.getElementById(
-                "rekap-shift2-apotek"
-            ).textContent = `${countShift2} hari`;
-
-            document.getElementById(
-                "rekap-lembur-apotek"
-            ).textContent = `${countLembur} hari`;
-
-            document.getElementById(
-                "rekap-khusus-apotek"
-            ).textContent = `${countKhusus} hari`;
-
-            document.getElementById(
-                "rekap-totalkERJA-apotek"
-            ).textContent =
-                `${countShift1 + countShift2 + countLembur + countKhusus} hari`;
-
-            document.getElementById(
-                "rekap-libur-apotek"
-            ).textContent = `${countLibur} hari`;
-
-            document.getElementById(
-                "rekap-absen-apotek"
-            ).textContent = `${countAbsen} hari`;
-
-
-            // ============================================================
-            // UPDATE REKAP KANAN
-            // ============================================================
-
-            document.getElementById(
-                "rekap-total-defisit-apotek"
-            ).textContent =
-                formatMenitKeTeksJam(totalDefisitMenit);
-
-            document.getElementById(
-                "rekap-total-ganti-apotek"
-            ).textContent =
-                formatMenitKeTeksJam(totalGantiMenit);
-
-
-            // ============================================================
-            // INDIKATOR DEFISIT
-            // ============================================================
-
-            const elIndikator =
-                document.getElementById(
-                    "status-indikator-defisit-apotek"
-                );
-
-
+            const elIndikator = document.getElementById("status-indikator-defisit-apotek");
             if (totalDefisitMenit <= totalGantiMenit) {
-
-                elIndikator.className =
-                    "w-full py-1 px-2 rounded-xl text-center font-black text-[9px] bg-emerald-100 text-emerald-900 border border-emerald-300";
-
-                elIndikator.innerHTML = `
-                    <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i>
-                    Defisit Jam Telah Tergantikan
-                `;
-
+                elIndikator.className = "w-full py-1 px-2 rounded-xl text-center font-black text-[9px] bg-emerald-100 text-emerald-900 border border-emerald-300";
+                elIndikator.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Defisit Jam Telah Tergantikan`;
+            } else {
+                const sisaMenit = totalDefisitMenit - totalGantiMenit;
+                elIndikator.className = "w-full py-1 px-2 rounded-xl text-center font-black text-[9px] bg-amber-100 text-amber-900 border border-amber-300";
+                elIndikator.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i> Defisit Jam tersisa: ${formatMenitKeTeksJam(sisaMenit)}`;
             }
-
-            else {
-
-                const sisaMenit =
-                    totalDefisitMenit - totalGantiMenit;
-
-                elIndikator.className =
-                    "w-full py-1 px-2 rounded-xl text-center font-black text-[9px] bg-amber-100 text-amber-900 border border-amber-300";
-
-                elIndikator.innerHTML = `
-                    <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i>
-                    Defisit Jam tersisa: ${formatMenitKeTeksJam(sisaMenit)}
-                `;
-
-            }
-
         })
-
         .catch(err => {
-
-            console.error(
-                "Gagal membaca kartu presensi apotek:",
-                err
-            );
-
-            tabelKiri.innerHTML = `
-                <tr>
-                    <td colspan="5"
-                        class="py-4 text-center text-rose-600 text-[10px]">
-                        Gagal Memuat Data
-                    </td>
-                </tr>
-            `;
-
+            console.error("Gagal membaca kartu presensi apotek:", err);
+            tabelKiri.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-rose-600 text-[10px]">Gagal Memuat Data</td></tr>`;
         });
 }
 
@@ -4788,7 +4358,7 @@ function tutupModalKartuApotek() {
     }, 200);
 }
 
-// Helper Formatting Waktu & Tanggal
+// HELPER FORMATTING
 function parseJamKeMenit(strJam) {
     if (!strJam || strJam === "-") return 0;
     const parts = strJam.split(":");
@@ -4815,7 +4385,7 @@ function formatSingkatTanggalIndo(strTanggalFull) {
     return strTanggalFull;
 }
 
-// Unduh PDF Lokal Apotek
+// UNDUH PDF LOKAL APOTEK
 function unduhKartuApotekPdf() {
     const elementTarget = document.getElementById("area-cetak-pdf-apotek");
     const btn = document.getElementById("btn-unduh-pdf-apotek");
@@ -4853,7 +4423,7 @@ function unduhKartuApotekPdf() {
     });
 }
 
-// Upload Gambar ke Google Drive Apotek
+// UPLOAD GAMBAR KE DRIVE APOTEK
 function uploadKartuApotekKeDrive() {
     const elementTarget = document.getElementById("area-cetak-pdf-apotek");
     const btn = document.getElementById("btn-upload-presensi-cloud-apotek");
