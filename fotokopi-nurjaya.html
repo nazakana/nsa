@@ -2910,7 +2910,13 @@ function toggleGatePass() {
                     <span>Pengaturan</span>
                 </button>
             </div>
-
+			
+			<!-- 3. Tombol Ganti PIN Privasi (Lebar 1 Baris Penuh) -->
+<button type="button" onclick="bukaModalGantiPinFotokopi(); toggleMenuSidebar();" 
+        class="w-full h-12 bg-gradient-to-r from-pink-600 to-rose-700 hover:from-pink-700 hover:to-rose-800 text-white rounded-2xl shadow-md flex items-center justify-center gap-2.5 focus:outline-none transition-all font-bold text-sm uppercase tracking-wide active:scale-[0.98]">
+    <i class="fa-solid fa-key text-pink-200"></i>
+    <span>Ganti PIN Privasi</span>
+</button>
 
 
 
@@ -6310,150 +6316,268 @@ const resetStatusTombolUpload = transformToScaleNormal;
 
 
 <!-- ================= MODAL ALERT UNIVERSAL CLOUD FOTOKOPI ================= -->
-<div id="modal-alert-fotokopi" class="fixed inset-0 z-[15000] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
-    <div id="fotokopi-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
+<div id="modal-alert-fotokopi" 
+     class="fixed inset-0 z-[999999] hidden items-end justify-center p-4 sm:p-6 bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-200 ease-out select-none"
+     onclick="event.stopPropagation();">
+    
+    <!-- Box Alert -->
+    <div id="fotokopi-box-content" 
+         onclick="event.stopPropagation();" 
+         class="bg-white w-full max-w-sm rounded-[32px] p-6 text-center shadow-2xl border border-slate-100 transform translate-y-8 transition-all duration-200 ease-out space-y-4 mb-2 pointer-events-auto">
         
-        <!-- Wadah Lingkaran Icon (Warna & Icon akan diatur dinamis lewat JS) -->
-        <div id="fotokopi-alert-icon-box" class="mx-auto w-16 h-16 rounded-full flex items-center justify-center text-2xl animate-bounce">
+        <!-- Wadah Ikon Lingkaran Pastel -->
+        <div id="fotokopi-alert-icon-box" class="mx-auto w-20 h-20 rounded-full flex items-center justify-center text-3xl transition-colors">
             <i id="fotokopi-alert-icon" class="fa-solid"></i>
         </div>
 
         <!-- Wadah Teks Informasi -->
-        <div class="space-y-1">
-            <h3 id="fotokopi-alert-judul" class="text-lg font-black text-gray-900 uppercase tracking-wide leading-tight"></h3>
-            <p id="fotokopi-alert-deskripsi" class="text-xs font-bold text-gray-500 leading-relaxed px-2"></p>
+        <div class="space-y-1.5 px-2">
+            <h3 id="fotokopi-alert-judul" class="text-lg font-bold text-slate-900 tracking-tight leading-snug"></h3>
+            <p id="fotokopi-alert-deskripsi" class="text-xs font-normal text-slate-500 leading-relaxed"></p>
         </div>
 
         <!-- Tombol Konfirmasi -->
-        <button type="button" onclick="tutupAlertFotokopi()" id="fotokopi-alert-btn"
-            class="w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all">
+        <button type="button" 
+                onclick="tutupAlertFotokopi(event)" 
+                id="fotokopi-alert-btn"
+                class="w-full py-3.5 text-xs font-bold tracking-wide uppercase rounded-full shadow-md active:scale-95 transition-all duration-150">
             SAYA MENGERTI
         </button>
     </div>
 </div>
 
-
-
 <script>
+// ====================================================================
+// SYSTEM ALERT & OVERRIDE FOTOKOPI (ISOLATED & PROMISE-BASED)
+// ====================================================================
+
+let resolveAlertPromise = null;
+let bodyOverflowSebelumnya = '';
+
 /**
- * GLOBAL OVERRIDE: Mengalihkan fungsi alert() bawaan browser secara otomatis
- * ke modal kustom NSA CLOUD Fotokopi tanpa mengubah kode lama satu per satu.
+ * GLOBAL OVERRIDE: Mengalihkan window.alert bawaan
  */
 window.alert = function(pesan) {
-    // Deteksi otomatis: jika ada kata 'gagal', 'error', 'salah', atau 'periksa', set jadi tipe error
+    if (pesan === undefined || pesan === null) return Promise.resolve();
+
     const kataKunciError = ['gagal', 'error', 'salah', 'periksa', 'ditolak', 'kosong', 'ulang', 'ulangi', 'tidak berhasil'];
-    const apakahError = kataKunciError.some(kata => pesan.toLowerCase().includes(kata));
+    const apakahError = kataKunciError.some(kata => String(pesan).toLowerCase().includes(kata));
 
-    if (apakahError) {
-        bukaAlertFotokopi(
-            "error", 
-            "Sistem Peringatan", 
-            pesan.replace(/\n/g, "<br>") // Ubah \n bawaan alert lama menjadi <br> agar rapi di HTML
-        );
-    } else {
-        bukaAlertFotokopi(
-            "sukses", 
-            "Notifikasi Sistem", 
-            pesan.replace(/\n/g, "<br>")
-        );
-    }
+    const tipe = apakahError ? "error" : "sukses";
+    const judul = apakahError ? "Sistem Peringatan" : "Notifikasi Baru";
+    const deskripsiFormatted = String(pesan).replace(/\n/g, "<br>");
+
+    return bukaAlertFotokopi(tipe, judul, deskripsiFormatted);
 };
-</script>
 
-<script>
 /**
- * UTILITY: Membuka Modal Alert Kustom Fotokopi (Dinamis Sukses/Gagal)
- * @param {string} tipe - 'sukses' atau 'error'
+ * UTILITY: Membuka Modal Alert Kustom
  */
 function bukaAlertFotokopi(tipe, judul, deskripsi) {
-    const modal = document.getElementById('modal-alert-fotokopi');
-    const box = document.getElementById('fotokopi-box-content');
-    const iconBox = document.getElementById('fotokopi-alert-icon-box');
-    const icon = document.getElementById('fotokopi-alert-icon');
-    const judulElem = document.getElementById('fotokopi-alert-judul');
-    const deskripsiElem = document.getElementById('fotokopi-alert-deskripsi');
-    const btn = document.getElementById('fotokopi-alert-btn');
+    return new Promise((resolve) => {
+        // Jika masih ada alert aktif sebelumnya, selesaikan promise lama terlebih dahulu
+        if (typeof resolveAlertPromise === 'function') {
+            resolveAlertPromise();
+        }
+        resolveAlertPromise = resolve;
 
-    if (!modal || !box || !iconBox || !icon || !judulElem || !deskripsiElem || !btn) return;
+        const modal = document.getElementById('modal-alert-fotokopi');
+        const box = document.getElementById('fotokopi-box-content');
+        const iconBox = document.getElementById('fotokopi-alert-icon-box');
+        const icon = document.getElementById('fotokopi-alert-icon');
+        const judulElem = document.getElementById('fotokopi-alert-judul');
+        const deskripsiElem = document.getElementById('fotokopi-alert-deskripsi');
+        const btn = document.getElementById('fotokopi-alert-btn');
 
-    // Setel konten teks
-    judulElem.innerHTML = judul;
-    deskripsiElem.innerHTML = deskripsi;
+        if (!modal || !box) {
+            resolve();
+            return;
+        }
 
-    // Atur visual berdasarkan tipe respon cloud
-    if (tipe === 'sukses') {
-        // Tema Hijau Emerald khas Fotokopi
-        box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
-        iconBox.className = "mx-auto w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl animate-bounce border border-emerald-200";
-        icon.className = "fa-solid fa-cloud-arrow-up";
-        btn.className = "w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
-    } else {
-        // Tema Merah/Rose jika terjadi masalah koneksi
-        box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-rose-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
-        iconBox.className = "mx-auto w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center text-2xl animate-pulse border border-rose-200";
-        icon.className = "fa-solid fa-circle-exclamation";
-        btn.className = "w-full py-3 bg-gradient-to-r from-rose-500 to-red-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
-    }
+        // Simpan gaya overflow body awal (hanya jika belum disimpan)
+        if (!modal.classList.contains('flex')) {
+            bodyOverflowSebelumnya = document.body.style.overflow;
+        }
 
-    // Aktifkan layout grid PWA
-    modal.classList.remove('hidden');
-    modal.classList.add('grid');
-    
-    setTimeout(() => {
-        box.classList.remove('scale-95', 'opacity-0');
-        box.classList.add('scale-100', 'opacity-100');
-    }, 50);
+        // Setel Teks
+        if (judulElem) judulElem.innerHTML = judul;
+        if (deskripsiElem) deskripsiElem.innerHTML = deskripsi;
+
+        // Setel Visual Tipe
+        if (tipe === 'sukses') {
+            if (iconBox) iconBox.className = "mx-auto w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-3xl";
+            if (icon) icon.className = "fa-solid fa-bell";
+            if (btn) btn.className = "w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold tracking-wide uppercase rounded-full shadow-lg shadow-emerald-200 active:scale-95 transition-all";
+        } else {
+            if (iconBox) iconBox.className = "mx-auto w-20 h-20 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center text-3xl";
+            if (icon) icon.className = "fa-solid fa-triangle-exclamation";
+            if (btn) btn.className = "w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold tracking-wide uppercase rounded-full shadow-lg shadow-rose-200 active:scale-95 transition-all";
+        }
+
+        // Tampilkan Modal Alert
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+
+        // Trigger Animasi Slide Up
+        requestAnimationFrame(() => {
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+            box.classList.remove('translate-y-8');
+            box.classList.add('translate-y-0');
+        });
+    });
 }
 
 /**
- * UTILITY: Menutup Modal Alert Kustom Fotokopi
+ * UTILITY: Menutup Modal Alert Kustom
  */
-function tutupAlertFotokopi() {
+function tutupAlertFotokopi(e) {
+    if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+    }
+
     const modal = document.getElementById('modal-alert-fotokopi');
     const box = document.getElementById('fotokopi-box-content');
 
     if (!modal || !box) return;
 
-    box.classList.remove('scale-100', 'opacity-100');
-    box.classList.add('scale-95', 'opacity-0');
+    // Trigger Animasi Slide Down
+    modal.classList.remove('opacity-100');
+    modal.classList.add('opacity-0');
+    box.classList.remove('translate-y-0');
+    box.classList.add('translate-y-8');
 
     setTimeout(() => {
-        modal.classList.remove('grid');
+        modal.classList.remove('flex');
         modal.classList.add('hidden');
-    }, 300);
+
+        // Kembalikan overflow body ke kondisi semula sebelum alert dipanggil
+        document.body.style.overflow = bodyOverflowSebelumnya;
+
+        // Resolve Promise agar baris `await alert(...)` di kode utama dapat berlanjut
+        if (typeof resolveAlertPromise === 'function') {
+            const currentResolve = resolveAlertPromise;
+            resolveAlertPromise = null;
+            currentResolve();
+        }
+    }, 200);
 }
+
+// Mencegah Klik Backdrop Lolos Ke Element Lain
+document.addEventListener('DOMContentLoaded', () => {
+    const alertModal = document.getElementById('modal-alert-fotokopi');
+    if (alertModal) {
+        alertModal.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (e.target === alertModal) {
+                tutupAlertFotokopi(e);
+            }
+        });
+        
+        // Mencegah Mousedown/Pointerdown Lolos ke Listener Modal Lain
+        alertModal.addEventListener('mousedown', (e) => e.stopPropagation());
+        alertModal.addEventListener('touchstart', (e) => e.stopPropagation());
+    }
+});
 </script>
 
 
 <script>
 // ====================================================================
-// CONFIG & INSTANSIASI FITUR BARANG KOSONG (NSA) - V2 WITH CATATAN
+// CONFIG & INSTANSIASI FITUR BARANG KOSONG (NSA) - V3 CLEAN STACK
 // ====================================================================
 const API_BARANG_KOSONG = "https://script.google.com/macros/s/AKfycbxEOZBmgmXeFeG_lkkCY5OOUESufebQ2Pj9Y9NiaNcpLde-bPUQshXrlVnzDtf3s1-wfQ/exec";
 const NO_WA_TUJUAN = "6285211029598"; 
 
 let listDataGambarPreview = [];
 
-// 1. Fungsi Utama: Buka Modal
+/**
+ * FUNGSI UTAMA SWITCH VIEW (ISOLASI TOTAL TANPA STUCK)
+ */
+/**
+ * FUNGSI UTAMA SWITCH VIEW (DENGAN KONTROL TOMBOL X)
+ */
+function switchViewBK(targetView) {
+    const vInput = document.getElementById('viewInputBK');
+    const vPreview = document.getElementById('viewPreviewBK');
+    const vTambah = document.getElementById('viewTambahBarangBK');
+    const titleEl = document.getElementById('titleModalBK');
+    const iconHeader = document.getElementById('iconHeaderBK');
+    const btnClose = document.getElementById('btnCloseBK'); // Tombol X
+
+    // Hide semua layer view
+    if (vInput) { vInput.classList.add('hidden'); vInput.classList.remove('flex'); }
+    if (vPreview) { vPreview.classList.add('hidden'); vPreview.classList.remove('flex'); }
+    if (vTambah) { vTambah.classList.add('hidden'); vTambah.classList.remove('flex'); }
+
+    if (targetView === 'viewInput') {
+        if (vInput) { vInput.classList.remove('hidden'); vInput.classList.add('flex'); }
+        if (titleEl) titleEl.innerText = "Daftar Barang Kosong";
+        if (iconHeader) iconHeader.className = "fas fa-exclamation-triangle text-lg text-amber-100";
+        
+        // TAMPILKAN TOMBOL X jika sedang di Halaman Utama Induk
+        if (btnClose) btnClose.style.display = 'flex';
+    } 
+    else if (targetView === 'viewPreview') {
+        if (vPreview) { vPreview.classList.remove('hidden'); vPreview.classList.add('flex'); }
+        if (titleEl) titleEl.innerText = "Preview Format Cetak";
+        if (iconHeader) iconHeader.className = "fas fa-print text-lg text-amber-100";
+        
+        // SEMBUNYIKAN TOMBOL X jika sedang di Preview Format Cetak
+        if (btnClose) btnClose.style.display = 'none';
+    } 
+    else if (targetView === 'viewTambah') {
+        // Reset Form saat membuka view tambah barang
+        const form = document.getElementById('formTambahBarangBK');
+        if (form) form.reset();
+
+        if (vTambah) { vTambah.classList.remove('hidden'); vTambah.classList.add('flex'); }
+        if (titleEl) titleEl.innerText = "Tambah Barang Belanjaan";
+        if (iconHeader) iconHeader.className = "fas fa-cart-plus text-lg text-amber-100";
+        
+        // SEMBUNYIKAN TOMBOL X jika sedang di Form Tambah Barang
+        if (btnClose) btnClose.style.display = 'none';
+    }
+}
+
+// 1. Buka Modal Utama
 function bukaModalBK() {
     const modal = document.getElementById('modalBarangKosongBK');
     if (!modal) return;
+
+    // Selalu paksa kembali ke View Input List
+    switchViewBK('viewInput');
+
     modal.classList.remove('hidden');
+    modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
     setTanggalHariIni();
     muatDataBarangKosong();
 }
 
-// 2. Fungsi Utama: Tutup Modal
+// 2. Tutup Modal Utama
 function tutupModalBK() {
     const modal = document.getElementById('modalBarangKosongBK');
     if (modal) {
         modal.classList.add('hidden');
+        modal.classList.remove('flex');
         document.body.style.overflow = '';
     }
 }
 
-// 3. Ambil Data dari Sheets & Render ke Layar (Include 2 Form: Jumlah & Catatan)
+// 3. Aliases Navigasi (Sesuai Tombol HTML)
+function kembaliKeInputBK() {
+    switchViewBK('viewInput');
+}
+
+function bukaViewTambahBarang() {
+    switchViewBK('viewTambah');
+}
+
+// 4. Ambil Data dari Sheets & Render ke Layar
 async function muatDataBarangKosong() {
     const wrapper = document.getElementById('wrapperItemBK');
     const txtUangSisa = document.getElementById('txtUangSisaBK');
@@ -6540,8 +6664,7 @@ async function muatDataBarangKosong() {
     }
 }
 
-// 4. Fungsi Kirim Laporan ke Google Sheets & WhatsApp (Include Data Catatan)
-// 4. Fungsi Simpan Laporan Langsung ke Google Sheets (Tanpa WA)
+// 5. Simpan Laporan Langsung ke Google Sheets
 async function simpanKeAsistenBelanja() {
     const btnSimpan = document.getElementById('btnSimpanBK');
     const iconSimpan = document.getElementById('iconSimpanBK');
@@ -6555,14 +6678,12 @@ async function simpanKeAsistenBelanja() {
         const nama = input.getAttribute('data-barang');
         const jumlah = input.value.trim();
         
-        // Cari input catatan pendamping
         const inputCatatan = document.querySelector(`[data-barang-catatan="${nama}"]`);
         const catatan = inputCatatan ? inputCatatan.value.trim() : "";
 
         dataUpdateSheets.push({ nama: nama, jumlah: jumlah, catatan: catatan });
     });
 
-    // Indikator Loading pada Tombol
     btnSimpan.disabled = true;
     if (iconSimpan) iconSimpan.className = "fas fa-spinner fa-spin text-sm";
 
@@ -6588,7 +6709,7 @@ async function simpanKeAsistenBelanja() {
     }
 }
 
-// 5. FITUR GENERATE PREVIEW STRUK JPG (A4 FORMAT) - FIXED DYNAMIC VERTICAL OVERFLOW
+// 6. FITUR GENERATE PREVIEW STRUK JPG
 async function buatFormatCetakJPG() {
     const inputElements = document.querySelectorAll('.input-jumlah-belanja');
     const strTanggal = document.getElementById('txtTanggalBK')?.innerText || "";
@@ -6620,8 +6741,6 @@ async function buatFormatCetakJPG() {
     const baseRowHeight = 26;     
     const baseWidth = 350;         
     const baseHeight = 700;        
-    
-    // Penentu Batas Aman Vertikal Kanvas (dalam skala normal sebelum dikali scale)
     const bottomSafeMargin = 640; 
     
     const posX_Check = (baseWidth - 32) * scale; 
@@ -6630,7 +6749,6 @@ async function buatFormatCetakJPG() {
     const containerPreview = document.getElementById('previewCetakContainer');
     containerPreview.innerHTML = "";
 
-    // Helper untuk memecah teks nama barang
     function wrapText(context, text, maxWidth) {
         let words = text.split(' ');
         let line = '';
@@ -6651,10 +6769,9 @@ async function buatFormatCetakJPG() {
         return lines;
     }
 
-    // LOGIKA BARU: Distribusikan item ke dalam array halaman berdasarkan kalkulasi tinggi riil Y
     const pagesData = [];
     let currentPageItems = [];
-    let testY = 120; // Estimasi awal posisi Y setelah Header di Halaman 1
+    let testY = 120;
 
     listBarangValid.forEach((item, index) => {
         const tempCanvas = document.createElement('canvas');
@@ -6664,19 +6781,14 @@ async function buatFormatCetakJPG() {
         let teksFull = `${index + 1}. ${item.nama}`;
         const barisNama = wrapText(tempCtx, teksFull, 190 * scale);
         
-        // Hitung berapa space vertikal yang dibutuhkan item ini
         let itemHeightNeeded = baseRowHeight;
         if (barisNama.length > 1) itemHeightNeeded += 4;
         if (item.catatan) itemHeightNeeded += 4;
 
-        // Jika item ini dimasukkan, apakah akan menembus batas bawah halaman?
         if (testY + itemHeightNeeded > bottomSafeMargin) {
-            // Berarti lembar ini sudah penuh, amankan halaman yang ada
             pagesData.push(currentPageItems);
-            
-            // Buka halaman baru, reset array item dan kembalikan testY ke posisi atas halaman sambungan
             currentPageItems = [];
-            testY = 60; // Halaman sambungan headernya lebih pendek, jadi mulai lebih atas
+            testY = 60;
         }
 
         currentPageItems.push({
@@ -6689,14 +6801,12 @@ async function buatFormatCetakJPG() {
         testY += itemHeightNeeded;
     });
 
-    // Masukkan sisa item terakhir jika masih ada
     if (currentPageItems.length > 0) {
         pagesData.push(currentPageItems);
     }
 
     const totalPages = pagesData.length;
 
-    // LOOPING GENERATE CANVAS BERDASARKAN HASIL PAGINASI DINAMIS
     for (let p = 0; p < totalPages; p++) {
         const barangHalamanIni = pagesData[p];
 
@@ -6715,7 +6825,6 @@ async function buatFormatCetakJPG() {
 
         let currentY = 30 * scale; 
 
-        // RENDER HEADER STRUK
         if (p === 0) {
             ctx.textAlign = "center";
             ctx.fillStyle = "#111827"; 
@@ -6775,7 +6884,6 @@ async function buatFormatCetakJPG() {
             currentY += 18 * scale; 
         }
 
-        // RENDER DATA BARANG & CATATAN KE KANVAS
         barangHalamanIni.forEach((item) => {
             const startX = 20 * scale;
 
@@ -6783,26 +6891,22 @@ async function buatFormatCetakJPG() {
             ctx.font = `500 ${11 * scale}px Arial`; 
             ctx.fillStyle = "#1f2937"; 
             
-            // Render Baris Pertama Nama Barang
             ctx.fillText(item.barisNama[0], startX, currentY);
 
-            // Render Baris Kedua Nama Barang (Jika ada)
             if (item.barisNama.length > 1) {
                 currentY += 12 * scale;
                 let barisKedua = item.barisNama[1];
                 if (barisKedua.length > 30) barisKedua = barisKedua.substring(0, 28) + "..";
                 ctx.fillText(barisKedua, startX + (10 * scale), currentY);
-                currentY -= 12 * scale; // Kembalikan ke posisi baseline baris pertama
+                currentY -= 12 * scale; 
             }
 
-            // Cetak Jumlah Kuantitas Belanjaan
             ctx.textAlign = "center";
             ctx.font = `bold ${11 * scale}px Arial`; 
             ctx.fillStyle = "#047857"; 
             let teksQty = item.jumlah;
             ctx.fillText(teksQty, posX_QTY, currentY);
 
-            // Pembuatan Jalur Titik-Titik Penghubung
             ctx.textAlign = "left";
             ctx.font = `500 ${10 * scale}px Arial`; 
             ctx.fillStyle = "#d1d5db"; 
@@ -6819,7 +6923,6 @@ async function buatFormatCetakJPG() {
                 titikStartX += lebarSatuTitik + (2 * scale);
             }
 
-            // Pembuatan Box Kotak Checklist Manual
             const boxSize = 13 * scale; 
             const boxX = posX_Check - (boxSize / 2); 
             const boxY = currentY - (10 * scale);
@@ -6832,7 +6935,6 @@ async function buatFormatCetakJPG() {
             ctx.roundRect(boxX, boxY, boxSize, boxSize, borderRadius); 
             ctx.stroke();
 
-            // JIKA ADA CATATAN OWNER, CETAK DI BAWAH BARIS TERAKHIR NAMA BARANG
             if (item.catatan) {
                 let offsetCatatan = (item.barisNama.length > 1) ? 22 * scale : 12 * scale;
                 currentY += offsetCatatan;
@@ -6849,11 +6951,9 @@ async function buatFormatCetakJPG() {
                 currentY -= offsetCatatan; 
             }
 
-            // Hitung ruang ekstra garis pemisah
             let extraSpace = (item.barisNama.length > 1) ? 14 * scale : 7 * scale;
             if (item.catatan) extraSpace += 10 * scale;
 
-            // Garis tipis pemisah antar baris barang
             ctx.lineWidth = 0.5 * scale;
             ctx.strokeStyle = "#f3f4f6";
             ctx.beginPath();
@@ -6861,11 +6961,9 @@ async function buatFormatCetakJPG() {
             ctx.lineTo(canvas.width - (15 * scale), currentY + extraSpace);
             ctx.stroke();
 
-            // Geser koordinat Y utama berdasarkan kebutuhan riil item ini
             currentY += (item.itemHeightNeeded * scale);
         });
 
-        // Catatan Kaki Dokumen (Footer) aman di posisi bawah tanpa tertimpa item belanja
         ctx.textAlign = "center";
         ctx.font = `bold ${8 * scale}px Arial`;
         ctx.fillStyle = "#9ca3af";
@@ -6887,12 +6985,10 @@ async function buatFormatCetakJPG() {
 
     if(iconCetak) iconCetak.className = "fas fa-image text-sm";
 
-    document.getElementById('viewInputBK').classList.add('hidden');
-    document.getElementById('viewPreviewBK').classList.remove('hidden');
-    document.getElementById('titleModalBK').innerText = "PREVIEW FORMAT CETAK";
+    switchViewBK('viewPreview');
 }
 
-// 6. Helper: Set Tanggal Dinamis
+// 7. Helper: Set Tanggal Dinamis
 function setTanggalHariIni() {
     const elTanggal = document.getElementById('txtTanggalBK');
     if (!elTanggal) return;
@@ -6902,7 +6998,7 @@ function setTanggalHariIni() {
     elTanggal.innerText = `${daftarHari[tgl.getDay()]}, ${tgl.getDate()} ${daftarBulan[tgl.getMonth()]} ${tgl.getFullYear()}`;
 }
 
-// 7. Helper: Format Rupiah Latar Modal
+// 8. Helper: Format Rupiah
 function formatRupiahManual(angkaStr) {
     if (!angkaStr || angkaStr === "0" || angkaStr === "-") return "Rp 0";
     let cleanNumber = angkaStr.replace(/[^0-9]/g, '');
@@ -6910,12 +7006,7 @@ function formatRupiahManual(angkaStr) {
     return "Rp " + parseInt(cleanNumber, 10).toLocaleString('id-ID');
 }
 
-function kembaliKeInputBK() {
-    document.getElementById('viewPreviewBK').classList.add('hidden');
-    document.getElementById('viewInputBK').classList.remove('hidden');
-    document.getElementById('titleModalBK').innerText = "DAFTAR Barang Kosong";
-}
-
+// 9. Eksekusi Unduh Struk JPG
 async function eksekusiUnduhSemuaJPG() {
     if (listDataGambarPreview.length === 0) return;
     
@@ -6940,37 +7031,13 @@ async function eksekusiUnduhSemuaJPG() {
     }
 }
 
-// ====================================================================
-// FUNGSI TAMBAHAN: TAMBAH BARANG BELANJAAN MANUAL
-// ====================================================================
-
-// Buka Modal Tambah Barang
-// Buka Modal Tambah Barang
-function bukaModalTambahBarang() {
-    const modal = document.getElementById('modalTambahBarangBK');
-    if (!modal) return;
-    
-    // Reset Form Input
-    document.getElementById('inputNamaBarangBaruBK').value = '';
-    document.getElementById('inputJumlahBarangBaruBK').value = '';
-    document.getElementById('inputCatatanBarangBaruBK').value = '';
-    
-    modal.classList.remove('hidden');
-}
-
-// Tutup Modal Tambah Barang
-function tutupModalTambahBarang() {
-    const modal = document.getElementById('modalTambahBarangBK');
-    if (modal) modal.classList.add('hidden');
-}
-
-// Kirim Barang Baru ke Google Sheets
+// 10. Simpan Barang Baru ke Google Sheets
 async function simpanBarangBaruKeSheets(event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
     
-    const namaBarang = document.getElementById('inputNamaBarangBaruBK').value.trim();
-    const jumlah = document.getElementById('inputJumlahBarangBaruBK').value.trim();
-    const catatan = document.getElementById('inputCatatanBarangBaruBK').value.trim();
+    const namaBarang = document.getElementById('inputNamaBarangBaruBK')?.value.trim() || "";
+    const jumlah = document.getElementById('inputJumlahBarangBaruBK')?.value.trim() || "";
+    const catatan = document.getElementById('inputCatatanBarangBaruBK')?.value.trim() || "";
     
     if (!namaBarang) {
         alert("Nama barang tidak boleh kosong!");
@@ -6980,7 +7047,7 @@ async function simpanBarangBaruKeSheets(event) {
     const btnSubmit = document.getElementById('btnSubmitBarangBaruBK');
     const iconSubmit = document.getElementById('iconSubmitBarangBaruBK');
     
-    btnSubmit.disabled = true;
+    if (btnSubmit) btnSubmit.disabled = true;
     if (iconSubmit) iconSubmit.className = "fas fa-spinner fa-spin text-xs";
 
     try {
@@ -7000,8 +7067,7 @@ async function simpanBarangBaruKeSheets(event) {
         
         if (result.status === "success") {
             alert(`Barang "${namaBarang}" berhasil ditambahkan!`);
-            tutupModalTambahBarang();
-            // Otomatis refresh list modal barang kosong
+            switchViewBK('viewInput');
             muatDataBarangKosong();
         } else {
             throw new Error(result.message || "Gagal menambahkan barang.");
@@ -7010,7 +7076,7 @@ async function simpanBarangBaruKeSheets(event) {
         console.error("Error Tambah Barang:", error);
         alert("Gagal menambahkan barang ke Google Sheets. Periksa koneksi internet Anda.");
     } finally {
-        btnSubmit.disabled = false;
+        if (btnSubmit) btnSubmit.disabled = false;
         if (iconSubmit) iconSubmit.className = "fas fa-plus-circle text-xs";
     }
 }
@@ -7022,7 +7088,7 @@ async function simpanBarangBaruKeSheets(event) {
 function kembaliKeInputBK() {
     document.getElementById('viewPreviewBK').classList.add('hidden');
     document.getElementById('viewInputBK').classList.remove('hidden');
-    document.getElementById('titleModalBK').innerText = "DAFTAR Barang Kosong";
+    document.getElementById('titleModalBK').innerText = "Daftar Barang Kosong";
 }
 
 // Fungsi eksekusi download berantai untuk semua halaman gambar yang ada di memori
@@ -7758,28 +7824,34 @@ function resetZoomFotokopi() {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
 <script>
+// =========================================================================
+// NSA ASISTEN SLIP GAJI JAVASCRIPT LOGIC - SMART PERIOD EDITION (v5.4 FIX)
+// NURJAYA ABADI PHOTOCOPY - MODE KHUSUS OWNER
+// =========================================================================
+
 document.addEventListener("DOMContentLoaded", function() {
     // =========================================================================
-    // 1. KONSTANTA & DEFINISI DATA SOURCE (SLIP GAJI MANDIRI)
+    // 1. KONSTANTA & DEFINISI DATA SOURCE
     // =========================================================================
     const API_URL_PRESENSI = "https://script.google.com/macros/s/AKfycbwyzHl2sdJAaskZR-OZNcAmcjSq4WebF8wfQk7u7He5ceMLcwyIRNPgwo1n-ZFxQyc-_A/exec";
+    const GAS_WEB_APP_URL  = "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
 
-    // Elemen Dropdown Karyawan Utama
+    // Elemen Dropdown Karyawan Utama & Status
     const selectGajiKaryawan = document.getElementById("gaji-pilih-karyawan");
     const statusLoadingPdf   = document.getElementById("status-loading-pdf");
 
-    // Elemen Output Metadata
+    // Elemen Output Metadata Periode
     const txtPeriode    = document.getElementById("sg-text-periode");
     const txtTotalHari  = document.getElementById("sg-text-total-hari");
 
     // Elemen Jadwal 2 Karyawan
-    const lblJadwal2    = document.getElementById("sg-lbl-jadwal2");
-    const inRateJadwal2 = document.getElementById("sg-in-rate-jadwal2");
+    const lblJadwal2      = document.getElementById("sg-lbl-jadwal2");
+    const inRateJadwal2   = document.getElementById("sg-in-rate-jadwal2");
     const outTotalJadwal2 = document.getElementById("sg-out-total-jadwal2");
 
     // Elemen Jadwal 1 Karyawan
-    const lblJadwal1    = document.getElementById("sg-lbl-jadwal1");
-    const inRateJadwal1 = document.getElementById("sg-in-rate-jadwal1");
+    const lblJadwal1      = document.getElementById("sg-lbl-jadwal1");
+    const inRateJadwal1   = document.getElementById("sg-in-rate-jadwal1");
     const outTotalJadwal1 = document.getElementById("sg-out-total-jadwal1");
 
     // Elemen Libur & Absen Lain
@@ -7805,7 +7877,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const inPembulatan       = document.getElementById("sg-in-pembulatan");
     const outFinalGaji       = document.getElementById("sg-out-final-gaji");
 
-    // State Internal Penyimpanan Angka Hasil Hitung Presensi
+    // State Internal Akumulasi Presensi Periode Aktif
     let dataPresensiHitung = {
         hariJadwal2: 0,
         hariJadwal1: 0,
@@ -7813,12 +7885,12 @@ document.addEventListener("DOMContentLoaded", function() {
         hariAbsenLain: 0
     };
 
-    // Helper Utama: Format Angka ke Tampilan Rupiah Standar
+    // Helper: Format Angka ke Tampilan Rupiah
     function formatRupiah(angka) {
         return "Rp " + Number(angka).toLocaleString("id-ID");
     }
 
-    // --- HELPER SAKTI BARU: Manajemen Input Masking Titik & Anti-Scroll ---
+    // Helper: Bersihkan Angka Murni & Masking Format Titik Ribuan
     function bersihkanAngkaMurni(teks) {
         if (!teks) return 0;
         return parseFloat(String(teks).replace(/[^0-9]/g, "")) || 0;
@@ -7848,9 +7920,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================================
-    // 2. LOGIKA FETCH DATA & AKUMULASI DARI SPREADSHEET
+    // 2. FETCH DATA & SMART PERIOD FILTERING DARI SPREADSHEET (11 KOLOM)
     // =========================================================================
-    if (selectGajiKaryawan) {
+  if (selectGajiKaryawan) {
         selectGajiKaryawan.addEventListener("change", function() {
             const karyawanTerpilih = this.value;
             if (!karyawanTerpilih) return;
@@ -7858,16 +7930,55 @@ document.addEventListener("DOMContentLoaded", function() {
             resetFormSlipGaji();
             if (statusLoadingPdf) statusLoadingPdf.classList.remove("hidden");
 
-            fetch(`${API_URL_PRESENSI}?karyawan=${karyawanTerpilih}`)
+            // Ambil tanggal hari ini sebagai parameter pendamping
+            const tglHariIni = new Date().toISOString().split('T')[0];
+
+            fetch(`${API_URL_PRESENSI}?karyawan=${encodeURIComponent(karyawanTerpilih)}&action=getMetaData&tanggal=${encodeURIComponent(tglHariIni)}`)
                 .then(response => response.json())
                 .then(result => {
                     if (statusLoadingPdf) statusLoadingPdf.classList.add("hidden");
 
                     if (result.status === "success") {
-                        if (txtPeriode) txtPeriode.innerText = result.periode_langsung || "Tidak Terdeteksi";
-                        if (txtTotalHari) txtTotalHari.innerText = (result.data ? result.data.length : 0) + " Hari";
+                        const records = result.records || result.data || [];
+                        const totalAwal = records.length;
+                        
+                        if (totalAwal === 0) {
+                            if (txtPeriode) txtPeriode.innerText = result.periode || "Tidak Terdeteksi";
+                            if (txtTotalHari) txtTotalHari.innerText = "0 Hari";
+                            prosesAkumulasiDataPresensi([]);
+                            return;
+                        }
 
-                        prosesAkumulasiDataPresensi(result.data);
+                        // 1. Ambil baris paling terakhir dari spreadsheet
+                        const barisTerakhir = records[totalAwal - 1];
+
+                        // 2. Ambil nama periode dari baris terakhir (fallback ke result.periode)
+                        let periodeTarget = barisTerakhir.nama_periode || barisTerakhir.namaperiode || barisTerakhir.periode || result.periode || "Tidak Terdeteksi";
+
+                        // Helper untuk menormalkan karakter strip/dash & spasi agar matching 100%
+                        function bersihkanStringPeriode(str) {
+                            if (!str) return "";
+                            return String(str)
+                                .replace(/[\u2013\u2014]/g, "-") // Normalisasi en-dash & em-dash menjadi strip biasa
+                                .replace(/\s+/g, " ")            // Hapus spasi ganda
+                                .trim()
+                                .toLowerCase();
+                        }
+
+                        const periodeTargetNormalized = bersihkanStringPeriode(periodeTarget);
+
+                        // 3. FILTER PERIODE AKTIF: Hanya ambil baris yang periodenya cocok dengan baris paling bawah
+                        const recordsFiltered = records.filter(row => {
+                            const pRow = row.nama_periode || row.namaperiode || row.periode || "";
+                            return bersihkanStringPeriode(pRow) === periodeTargetNormalized;
+                        });
+
+                        // 4. Tampilkan Nama Periode Asli & Jumlah Hari Terfilter
+                        if (txtPeriode) txtPeriode.innerText = periodeTarget;
+                        if (txtTotalHari) txtTotalHari.innerText = recordsFiltered.length + " Hari";
+
+                        // 5. Jalankan kalkulasi akumulasi data gaji
+                        prosesAkumulasiDataPresensi(recordsFiltered);
                     } else {
                         alert("Gagal memuat data presensi kalkulator: " + result.message);
                     }
@@ -7922,7 +8033,7 @@ document.addEventListener("DOMContentLoaded", function() {
             let tanggalRapi = "-";
             if (row.tanggal) {
                 const tglObj = new Date(row.tanggal);
-                if (!isNaN(tglObj)) {
+                if (!isNaN(tglObj.getTime())) {
                     tanggalRapi = String(tglObj.getDate()).padStart(2, '0') + '/' + 
                                   String(tglObj.getMonth() + 1).padStart(2, '0') + '/' + 
                                   tglObj.getFullYear();
@@ -7932,14 +8043,14 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             if (hadirStatus === "YA") {
-                const jenisJadwal = parseInt(row.jenisjadwalkerja);
+                const jenisJadwal = parseInt(row.jenis_jadwal_kerja || row.jenisjadwalkerja);
                 if (jenisJadwal === 2) {
                     j2++;
                 } else if (jenisJadwal === 1) {
                     j1++;
                 }
             } else if (hadirStatus === "TIDAK") {
-                const alasan = String(row.alasantidakhadir || "");
+                const alasan = String(row.alasan_tidak_hadir || row.alasantidakhadir || "");
                 if (alasan.toLowerCase().includes("libur")) {
                     libur++;
                 } else {
@@ -7947,20 +8058,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
 
-            if (row.potonganjam) {
-                const menitBiji = dapatkanTotalMenit(row.potonganjam);
+            const valPotonganJam = row.potongan_jam || row.potonganjam;
+            if (valPotonganJam) {
+                const menitBiji = dapatkanTotalMenit(valPotonganJam);
                 if (menitBiji > 0) {
                     totalMenitPotongan += menitBiji;
-                    const txtAlasanPot = row.alasanpotonganjam ? String(row.alasanpotonganjam).trim() : "Potongan jam kerja";
+                    const valAlasanPot = row.alasan_potongan_jam || row.alasanpotonganjam;
+                    const txtAlasanPot = valAlasanPot ? String(valAlasanPot).trim() : "Potongan jam kerja";
                     listHtmlPotongan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanPot}</li>`;
                 }
             }
 
-            if (row.tambahanjam) {
-                const menitBiji = dapatkanTotalMenit(row.tambahanjam);
+            const valTambahanJam = row.tambahan_jam || row.tambahanjam;
+            if (valTambahanJam) {
+                const menitBiji = dapatkanTotalMenit(valTambahanJam);
                 if (menitBiji > 0) {
                     totalMenitTambahan += menitBiji;
-                    const txtAlasanTam = row.alasantambahanjam ? String(row.alasantambahanjam).trim() : "Tambahan jam kerja";
+                    const valAlasanTam = row.alasan_tambahan_jam || row.alasantambahanjam;
+                    const txtAlasanTam = valAlasanTam ? String(valAlasanTam).trim() : "Tambahan jam kerja";
                     listHtmlTambahan += `<li><span class="font-bold text-slate-700">${tanggalRapi}:</span> ${txtAlasanTam}</li>`;
                 }
             }
@@ -7987,7 +8102,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (absenLain === 0) {
                 urPetunjukDinamis.innerHTML = `
                     <span class="text-green-600 font-bold">✔ Rekomendasi:</span> 
-                    Karyawan berhak mendapatkan Uang Rajin penuh (jika indikator absen bulan ini adalah 0 hari).
+                    Karyawan berhak mendapatkan Uang Rajin penuh (indikator absen bulan ini adalah 0 hari).
                 `;
             } else {
                 urPetunjukDinamis.innerHTML = `
@@ -8044,7 +8159,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================================
-    // 3. INTERAKSI DINAMIS FORM POIN TAMBAHAN & UANG RAJIN
+    // 3. INTERAKSI FORM POIN TAMBAHAN & UANG RAJIN
     // =========================================================================
     if (selPoin) {
         selPoin.addEventListener("change", function() {
@@ -8159,20 +8274,11 @@ document.addEventListener("DOMContentLoaded", function() {
         if (outTotalGajiBersih) outTotalGajiBersih.innerText = formatRupiah(totalGajiOtomatis);
 
         const rpPembulatan = inPembulatan ? bersihkanAngkaMurni(inPembulatan.value) : 0;
-        let finalGajiDiterima = 0;
-
-        if (rpPembulatan > 0) {
-            finalGajiDiterima = rpPembulatan;
-        } else {
-            finalGajiDiterima = totalGajiOtomatis;
-        }
+        let finalGajiDiterima = (rpPembulatan > 0) ? rpPembulatan : totalGajiOtomatis;
 
         if (outFinalGaji) outFinalGaji.innerText = formatRupiah(finalGajiDiterima);
     }
 
-    // =========================================================================
-    // LISTENERS DROPDOWN INTERAKSI UANG RAJIN
-    // =========================================================================
     if (selUangRajin) {
         selUangRajin.addEventListener("change", function() {
             const wrapperUangRajinDinamis = document.getElementById("sg-wrapper-uang-rajin-dinamis");
@@ -8258,7 +8364,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================================
-    // 5. INTERAKSI MODAL POPUP & SINKRONISASI DATA PREVIEW SLIP GAJI
+    // 5. PREVIEW MODAL & SINKRONISASI SLIP GAJI
     // =========================================================================
     const modalPreviewSlip = document.getElementById("modal-preview-slip");
     const btnGenerateSlip   = document.getElementById("btn-generate-slip-gaji");
@@ -8275,8 +8381,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const pvHariJ1            = document.getElementById("pv-hari-j1");
     const pvRateJ1            = document.getElementById("pv-rate-j1");
     const pvTotalJ1           = document.getElementById("pv-total-j1");
-    const pvHariLibur        = document.getElementById("pv-hari-libur");
-    const pvHariAbsen        = document.getElementById("pv-hari-absen");
+    const pvHariLibur         = document.getElementById("pv-hari-libur");
+    const pvHariAbsen         = document.getElementById("pv-hari-absen");
     const pvLblPotongan      = document.getElementById("pv-lbl-potongan");
     const pvTotalPotongan    = document.getElementById("pv-total-potongan");
     const pvLblTambahan      = document.getElementById("pv-lbl-tambahan");
@@ -8453,21 +8559,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================================
-    // 6. INTEGRASI EMERALD BUTTON: RENDER HD + UPLOAD GOOGLE DRIVE + WEB SHARE
+    // 6. RENDER HD + UPLOAD GOOGLE DRIVE + WHATSAPP SHARE
     // =========================================================================
     const btnKirimWaReal = document.getElementById("nsa-btn-wa-kirim-slip");
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
 
     if (btnKirimWaReal) {
         btnKirimWaReal.addEventListener("click", function() {
-            // A. Validasi Awal
             const karyawanTerpilih = typeof selectGajiKaryawan !== 'undefined' ? selectGajiKaryawan.value : "";
             if (!karyawanTerpilih || typeof txtPeriode === 'undefined' || txtPeriode.innerText === "-") {
                 alert("Silakan pilih karyawan dan akumulasikan data terlebih dahulu!");
                 return;
             }
 
-            // B. Tarik Nama Lengkap & Database Nomor WA
             let namaLengkapKaryawan = "";
             let nomorWa = "";
 
@@ -8496,15 +8599,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            // C. Efek Animasi Loading Spinner Awal
             const textAwalTombol = this.innerHTML;
             this.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Slip Gaji...`;
             this.disabled = true;
 
-            // D. Susun Pesan Teks Pendamping WhatsApp
             let teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja bulan ini untuk Nurjaya Abadi Photocopy, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
 
-            // E. Eksekusi Render HD -> Upload ke Drive (Background) -> Share ke WA
             setTimeout(async () => {
                 try {
                     if (typeof domtoimage === 'undefined') {
@@ -8522,26 +8622,19 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                     }
 
-                    // A. Ambil teks periode
-let teksPeriode = txtPeriode.innerText.trim();
+                    let teksPeriode = txtPeriode.innerText.trim();
+                    const regexTahun = /\b20\d{2}\b/;
+                    if (!regexTahun.test(teksPeriode)) {
+                        const tahunSekarang = new Date().getFullYear();
+                        teksPeriode = `${teksPeriode}_${tahunSekarang}`;
+                    }
 
-// B. Cek apakah di dalam teks periode sudah ada tahun 4 digit (misal: 2026)
-// Jika belum ada tahun, tambahkan tahun berjalan (misal: 2026) secara otomatis
-const regexTahun = /\b20\d{2}\b/;
-if (!regexTahun.test(teksPeriode)) {
-    const tahunSekarang = new Date().getFullYear(); // Menghasilkan 2026
-    teksPeriode = `${teksPeriode}_${tahunSekarang}`;
-}
+                    const periodeFormatted = teksPeriode.replace(/\s+/g, '_');
+                    const namaFileDrive = `${namaLengkapKaryawan}_${periodeFormatted}.jpg`;
 
-// C. Format karakter spasi & strip agar rapi
-const periodeFormatted = teksPeriode.replace(/\s+/g, '_');
-const namaFileDrive = `${namaLengkapKaryawan}_${periodeFormatted}.jpg`;
-
-                    // Simpan style awal sebelum render
                     const originalStyleWidth = targetRenderImage.style.width;
                     const originalStyleMinWidth = targetRenderImage.style.minWidth;
 
-                    // Kunci sementara lebar render ke 400px presisi
                     const targetWidth = 400;
                     targetRenderImage.style.width = targetWidth + 'px';
                     targetRenderImage.style.minWidth = targetWidth + 'px';
@@ -8564,14 +8657,10 @@ const namaFileDrive = `${namaLengkapKaryawan}_${periodeFormatted}.jpg`;
                         }
                     });
 
-                    // LANGSUNG KEMBALIKAN STYLE PREVIEW WEB DILUAR RENDER
-                    // Agar live preview di layar HP langsung rapi & fit instan
                     targetRenderImage.style.width = originalStyleWidth;
                     targetRenderImage.style.minWidth = originalStyleMinWidth;
 
-                    // =========================================================
-                    // TAHAP 1: UPLOAD KE GOOGLE DRIVE (BACKGROUND / TANPA AWAIT)
-                    // =========================================================
+                    // UPLOAD BACKGROUND KE GOOGLE DRIVE
                     try {
                         if (typeof google !== 'undefined' && google.script && google.script.run) {
                             google.script.run
@@ -8596,9 +8685,7 @@ const namaFileDrive = `${namaLengkapKaryawan}_${periodeFormatted}.jpg`;
                         console.warn("Proses upload Drive background error:", errDrive);
                     }
 
-                    // =========================================================
-                    // TAHAP 2: BUKA POPUP SHARE ANDROID / WEBSHARE (INSTAN)
-                    // =========================================================
+                    // SHARE/POPUP WEBSHARE API
                     btnKirimWaReal.innerHTML = `<i class="fa-brands fa-whatsapp"></i> Membuka WhatsApp...`;
 
                     const responBlob = await fetch(dataUrl);
@@ -8633,7 +8720,6 @@ const namaFileDrive = `${namaLengkapKaryawan}_${periodeFormatted}.jpg`;
                         alert("Gagal me-render slip gaji. Mencoba metode alternatif...");
                     }
                 } finally {
-                    // Kembalikan style elemen ke semula
                     targetRenderImage.style.width = originalStyleWidth;
                     targetRenderImage.style.minWidth = originalStyleMinWidth;
 
@@ -8643,7 +8729,7 @@ const namaFileDrive = `${namaLengkapKaryawan}_${periodeFormatted}.jpg`;
             }, 100);
         });
     }
-}); // <--- PENUTUP DOMContentLoaded YANG SEBELUMNYA HILANG
+});
 
 function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
     let linkDownload = document.createElement('a');
@@ -8655,26 +8741,39 @@ function jalankanMetodeLamaFallback(dataUrl, namaFile, nomorTarget, teksPesan) {
     const urlWhatsApp = `https://api.whatsapp.com/send?phone=${nomorTarget}&text=${pesanEncoded}`;
     window.open(urlWhatsApp, '_blank');
 }
+
 // =========================================================================
-// 7. INTEGRASI CEK ARSIP SLIP GAJI KARYAWAN (VERIFIKASI PIN & DRIVE VIEWER)
+// INTEGRASI CEK ARSIP SLIP GAJI & GANTI PIN CLOUD (FOTOKOPI)
 // =========================================================================
-const PIN_KARYAWAN = {
-    "Dadan": "2001",
-    "Syamsi": "2006"
+
+// Endpoint Cloud Backend Apps Script
+const URL_WEB_APP_PIN_NSA_FOTOKOPI = "https://script.google.com/macros/s/AKfycbyF597NVC2ieRvrndrfrCITt1qoCZTuxQhQhk_OC9ghC04WLcsWWZ6F4x-vflh2HbyeFg/exec";
+const URL_GAS_DRIVE_SLIP_FOTOKOPI   = "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
+
+// Mapping nama panggilan ke nama lengkap spreadsheet/drive
+const PETA_NAMA_LENGKAP_FOTOKOPI = {
+    "Dadan": "Dadan Nurfaizal",
+    "Syamsi": "Syamsi Nurhakim"
 };
 
 let daftarFileDriveCached = [];
 let karyawanAktifArsip = "";
 
-// A. Buka & Tutup Modal
+// -------------------------------------------------------------
+// A. MODAL ARSIP SLIP GAJI FOTOKOPI
+// -------------------------------------------------------------
+
 window.bukaModalArsipSlip = function() {
     const modal = document.getElementById("modal-arsip-slip-gaji");
     if (!modal) return;
     
     resetModalArsip();
     modal.classList.remove("opacity-0", "pointer-events-none");
-    modal.querySelector(".transform").classList.remove("scale-95");
-    modal.querySelector(".transform").classList.add("scale-100");
+    modal.querySelector(".transform")?.classList.remove("scale-95");
+    modal.querySelector(".transform")?.classList.add("scale-100");
+
+    // Pre-fetch/Sync status koneksi PIN Cloud
+    fetchPinDatabaseFotokopi();
 };
 
 window.tutupModalArsipSlip = function() {
@@ -8682,20 +8781,30 @@ window.tutupModalArsipSlip = function() {
     if (!modal) return;
     
     modal.classList.add("opacity-0", "pointer-events-none");
-    modal.querySelector(".transform").classList.add("scale-95");
-    modal.querySelector(".transform").classList.remove("scale-100");
+    modal.querySelector(".transform")?.classList.add("scale-95");
+    modal.querySelector(".transform")?.classList.remove("scale-100");
     resetModalArsip();
 };
 
 function resetModalArsip() {
-    const selKaryawan = document.getElementById("arsip-pilih-karyawan");
-    const wrapperPin  = document.getElementById("arsip-wrapper-pin");
-    const wrapperView = document.getElementById("arsip-wrapper-viewer");
-    const inputPin    = document.getElementById("arsip-input-pin");
-    const containerImg= document.getElementById("arsip-container-gambar");
+    const selKaryawan  = document.getElementById("arsip-pilih-karyawan");
+    const wrapperPin   = document.getElementById("arsip-wrapper-pin");
+    const wrapperView  = document.getElementById("arsip-wrapper-viewer");
+    const inputPin     = document.getElementById("arsip-input-pin");
+    const containerImg = document.getElementById("arsip-container-gambar");
+    const msgError     = document.getElementById("arsip-msg-error-pin-fk");
+    const syncStatus   = document.getElementById("arsip-pin-sync-status-fk");
     
     if (selKaryawan) selKaryawan.selectedIndex = 0;
-    if (inputPin) inputPin.value = "";
+    if (inputPin) {
+        inputPin.value = "";
+        inputPin.classList.remove("border-rose-500");
+    }
+    if (msgError) {
+        msgError.innerText = "";
+        msgError.classList.add("hidden");
+    }
+    if (syncStatus) syncStatus.classList.add("hidden");
     if (wrapperPin) wrapperPin.classList.add("hidden");
     if (wrapperView) wrapperView.classList.add("hidden");
     if (containerImg) containerImg.classList.add("hidden");
@@ -8704,58 +8813,141 @@ function resetModalArsip() {
     daftarFileDriveCached = [];
 }
 
-// B. Dipanggil langsung saat Dropdown Karyawan Dipilih
+// Pre-fetch koneksi PIN Cloud
+function fetchPinDatabaseFotokopi() {
+    const syncStatus = document.getElementById("arsip-pin-sync-status-fk");
+    
+    if (syncStatus) {
+        syncStatus.className = "text-center text-[11px] font-bold py-1.5 px-3 rounded-xl bg-amber-50 text-amber-700 border border-amber-200";
+        syncStatus.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Menyinkronkan database PIN Cloud...`;
+        syncStatus.classList.remove("hidden");
+    }
+
+    fetch(`${URL_WEB_APP_PIN_NSA_FOTOKOPI}?action=getUsers`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                if (syncStatus) {
+                    syncStatus.className = "text-center text-[11px] font-bold py-1.5 px-3 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200";
+                    syncStatus.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> Database PIN Cloud Siap`;
+                    setTimeout(() => syncStatus.classList.add("hidden"), 2500);
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Gagal sinkronisasi PIN Fotokopi:", err);
+            if (syncStatus) {
+                syncStatus.className = "text-center text-[11px] font-bold py-1.5 px-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200";
+                syncStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Gagal koneksi PIN Cloud`;
+            }
+        });
+}
+
 window.pilihKaryawanArsip = function(valNama) {
     if (!valNama) return;
     karyawanAktifArsip = valNama;
     
-    const wrapperPin  = document.getElementById("arsip-wrapper-pin");
-    const wrapperView = document.getElementById("arsip-wrapper-viewer");
-    const teksSapaan  = document.getElementById("arsip-teks-sapaan-pin");
-    const inputPin    = document.getElementById("arsip-input-pin");
-    const containerImg= document.getElementById("arsip-container-gambar");
+    const wrapperPin   = document.getElementById("arsip-wrapper-pin");
+    const wrapperView  = document.getElementById("arsip-wrapper-viewer");
+    const teksSapaan   = document.getElementById("arsip-teks-sapaan-pin");
+    const inputPin     = document.getElementById("arsip-input-pin");
+    const containerImg = document.getElementById("arsip-container-gambar");
+    const msgError     = document.getElementById("arsip-msg-error-pin-fk");
     
     if (wrapperView) wrapperView.classList.add("hidden");
     if (containerImg) containerImg.classList.add("hidden");
-    if (inputPin) inputPin.value = "";
+    if (msgError) msgError.classList.add("hidden");
+    if (inputPin) {
+        inputPin.value = "";
+        inputPin.classList.remove("border-rose-500");
+    }
+    
+    const namaLengkap = PETA_NAMA_LENGKAP_FOTOKOPI[valNama] || valNama;
     
     if (teksSapaan) {
-        let namaLengkap = valNama === "Dadan" ? "Dadan Nurfaizal" : "Syamsi Nurhakim";
         teksSapaan.innerText = `VERIFIKASI PIN PRIVASI (${namaLengkap})`;
     }
     
     if (wrapperPin) {
         wrapperPin.classList.remove("hidden");
-        // Auto-focus ke input PIN setelah muncul
         setTimeout(() => { if (inputPin) inputPin.focus(); }, 150);
     }
 };
 
-// C. Verifikasi PIN Karyawan
+// Verifikasi PIN Cloud via GET Apps Script
 window.verifikasiPinKaryawan = function() {
-    const inputPin = document.getElementById("arsip-input-pin");
-    const pinUser  = inputPin ? inputPin.value.trim() : "";
+    const inputPin  = document.getElementById("arsip-input-pin");
+    const btnSubmit = document.getElementById("arsip-btn-verifikasi-pin-fk");
+    const msgError  = document.getElementById("arsip-msg-error-pin-fk");
+    const pinUser   = inputPin ? inputPin.value.trim() : "";
     
-    if (!karyawanAktifArsip || !PIN_KARYAWAN[karyawanAktifArsip]) {
+    if (!karyawanAktifArsip) {
         alert("Silakan pilih nama karyawan terlebih dahulu!");
         return;
     }
-    
-    if (pinUser === PIN_KARYAWAN[karyawanAktifArsip]) {
-        document.getElementById("arsip-wrapper-pin").classList.add("hidden");
-        document.getElementById("arsip-wrapper-viewer").classList.remove("hidden");
-        
-        muatDaftarPeriodeSlip(karyawanAktifArsip);
-    } else {
-        alert("PIN Privasi yang Anda masukkan salah!");
-        if (inputPin) {
-            inputPin.value = "";
-            inputPin.focus();
-        }
+
+    if (!pinUser) {
+        tampilkanErrorPinFotokopi("PIN tidak boleh kosong!");
+        return;
     }
+
+    const namaLengkap = PETA_NAMA_LENGKAP_FOTOKOPI[karyawanAktifArsip] || karyawanAktifArsip;
+
+    if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memeriksa...`;
+    }
+
+    if (msgError) msgError.classList.add("hidden");
+    if (inputPin) inputPin.classList.remove("border-rose-500");
+
+    const fetchUrl = `${URL_WEB_APP_PIN_NSA_FOTOKOPI}?action=validatePin&nama=${encodeURIComponent(namaLengkap)}&pin=${encodeURIComponent(pinUser)}`;
+
+    fetch(fetchUrl)
+        .then(res => res.json())
+        .then(res => {
+            if (btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-key"></i> Buka Slip Gaji`;
+            }
+
+            if (res.status === "success" && res.valid) {
+                // PIN Benar
+                document.getElementById("arsip-wrapper-pin")?.classList.add("hidden");
+                document.getElementById("arsip-wrapper-viewer")?.classList.remove("hidden");
+                
+                muatDaftarPeriodeSlip(karyawanAktifArsip);
+            } else {
+                // PIN Salah
+                tampilkanErrorPinFotokopi(res.message || "PIN Privasi yang Anda masukkan salah!");
+            }
+        })
+        .catch(err => {
+            console.error("Error Validasi PIN Fotokopi:", err);
+            if (btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="fa-solid fa-key"></i> Buka Slip Gaji`;
+            }
+            tampilkanErrorPinFotokopi("Gagal terhubung ke server PIN Cloud!");
+        });
 };
 
-// D. Mengambil Daftar Slip Gaji dari Google Drive via Google Apps Script (FIX LABELLING PERIODE)
+function tampilkanErrorPinFotokopi(pesan) {
+    const inputPin = document.getElementById("arsip-input-pin");
+    const msgError = document.getElementById("arsip-msg-error-pin-fk");
+
+    if (msgError) {
+        msgError.innerText = pesan;
+        msgError.classList.remove("hidden");
+    }
+    if (inputPin) {
+        inputPin.classList.add("border-rose-500");
+        inputPin.value = "";
+        inputPin.focus();
+    }
+}
+
+// Ambil List File Slip Gaji Fotokopi dari Google Drive
 function muatDaftarPeriodeSlip(namaKaryawan) {
     const selPeriode   = document.getElementById("arsip-pilih-periode");
     const loading      = document.getElementById("arsip-loading-gambar");
@@ -8763,20 +8955,11 @@ function muatDaftarPeriodeSlip(namaKaryawan) {
     
     if (containerImg) containerImg.classList.add("hidden");
     if (loading) loading.classList.remove("hidden");
-    if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Mencari arsip file di Drive...</option>`;
+    if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Mencari arsip file di Drive Fotokopi...</option>`;
     
-    const urlGasApps = typeof GAS_WEB_APP_URL !== 'undefined' ? GAS_WEB_APP_URL : "https://script.google.com/macros/s/AKfycby80uCZppUxnpLSiB3lwLqjvB-AKpWj_RMpnIK8NViICqPoiCjqE_TVu_m9iYmhqo0eqw/exec";
+    const namaLengkap = PETA_NAMA_LENGKAP_FOTOKOPI[namaKaryawan] || namaKaryawan;
     
-    // Pemetaan Nama Lengkap Karyawan Fotokopi
-    const PETA_NAMA_LENGKAP = {
-        "Cahya": "M. Cahya Ardiansyah",
-        "Dadan": "Dadan Nurfaizal",
-        "Syamsi": "Syamsi Nurhakim"
-    };
-
-    const namaLengkap = PETA_NAMA_LENGKAP[namaKaryawan] || namaKaryawan;
-    
-    fetch(`${urlGasApps}?action=list_files&karyawan=${encodeURIComponent(namaLengkap)}`)
+    fetch(`${URL_GAS_DRIVE_SLIP_FOTOKOPI}?action=list_files&karyawan=${encodeURIComponent(namaLengkap)}`)
         .then(res => res.json())
         .then(res => {
             if (loading) loading.classList.add("hidden");
@@ -8788,20 +8971,14 @@ function muatDaftarPeriodeSlip(namaKaryawan) {
                 
                 listFiles.forEach((file, idx) => {
                     let rawName = file.name || file.fileName || "";
-                    
-                    // 1. Buang ekstensi file (.jpg, .jpeg, .png)
                     let cleanName = rawName.replace(/\.(jpg|jpeg|png)$/gi, '');
                     
-                    // 2. Hapus Nama Lengkap atau Nama Depan dari bagian depan teks
                     cleanName = cleanName
                         .replace(new RegExp(`^${namaLengkap}_?`, 'i'), '')
                         .replace(new RegExp(`^${namaKaryawan}_?`, 'i'), '')
                         .replace(/^Slip_Gaji_?/i, '');
                     
-                    // 3. Ubah karakter garis bawah (_) menjadi spasi
                     let labelPeriode = cleanName.replace(/_/g, ' ').trim();
-                    
-                    // 4. Buka kembali strip yang terhimpit spasi (contoh: "30 September - 29 Oktober")
                     labelPeriode = labelPeriode.replace(/\s*-\s*/g, ' - ');
                     
                     if (!labelPeriode) labelPeriode = file.periode || `Slip Gaji ${idx + 1}`;
@@ -8814,12 +8991,11 @@ function muatDaftarPeriodeSlip(namaKaryawan) {
         })
         .catch(err => {
             if (loading) loading.classList.add("hidden");
-            console.error("Gagal memuat list file Drive:", err);
-            if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Gagal terhubung ke Drive</option>`;
+            console.error("Gagal memuat list file Drive Fotokopi:", err);
+            if (selPeriode) selPeriode.innerHTML = `<option value="" disabled selected>Gagal terhubung ke Drive Fotokopi</option>`;
         });
 }
 
-// E. Tampilkan Gambar Slip Gaji Saat Periode Dipilih
 window.tampilkanGambarSlip = function(indexSelected) {
     const fileObj = daftarFileDriveCached[indexSelected];
     if (!fileObj) return;
@@ -8834,203 +9010,341 @@ window.tampilkanGambarSlip = function(indexSelected) {
     if (imgSlip) imgSlip.src = linkGambar;
     if (btnUnduh) {
         btnUnduh.href = linkDownload;
-        btnUnduh.download = fileObj.name || fileObj.fileName || "Slip_Gaji.jpg";
+        btnUnduh.download = fileObj.name || fileObj.fileName || "Slip_Gaji_Fotokopi.jpg";
     }
     
     if (containerImg) containerImg.classList.remove("hidden");
 };
+
+
+// -------------------------------------------------------------
+// B. MODAL GANTI PIN PRIVASI FOTOKOPI
+// -------------------------------------------------------------
+
+window.bukaModalGantiPinFotokopi = function() {
+    const modal = document.getElementById("modal-ganti-pin-fotokopi");
+    if (!modal) return;
+    
+    resetModalGantiPinFotokopi();
+    modal.classList.remove("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform")?.classList.remove("scale-95");
+    modal.querySelector(".transform")?.classList.add("scale-100");
+};
+
+window.tutupModalGantiPinFotokopi = function() {
+    const modal = document.getElementById("modal-ganti-pin-fotokopi");
+    if (!modal) return;
+    
+    modal.classList.add("opacity-0", "pointer-events-none");
+    modal.querySelector(".transform")?.classList.add("scale-95");
+    modal.querySelector(".transform")?.classList.remove("scale-100");
+    resetModalGantiPinFotokopi();
+};
+
+function resetModalGantiPinFotokopi() {
+    const form = document.getElementById("form-ganti-pin-fotokopi");
+    const msgStatus = document.getElementById("ganti-msg-status-pin-fk");
+    const btnSubmit = document.getElementById("ganti-btn-simpan-pin-fk");
+
+    if (form) form.reset();
+    if (msgStatus) {
+        msgStatus.className = "hidden text-center text-[11px] font-bold py-2.5 px-3 rounded-xl transition-all";
+        msgStatus.innerText = "";
+    }
+    if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan PIN Baru`;
+    }
+}
+
+// Submit Form Ganti PIN ke Apps Script Backend
+window.prosesGantiPinFotokopi = function(e) {
+    e.preventDefault();
+
+    const selKaryawan  = document.getElementById("ganti-pilih-karyawan-fotokopi");
+    const inputOldPin  = document.getElementById("ganti-input-pin-lama-fk");
+    const inputNewPin  = document.getElementById("ganti-input-pin-baru-fk");
+    const inputConfirm = document.getElementById("ganti-input-pin-konfirmasi-fk");
+    const btnSubmit    = document.getElementById("ganti-btn-simpan-pin-fk");
+
+    const valKaryawan = selKaryawan ? selKaryawan.value : "";
+    const oldPin      = inputOldPin ? inputOldPin.value.trim() : "";
+    const newPin      = inputNewPin ? inputNewPin.value.trim() : "";
+    const confirmPin  = inputConfirm ? inputConfirm.value.trim() : "";
+
+    // Validasi Client-Side
+    if (!valKaryawan) {
+        tampilkanStatusGantiPinFK("Pilih nama Anda terlebih dahulu!", "error");
+        return;
+    }
+
+    if (newPin.length !== 4) {
+        tampilkanStatusGantiPinFK("PIN Baru harus 4 digit angka!", "error");
+        if (inputNewPin) inputNewPin.focus();
+        return;
+    }
+
+    if (newPin !== confirmPin) {
+        tampilkanStatusGantiPinFK("Konfirmasi PIN baru tidak cocok!", "error");
+        if (inputConfirm) {
+            inputConfirm.value = "";
+            inputConfirm.focus();
+        }
+        return;
+    }
+
+    const namaLengkap = PETA_NAMA_LENGKAP_FOTOKOPI[valKaryawan] || valKaryawan;
+
+    if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Memperbarui PIN...`;
+    }
+    tampilkanStatusGantiPinFK("Menghubungkan ke database Cloud...", "info");
+
+    const payload = {
+        action: "changePin",
+        nama: namaLengkap,
+        oldPin: oldPin,
+        newPin: newPin
+    };
+
+    // Kirim POST Request
+    fetch(URL_WEB_APP_PIN_NSA_FOTOKOPI, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (btnSubmit) btnSubmit.disabled = false;
+
+        if (res.status === "success") {
+            tampilkanStatusGantiPinFK("PIN Berhasil diperbarui! Silakan gunakan PIN baru Anda.", "success");
+            if (btnSubmit) btnSubmit.innerHTML = `<i class="fa-solid fa-check"></i> Berhasil Diperbarui`;
+            
+            setTimeout(() => {
+                tutupModalGantiPinFotokopi();
+            }, 2500);
+        } else {
+            tampilkanStatusGantiPinFK(res.message || "Gagal memperbarui PIN!", "error");
+            if (btnSubmit) btnSubmit.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan PIN Baru`;
+        }
+    })
+    .catch(err => {
+        console.error("Error Ganti PIN Fotokopi:", err);
+        if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan PIN Baru`;
+        }
+        tampilkanStatusGantiPinFK("Gagal terhubung ke server database Cloud!", "error");
+    });
+};
+
+function tampilkanStatusGantiPinFK(pesan, tipe) {
+    const msgStatus = document.getElementById("ganti-msg-status-pin-fk");
+    if (!msgStatus) return;
+
+    msgStatus.classList.remove("hidden");
+
+    if (tipe === "error") {
+        msgStatus.className = "text-center text-[11px] font-bold py-2.5 px-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 animate-pulse";
+        msgStatus.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> ${pesan}`;
+    } else if (tipe === "success") {
+        msgStatus.className = "text-center text-[11px] font-bold py-2.5 px-3 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200";
+        msgStatus.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> ${pesan}`;
+    } else {
+        msgStatus.className = "text-center text-[11px] font-bold py-2.5 px-3 rounded-xl bg-amber-50 text-amber-700 border border-amber-200";
+        msgStatus.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> ${pesan}`;
+    }
+}
 </script>
 
 
 
 
-<!-- MODAL BARANG KOSONG -->
+<!-- MODAL BARANG KOSONG (REVISI EKSTREM ANTI-STUCK & ANTI-BOCO) -->
 <div id="modalBarangKosongBK" 
-     class="fixed inset-0 bg-black/70 backdrop-blur-md z-[10000] hidden flex items-center justify-center p-4 transition-all duration-300">
+     class="fixed inset-0 bg-black/75 backdrop-blur-md z-[10000] hidden items-center justify-center p-3 sm:p-4 transition-all duration-300">
     
-    <div class="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-orange-200">
+    <!-- CARD CONTAINER UTAMA WITH RIGID HEIGHT -->
+    <div class="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden flex flex-col h-[88vh] max-h-[750px] border border-orange-200 relative">
         
-        <!-- HEADER MODAL -->
-        <div class="bg-gradient-to-r from-orange-500 to-amber-600 p-5 flex items-center justify-between text-white shadow-lg">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                    <i class="fas fa-exclamation-triangle text-lg text-amber-100"></i>
-                </div>
-                <div>
-                    <h3 id="titleModalBK" class="text-lg font-bold leading-none tracking-wide">Daftar Barang Kosong</h3>
-                    <p class="text-[10px] opacity-90 mt-1 uppercase tracking-wider font-medium flex flex-wrap items-center gap-1.5">
-                        <span>(DIISI OLEH OWNER)</span>
-                        <span class="opacity-40">•</span>
-                        <span id="txtTanggalBK" class="text-white font-bold bg-black/20 px-2 py-0.5 rounded-md"></span>
-                    </p>
-                </div>
-            </div>
-            
-            <button onclick="tutupModalBK()" 
-                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/10 transition-colors focus:outline-none">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+<!-- HEADER FIXED (BERLAKU UNTUK SEMUA VIEW) -->
+<div class="bg-gradient-to-r from-orange-500 to-amber-600 p-4 sm:p-5 flex items-center justify-between text-white shadow-md flex-shrink-0 z-20">
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm flex-shrink-0">
+            <i id="iconHeaderBK" class="fas fa-exclamation-triangle text-lg text-amber-100"></i>
         </div>
+        <div>
+            <h3 id="titleModalBK" class="text-base sm:text-lg font-bold leading-none tracking-wide">Daftar Barang Kosong</h3>
+            <p class="text-[10px] opacity-90 mt-1 uppercase tracking-wider font-medium flex flex-wrap items-center gap-1.5">
+                <span>(DIISI OLEH OWNER)</span>
+                <span class="opacity-40">•</span>
+                <span id="txtTanggalBK" class="text-white font-bold bg-black/20 px-2 py-0.5 rounded-md"></span>
+            </p>
+        </div>
+    </div>
+    
+    <!-- TOMBOL X (DIBERI ID "btnCloseBK") -->
+    <button type="button" 
+            id="btnCloseBK"
+            onclick="tutupModalBK()" 
+            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/10 transition-colors focus:outline-none flex-shrink-0">
+        <i class="fas fa-times text-xl"></i>
+    </button>
+</div>
 
-        <div id="viewInputBK" class="flex flex-col flex-1 overflow-hidden">
-            <div class="bg-orange-50/80 px-5 py-2.5 border-b border-orange-100 flex items-center justify-between text-orange-900">
-                <div class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider">
-                    <i class="fas fa-info-circle text-xs text-orange-600 flex-shrink-0"></i>
-                    <span>Petunjuk: Isi <span class="bg-orange-200 px-1.5 py-0.5 rounded text-orange-950 font-black">0</span> jika tidak dibeli.</span>
-                </div>
-                
-                <!-- TOMBOL REFRESH LIST & TAMBAH BARANG -->
-                <div class="flex items-center gap-1.5">
-                    <button type="button" 
-                            onclick="muatDataBarangKosong()" 
-                            title="Refresh List"
-                            class="bg-white hover:bg-orange-100 text-orange-700 border border-orange-200 px-2.5 py-1 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all flex items-center gap-1 shadow-sm active:scale-95">
-                        <i class="fas fa-sync-alt text-xs"></i>
-                        <span class="hidden sm:inline">Refresh</span>
-                    </button>
+        <!-- WRAPPER BODY LAYER (ISOLASI MUTLAK VIEW 1, 2, 3) -->
+        <div class="relative flex-1 w-full h-full overflow-hidden bg-gray-50/50">
+
+            <!-- ================= VIEW 1: LIST UTAMA BARANG KOSONG ================= -->
+            <div id="viewInputBK" class="absolute inset-0 flex flex-col w-full h-full bg-gray-50/50 z-10">
+                <div class="bg-orange-50/90 px-4 py-2.5 border-b border-orange-100 flex items-center justify-between text-orange-900 flex-shrink-0">
+                    <div class="flex items-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
+                        <i class="fas fa-info-circle text-xs text-orange-600 flex-shrink-0"></i>
+                        <span>Isi <span class="bg-orange-200 px-1.5 py-0.5 rounded text-orange-950 font-black">0</span> jika tidak dibeli.</span>
+                    </div>
                     
-                    <button type="button" 
-                            onclick="bukaModalTambahBarang()" 
-                            class="bg-orange-600 hover:bg-orange-700 text-white px-3 py-1 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-md shadow-orange-600/20 active:scale-95">
-                        <span>Tambah Barang</span>
-                    </button>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <button type="button" 
+                                onclick="muatDataBarangKosong()" 
+                                title="Refresh List"
+                                class="bg-white hover:bg-orange-100 text-orange-700 border border-orange-200 px-2.5 py-1 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all flex items-center gap-1 shadow-sm active:scale-95">
+                            <i class="fas fa-sync-alt text-xs"></i>
+                            <span class="hidden sm:inline">Refresh</span>
+                        </button>
+                        
+                        <button type="button" 
+                                onclick="switchViewBK('viewTambah')" 
+                                class="bg-orange-600 hover:bg-orange-700 text-white px-3 py-1 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-md shadow-orange-600/20 active:scale-95">
+                            <i class="fas fa-plus-circle text-xs"></i>
+                            <span>Tambah Barang</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BODY SCROLLABLE LIST -->
+                <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div id="wrapperItemBK" class="space-y-4"></div>
+                </div>
+
+                <!-- FOOTER RINCIAN UANG & TOMBOL -->
+                <div class="bg-orange-50/60 border-t border-orange-100 p-3 space-y-2.5 flex-shrink-0">
+                    <div class="bg-white p-2.5 rounded-2xl border border-orange-100 shadow-sm flex items-center justify-between divide-x divide-orange-100">
+                        <div class="flex-1 px-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2">
+                            <span class="text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-tight">Sisa Akhir</span>
+                            <span id="txtUangSisaBK" class="text-xs sm:text-sm font-black text-orange-600 tracking-tight">Rp 0</span>
+                        </div>
+                        
+                        <div class="flex-1 px-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2 pl-3">
+                            <span class="text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-tight">Tabungan B</span>
+                            <span id="txtUangTabunganBK" class="text-xs sm:text-sm font-black text-orange-600 tracking-tight">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button type="button"
+                                id="btnSimpanBK"
+                                onclick="simpanKeAsistenBelanja()"
+                                class="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-orange-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+                            <i id="iconSimpanBK" class="fas fa-paper-plane text-sm"></i>
+                            <span>Kirim ke Asisten Belanja</span>
+                        </button>
+
+                        <button type="button"
+                                id="btnCetakBK"
+                                onclick="buatFormatCetakJPG()"
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+                            <i id="iconCetakBK" class="fas fa-image text-sm"></i>
+                            <span>List Belanja Format Cetak</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- BODY LIST BARANG -->
-            <div id="bodyListBK" class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50/50">
-                <div id="wrapperItemBK" class="space-y-4"></div>
-            </div>
-
-            <!-- FOOTER COMPACT: RINCIAN UANG & ACTION BUTTONS -->
-            <div class="bg-orange-50/50 border-t border-orange-100 p-3 sm:p-4 space-y-2.5">
-                
-                <!-- RINCIAN UANG RINGKAS (SIDE BY SIDE / KIRI-KANAN) -->
-                <div class="bg-white p-2.5 rounded-2xl border border-orange-100 shadow-sm flex items-center justify-between divide-x divide-orange-100">
-                    <div class="flex-1 px-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2">
-                        <span class="text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-tight">Sisa Akhir</span>
-                        <span id="txtUangSisaBK" class="text-xs sm:text-sm font-black text-orange-600 tracking-tight">Rp 0</span>
-                    </div>
-                    
-                    <div class="flex-1 px-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2 pl-3">
-                        <span class="text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-tight">Tabungan B</span>
-                        <span id="txtUangTabunganBK" class="text-xs sm:text-sm font-black text-orange-600 tracking-tight">Rp 0</span>
-                    </div>
+            <!-- ================= VIEW 2: PREVIEW CETAK STRUK ================= -->
+            <div id="viewPreviewBK" class="absolute inset-0 hidden flex-col w-full h-full bg-neutral-900 z-10">
+                <div class="bg-orange-50 px-4 py-2.5 border-b border-orange-100 flex items-center gap-2 text-orange-900 flex-shrink-0">
+                    <i class="fas fa-eye text-xs text-orange-600 flex-shrink-0"></i>
+                    <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Periksa kembali hasil cetakan struk sebelum diunduh.</span>
                 </div>
 
-                <!-- ACTION BUTTONS -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div class="flex-1 overflow-y-auto p-4 sm:p-6 bg-neutral-800 flex flex-col items-center gap-4">
+                    <div id="previewCetakContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-full justify-center"></div>
+                </div>
+
+                <div class="bg-neutral-900 p-4 grid grid-cols-1 sm:grid-cols-2 gap-2 border-t border-neutral-700 flex-shrink-0">
                     <button type="button"
-                            id="btnSimpanBK"
-                            onclick="simpanKeAsistenBelanja()"
-                            class="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-orange-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
-                        <i id="iconSimpanBK" class="fas fa-paper-plane text-sm"></i>
-                        <span>Kirim ke Asisten Belanja</span>
+                            onclick="switchViewBK('viewInput')"
+                            class="w-full bg-gray-700 hover:bg-gray-600 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
+                        <i class="fas fa-arrow-left text-sm"></i>
+                        <span>Kembali Edit</span>
                     </button>
 
                     <button type="button"
-                            id="btnCetakBK"
-                            onclick="buatFormatCetakJPG()"
+                            onclick="eksekusiUnduhSemuaJPG()"
                             class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
-                        <i id="iconCetakBK" class="fas fa-image text-sm"></i>
-                        <span>List Belanja Format Cetak</span>
+                        <i class="fas fa-cloud-download-alt text-sm"></i>
+                        <span>Download Semua JPG</span>
                     </button>
                 </div>
             </div>
-        </div>
 
-        <!-- VIEW PREVIEW CETAK STRUK -->
-        <div id="viewPreviewBK" class="flex flex-col flex-1 overflow-hidden hidden">
-            <div class="bg-orange-50 px-5 py-3 border-b border-orange-100 flex items-center gap-2.5 text-orange-900">
-                <i class="fas fa-eye text-xs text-orange-600 flex-shrink-0"></i>
-                <span class="text-[11px] font-bold uppercase tracking-wider">Silakan periksa kembali hasil cetakan struk di bawah sebelum diunduh.</span>
-            </div>
-
-            <div class="flex-1 overflow-y-auto p-6 bg-neutral-800 flex flex-col items-center gap-6">
-                <div id="previewCetakContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-full justify-center"></div>
-            </div>
-
-            <div class="bg-neutral-900 p-5 grid grid-cols-1 sm:grid-cols-2 gap-2 border-t border-neutral-700">
-                <button type="button"
-                        onclick="kembaliKeInputBK()"
-                        class="w-full bg-gray-700 hover:bg-gray-600 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
-                    <i class="fas fa-arrow-left text-sm"></i>
-                    <span>Kembali Edit</span>
-                </button>
-
-                <button type="button"
-                        onclick="eksekusiUnduhSemuaJPG()"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 focus:outline-none">
-                    <i class="fas fa-cloud-download-alt text-sm"></i>
-                    <span>Download Semua JPG</span>
-                </button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<!-- MODAL POPUP TAMBAH BARANG BELANJAAN BARU -->
-<div id="modalTambahBarangBK" 
-     class="fixed inset-0 bg-black/80 backdrop-blur-md z-[10001] hidden flex items-center justify-center p-4 transition-all duration-300">
-    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-orange-200 animate-in fade-in zoom-in-95 duration-200">
-        
-        <div class="bg-gradient-to-r from-orange-500 to-amber-600 p-4 flex items-center justify-between text-white">
-            <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-cart-plus text-amber-100 text-sm"></i>
+            <!-- ================= VIEW 3: FORM TAMBAH BARANG ================= -->
+            <div id="viewTambahBarangBK" class="absolute inset-0 hidden flex-col w-full h-full bg-gray-50/90 z-10">
+                <div class="bg-orange-100/90 px-4 py-2.5 border-b border-orange-200 flex items-center gap-2 text-orange-900 flex-shrink-0">
+                    <i class="fas fa-cart-plus text-xs text-orange-600 flex-shrink-0"></i>
+                    <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Form Tambah Item Barang Belanjaan Baru</span>
                 </div>
-                <h4 class="text-sm font-bold uppercase tracking-wide">Tambah Barang Belanjaan</h4>
+
+                <form id="formTambahBarangBK" onsubmit="simpanBarangBaruKeSheets(event)" class="p-4 sm:p-6 flex-1 flex flex-col justify-between overflow-y-auto">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-black text-gray-600 uppercase tracking-wider block mb-1.5">Nama Barang Baru <span class="text-rose-500">*</span></label>
+                            <input type="text" 
+                                   id="inputNamaBarangBaruBK" 
+                                   required 
+                                   placeholder="Contoh: Kertas A4 70gr Sidu" 
+                                   class="w-full bg-white border-2 border-gray-200 focus:border-orange-500 rounded-2xl px-4 py-3 text-xs font-semibold outline-none transition-all text-gray-800 shadow-sm">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-black text-gray-600 uppercase tracking-wider block mb-1.5">Jumlah Yang Harus Dibeli (Opsional)</label>
+                            <input type="text" 
+                                   id="inputJumlahBarangBaruBK" 
+                                   placeholder="Contoh: 1 dus / 5 pcs" 
+                                   class="w-full bg-white border-2 border-gray-200 focus:border-orange-500 rounded-2xl px-4 py-3 text-xs font-semibold outline-none transition-all text-gray-800 shadow-sm">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-black text-gray-600 uppercase tracking-wider block mb-1.5">Catatan Tambahan (Opsional)</label>
+                            <input type="text" 
+                                   id="inputCatatanBarangBaruBK" 
+                                   placeholder="Contoh: Tanya dulu varian/merek" 
+                                   class="w-full bg-white border-2 border-gray-200 focus:border-orange-500 rounded-2xl px-4 py-3 text-xs font-semibold outline-none transition-all text-gray-800 shadow-sm">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex items-center justify-end gap-2 border-t border-gray-200 flex-shrink-0 mt-6">
+                        <button type="button" 
+                                onclick="switchViewBK('viewInput')" 
+                                class="px-5 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs uppercase tracking-wider transition-all active:scale-95">
+                            Batal / Kembali
+                        </button>
+                        <button type="submit" 
+                                id="btnSubmitBarangBaruBK" 
+                                class="px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-600/30 transition-all flex items-center gap-2 active:scale-95">
+                            <i id="iconSubmitBarangBaruBK" class="fas fa-plus-circle text-xs"></i>
+                            <span>Simpan Barang</span>
+                        </button>
+                    </div>
+                </form>
             </div>
-            <button onclick="tutupModalTambahBarang()" class="text-white/80 hover:text-white p-1 focus:outline-none">
-                <i class="fas fa-times text-lg"></i>
-            </button>
+
         </div>
-
-        <form onsubmit="simpanBarangBaruKeSheets(event)" class="p-5 space-y-4">
-            <div>
-                <label class="text-[10px] font-black text-gray-600 uppercase tracking-wider block mb-1.5">Nama Barang Baru <span class="text-rose-500">*</span></label>
-                <input type="text" 
-                       id="inputNamaBarangBaruBK" 
-                       required 
-                       placeholder="Contoh: Kertas A4 70gr Sidu" 
-                       class="w-full bg-gray-50 border-2 border-gray-200 focus:border-orange-500 focus:bg-white rounded-2xl px-4 py-2.5 text-xs font-semibold outline-none transition-all text-gray-800">
-            </div>
-
-            <div>
-                <label class="text-[10px] font-black text-gray-600 uppercase tracking-wider block mb-1.5">Jumlah Yang Harus Dibeli (Opsional)</label>
-                <input type="text" 
-                       id="inputJumlahBarangBaruBK" 
-                       placeholder="Contoh: 1 dus / 5 pcs" 
-                       class="w-full bg-gray-50 border-2 border-gray-200 focus:border-orange-500 focus:bg-white rounded-2xl px-4 py-2.5 text-xs font-semibold outline-none transition-all text-gray-800">
-            </div>
-
-            <div>
-                <label class="text-[10px] font-black text-gray-600 uppercase tracking-wider block mb-1.5">Catatan Tambahan (Opsional)</label>
-                <input type="text" 
-                       id="inputCatatanBarangBaruBK" 
-                       placeholder="Contoh: Tanya dulu varian/merek" 
-                       class="w-full bg-gray-50 border-2 border-gray-200 focus:border-orange-500 focus:bg-white rounded-2xl px-4 py-2.5 text-xs font-semibold outline-none transition-all text-gray-800">
-            </div>
-
-            <div class="pt-2 flex items-center justify-end gap-2">
-                <button type="button" 
-                        onclick="tutupModalTambahBarang()" 
-                        class="px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs uppercase tracking-wider transition-all active:scale-95">
-                    Batal
-                </button>
-                <button type="submit" 
-                        id="btnSubmitBarangBaruBK"
-                        class="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-600/30 transition-all flex items-center gap-2 active:scale-95">
-                    <i id="iconSubmitBarangBaruBK" class="fas fa-plus-circle text-xs"></i>
-                    <span>Simpan Barang</span>
-                </button>
-            </div>
-        </form>
 
     </div>
 </div>
-
 
 <!-- MODAL PREVIEW KARTU PRESENSI PDF -->
 <div id="modal-kartu-presensi" class="fixed inset-0 bg-emerald-950/60 backdrop-blur-md z-[13000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
@@ -9874,6 +10188,25 @@ function updateTanggalDisplay(input) {
     }
     const [yyyy, mm, dd] = input.value.split('-');
     display.innerText = `${dd}-${mm}-${yyyy}`;
+}
+
+// ==========================================
+// HELPER TRIGGER DATE PICKER (DESKTOP & MOBILE)
+// ==========================================
+function bukaDatePicker() {
+    const dateInput = document.getElementById('datePickerRiwayat');
+    if (!dateInput) return;
+
+    // Memaksa browser desktop panggil popup kalender bawaan
+    if ('showPicker' in HTMLInputElement.prototype) {
+        try {
+            dateInput.showPicker();
+        } catch (error) {
+            dateInput.focus();
+        }
+    } else {
+        dateInput.focus();
+    }
 }
 
 // ==========================================
@@ -11453,9 +11786,9 @@ async function simpanPerubahanRequest(event) {
 }
 </script>
 
-<!-- ========================================== -->
-<!-- MODAL UTAMA: ARSIP SLIP GAJI KARYAWAN      -->
-<!-- ========================================== -->
+<!-- ========================================================== -->
+<!-- 1. MODAL UTAMA: ARSIP SLIP GAJI KARYAWAN FOTOKOPI          -->
+<!-- ========================================================== -->
 <div id="modal-arsip-slip-gaji" class="fixed inset-0 bg-black/70 backdrop-blur-md z-[10000] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
     <div class="bg-white w-full max-w-lg rounded-[28px] border-2 border-pink-200 shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 flex flex-col max-h-[90vh]">
         
@@ -11480,10 +11813,14 @@ async function simpanPerubahanRequest(event) {
         <!-- BODY MODAL CONTAINER -->
         <div class="p-5 overflow-y-auto space-y-4 bg-pink-50/20">
             
+            <!-- INDIKATOR SYNC DATA PIN -->
+            <div id="arsip-pin-sync-status-fk" class="hidden text-center text-[11px] font-bold py-1.5 px-3 rounded-xl transition-all">
+                <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Menyinkronkan keamanan PIN Cloud...
+            </div>
+
             <!-- SELEKSI NAMA KARYAWAN -->
             <div class="bg-white border border-pink-200 p-4 rounded-2xl shadow-sm space-y-2">
                 <label for="arsip-pilih-karyawan" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Karyawan:</label>
-                <!-- Diberi onchange langsung agar 100% selalu memicu event -->
                 <select id="arsip-pilih-karyawan" onchange="pilihKaryawanArsip(this.value)" class="w-full bg-pink-50/50 border border-pink-200 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-pink-500 focus:bg-white focus:outline-none transition-all cursor-pointer">
                     <option value="" disabled selected>-- Pilih Karyawan --</option>
                     <option value="Dadan">Dadan Nurfaizal</option>
@@ -11491,7 +11828,7 @@ async function simpanPerubahanRequest(event) {
                 </select>
             </div>
 
-            <!-- POPUP / BOX MINTA PIN (DILENGKAPI ANIMASI & ICON BANTUAN) -->
+            <!-- BOX VERIFIKASI PIN PRIVASI -->
             <div id="arsip-wrapper-pin" class="hidden bg-white border-2 border-dashed border-pink-300 p-5 rounded-2xl shadow-md text-center space-y-3 transition-all">
                 <div class="w-12 h-12 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mx-auto text-xl shadow-inner">
                     <i class="fa-solid fa-user-lock"></i>
@@ -11500,15 +11837,19 @@ async function simpanPerubahanRequest(event) {
                     <h4 id="arsip-teks-sapaan-pin" class="text-xs font-black text-slate-800 uppercase tracking-wide">VERIFIKASI PIN PRIVASI</h4>
                     <p class="text-[11px] text-slate-500 font-medium mt-0.5">Masukkan 4 digit PIN akun karyawan untuk membuka arsip slip gaji.</p>
                 </div>
-                <div class="flex justify-center gap-2 max-w-[220px] mx-auto pt-1">
+                
+                <div class="flex flex-col items-center gap-1 max-w-[220px] mx-auto pt-1">
                     <input type="password" id="arsip-input-pin" maxlength="4" placeholder="••••" inputmode="numeric" class="w-full text-center bg-pink-50/50 border-2 border-pink-200 text-slate-900 font-black text-xl py-2 rounded-xl tracking-[0.4em] focus:border-pink-500 focus:bg-white focus:outline-none shadow-inner transition-all">
+                    <!-- Pesan Error PIN -->
+                    <p id="arsip-msg-error-pin-fk" class="hidden text-[11px] font-bold text-rose-600 animate-pulse mt-1"></p>
                 </div>
-                <button type="button" onclick="verifikasiPinKaryawan()" class="w-full bg-pink-600 hover:bg-pink-700 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-md shadow-pink-600/20 transition-all flex items-center justify-center gap-2">
+
+                <button type="button" id="arsip-btn-verifikasi-pin-fk" onclick="verifikasiPinKaryawan()" class="w-full bg-gradient-to-r from-pink-600 to-rose-700 hover:from-pink-700 hover:to-rose-800 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-md shadow-pink-600/20 transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-key"></i> Buka Slip Gaji
                 </button>
             </div>
 
-            <!-- TAMPILAN VIEWER SLIP GAJI (SETELAH PIN BENAR) -->
+            <!-- TAMPILAN VIEWER SLIP GAJI -->
             <div id="arsip-wrapper-viewer" class="hidden space-y-4">
                 
                 <!-- DROPDOWN PERIODE SLIP GAJI -->
@@ -11519,7 +11860,7 @@ async function simpanPerubahanRequest(event) {
                     </select>
                 </div>
 
-                <!-- LOADING SPINNER PROSES AMBIL GAMBAR -->
+                <!-- LOADING SPINNER -->
                 <div id="arsip-loading-gambar" class="hidden py-8 text-center space-y-2 bg-white rounded-2xl border border-pink-200">
                     <i class="fa-solid fa-circle-notch fa-spin text-3xl text-pink-600"></i>
                     <p class="text-xs font-bold text-slate-500">Menghubungkan ke NSA Cloud & mengambil arsip slip gaji...</p>
@@ -11541,6 +11882,9 @@ async function simpanPerubahanRequest(event) {
 
     </div>
 </div>
+
+
+
 
 <!-- 1. MODAL RIWAYAT LAPORAN PENDAPATAN (INDUK) -->
 <div id="modalRiwayatOverlay" 
@@ -11587,13 +11931,14 @@ async function simpanPerubahanRequest(event) {
 
                 <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                     <!-- Date Picker Trigger Button -->
-                    <div class="relative inline-flex items-center gap-1.5 bg-sky-600 hover:bg-sky-700 active:scale-95 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-sm shadow-sky-600/20 cursor-pointer transition-all">
+                    <div onclick="bukaDatePicker()" 
+                         class="relative inline-flex items-center gap-1.5 bg-sky-600 hover:bg-sky-700 active:scale-95 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-sm shadow-sky-600/20 cursor-pointer transition-all">
                         <input type="date" 
                                id="datePickerRiwayat" 
                                class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
                                onchange="updateTanggalDisplay(this)">
-                        <i class="fas fa-calendar-day text-xs"></i>
-                        <span>Pilih</span>
+                        <i class="fas fa-calendar-day text-xs pointer-events-none"></i>
+                        <span class="pointer-events-none">Pilih</span>
                     </div>
 
                     <!-- Search Button -->
@@ -11642,7 +11987,6 @@ async function simpanPerubahanRequest(event) {
 
     </div>
 </div>
-
 <!-- 2. FULLSCREEN IMAGE VIEWER MODAL (INDEPENDEN DI LUAR MODAL UTAMA) -->
 <div id="modalZoomViewer" 
      class="fixed inset-0 bg-slate-950/95 z-[10000] hidden flex-col items-center justify-between p-3 sm:p-4 touch-none transition-opacity duration-200">
@@ -11962,6 +12306,173 @@ async function simpanPerubahanRequest(event) {
 
     </div>
 </div>
+<!-- ================= UNIVERSAL ALERT SHIELD PATCH ================= -->
+<script>
+(function () {
+    // Flag penanda apakah alert sedang aktif di layar
+    window.__IS_ALERT_FOTOKOPI_ACTIVE = false;
+    
+    // Antrean untuk menunda perintah penutupan modal lain
+    const antreanTutupModal = [];
 
+    // 1. PATCH FUNGSI bukaAlertFotokopi
+    const originalBukaAlert = window.bukaAlertFotokopi;
+    if (typeof originalBukaAlert === 'function') {
+        window.bukaAlertFotokopi = function (...args) {
+            window.__IS_ALERT_FOTOKOPI_ACTIVE = true;
+            return originalBukaAlert.apply(this, args);
+        };
+    }
+
+    // 2. PATCH FUNGSI tutupAlertFotokopi
+    const originalTutupAlert = window.tutupAlertFotokopi;
+    if (typeof originalTutupAlert === 'function') {
+        window.tutupAlertFotokopi = function (...args) {
+            const result = originalTutupAlert.apply(this, args);
+            
+            // Tunggu hingga transisi penutupan alert selesai
+            setTimeout(() => {
+                window.__IS_ALERT_FOTOKOPI_ACTIVE = false;
+                
+                // Jalankan perintah penutupan modal lain yang sempat ditunda
+                while (antreanTutupModal.length > 0) {
+                    const eksekusiPenutupan = antreanTutupModal.shift();
+                    try { eksekusiPenutupan(); } catch (err) { console.error(err); }
+                }
+            }, 250);
+
+            return result;
+        };
+    }
+
+    // 3. HADANG EVENT GLOBAL (CAPTURE PHASE)
+    // Mencegah klik / keydown di luar alert memicu event handler di modal induk
+    ['click', 'mousedown', 'mouseup', 'keydown', 'pointerdown'].forEach(eventType => {
+        window.addEventListener(eventType, function (e) {
+            if (!window.__IS_ALERT_FOTOKOPI_ACTIVE) return;
+
+            const alertEl = document.getElementById('modal-alert-fotokopi');
+            if (!alertEl) return;
+
+            // Jika aksi terjadi DI LUAR elemen modal alert, hentikan seketika!
+            if (!alertEl.contains(e.target)) {
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                e.preventDefault();
+            }
+        }, true); // Parameter `true` memicu Capture Phase (Saringan terdepan)
+    });
+
+    // 4. PATCH UNTUK FRAMEWORK MODAL UMUM (Bootstrap / jQuery / Custom)
+    
+    // A. Patch Bootstrap Modal (jika pakai Bootstrap)
+    if (typeof window.bootstrap !== 'undefined' && window.bootstrap.Modal) {
+        const originalBsHide = window.bootstrap.Modal.prototype.hide;
+        window.bootstrap.Modal.prototype.hide = function (...args) {
+            if (window.__IS_ALERT_FOTOKOPI_ACTIVE) {
+                // Tunda penutupan modal Bootstrap sampai alert selesai!
+                antreanTutupModal.push(() => originalBsHide.apply(this, args));
+                return;
+            }
+            return originalBsHide.apply(this, args);
+        };
+    }
+
+    // B. Patch jQuery Modal (jika pakai jQuery / $.fn.modal)
+    if (typeof window.jQuery !== 'undefined' && window.jQuery.fn && window.jQuery.fn.modal) {
+        const originalJQueryModal = window.jQuery.fn.modal;
+        window.jQuery.fn.modal = function (option, ...args) {
+            if (window.__IS_ALERT_FOTOKOPI_ACTIVE && option === 'hide') {
+                const self = this;
+                antreanTutupModal.push(() => originalJQueryModal.call(self, option, ...args));
+                return this;
+            }
+            return originalJQueryModal.apply(this, [option, ...args]);
+        };
+    }
+})();
+</script>
+
+<!-- ========================================================== -->
+<!-- 2. MODAL BARU: GANTI PIN PRIVASI KARYAWAN FOTOKOPI         -->
+<!-- ========================================================== -->
+<div id="modal-ganti-pin-fotokopi" class="fixed inset-0 bg-black/70 backdrop-blur-md z-[10000] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white w-full max-w-lg rounded-[28px] border-2 border-pink-200 shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 flex flex-col max-h-[90vh]">
+        
+        <!-- HEADER MODAL -->
+        <div class="p-5 bg-gradient-to-r from-pink-600 to-rose-700 flex justify-between items-center flex-shrink-0 text-white shadow-md">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    <i class="fa-solid fa-key text-lg text-pink-200"></i>
+                </div>
+                <div>
+                    <h3 class="text-base md:text-lg font-black uppercase tracking-tight flex items-center gap-2">
+                        GANTI PIN PRIVASI
+                    </h3>
+                    <p class="text-[10px] text-pink-100 opacity-90 font-bold uppercase tracking-wider">Nurjaya Abadi Photocopy</p>
+                </div>
+            </div>
+            <button type="button" onclick="tutupModalGantiPinFotokopi()" class="w-9 h-9 bg-white/20 hover:bg-black/10 text-white rounded-full flex items-center justify-center transition-colors focus:outline-none">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- BODY MODAL CONTAINER -->
+        <div class="p-5 overflow-y-auto space-y-4 bg-pink-50/20">
+            
+            <!-- INFORMASI -->
+            <div class="bg-pink-100/60 border border-pink-200 p-3.5 rounded-2xl flex items-start gap-3">
+                <i class="fa-solid fa-shield-halved text-pink-600 text-lg mt-0.5"></i>
+                <p class="text-[11px] text-slate-600 font-medium leading-relaxed">
+                    Perbarui PIN privasi secara berkala untuk menjaga kerahasiaan arsip slip gaji Karyawan Fotokopi di NSA Cloud.
+                </p>
+            </div>
+
+            <!-- FORM GANTI PIN -->
+            <form id="form-ganti-pin-fotokopi" onsubmit="prosesGantiPinFotokopi(event)" class="space-y-3.5">
+                
+                <!-- SELEKSI NAMA KARYAWAN -->
+                <div class="bg-white border border-pink-200 p-3.5 rounded-2xl shadow-sm space-y-1.5">
+                    <label for="ganti-pilih-karyawan-fotokopi" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Anda:</label>
+                    <select id="ganti-pilih-karyawan-fotokopi" required class="w-full bg-pink-50/50 border border-pink-200 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-pink-500 focus:bg-white focus:outline-none transition-all cursor-pointer">
+                        <option value="" disabled selected>-- Pilih Karyawan --</option>
+                        <option value="Dadan">Dadan Nurfaizal</option>
+                        <option value="Syamsi">Syamsi Nurhakim</option>
+                    </select>
+                </div>
+
+                <!-- INPUT PIN LAMA -->
+                <div class="bg-white border border-pink-200 p-3.5 rounded-2xl shadow-sm space-y-1.5">
+                    <label for="ganti-input-pin-lama-fk" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">PIN Lama Saat Ini:</label>
+                    <input type="password" id="ganti-input-pin-lama-fk" maxlength="4" placeholder="••••" inputmode="numeric" required class="w-full text-center bg-pink-50/50 border border-pink-200 text-slate-900 font-black text-lg py-2 rounded-xl tracking-[0.3em] focus:border-pink-500 focus:bg-white focus:outline-none shadow-inner transition-all">
+                </div>
+
+                <!-- INPUT PIN BARU & KONFIRMASI -->
+                <div class="bg-white border border-pink-200 p-3.5 rounded-2xl shadow-sm space-y-3">
+                    <div>
+                        <label for="ganti-input-pin-baru-fk" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">PIN Baru (4 Digit):</label>
+                        <input type="password" id="ganti-input-pin-baru-fk" maxlength="4" placeholder="••••" inputmode="numeric" required class="w-full text-center bg-pink-50/50 border border-pink-200 text-slate-900 font-black text-lg py-2 rounded-xl tracking-[0.3em] focus:border-pink-500 focus:bg-white focus:outline-none shadow-inner transition-all mt-1.5">
+                    </div>
+
+                    <div>
+                        <label for="ganti-input-pin-konfirmasi-fk" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Konfirmasi PIN Baru:</label>
+                        <input type="password" id="ganti-input-pin-konfirmasi-fk" maxlength="4" placeholder="••••" inputmode="numeric" required class="w-full text-center bg-pink-50/50 border border-pink-200 text-slate-900 font-black text-lg py-2 rounded-xl tracking-[0.3em] focus:border-pink-500 focus:bg-white focus:outline-none shadow-inner transition-all mt-1.5">
+                    </div>
+                </div>
+
+                <!-- PESAN STATUS -->
+                <div id="ganti-msg-status-pin-fk" class="hidden text-center text-[11px] font-bold py-2.5 px-3 rounded-xl transition-all"></div>
+
+                <!-- TOMBOL SUBMIT -->
+                <button type="submit" id="ganti-btn-simpan-pin-fk" class="w-full bg-gradient-to-r from-pink-600 to-rose-700 hover:from-pink-700 hover:to-rose-800 active:scale-[0.98] text-white font-black text-xs uppercase tracking-widest py-3.5 rounded-xl shadow-md shadow-pink-600/20 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan PIN Baru
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
 </body>
 </html>
