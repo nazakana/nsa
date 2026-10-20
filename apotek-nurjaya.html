@@ -314,6 +314,128 @@ document.addEventListener('keydown', function(e) {
 
 </style>
 
+
+    <!-- SMART INVERSION DARK MODE PATCH -->
+<style>
+
+  /* SMART INVERSION DARK MODE PATCH */
+
+  html.dark-mode-active {
+
+    filter: invert(0.92) hue-rotate(180deg) contrast(1.05) !important;
+
+    background-color: #121212 !important;
+
+  }
+
+
+
+  /* 1. KEMBALIKAN GAMBAR & MEDIA */
+
+  html.dark-mode-active img,
+
+  html.dark-mode-active canvas,
+
+  html.dark-mode-active video,
+
+  html.dark-mode-active .no-invert {
+
+    filter: invert(1) hue-rotate(180deg) !important;
+
+  }
+
+
+
+  /* 2. FIX JUDUL DASHBOARD (Supaya teks header tidak ikut jadi hitam) */
+
+  html.dark-mode-active header,
+
+  html.dark-mode-active [class*="top-bar"],
+
+  html.dark-mode-active .fixed.top-0,
+
+  html.dark-mode-active h1,
+
+  html.dark-mode-active h2 {
+
+    /* Mencegah teks putih terbalik jadi hitam */
+
+    filter: invert(1) hue-rotate(180deg) !important;
+
+  }
+
+
+
+  /* Exception khusus tombol floating biar ikonkannya sinkron */
+
+  html.dark-mode-active #theme-toggle-btn,
+
+  html.dark-mode-active #theme-toggle-btn * {
+
+    filter: none !important;
+
+  }
+
+/* PAKSA HEADER BANNER & SUBTITLE PERMANEN PUTIH BAWAAN */
+
+html.dark-mode-active #headerSubtitle,
+html.dark-mode-active #headerSubtitle {
+  filter: invert(1) hue-rotate(180deg) !important;
+}
+</style>
+
+    <!-- SCRIPT TEMA & LOCKOUT AUTO DARK (LANGSUNG EKSEKUSI DI HEAD) -->
+<!-- SCRIPT TEMA & LOCKOUT AUTO DARK (FRESH RESET) -->
+<script>
+  (function () {
+    // Ganti nama key agar memori 'dark' lama di browser terhapus otomatis!
+    const THEME_KEY = 'nsa_theme_v3';
+
+    // 1. HAPUS MEMORI DARI UJI COBA LAMA
+    localStorage.removeItem('nsa_theme_preference');
+    localStorage.removeItem('nsa_theme_v2');
+
+    // 2. PAKSA MATIKAN DARK MODE DI LEVEL AWAL (0ms)
+    document.documentElement.classList.remove('dark-mode-active', 'dark');
+
+    // 3. BACA PREFERENSI BARU
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark-mode-active');
+    } else {
+      // Default WAJIB Light Mode jika belum pernah klik tombol baru
+      localStorage.setItem(THEME_KEY, 'light');
+      document.documentElement.classList.remove('dark-mode-active');
+    }
+
+    // 4. FUNGSI TRIGGER TOGGLE TEMA
+    window.toggleDarkMode = function() {
+      const isDark = document.documentElement.classList.toggle('dark-mode-active');
+      localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+      window.updateThemeUI(isDark);
+    };
+
+    // 5. UPDATE IKON TOMBOL TRIGGER
+    window.updateThemeUI = function(isDark) {
+      const icon = document.getElementById('theme-toggle-icon');
+      const btn = document.getElementById('theme-toggle-btn');
+      
+      if (icon) {
+        icon.className = isDark 
+          ? 'fas fa-sun text-lg text-amber-500 group-hover:rotate-45 transition-transform' 
+          : 'fas fa-moon text-lg text-slate-800 group-hover:scale-110 transition-transform';
+      }
+      if (btn) {
+        btn.setAttribute('title', isDark ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap');
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      window.updateThemeUI(document.documentElement.classList.contains('dark-mode-active'));
+    });
+  })();
+</script>
 </head>
 
 
@@ -465,9 +587,18 @@ document.addEventListener('keydown', function(e) {
 <!-- ========================================== -->
 <!-- 1. TOMBOL UTAMA MENU (Hamburger Floating) -->
 <!-- ========================================== -->
-<div class="fixed top-6 right-6 z-[9998]">
-    <button onclick="toggleMenuApotekSidebar()" 
-            class="w-12 h-12 bg-white/80 hover:bg-white text-gray-800 backdrop-blur-md border border-white/40 rounded-full shadow-lg flex items-center justify-center focus:outline-none transition-all duration-300 group">
+<div class="fixed top-6 right-6 z-[9998] flex items-center gap-3">
+    <!-- Tombol Theme Switcher -->
+    <button id="theme-toggle-btn" type="button" onclick="toggleDarkMode()" 
+            title="Ubah Tema"
+            class="w-12 h-12 shrink-0 aspect-square bg-white/80 hover:bg-white text-slate-800 backdrop-blur-md border border-white/40 rounded-full shadow-lg flex items-center justify-center focus:outline-none transition-all duration-300 group hover:scale-105 active:scale-95">
+        <i id="theme-toggle-icon" class="fas fa-moon text-lg group-hover:scale-110 transition-transform"></i>
+    </button>
+
+    <!-- Tombol Hamburger -->
+    <button type="button" onclick="toggleMenuApotekSidebar()" 
+            title="Menu Utama"
+            class="w-12 h-12 shrink-0 aspect-square bg-white/80 hover:bg-white text-slate-800 backdrop-blur-md border border-white/40 rounded-full shadow-lg flex items-center justify-center focus:outline-none transition-all duration-300 group hover:scale-105 active:scale-95">
         <i class="fas fa-bars text-lg group-hover:scale-110 transition-transform"></i>
     </button>
 </div>
@@ -8454,5 +8585,50 @@ function toggleExpandShiftWidget() {
 
     </div>
 </div>
+
+<script>
+  (function () {
+    const THEME_KEY = 'nsa_theme_preference';
+
+    // ATURAN EXTREME 1: Paksa matikan dark mode di level paling awal
+    document.documentElement.classList.remove('dark-mode-active');
+
+    // Check localStorage hanya jika BENAR-BENAR bernilai string 'dark'
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark-mode-active');
+    } else {
+      // Jika bernilai null, undefined, 'light', atau lainnya -> Paksa simpan 'light'
+      localStorage.setItem(THEME_KEY, 'light');
+      document.documentElement.classList.remove('dark-mode-active');
+    }
+
+    // 1. Trigger Toggle Manual
+    window.toggleDarkMode = function() {
+      const isDark = document.documentElement.classList.toggle('dark-mode-active');
+      localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+      updateUI(isDark);
+    };
+
+    // 2. Update Tampilan Tombol
+    function updateUI(isDark) {
+      const icon = document.getElementById('theme-toggle-icon');
+      const btn = document.getElementById('theme-toggle-btn');
+      
+      if (icon) {
+        icon.className = isDark 
+          ? 'fas fa-sun text-lg text-amber-500 group-hover:rotate-45 transition-transform' 
+          : 'fas fa-moon text-lg text-slate-800 group-hover:scale-110 transition-transform';
+      }
+      if (btn) {
+        btn.setAttribute('title', isDark ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUI(document.documentElement.classList.contains('dark-mode-active'));
+    });
+  })();
+</script>
 </body>
 </html>
