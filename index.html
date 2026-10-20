@@ -3282,27 +3282,36 @@ function kirimRingkasanBelanjaWA() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 // =========================================================================
-// NSA PRESENSI JAVASCRIPT LOGIC - INTEGRASI SCAN WAJAH & FIT TO SCREEN
+// NSA PRESENSI JAVASCRIPT LOGIC - INTEGRASI SCAN WAJAH, PANZOOM & SMART PERIOD
+// NURJAYA ABADI PHOTOCOPY
 // =========================================================================
 
-// Buka Modal Presensi via Scan Wajah & Tampilkan Card Profile Instan
+// Pemetaan Nama Pendek Ke Nama Lengkap Karyawan
+const PEMETAAN_NAMA_FOTOKOPI = {
+    "Dadan": "Dadan Nurfaizal",
+    "Syamsi": "Syamsi Nurhakim"
+};
+
+let requestPeriodeFotokopi = null;
+
+// 1. Buka Modal Presensi via Scan Wajah & Tampilkan Card Profile Instan
 window.eksekusiPresensiOtomatis = function(namaKaryawan) {
     const wrapperForm = document.getElementById("wrapper_form_presensi");
     const inputHiddenKaryawan = document.getElementById("presensi-karyawan");
 
-    // 1. Simpan nama karyawan ke input hidden
+    // Simpan nama karyawan ke input hidden
     if (inputHiddenKaryawan) {
         inputHiddenKaryawan.value = namaKaryawan;
     }
 
-    // 2. Sembunyikan semua card profile, lalu munculkan hanya yang cocok
+    // Sembunyikan semua card profile, lalu munculkan hanya yang cocok
     document.querySelectorAll('.card-karyawan-profile').forEach(card => card.classList.add('hidden'));
     const cardTerpilih = document.getElementById(`card-profile-${namaKaryawan}`);
     if (cardTerpilih) {
         cardTerpilih.classList.remove('hidden');
     }
 
-    // 3. Tampilkan wrapper form modal
+    // Tampilkan wrapper form modal
     if (wrapperForm) {
         wrapperForm.classList.remove("hidden");
         setTimeout(() => {
@@ -3312,39 +3321,69 @@ window.eksekusiPresensiOtomatis = function(namaKaryawan) {
         }, 50);
     }
 
-    // 4. Ambil informasi target periode otomatis dari spreadsheet
+    // Ambil informasi target periode & tanggal gaji otomatis dari spreadsheet
     muatPeriodeKaryawan(namaKaryawan);
 };
 
-// Fungsi Ambil Target Periode Aktif per Karyawan
+// 2. Fungsi Ambil Target Periode & Tanggal Gaji Aktif Realtime per Karyawan
 function muatPeriodeKaryawan(namaKaryawan) {
     const targetLabel = document.getElementById(`label-periode-${namaKaryawan}`);
+    const targetGajiLabel = document.getElementById(`label-tglgaji-${namaKaryawan}`);
     const API_URL_PRESENSI = "https://script.google.com/macros/s/AKfycbwyzHl2sdJAaskZR-OZNcAmcjSq4WebF8wfQk7u7He5ceMLcwyIRNPgwo1n-ZFxQyc-_A/exec";
+    const tglInput = document.getElementById("presensi-tanggal")?.value || "";
 
-    if (targetLabel) {
-        targetLabel.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-emerald-600"></i> Memuat...`;
+    if (requestPeriodeFotokopi) {
+        requestPeriodeFotokopi.abort();
     }
 
-    fetch(`${API_URL_PRESENSI}?karyawan=${namaKaryawan}`)
-        .then(response => response.json())
-        .then(result => {
-            if (result.status === "success" && result.periode_langsung) {
-                if (targetLabel) targetLabel.textContent = result.periode_langsung;
-            } else {
-                if (targetLabel) targetLabel.textContent = "Buku Aktif";
-            }
-        })
-        .catch(() => {
+    const controller = new AbortController();
+    requestPeriodeFotokopi = controller;
+
+    if (targetLabel) targetLabel.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-emerald-600"></i> Memuat...`;
+    if (targetGajiLabel) targetGajiLabel.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-emerald-600"></i> ...`;
+
+    fetch(`${API_URL_PRESENSI}?karyawan=${encodeURIComponent(namaKaryawan)}&action=getMetaData&tanggal=${encodeURIComponent(tglInput)}`, {
+        signal: controller.signal
+    })
+    .then(response => response.json())
+    .then(result => {
+        const namaAktif = document.getElementById("presensi-karyawan")?.value;
+        if (namaAktif !== namaKaryawan) return;
+
+        if (result.status === "success") {
+            if (targetLabel) targetLabel.textContent = result.periode || "Buku Aktif";
+            if (targetGajiLabel) targetGajiLabel.textContent = result.tanggalGaji || "-";
+        } else {
             if (targetLabel) targetLabel.textContent = "Buku Aktif";
-        });
+            if (targetGajiLabel) targetGajiLabel.textContent = "-";
+        }
+    })
+    .catch(err => {
+        if (err.name === "AbortError") return;
+        if (targetLabel) targetLabel.textContent = "Buku Aktif";
+        if (targetGajiLabel) targetGajiLabel.textContent = "-";
+    })
+    .finally(() => {
+        if (requestPeriodeFotokopi === controller) {
+            requestPeriodeFotokopi = null;
+        }
+    });
 }
 
-// Fungsi Buka Preview Foto Profil
+// 3. Trigger Perbarui Periode Otomatis Saat Input Tanggal Diubah
+function perbaruiPeriodeOtomatisRealtime() {
+    const namaKaryawan = document.getElementById("presensi-karyawan")?.value;
+    if (namaKaryawan) {
+        muatPeriodeKaryawan(namaKaryawan);
+    }
+}
+
+// 4. Fungsi Buka Preview Foto Profil
 function intipFotoKaryawan(urlFoto) {
     window.open(urlFoto, '_blank');
 }
 
-// Fungsi Tutup Modal Presensi
+// 5. Fungsi Tutup Modal Presensi Utama
 function tutupFormPresensiModal() {
     const wrapperForm = document.getElementById("wrapper_form_presensi");
     if (wrapperForm) {
@@ -3358,6 +3397,9 @@ function tutupFormPresensiModal() {
     }
 }
 
+// =========================================================================
+// EVENT LISTENER UTAMA SETELAH DOM SIAP
+// =========================================================================
 document.addEventListener("DOMContentLoaded", function() {
     // 1. URL API Web App Google Apps Script
     const API_URL_PRESENSI = "https://script.google.com/macros/s/AKfycbwyzHl2sdJAaskZR-OZNcAmcjSq4WebF8wfQk7u7He5ceMLcwyIRNPgwo1n-ZFxQyc-_A/exec";
@@ -3365,8 +3407,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 2. Elemen DOM Form Utama
     const selectKaryawan     = document.getElementById("presensi-karyawan");
-    const labelPeriode       = document.getElementById("label-periode-aktif");
-    const inputTanggal       = document.getElementById("presensi-tanggal");
+    const inputTanggal        = document.getElementById("presensi-tanggal");
     const selectKehadiran     = document.getElementById("presensi-kehadiran");
     const selectJadwal        = document.getElementById("presensi-jadwal");
     const wrapperKetJadwal   = document.getElementById("wrapper-keterangan-jadwal");
@@ -3378,11 +3419,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const formPresensi       = document.getElementById("form-presensi-nsa");
     const btnSubmit          = document.getElementById("btn-submit-presensi");
     
-    // --- ELEMEN UTAMA FORM TAMBAHAN JAM ---
+    // Elemen Input Tambahan Jam
     const inputTambahanJamForm    = document.getElementById("presensi-tambahan");
     const inputAlasanTambahanForm = document.getElementById("presensi-alasan-tambahan");
     
-    // 3. Elemen DOM Navigasi Modal
+    // 3. Elemen DOM Navigasi Modal & Kartu Cetak
     const btnBukaModal       = document.getElementById("btn-buka-modal");
     const btnBukaModalAlt    = document.getElementById("btn-buka-modal-alt");
     const btnTutupModal      = document.getElementById("btn-tutup-modal");
@@ -3418,11 +3459,10 @@ document.addEventListener("DOMContentLoaded", function() {
         inputTanggal.value = new Date().toISOString().split('T')[0];
     }
     
-    // Mengambil elemen tombol dan wrapper form
+    // Toggle Form Presensi Manual
     const btnBukaForm = document.getElementById('btn-buka-form-presensi');
     const wrapperForm = document.getElementById('wrapper_form_presensi');
 
-    // Jalankan event click untuk toggle form presensi manual
     if (btnBukaForm && wrapperForm) {
         btnBukaForm.addEventListener('click', function() {
             wrapperForm.classList.toggle('hidden');
@@ -3541,13 +3581,11 @@ document.addEventListener("DOMContentLoaded", function() {
             if (wrapperKetJadwal && inputKetJadwal) {
                 wrapperKetJadwal.classList.add("opacity-40", "pointer-events-none");
                 inputKetJadwal.setAttribute("disabled", "disabled");
-                inputKetJadwal.removeAttribute("required");
                 inputKetJadwal.value = "";
             }
             if (wrapperAlasanAbsen && inputAlasanAbsen) {
                 wrapperAlasanAbsen.classList.remove("opacity-40", "pointer-events-none");
                 inputAlasanAbsen.removeAttribute("disabled");
-                inputAlasanAbsen.setAttribute("required", "required");
             }
         } else {
             selectJadwal.removeAttribute("disabled");
@@ -3556,18 +3594,15 @@ document.addEventListener("DOMContentLoaded", function() {
             if (wrapperAlasanAbsen && inputAlasanAbsen) {
                 wrapperAlasanAbsen.classList.add("opacity-40", "pointer-events-none");
                 inputAlasanAbsen.setAttribute("disabled", "disabled");
-                inputAlasanAbsen.removeAttribute("required");
                 inputAlasanAbsen.value = "";
             }
             if (wrapperKetJadwal && inputKetJadwal) {
                 if (jenisJadwal === "1") {
                     wrapperKetJadwal.classList.remove("opacity-40", "pointer-events-none");
                     inputKetJadwal.removeAttribute("disabled");
-                    inputKetJadwal.setAttribute("required", "required");
                 } else {
                     wrapperKetJadwal.classList.add("opacity-40", "pointer-events-none");
                     inputKetJadwal.setAttribute("disabled", "disabled");
-                    inputKetJadwal.removeAttribute("required");
                     inputKetJadwal.value = ""; 
                 }
             }
@@ -3595,7 +3630,7 @@ document.addEventListener("DOMContentLoaded", function() {
         dataRows.forEach(row => {
             const pot = row.potonganjam || row.potongan_jam;
             if (pot) {
-                const parts = pot.toString().replace(',', '.').split('.');
+                const parts = pot.toString().replace(',', '.').split(':');
                 const jam = parseInt(parts[0]) || 0;
                 const menit = parseInt(parts[1]) || 0;
                 totalMenit += (jam * 60) + menit;
@@ -3609,7 +3644,7 @@ document.addEventListener("DOMContentLoaded", function() {
         dataRows.forEach(row => {
             const tam = row.tambahanjam || row.tambahan_jam;
             if (tam) {
-                const parts = tam.toString().replace(',', '.').split('.');
+                const parts = tam.toString().replace(',', '.').split(':');
                 const jam = parseInt(parts[0]) || 0;
                 const menit = parseInt(parts[1]) || 0;
                 totalMenit += (jam * 60) + menit;
@@ -3670,14 +3705,11 @@ document.addEventListener("DOMContentLoaded", function() {
     inisialisasiEventCatatanChip();
 
     // =========================================================================
-    // FUNGSI 5: INJEKSI DATA API & PREVIEW MODAL
+    // FUNGSI 5: INJEKSI DATA API & PREVIEW MODAL (DENGAN SMART PERIODE FILTER)
     // =========================================================================
     function pemicuBukaModal() {
         const karyawanTerpilih = selectKaryawan ? selectKaryawan.value : "";
-        const pemetaanNamaLengkap = { 
-            "Dadan": "Dadan Nurfaizal",
-            "Syamsi": "Syamsi Nurhakim"
-        };
+        const tglInput = inputTanggal ? inputTanggal.value : "";
 
         if (!karyawanTerpilih) {
             alert("Lakukan pemindaian wajah terlebih dahulu untuk memilih staf karyawan!");
@@ -3690,17 +3722,17 @@ document.addEventListener("DOMContentLoaded", function() {
             btnUnduhPdf.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> Memuat Data...`;
         }
 
-        if (modalNamaKaryawan) modalNamaKaryawan.textContent = pemetaanNamaLengkap[karyawanTerpilih] || karyawanTerpilih;
-        
-        const labelPeriodeElement = document.getElementById(`label-periode-${karyawanTerpilih}`);
-        if (modalPeriodeKerja) modalPeriodeKerja.textContent = labelPeriodeElement ? labelPeriodeElement.textContent : "--";
-        
+        if (modalNamaKaryawan) modalNamaKaryawan.textContent = PEMETAAN_NAMA_FOTOKOPI[karyawanTerpilih] || karyawanTerpilih;
+        if (modalPeriodeKerja) modalPeriodeKerja.textContent = "...";
         if (modalTotalHariKerja) modalTotalHariKerja.textContent = "...";
+
         if (modalPresensi) {
-            modalPresensi.classList.remove("opacity-0", "pointer-events-none");
-            const innerBox = modalPresensi.querySelector(".transform");
-            if (innerBox) innerBox.classList.remove("scale-95");
-            modalPresensi.style.overflowY = "auto";
+            modalPresensi.classList.remove("hidden");
+            setTimeout(() => {
+                modalPresensi.classList.remove("opacity-0", "pointer-events-none");
+                const innerBox = modalPresensi.querySelector(".transform");
+                if (innerBox) innerBox.classList.remove("scale-95");
+            }, 10);
         }
 
         if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-400 italic text-[10px]">Memuat data...</td></tr>`;
@@ -3712,10 +3744,11 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }, 150);
 
-        fetch(`${API_URL_PRESENSI}?karyawan=${karyawanTerpilih}`)
+        // Fetch Data API Spreadsheet dengan Filter Periode Aktif
+        fetch(`${API_URL_PRESENSI}?karyawan=${encodeURIComponent(karyawanTerpilih)}&action=getMetaData&tanggal=${encodeURIComponent(tglInput)}`)
             .then(res => res.json())
             .then(result => {
-                if (result.status !== "success" || !result.data || result.data.length === 0) {
+                if (result.status !== "success" || !result.records || result.records.length === 0) {
                     if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
                     if (tabelKananBody) tabelKananBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Kosong</td></tr>`;
                     if (modalTotalHariKerja) modalTotalHariKerja.textContent = "0";
@@ -3725,22 +3758,37 @@ document.addEventListener("DOMContentLoaded", function() {
                     return;
                 }
 
-                if (result.periode_langsung) {
-                    namaPeriodeTerdeteksi = result.periode_langsung;
-                    if (modalPeriodeKerja) modalPeriodeKerja.textContent = result.periode_langsung;
+                // SMART FILTER DATA: Filter agar hanya mengambil baris yang periode-nya sesuai periode berjalan
+                const totalDataAwal = result.records.length;
+                const barisTerakhir = result.records[totalDataAwal - 1];
+                const periodeAktif = result.periode || barisTerakhir?.nama_periode || result.records[0]?.nama_periode;
+
+                const dataRows = result.records.filter(row => {
+                    const periodeRow = row.nama_periode || row.namaperiode || row.periode;
+                    return periodeRow === periodeAktif;
+                });
+
+                if (dataRows.length === 0) {
+                    if (tabelKiriBody) tabelKiriBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Periode Ini Kosong</td></tr>`;
+                    if (tabelKananBody) tabelKananBody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-amber-600 text-[10px]">Data Periode Ini Kosong</td></tr>`;
+                    if (modalTotalHariKerja) modalTotalHariKerja.textContent = "0";
+                    return;
                 }
-                if (modalTotalHariKerja) modalTotalHariKerja.textContent = result.data.length;
+
+                namaPeriodeTerdeteksi = periodeAktif;
+                if (modalPeriodeKerja) modalPeriodeKerja.textContent = periodeAktif;
+                if (modalTotalHariKerja) modalTotalHariKerja.textContent = dataRows.length;
 
                 let cJ2 = 0, cJ1 = 0, cLibur = 0, cAbsen = 0;
                 if (tabelKiriBody) tabelKiriBody.innerHTML = "";
                 if (tabelKananBody) tabelKananBody.innerHTML = "";
 
-                result.data.forEach((row, index) => {
+                dataRows.forEach((row, index) => {
                     const hariKe = index + 1;
                     const hadirVal = (row.kehadiran || "").toString().toUpperCase();
-                    const jadwalVal = (row.jenisjadwalkerja || row.jenis_jadwal_kerja || "").toString();
-                    const ketJadwal = row.keteranganjadwal || row.keterangan_jam || "";
-                    const alasanAbsen = row.alasantidakhadir || row.alasan_tidak_hadir || "";
+                    const jadwalVal = (row.jenis_jadwal_kerja || row.jenisjadwalkerja || "").toString();
+                    const ketJadwal = row.keterangan_jadwal || row.keteranganjadwal || "";
+                    const alasanAbsen = row.alasan_tidak_hadir || row.alasantidakhadir || "";
 
                     if (hadirVal === "YA") {
                         if (jadwalVal === "2") cJ2++;
@@ -3778,7 +3826,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 }
                 if (tabelKananBody) {
-                    while (tabelKananBody.children.length < 16) {
+                    while (tabelKananBody.children.length < 15) {
                         tabelKananBody.insertAdjacentHTML('beforeend', `<tr class="h-[18px]"><td class="border-r border-slate-200">&nbsp;</td><td class="border-r border-slate-200"></td><td class="border-r border-slate-200"></td><td class="border-r border-slate-200"></td><td></td></tr>`);
                     }
                 }
@@ -3788,8 +3836,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (rekapLibur)   rekapLibur.textContent   = `${cLibur} hari`;
                 if (rekapAbsen)   rekapAbsen.textContent   = `${cAbsen} hari`;
                 
-                if (modalTotalPotongan) modalTotalPotongan.textContent = hitungTotalPotonganMinit(result.data);
-                if (modalTotalTambahan) modalTotalTambahan.textContent = hitungTotalTambahanMinit(result.data);
+                if (modalTotalPotongan) modalTotalPotongan.textContent = hitungTotalPotonganMinit(dataRows);
+                if (modalTotalTambahan) modalTotalTambahan.textContent = hitungTotalTambahanMinit(dataRows);
 
                 sinkronisasiTeksKeMirror();
                 if (btnUnduhPdf) {
@@ -3813,8 +3861,9 @@ document.addEventListener("DOMContentLoaded", function() {
         btnTutupModal.addEventListener("click", function() {
             const innerBox = modalPresensi.querySelector(".transform");
             if (innerBox) innerBox.classList.add("scale-95");
+            modalPresensi.classList.add("opacity-0", "pointer-events-none");
             setTimeout(() => {
-                modalPresensi.classList.add("opacity-0", "pointer-events-none");
+                modalPresensi.classList.add("hidden");
             }, 150);
         });
     }
@@ -3970,14 +4019,13 @@ document.addEventListener("DOMContentLoaded", function() {
         .finally(() => { resetStatusTombolUpload(); });
     }
 
-    function transformToScaleNormal() {
+    function resetStatusTombolUpload() {
         if (btnUploadPresensiCloud) {
             btnUploadPresensiCloud.removeAttribute("disabled");
             btnUploadPresensiCloud.classList.remove("opacity-50", "cursor-not-allowed");
             btnUploadPresensiCloud.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> Arsipkan ke Cloud Drive`;
         }
     }
-    const resetStatusTombolUpload = transformToScaleNormal;
 
     // =========================================================================
     // FUNGSI 8: SUBMIT DATA FORM UTAMA KE CLOUD SPREADSHEET
@@ -3990,13 +4038,11 @@ document.addEventListener("DOMContentLoaded", function() {
             if (!karyawanTerpilih) return alert("Pemindaian wajah belum terverifikasi!");
 
             btnSubmit.setAttribute("disabled", "disabled");
-            btnSubmit.className = "w-full md:w-auto px-8 py-4 bg-gray-400 text-white font-black text-xs rounded-[18px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed";
+            btnSubmit.classList.add("opacity-50", "cursor-not-allowed");
             btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-sm"></i> MEMPROSES DATA KE CLOUD...`;
 
             const dataPayload = {
-                action: "addPresensi",
                 karyawan: karyawanTerpilih,
-                nama_periode: namaPeriodeTerdeteksi,
                 tanggal: inputTanggal.value,
                 kehadiran: selectKehadiran.value,
                 jenis_jadwal_kerja: parseInt(selectJadwal.value) || 2,
@@ -4004,7 +4050,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 alasan_tidak_hadir: inputAlasanAbsen ? inputAlasanAbsen.value : "",
                 potongan_jam: inputPotongan ? inputPotongan.value : "",
                 alasan_potongan_jam: inputAlasanPotong ? inputAlasanPotong.value : "",
-                
                 tambahan_jam: inputTambahanJamForm ? inputTambahanJamForm.value : "",
                 alasan_tambahan_jam: inputAlasanTambahanForm ? inputAlasanTambahanForm.value : ""
             };
@@ -4014,23 +4059,27 @@ document.addEventListener("DOMContentLoaded", function() {
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify(dataPayload)
             })
-            .then(res => {
-                alert(`Presensi harian ${karyawanTerpilih} sukses dikirim ke NSA Cloud!`);
-                
-                if (inputKetJadwal) inputKetJadwal.value = "";
-                if (inputAlasanAbsen) inputAlasanAbsen.value = "";
-                if (inputPotongan) inputPotongan.value = "";
-                if (inputAlasanPotong) inputAlasanPotong.value = "";
-                
-                if (inputTambahanJamForm) inputTambahanJamForm.value = "";
-                if (inputAlasanTambahanForm) inputAlasanTambahanForm.value = "";
-                
-                if (inputAlasanCustom) inputAlasanCustom.value = "";
-                if (inputAlasanTambahanCustom) inputAlasanTambahanCustom.value = "";
-                
-                handleFormInteractivity(); 
-                if (typeof sinkronisasiTeksKeMirror === "function") {
-                    sinkronisasiTeksKeMirror();
+            .then(res => res.json())
+            .then(result => {
+                if (result.status === "success") {
+                    alert(`Presensi harian ${karyawanTerpilih} tanggal ${inputTanggal.value} sukses disimpan ke NSA Cloud!`);
+                    
+                    if (inputKetJadwal) inputKetJadwal.value = "";
+                    if (inputAlasanAbsen) inputAlasanAbsen.value = "";
+                    if (inputPotongan) inputPotongan.value = "";
+                    if (inputAlasanPotong) inputAlasanPotong.value = "";
+                    if (inputTambahanJamForm) inputTambahanJamForm.value = "";
+                    if (inputAlasanTambahanForm) inputAlasanTambahanForm.value = "";
+                    
+                    if (inputAlasanCustom) inputAlasanCustom.value = "";
+                    if (inputAlasanTambahanCustom) inputAlasanTambahanCustom.value = "";
+                    
+                    handleFormInteractivity(); 
+                    if (typeof sinkronisasiTeksKeMirror === "function") {
+                        sinkronisasiTeksKeMirror();
+                    }
+                } else {
+                    alert("Gagal menyimpan: " + result.message);
                 }
             })
             .catch(error => {
@@ -4039,13 +4088,12 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .finally(() => {
                 btnSubmit.removeAttribute("disabled");
-                btnSubmit.className = "w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2";
+                btnSubmit.classList.remove("opacity-50", "cursor-not-allowed");
                 btnSubmit.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-sm"></i> KIRIM PRESENSI KE NSA CLOUD`;
             });
         });
     }
 });
-
 
 // =========================================================================
 // LOGIKA KARTU PRESENSI APOTEK NURJAYA (SEPARATE ID & ENGINE)
@@ -4628,7 +4676,7 @@ window.alert = function(message) {
 </div>
 
 
-<!-- MODAL PREVIEW KARTU PRESENSI PDF -->
+<!-- MODAL PREVIEW KARTU PRESENSI FOTOKOPI -->
 <div id="modal-kartu-presensi" class="fixed inset-0 bg-emerald-950/60 backdrop-blur-md z-[13000] flex items-center justify-center p-2 sm:p-4 transition-all duration-300 opacity-0 pointer-events-none">
     
     <div class="bg-slate-900/95 backdrop-blur-lg w-full max-w-5xl max-h-[95vh] rounded-[32px] border border-emerald-500/30 shadow-[0_0_50px_-12px_rgba(16,185,129,0.3)] overflow-hidden flex flex-col transform scale-95 transition-all duration-300">
@@ -5533,73 +5581,9 @@ function scrollMenuSlider(direction) {
 </script>
 
 
-<!-- HTML Structure -->
-<div id="nsaDynamicIsland" class="nsa-dynamic-island" onclick="bukaNotifIslandManual()">
-    <!-- Status Ringkas (Titik Kiri | Jam Tengah | Icon Kanan) -->
-    <div class="island-compact-content">
-        <span class="island-compact-dot"></span>
-        <span id="islandClock" class="island-clock-text">00:00</span>
-        <i class="far fa-clock island-clock-icon"></i>
-    </div>
-
-    <!-- Status Notifikasi Terbuka (Expanded State) -->
-    <div class="island-expanded-content">
-        <div class="island-icon-box">
-            <i class="fas fa-folder-open"></i>
-        </div>
-        <div class="island-text-group">
-            <span class="island-title">NURJAYA SMART ARCHIVE</span>
-            <span class="island-desc">Halo! Selamat datang kembali di NSA.</span>
-        </div>
-    </div>
-</div>
 
 <!-- JavaScript Logic -->
-<script>
-// Update Jam Digital Real-time
-function updateIslandClock() {
-    const clockElement = document.getElementById('islandClock');
-    if (!clockElement) return;
 
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    
-    clockElement.textContent = `${hours}:${minutes}`;
-}
-
-// Logika Animasi Otomatis Dynamic Island
-window.addEventListener('DOMContentLoaded', () => {
-    updateIslandClock();
-    setInterval(updateIslandClock, 1000);
-
-    const island = document.getElementById('nsaDynamicIsland');
-    if (!island) return;
-
-    // Membuka animasi notifikasi otomatis saat portal dibuka
-    setTimeout(() => {
-        island.classList.add('expanded');
-    }, 400);
-
-    // Kembali ringkas ke tampilan jam setelah 4.4 detik
-    setTimeout(() => {
-        island.classList.remove('expanded');
-    }, 4400);
-});
-
-// Klik notch untuk pemicu manual
-function bukaNotifIslandManual() {
-    const island = document.getElementById('nsaDynamicIsland');
-    if (!island) return;
-    
-    if (!island.classList.contains('expanded')) {
-        island.classList.add('expanded');
-        setTimeout(() => {
-            island.classList.remove('expanded');
-        }, 3500);
-    }
-}
-</script>
 
 <script>
 let startY = 0;
@@ -5759,13 +5743,13 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- Body Form (Scrollable) -->
         <div class="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1 text-gray-700">
             
-            <!-- AREA CARD PROFIL KARYAWAN TERDETEKSI (Menggantikan Dropdown) -->
+            <!-- AREA CARD PROFIL KARYAWAN TERDETEKSI -->
             <div class="space-y-2">
                 <p class="text-[11px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-id-card text-emerald-600"></i> Identitas Karyawan Terverifikasi
                 </p>
 
-                <!-- Container Card Dadan (Hidden by default) -->
+                <!-- Container Card Dadan -->
                 <div id="card-profile-Dadan" class="card-karyawan-profile hidden bg-[#E8F1EC] p-4 sm:p-5 rounded-[28px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
                     <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL')">
                         <img src="https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL" 
@@ -5790,13 +5774,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
 
-                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
-                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
-                        <span id="label-periode-Dadan" class="text-xs font-black text-emerald-800">Memuat...</span>
+                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto space-y-1">
+                        <div>
+                            <span class="block text-[9px] text-gray-400 font-extrabold uppercase tracking-tight">Tanggal Gajian</span>
+                            <span id="label-tglgaji-Dadan" class="text-xs font-black text-emerald-900 bg-emerald-100/80 px-2 py-0.5 rounded-md inline-block">Memuat...</span>
+                        </div>
+                        <div>
+                            <span class="block text-[9px] text-gray-400 font-extrabold uppercase tracking-tight">Target Periode</span>
+                            <span id="label-periode-Dadan" class="text-xs font-black text-emerald-800">Memuat...</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Container Card Syamsi (Hidden by default) -->
+                <!-- Container Card Syamsi -->
                 <div id="card-profile-Syamsi" class="card-karyawan-profile hidden bg-[#E8F1EC] p-4 sm:p-5 rounded-[28px] border border-[#C2DBD0] flex flex-col sm:flex-row items-center gap-4 shadow-sm transition-all hover:shadow-md relative overflow-hidden w-full">
                     <div class="relative shrink-0 group cursor-pointer" onclick="intipFotoKaryawan('https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ')">
                         <img src="https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ" 
@@ -5821,13 +5811,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
 
-                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto">
-                        <span class="block text-[10px] text-gray-500 font-bold uppercase">Target Periode</span>
-                        <span id="label-periode-Syamsi" class="text-xs font-black text-emerald-800">Memuat...</span>
+                    <div class="sm:self-center border-t sm:border-t-0 sm:border-l border-[#C2DBD0] pt-2 sm:pt-0 sm:pl-4 text-center sm:text-right w-full sm:w-auto space-y-1">
+                        <div>
+                            <span class="block text-[9px] text-gray-400 font-extrabold uppercase tracking-tight">Tanggal Gajian</span>
+                            <span id="label-tglgaji-Syamsi" class="text-xs font-black text-emerald-900 bg-emerald-100/80 px-2 py-0.5 rounded-md inline-block">Memuat...</span>
+                        </div>
+                        <div>
+                            <span class="block text-[9px] text-gray-400 font-extrabold uppercase tracking-tight">Target Periode</span>
+                            <span id="label-periode-Syamsi" class="text-xs font-black text-emerald-800">Memuat...</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Input Hidden Nama Karyawan untuk Kebutuhan Kirim Form ke Google Apps Script -->
+                <!-- Input Hidden Nama Karyawan -->
                 <input type="hidden" id="presensi-karyawan" name="presensi-karyawan" value="">
             </div>
 
@@ -5837,19 +5833,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="space-y-1.5">
                             <label for="presensi-tanggal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-calendar-day text-green-600"></i> Hari / Tanggal Kerja
+                                <i class="fa-solid fa-calendar-day text-emerald-600"></i> Hari / Tanggal Kerja
                             </label>
-                            <input type="date" id="presensi-tanggal" required 
-                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
+                            <input type="date" id="presensi-tanggal" required onchange="perbaruiPeriodeOtomatisRealtime()"
+                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-emerald-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
                         </div>
 
                         <div class="space-y-1.5">
                             <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-circle-check text-green-600"></i> Status Kehadiran
+                                <i class="fa-solid fa-circle-check text-emerald-600"></i> Status Kehadiran
                             </label>
                             <div class="relative">
                                 <select id="presensi-kehadiran" required 
-                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-emerald-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
                                     <option value="YA">YA (Hadir Kerja)</option>
                                     <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
                                 </select>
@@ -5865,11 +5861,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="space-y-1.5">
                             <label for="presensi-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-users-gear text-green-600"></i> Jenis Jadwal Kerja
+                                <i class="fa-solid fa-users-gear text-emerald-600"></i> Jenis Jadwal Kerja
                             </label>
                             <div class="relative">
                                 <select id="presensi-jadwal" required 
-                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
+                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-emerald-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
                                     <option value="2">2 Karyawan (Full Team)</option>
                                     <option value="1">1 Karyawan (Piket Sendiri / Lembur)</option>
                                 </select>
@@ -5881,19 +5877,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         <div id="wrapper-keterangan-jadwal" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
                             <label for="presensi-ket-jadwal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-clipboard text-green-600"></i> Keterangan Jadwal
+                                <i class="fa-solid fa-clipboard text-emerald-600"></i> Keterangan Jadwal
                             </label>
                             <input type="text" id="presensi-ket-jadwal" placeholder="Contoh: rekan libur/sakit" disabled 
-                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-emerald-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
                         </div>
                     </div>
 
                     <div id="wrapper-alasan-tidak-hadir" class="space-y-1.5 opacity-40 transition-all duration-200 pointer-events-none">
                         <label for="presensi-alasan-absen" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-exclamation text-green-600"></i> Alasan Tidak Hadir
+                            <i class="fa-solid fa-circle-exclamation text-emerald-600"></i> Alasan Tidak Hadir
                         </label>
                         <input type="text" id="presensi-alasan-absen" placeholder="Contoh: jatah libur, izin, sakit" disabled 
-                            class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-green-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
+                            class="w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-emerald-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
                     </div>
                 </div>
 
@@ -5903,7 +5899,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <label for="presensi-potongan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
                                 <i class="fa-solid fa-business-time text-orange-100"></i> Potongan Jam Kerja <span class="text-[10px] text-orange-200 font-bold normal-case">(Opsional)</span>
                             </label>
-                            <input type="text" id="presensi-potongan" placeholder="Contoh format: 00.00" 
+                            <input type="text" id="presensi-potongan" placeholder="Contoh format: 00:00" 
                                 class="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
                         </div>
                         
@@ -5923,7 +5919,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <label for="presensi-tambahan" class="block text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
                                 <i class="fa-solid fa-user-clock text-blue-100"></i> Tambahan Jam / Overtime
                             </label>
-                            <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00.00" 
+                            <input type="text" id="presensi-tambahan" placeholder="Contoh format: 00:00" 
                                 class="w-full px-4 py-3 bg-white border-2 border-blue-300 rounded-[18px] focus:outline-none focus:border-white font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] placeholder:text-gray-400">
                         </div>
                         
@@ -5937,20 +5933,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
-                <div class="pt-3 border-t border-gray-100 flex justify-end">
+                <div class="pt-3 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3">
                     <button type="submit" id="btn-submit-presensi"
-                        class="w-full md:w-auto px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                        class="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-[18px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
                         <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Simpan Presensi
                     </button>
-                </div>
-                
-                <div class="pt-2 border-t border-dashed border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3 mt-3">
-                    <div class="text-center sm:text-left">
-                        <p class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Pengecekan Riwayat Pengisian</p>
-                    </div>
-                    <button type="button" id="btn-buka-modal" onclick="javascript:void(0)"
-                        class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs rounded-[16px] uppercase tracking-wider shadow-md shadow-blue-600/10 transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-address-card text-sm"></i> Tampilkan Presensi Bulan Ini
+                    <button type="button" id="btn-buka-modal"
+                        class="w-full sm:w-auto px-5 py-3.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-extrabold text-xs rounded-[18px] uppercase tracking-wider border border-emerald-200 transition-all duration-200 flex items-center justify-center gap-2 shadow-xs active:scale-95">
+                        <i class="fa-solid fa-address-card text-emerald-600 text-sm"></i> Tampilkan Kartu Presensi
                     </button>
                 </div>
             </form>
