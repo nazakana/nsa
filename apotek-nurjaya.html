@@ -40,6 +40,56 @@
             }
         }
     </script>
+	
+	<style>
+  /* ============================================================
+     PATCH UNIVERSAL GPU STABLE (MODAL SMOOTH + GLASS NAV ALIVE)
+     ============================================================ */
+
+  /* 1. Akselerasi GPU untuk Seluruh Elemen Modal, Popup & Overlay */
+  [id*="modal"], [id*="popup"], [id*="dialog"], [id*="drawer"],
+  [class*="modal"], [class*="popup"], [class*="dialog"], [class*="drawer"],
+  [class*="backdrop"], [class*="overlay"],
+  dialog, .fixed.inset-0 {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 2. Matikan Blur HANYA pada Modal/Popup di Mobile agar Bebas Flicker */
+  @media (max-width: 1024px) {
+    [id*="modal"] [class*="backdrop-blur"],
+    [id*="popup"] [class*="backdrop-blur"],
+    [class*="backdrop-blur"]:not(aside *):not(aside) {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+  }
+
+  /* 3. KHUSUS FLOATING LIQUID GLASS BOTTOM NAV (iOS GLASS PRESERVED) */
+  aside [class*="backdrop-blur"],
+  aside .backdrop-blur-xl {
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    isolation: isolate;
+  }
+
+  /* 4. PERBAIKAN OVERLAY SIDEBAR: Kunci Agar Tidak Kebuka Sendiri saat Load */
+  #menuSidebarOverlay.hidden {
+    display: none !important;
+    -webkit-transform: none !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+</style>
     <style>
     :root {
         --bg-base: #f9fafb; /* gray-50 */
@@ -689,506 +739,476 @@ document.addEventListener('keydown', function(e) {
 <!-- ================= TAB 1: BERANDA ================= -->
 <div id="tab-beranda" class="tab-content active space-y-4">
     
-    <!-- CONTAINER UTAMA DASHBOARD CARD APOTEK -->
-    <div class="max-w-md md:max-w-5xl mx-auto space-y-3">
+    <!-- CONTAINER UTAMA DASHBOARD APOTEK (CSS Grid 2 Kolom di md/lg) -->
+    <div class="max-w-md md:max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
 
-<!-- ================= CARD 0: PROGRES BULAN INI (BIRU BRI & LINGKARAN PUTIH + TEKS) ================= -->
-<div id="card-0-apotek" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-800 to-slate-900 p-3 sm:p-3.5 text-white shadow-lg shadow-blue-900/20 border border-blue-400/30 min-h-[85px] flex items-center justify-between">
-    
-    <!-- ORNAMEN BACKGROUND CARD 0 -->
-    <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-blue-400/20 blur-xl pointer-events-none"></div>
-    <div class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-cyan-400/15 blur-xl pointer-events-none"></div>
-    <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
-
-    <!-- KONTEN UTAMA -->
-    <div class="relative z-10 w-full flex items-center justify-between pr-3 sm:pr-4">
-        
-        <!-- Bagian Kiri: 3 Baris Konten -->
-        <div class="flex-1 pr-2">
-            <!-- BARIS 1: JUDUL PROGRES (1 BARIS) -->
-            <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] text-blue-200 block whitespace-nowrap truncate leading-tight">
-                PROGRES <span id="progres-bulan-ini-nama-apotek">BULAN INI</span>
-            </span>
+        <!-- ================= KOLOM KIRI (CARD UTAMA, GRAFIK & SHORTCUT APP) ================= -->
+        <div class="space-y-3">
             
-            <!-- BARIS 2: KETERANGAN -->
-            <p class="text-[10px] sm:text-[11px] font-semibold text-blue-100/80 leading-tight mt-0.5">
-                Total Pendapatan Kotor
-            </p>
-            
-            <!-- BARIS 3: NOMINAL & TOMBOL MATA -->
-            <div class="flex items-center gap-2 mt-0.5">
-                <div id="progres-bulan-ini-kotor-apotek" class="text-lg sm:text-xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
-                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
-                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
-                </div>
+            <!-- ================= CARD 0: PROGRES BULAN INI ================= -->
+            <div id="card-0-apotek" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-800 to-slate-900 p-3 sm:p-3.5 text-white shadow-lg shadow-blue-900/20 border border-blue-400/30 min-h-[85px] flex items-center justify-between">
                 
-                <button onclick="toggleNominalCard0Apotek(this)" class="text-blue-200/70 hover:text-white p-0.5 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
-                    <i class="fa-solid fa-eye text-xs sm:text-sm"></i>
-                </button>
-            </div>
-        </div>
+                <!-- ORNAMEN BACKGROUND CARD 0 -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-blue-400/20 blur-xl pointer-events-none"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-cyan-400/15 blur-xl pointer-events-none"></div>
+                <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
 
-        <!-- Bagian Kanan: Lingkaran Putih dengan ID Angka Hari (Diperbesar) -->
-<div class="relative w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex flex-col items-center justify-center shrink-0 shadow-md ml-3 sm:ml-4">
-    <!-- Angka Hari (Diperbesar jadi text-lg sm:text-xl) -->
-    <span id="angka-hari-tercatat-apotek" class="text-lg sm:text-xl font-black tracking-tight text-blue-900 leading-none">
-        0
-    </span>
-    <!-- Label HARI (Diperbesar jadi text-[9px] sm:text-[10px]) -->
-    <span class="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-blue-800 mt-0.5">
-        HARI
-    </span>
-</div>
-
-    </div>
-</div>
-
-<!-- CONTAINER SLIDER KARTU DIGITAL APOTEK (CARD 1, 2, 3) -->
-<div id="cardSnapContainerApotek" 
-     class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 px-1 -mx-1"
-     style="scrollbar-width: none; -ms-overflow-style: none;">
-    
-    <!-- CSS Internal untuk Menyembunyikan Scrollbar di Webkit (Chrome/Safari/Edge) -->
-    <style>
-        #cardSnapContainerApotek::-webkit-scrollbar {
-            display: none !important;
-            width: 0 !important;
-            height: 0 !important;
-        }
-    </style>
-
-    <!-- ================= CARD 1: TUTUP KASIR TERBARU (GRADASI PINK) ================= -->
-    <div id="card-1-apotek" class="snap-center shrink-0 w-full">
-        <div class="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-pink-600 via-rose-600 to-slate-900 p-5 sm:p-6 text-white shadow-[0_15px_35px_-5px_rgba(219,39,119,0.35)] border border-pink-400/30 min-h-[180px] flex flex-col justify-between">
-            
-            <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-pink-400/20 blur-2xl pointer-events-none"></div>
-            <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-rose-400/20 blur-2xl pointer-events-none"></div>
-            <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
-
-            <div class="relative z-10 flex justify-between items-start">
-                <div>
-                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-pink-200/90 block">
-                        Tutup Kasir Terbaru
-                    </span>
-                    <span id="tgl-terbaru-card-apotek" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
-                        Memuat ...
-                    </span>
-                </div>
-                <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-pink-200 uppercase">
-                    APOTEK
-                </div>
-            </div>
-
-            <div class="relative z-10 my-2 sm:my-3">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-pink-200/70 mb-1">
-                    Pendapatan Kotor
-                </p>
-                <div class="flex items-center gap-3 h-8 sm:h-10">
-                    <div id="kotor-terbaru-card-apotek" class="text-2xl sm:text-3xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
-                        <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
-                        <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
-                    </div>
-                    <button onclick="toggleNominalCard1Apotek(this)" class="text-pink-200/70 hover:text-white p-1 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
-                        <i class="fa-solid fa-eye text-lg sm:text-xl"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- BAWAH CARD 1 (TOMBOL "Lihat Data Lainnya" DENGAN BORDER SPINNING) -->
-            <div class="relative z-10 pt-3 border-t border-white/15 flex justify-between items-center">
-    
-    <!-- WRAPPER DENGAN ANIMASI SPINNING BORDER -->
-    <div class="relative inline-flex overflow-hidden rounded-xl p-[1.5px] focus:outline-none">
-        <!-- SPAN ANIMASI CONIC GRADIENT -->
-        <span class="absolute inset-[-500%] animate-[spin-border_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_300deg,rgba(255,255,255,0.6)_360deg)]"></span>
-        
-        <!-- TOMBOL UTAMA -->
-        <button onclick="scrollKeCard2Apotek()" class="relative group px-4 py-2 rounded-[10.5px] bg-slate-900/60 hover:bg-slate-900/40 active:scale-95 backdrop-blur-md text-white font-bold text-xs flex items-center gap-2 transition-all duration-200 shadow-sm">
-            <span>Lihat Data Lainnya</span>
-            <i class="fa-solid fa-chevron-right text-[10px] opacity-75 group-hover:translate-x-0.5 transition-transform"></i>
-        </button>
-    </div>
-
-    <!-- IKON KASIR -->
-    <div class="flex items-center justify-center text-pink-200/80 drop-shadow">
-        <i class="fa-solid fa-cash-register text-2xl sm:text-3xl"></i>
-    </div>
-</div>
-
-        </div>
-    </div>
-
-    <!-- ================= CARD 2: PEMBAYARAN FAKTUR (GRADASI UNGU) ================= -->
-    <div id="card-2-apotek" class="snap-center shrink-0 w-full">
-        <div class="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-purple-700 via-indigo-800 to-slate-900 p-5 sm:p-6 text-white shadow-[0_15px_35px_-5px_rgba(126,34,206,0.35)] border border-purple-400/30 min-h-[180px] flex flex-col justify-between">
-            
-            <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-purple-400/20 blur-2xl pointer-events-none"></div>
-            <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-indigo-400/20 blur-2xl pointer-events-none"></div>
-            <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
-
-            <div class="relative z-10 flex justify-between items-start">
-                <div>
-                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-purple-200/90 block">
-                        Pembayaran Faktur
-                    </span>
-                    <span id="label-bulan-faktur-apotek" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
-                        Data ...
-                    </span>
-                </div>
-                <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-purple-200 uppercase">
-                    FAKTUR
-                </div>
-            </div>
-
-            <div class="relative z-10 my-2 sm:my-3">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-purple-200/70 mb-1">
-                    Total Keluar Faktur
-                </p>
-                <div class="flex items-center gap-3 h-8 sm:h-10">
-                    <div id="total-faktur-card-apotek" class="text-2xl sm:text-3xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
-                        <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
-                        <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
-                    </div>
-                    <button onclick="toggleNominalCard2Apotek(this)" class="text-purple-200/70 hover:text-white p-1 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
-                        <i class="fa-solid fa-eye text-lg sm:text-xl"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="relative z-10 pt-3 border-t border-white/15 flex justify-between items-center">
-                <span class="text-[10px] text-purple-200/80 font-medium italic">Akumulasi Bulan Berjalan</span>
-                <div class="flex items-center justify-center text-purple-200/80 drop-shadow">
-                    <i class="fa-solid fa-file-invoice-dollar text-2xl sm:text-3xl"></i>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ================= CARD 3: TRANSAKSI QRIS (GRADASI HIJAU EMERALD/TEAL) ================= -->
-    <div id="card-3-apotek" class="snap-center shrink-0 w-full">
-        <div class="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-5 sm:p-6 text-white shadow-[0_15px_35px_-5px_rgba(16,185,129,0.35)] border border-emerald-400/30 min-h-[180px] flex flex-col justify-between">
-            
-            <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
-            <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-teal-400/20 blur-2xl pointer-events-none"></div>
-            <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
-
-            <div class="relative z-10 flex justify-between items-start">
-                <div>
-                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-emerald-200/90 block">
-                        Transaksi QRIS
-                    </span>
-                    <span id="label-bulan-qris-apotek" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
-                        Data ...
-                    </span>
-                </div>
-                <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-emerald-200 uppercase">
-                    NON-TUNAI
-                </div>
-            </div>
-
-            <div class="relative z-10 my-2 sm:my-3">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200/70 mb-1">
-                    Total Masuk QRIS
-                </p>
-                <div class="flex items-center gap-3 h-8 sm:h-10">
-                    <div id="total-qris-card-apotek" class="text-2xl sm:text-3xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
-                        <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
-                        <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
-                    </div>
-                    <button onclick="toggleNominalCard3Apotek(this)" class="text-emerald-200/70 hover:text-white p-1 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
-                        <i class="fa-solid fa-eye text-lg sm:text-xl"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="relative z-10 pt-3 border-t border-white/15 flex justify-between items-center">
-                <span class="text-[10px] text-emerald-200/80 font-medium italic">Akumulasi Bulan Berjalan</span>
-                <div class="flex items-center justify-center text-emerald-200/80 drop-shadow">
-                    <i class="fa-solid fa-qrcode text-2xl sm:text-3xl"></i>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div>
-
-<!-- ================================================================= -->
-<!-- CARD WIDGET: KALENDER SHIFT ASISTEN APOTEKER (COMPACT EXPANDABLE) -->
-<!-- ================================================================= -->
-<div id="widgetKalenderShiftApotek" class="mt-4 w-full">
-    <div id="captureAreaShift" class="relative overflow-hidden rounded-[24px] bg-slate-900 p-0 text-white shadow-2xl border border-pink-500/20 transition-all duration-300">
-        
-        <!-- HEADER WIDGET GRADASI PINK (BERISI TITLE, CHIP, PERIODE & ACCORDION) -->
-        <div class="relative overflow-hidden bg-gradient-to-br from-pink-600 via-rose-600 to-slate-900 p-4 sm:p-5 text-white">
-            <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-pink-400/20 blur-2xl pointer-events-none"></div>
-            <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
-
-            <div class="relative z-10 flex justify-between items-start mb-2">
-                <div>
-                    <h3 class="text-sm sm:text-base font-black tracking-tight text-white uppercase leading-tight">
-                        Kalender Shift <br> Asisten Apoteker
-                    </h3>
-                </div>
-
-                <!-- CHIP TAHUN DINAMIS & MODE EDIT -->
-                <div class="flex flex-col items-end gap-1">
-                    <span id="chipTahunApotek" class="px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-wider text-pink-100 uppercase">
-                        2026
-                    </span>
-                    <span id="badgeEditMode" class="hidden px-2 py-0.5 rounded-md bg-amber-400/90 text-slate-900 text-[9px] font-black tracking-wider uppercase animate-pulse shadow">
-                        MODE EDIT
-                    </span>
-                </div>
-            </div>
-
-            <!-- BARIS PERIODE MINGGU INI -->
-            <div class="relative z-10 pt-2 border-t border-white/15">
-                <div id="shiftPeriodeText" class="text-xs font-bold text-pink-100 tracking-wide">
-                    Senin, 12 Oktober - Minggu, 18 Oktober
-                </div>
-            </div>
-
-            <!-- TOMBOL ACCORDION EXPAND/COLLAPSE (BUKA/TUTUP) -->
-            <button type="button" id="btnToggleExpandShift" onclick="toggleExpandShiftWidget()" 
-                class="relative z-10 w-full mt-3 py-1.5 px-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-pink-100 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-inner">
-                <span id="labelToggleShift">BUKA JADWAL</span>
-                <i id="iconToggleShift" class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
-            </button>
-        </div>
-
-        <!-- BODY WIDGET TERSEMBUNYI (DEFAULT HIDDEN) -->
-        <div id="expandableShiftBody" class="hidden transition-all duration-300">
-            <div class="p-2 sm:p-4 bg-white text-slate-800">
-                
-                <!-- BARIS CARI RIWAYAT DI DALAM BODY (DI ATAS TABEL) -->
-                <div class="flex justify-between items-center mb-2.5 px-0.5">
-                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Jadwal Shift:</span>
-                    <div>
-                        <button type="button" onclick="openDatePickerShift()" class="px-2.5 py-1 bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-700 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
-                            <i class="fa-solid fa-calendar-days text-pink-500 text-xs"></i>
-                            <span>Cari Riwayat</span>
-                        </button>
-                        <input type="date" id="inputPickerShift" class="hidden" onchange="onShiftDateSelected(this.value)">
-                    </div>
-                </div>
-
-                <!-- BODY TABEL SHIFT -->
-                <div class="w-full">
-                    <table id="tableShiftApotek" class="w-full table-fixed text-center border-collapse text-xs">
-                        <thead>
-    <tr class="bg-pink-50/80 text-slate-700 border-b border-pink-200">
-        <th class="w-[28%] p-1.5 font-bold border-r border-pink-100 text-left text-[10px] sm:text-xs">
-            Hari, Tgl
-        </th>
-        <th class="w-[24%] p-1.5 font-bold border-r border-pink-100 text-[11px] sm:text-xs">
-            Dea<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Nove Asyari</span>
-        </th>
-        <th class="w-[24%] p-1.5 font-bold border-r border-pink-100 text-[11px] sm:text-xs">
-            Eka<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Ainun Nisa</span>
-        </th>
-        <th class="w-[24%] p-1.5 font-bold text-[11px] sm:text-xs">
-            Fadilla<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Nailul Wafa</span>
-        </th>
-    </tr>
-</thead>
-                        <tbody id="tbodyShiftApotek" class="divide-y divide-slate-100">
-                            <tr>
-                                <td colspan="4" class="py-8 text-slate-400 font-medium italic text-center">
-                                    <i class="fa-solid fa-circle-notch animate-spin text-pink-500 mr-2"></i> Memuat jadwal shift...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- FOOTER WIDGET: CATATAN & ACTION BUTTONS -->
-                <div class="mt-3 pt-3 border-t border-slate-100 flex flex-col gap-3">
+                <!-- KONTEN UTAMA -->
+                <div class="relative z-10 w-full flex items-center justify-between pr-3 sm:pr-4">
                     
-                   <!-- BOX CATATAN & TOMBOL AUTO CATATAN INLINE -->
-<div class="w-full">
-    <div class="flex justify-between items-center mb-1">
-        <label class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Catatan Minggu Ini:</label>
-        
-        <!-- TOMBOL AUTO CATATAN (DEFAULT HIDDEN, HANYA MUNCUL SAAT MODE EDIT) -->
-        <button type="button" id="btnAutoNoteShift" onclick="generateAutoNote()" 
-            class="hidden text-pink-600 hover:text-pink-700 text-[10px] font-bold flex items-center gap-1 transition-all">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto Catatan
-        </button>
-    </div>
-    
-    <textarea id="txtCatatanShift" readonly 
-        oninput="autoResizeTextarea(this)"
-        class="w-full p-2 text-[11px] rounded-xl border border-slate-200 bg-slate-50 text-slate-700 resize-none focus:outline-none transition-all block box-border"
-        style="height: auto; min-height: 50px; overflow: hidden;"
-        placeholder="Belum ada catatan..."></textarea>
-</div>
+                    <!-- Bagian Kiri: 3 Baris Konten -->
+                    <div class="flex-1 pr-2">
+                        <!-- BARIS 1: JUDUL PROGRES -->
+                        <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] text-blue-200 block whitespace-nowrap truncate leading-tight">
+                            PROGRES <span id="progres-bulan-ini-nama-apotek">BULAN INI</span>
+                        </span>
+                        
+                        <!-- BARIS 2: KETERANGAN -->
+                        <p class="text-[10px] sm:text-[11px] font-semibold text-blue-100/80 leading-tight mt-0.5">
+                            Total Pendapatan Kotor
+                        </p>
+                        
+                        <!-- BARIS 3: NOMINAL & TOMBOL MATA -->
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <div id="progres-bulan-ini-kotor-apotek" class="text-lg sm:text-xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                                <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                                <span class="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                            </div>
+                            
+                            <button onclick="toggleNominalCard0Apotek(this)" class="text-blue-200/70 hover:text-white p-0.5 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
+                                <i class="fa-solid fa-eye text-xs sm:text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
 
-                    <!-- BARIS TOMBOL UTAMA (MENU & ACTION EDIT/SIMPAN/BATAL) -->
-<div class="flex items-center gap-2">
-    <!-- DROPDOWN MENU LAIN -->
-    <div class="relative">
-        <button type="button" onclick="toggleMenuShiftOptions()" 
-            class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all border border-slate-200 active:scale-95 flex items-center gap-1.5">
-            <i class="fa-solid fa-bars text-xs"></i>
-            <span class="text-[11px]">Menu</span>
-        </button>
-
-        <!-- DROPDOWN POPUP DENGAN Z-50 -->
-        <div id="dropdownShiftMenu" class="hidden absolute left-0 bottom-full mb-2 w-56 bg-white rounded-2xl shadow-2xl border border-pink-100 p-1.5 z-50">
-            <button type="button" onclick="openModalNextWeek()" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-pink-50 hover:text-pink-600 rounded-xl flex items-center gap-2 transition-colors">
-                <i class="fa-solid fa-calendar-plus text-pink-500"></i> Buat Jadwal Minggu Selanjutnya
-            </button>
-            <button type="button" onclick="shareShiftSchedule()" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-pink-50 hover:text-pink-600 rounded-xl flex items-center gap-2 transition-colors">
-                <i class="fa-solid fa-share-nodes text-pink-500"></i> Bagikan Jadwal Ini
-            </button>
-            <button type="button" onclick="downloadShiftSchedule()" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-pink-50 hover:text-pink-600 rounded-xl flex items-center gap-2 transition-colors border-t border-slate-100 mt-1 pt-2">
-                <i class="fa-solid fa-download text-pink-500"></i> Unduh Jadwal
-            </button>
-        </div>
-    </div>
-
-    <!-- TOMBOL BATAL (DEFAULT HIDDEN, HANYA MUNCUL SAAT MODE EDIT) -->
-    <button type="button" id="btnCancelEditShift" onclick="cancelEditShift()" 
-        class="hidden py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition-all border border-slate-200 active:scale-95">
-        Batal
-    </button>
-
-    <!-- TOMBOL ISI / UBAH / SIMPAN -->
-    <button type="button" id="btnToggleEditShift" onclick="handleEditShiftToggle()" 
-        class="flex-1 py-2 px-4 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
-        <i id="iconBtnEditShift" class="fa-solid fa-pen-to-square"></i>
-        <span id="labelBtnEditShift">ISI / UBAH</span>
-    </button>
-</div>
+                    <!-- Bagian Kanan: Lingkaran Putih -->
+                    <div class="relative w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex flex-col items-center justify-center shrink-0 shadow-md ml-3 sm:ml-4">
+                        <span id="angka-hari-tercatat-apotek" class="text-lg sm:text-xl font-black tracking-tight text-blue-900 leading-none">
+                            0
+                        </span>
+                        <span class="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-blue-800 mt-0.5">
+                            HARI
+                        </span>
+                    </div>
 
                 </div>
             </div>
+
+            <!-- CONTAINER SLIDER KARTU DIGITAL APOTEK (CARD 1, 2, 3) -->
+            <div id="cardSnapContainerApotek" 
+                 class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 px-1 -mx-1"
+                 style="scrollbar-width: none; -ms-overflow-style: none;">
+                
+                <style>
+                    #cardSnapContainerApotek::-webkit-scrollbar {
+                        display: none !important;
+                        width: 0 !important;
+                        height: 0 !important;
+                    }
+                </style>
+
+                <!-- ================= CARD 1: TUTUP KASIR TERBARU ================= -->
+                <div id="card-1-apotek" class="snap-center shrink-0 w-full">
+                    <div class="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-pink-600 via-rose-600 to-slate-900 p-5 sm:p-6 text-white shadow-[0_15px_35px_-5px_rgba(219,39,119,0.35)] border border-pink-400/30 min-h-[180px] flex flex-col justify-between">
+                        
+                        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-pink-400/20 blur-2xl pointer-events-none"></div>
+                        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-rose-400/20 blur-2xl pointer-events-none"></div>
+                        <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
+
+                        <div class="relative z-10 flex justify-between items-start">
+                            <div>
+                                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-pink-200/90 block">
+                                    Tutup Kasir Terbaru
+                                </span>
+                                <span id="tgl-terbaru-card-apotek" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
+                                    Memuat ...
+                                </span>
+                            </div>
+                            <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-pink-200 uppercase">
+                                APOTEK
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 my-2 sm:my-3">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-pink-200/70 mb-1">
+                                Pendapatan Kotor
+                            </p>
+                            <div class="flex items-center gap-3 h-8 sm:h-10">
+                                <div id="kotor-terbaru-card-apotek" class="text-2xl sm:text-3xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                                    <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                                    <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                                </div>
+                                <button onclick="toggleNominalCard1Apotek(this)" class="text-pink-200/70 hover:text-white p-1 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
+                                    <i class="fa-solid fa-eye text-lg sm:text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 pt-3 border-t border-white/15 flex justify-between items-center">
+                            <div class="relative inline-flex overflow-hidden rounded-xl p-[1.5px] focus:outline-none">
+                                <span class="absolute inset-[-500%] animate-[spin-border_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_300deg,rgba(255,255,255,0.6)_360deg)]"></span>
+                                <button onclick="scrollKeCard2Apotek()" class="relative group px-4 py-2 rounded-[10.5px] bg-slate-900/60 hover:bg-slate-900/40 active:scale-95 backdrop-blur-md text-white font-bold text-xs flex items-center gap-2 transition-all duration-200 shadow-sm">
+                                    <span>Lihat Data Lainnya</span>
+                                    <i class="fa-solid fa-chevron-right text-[10px] opacity-75 group-hover:translate-x-0.5 transition-transform"></i>
+                                </button>
+                            </div>
+
+                            <div class="flex items-center justify-center text-pink-200/80 drop-shadow">
+                                <i class="fa-solid fa-cash-register text-2xl sm:text-3xl"></i>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ================= CARD 2: PEMBAYARAN FAKTUR ================= -->
+                <div id="card-2-apotek" class="snap-center shrink-0 w-full">
+                    <div class="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-purple-700 via-indigo-800 to-slate-900 p-5 sm:p-6 text-white shadow-[0_15px_35px_-5px_rgba(126,34,206,0.35)] border border-purple-400/30 min-h-[180px] flex flex-col justify-between">
+                        
+                        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-purple-400/20 blur-2xl pointer-events-none"></div>
+                        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-indigo-400/20 blur-2xl pointer-events-none"></div>
+                        <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
+
+                        <div class="relative z-10 flex justify-between items-start">
+                            <div>
+                                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-purple-200/90 block">
+                                    Pembayaran Faktur
+                                </span>
+                                <span id="label-bulan-faktur-apotek" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
+                                    Data ...
+                                </span>
+                            </div>
+                            <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-purple-200 uppercase">
+                                FAKTUR
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 my-2 sm:my-3">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-purple-200/70 mb-1">
+                                Total Keluar Faktur
+                            </p>
+                            <div class="flex items-center gap-3 h-8 sm:h-10">
+                                <div id="total-faktur-card-apotek" class="text-2xl sm:text-3xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                                    <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                                    <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                                </div>
+                                <button onclick="toggleNominalCard2Apotek(this)" class="text-purple-200/70 hover:text-white p-1 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
+                                    <i class="fa-solid fa-eye text-lg sm:text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 pt-3 border-t border-white/15 flex justify-between items-center">
+                            <span class="text-[10px] text-purple-200/80 font-medium italic">Akumulasi Bulan Berjalan</span>
+                            <div class="flex items-center justify-center text-purple-200/80 drop-shadow">
+                                <i class="fa-solid fa-file-invoice-dollar text-2xl sm:text-3xl"></i>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ================= CARD 3: TRANSAKSI QRIS ================= -->
+                <div id="card-3-apotek" class="snap-center shrink-0 w-full">
+                    <div class="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-5 sm:p-6 text-white shadow-[0_15px_35px_-5px_rgba(16,185,129,0.35)] border border-emerald-400/30 min-h-[180px] flex flex-col justify-between">
+                        
+                        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
+                        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-teal-400/20 blur-2xl pointer-events-none"></div>
+                        <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
+
+                        <div class="relative z-10 flex justify-between items-start">
+                            <div>
+                                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-emerald-200/90 block">
+                                    Transaksi QRIS
+                                </span>
+                                <span id="label-bulan-qris-apotek" class="text-xs sm:text-sm font-bold text-white/80 block mt-0.5 tracking-wide">
+                                    Data ...
+                                </span>
+                            </div>
+                            <div class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-widest text-emerald-200 uppercase">
+                                NON-TUNAI
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 my-2 sm:my-3">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200/70 mb-1">
+                                Total Masuk QRIS
+                            </p>
+                            <div class="flex items-center gap-3 h-8 sm:h-10">
+                                <div id="total-qris-card-apotek" class="text-2xl sm:text-3xl font-black text-white tracking-tight drop-shadow-sm flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                                    <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                                    <span class="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                                </div>
+                                <button onclick="toggleNominalCard3Apotek(this)" class="text-emerald-200/70 hover:text-white p-1 rounded-lg transition-colors focus:outline-none" title="Sembunyikan/Tampilkan Nominal">
+                                    <i class="fa-solid fa-eye text-lg sm:text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 pt-3 border-t border-white/15 flex justify-between items-center">
+                            <span class="text-[10px] text-emerald-200/80 font-medium italic">Akumulasi Bulan Berjalan</span>
+                            <div class="flex items-center justify-center text-emerald-200/80 drop-shadow">
+                                <i class="fa-solid fa-qrcode text-2xl sm:text-3xl"></i>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- MENU TOMBOL GRAFIK PROGRES -->
+            <div class="grid grid-cols-2 gap-2 sm:gap-3 my-2">
+                
+                <!-- Tombol 1: Statistik Harian -->
+                <button onclick="bukaModalGrafikApotek('modal-grafik-harian-apotek')" class="group relative overflow-hidden py-2 px-2.5 sm:py-2.5 sm:px-3.5 rounded-[16px] sm:rounded-[18px] border-2 border-pink-400/90 bg-gradient-to-r from-pink-100/90 via-pink-50/70 to-white backdrop-blur-md shadow-sm hover:shadow-md hover:border-pink-500 transition-all duration-200 text-left flex flex-col justify-between gap-1.5 active:scale-[0.98]">
+                    <div class="flex items-center justify-between w-full">
+                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 text-white flex-shrink-0 flex items-center justify-center text-sm sm:text-base shadow-sm group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <span class="text-[7px] sm:text-[8px] font-black uppercase tracking-wider px-1.5 py-[1px] bg-pink-600 text-white rounded shadow-sm leading-none">
+                            GRAFIK
+                        </span>
+                    </div>
+                    <div class="flex items-end justify-between w-full min-w-0">
+                        <div class="flex-grow min-w-0 pr-1">
+                            <h4 class="text-xs sm:text-sm font-black text-gray-900 leading-tight group-hover:text-pink-700 transition-colors whitespace-nowrap truncate">
+                                Statistik Harian
+                            </h4>
+                            <p class="text-[8.5px] sm:text-[10px] text-gray-600 font-medium leading-tight mt-0.5 whitespace-nowrap truncate">
+                                Statistik kotor bulan ini
+                            </p>
+                        </div>
+                        <div class="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-full bg-pink-200/70 text-pink-800 flex-shrink-0 flex items-center justify-center text-[8px] group-hover:translate-x-0.5 transition-transform">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Tombol 2: Statistik Bulanan -->
+                <button onclick="bukaModalGrafikApotek('modal-grafik-bulanan-apotek')" class="group relative overflow-hidden py-2 px-2.5 sm:py-2.5 sm:px-3.5 rounded-[16px] sm:rounded-[18px] border-2 border-rose-400/90 bg-gradient-to-r from-rose-100/90 via-rose-50/70 to-white backdrop-blur-md shadow-sm hover:shadow-md hover:border-rose-500 transition-all duration-200 text-left flex flex-col justify-between gap-1.5 active:scale-[0.98]">
+                    <div class="flex items-center justify-between w-full">
+                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-rose-600 to-red-700 text-white flex-shrink-0 flex items-center justify-center text-sm sm:text-base shadow-sm group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-chart-column"></i>
+                        </div>
+                        <span class="text-[7px] sm:text-[8px] font-black uppercase tracking-wider px-1.5 py-[1px] bg-rose-600 text-white rounded shadow-sm leading-none">
+                            GRAFIK
+                        </span>
+                    </div>
+                    <div class="flex items-end justify-between w-full min-w-0">
+                        <div class="flex-grow min-w-0 pr-1">
+                            <h4 class="text-xs sm:text-sm font-black text-gray-900 leading-tight group-hover:text-rose-700 transition-colors whitespace-nowrap truncate">
+                                Statistik Bulanan
+                            </h4>
+                            <p class="text-[8.5px] sm:text-[10px] text-gray-600 font-medium leading-tight mt-0.5 whitespace-nowrap truncate">
+                                Tren omset tahunan
+                            </p>
+                        </div>
+                        <div class="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-full bg-rose-200/70 text-rose-800 flex-shrink-0 flex items-center justify-center text-[8px] group-hover:translate-x-0.5 transition-transform">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </button>
+
+            </div>
+
+            <!-- SECTION FITUR UTAMA LAINNYA (GRID APP ICON 4 KOLOM DIPINDAH KE SISI KIRI) -->
+            <div class="w-full pt-3 border-t border-slate-200/80">
+                <div class="grid grid-cols-4 gap-2 sm:gap-3">
+                    
+                    <!-- 1. CEK SLIP GAJI -->
+                    <button type="button" 
+                            id="btn-buka-arsip-slip-apotek" 
+                            onclick="bukaModalArsipSlipApotek();" 
+                            class="group flex flex-col items-center justify-center text-center p-2 sm:p-3 rounded-[20px] bg-white border border-slate-100 hover:border-pink-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-pink-600 to-rose-500 text-white flex items-center justify-center text-base sm:text-lg shadow-md shadow-pink-500/25 group-hover:scale-110 transition-transform duration-200 mb-1.5">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <span class="text-[9.5px] sm:text-xs font-black text-slate-700 group-hover:text-pink-600 tracking-tight leading-tight transition-colors">
+                            Arsip<br>Slip Gaji
+                        </span>
+                    </button>
+
+                    <!-- 2. DATA KEUANGAN -->
+                    <button type="button" 
+                            onclick="bukaModalSpreadsheet()" 
+                            class="group flex flex-col items-center justify-center text-center p-2 sm:p-3 rounded-[20px] bg-white border border-slate-100 hover:border-emerald-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center text-base sm:text-lg shadow-md shadow-emerald-500/25 group-hover:scale-110 transition-transform duration-200 mb-1.5">
+                            <i class="fa-solid fa-table"></i>
+                        </div>
+                        <span class="text-[9.5px] sm:text-xs font-black text-slate-700 group-hover:text-emerald-600 tracking-tight leading-tight transition-colors">
+                            Data<br>Keuangan
+                        </span>
+                    </button>
+
+                    <!-- 3. KEMBALI KE PORTAL -->
+                    <button type="button" 
+                            id="btn-switch-ke-fotokopi" 
+                            onclick="navigasiKeFotokopi()" 
+                            class="group flex flex-col items-center justify-center text-center p-2 sm:p-3 rounded-[20px] bg-white border border-slate-100 hover:border-indigo-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-blue-600 text-white flex items-center justify-center text-base sm:text-lg shadow-md shadow-indigo-600/25 group-hover:scale-110 transition-transform duration-200 mb-1.5">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <span class="text-[9.5px] sm:text-xs font-black text-slate-700 group-hover:text-indigo-600 tracking-tight leading-tight transition-colors">
+                            Kembali<br>Ke Portal
+                        </span>
+                    </button>
+
+                    <!-- 4. PENGATURAN -->
+                    <button type="button" 
+                            id="btnOpenDevApotek" 
+                            onclick="bukaModalDevApotek();" 
+                            class="group flex flex-col items-center justify-center text-center p-2 sm:p-3 rounded-[20px] bg-white border border-slate-100 hover:border-amber-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-slate-600 to-amber-600 text-white flex items-center justify-center text-base sm:text-lg shadow-md shadow-slate-600/25 group-hover:scale-110 transition-transform duration-200 mb-1.5">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <span class="text-[9.5px] sm:text-xs font-black text-slate-700 group-hover:text-amber-600 tracking-tight leading-tight transition-colors">
+                            Pengaturan<br>Lainnya
+                        </span>
+                    </button>
+
+                </div>
+            </div>
+
         </div>
 
-    </div>
-</div>
+        <!-- ================= KOLOM KANAN (KHUSUS KALENDER SHIFT - DEFAULT EXPANDED) ================= -->
+        <div class="space-y-3">
+            
+            <!-- CARD WIDGET: KALENDER SHIFT ASISTEN APOTEKER -->
+            <div id="widgetKalenderShiftApotek" class="w-full">
+                <div id="captureAreaShift" class="relative overflow-hidden rounded-[24px] bg-slate-900 p-0 text-white shadow-2xl border border-pink-500/20 transition-all duration-300">
+                    
+                    <!-- HEADER WIDGET -->
+                    <div class="relative overflow-hidden bg-gradient-to-br from-pink-600 via-rose-600 to-slate-900 p-4 sm:p-5 text-white">
+                        <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-pink-400/20 blur-2xl pointer-events-none"></div>
+                        <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
 
+                        <div class="relative z-10 flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="text-sm sm:text-base font-black tracking-tight text-white uppercase leading-tight">
+                                    Kalender Shift <br> Asisten Apoteker
+                                </h3>
+                            </div>
 
+                            <div class="flex flex-col items-end gap-1">
+                                <span id="chipTahunApotek" class="px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-[10px] font-black tracking-wider text-pink-100 uppercase">
+                                    2026
+                                </span>
+                                <span id="badgeEditMode" class="hidden px-2 py-0.5 rounded-md bg-amber-400/90 text-slate-900 text-[9px] font-black tracking-wider uppercase animate-pulse shadow">
+                                    MODE EDIT
+                                </span>
+                            </div>
+                        </div>
 
+                        <div class="relative z-10 pt-2 border-t border-white/15">
+                            <div id="shiftPeriodeText" class="text-xs font-bold text-pink-100 tracking-wide">
+                                Senin, 12 Oktober - Minggu, 18 Oktober
+                            </div>
+                        </div>
 
-<!-- MENU TOMBOL GRAFIK PROGRES (SIDE-TO-SIDE 2 KOLOM DI HP & PC - COMPACT & STATIC ICON) -->
-<div class="grid grid-cols-2 gap-2 sm:gap-3 my-2">
-    
-    <!-- Tombol 1: Statistik Harian (Aksen Pink Apotek) -->
-    <button onclick="bukaModalGrafikApotek('modal-grafik-harian-apotek')" class="group relative overflow-hidden py-2 px-2.5 sm:py-2.5 sm:px-3.5 rounded-[16px] sm:rounded-[18px] border-2 border-pink-400/90 bg-gradient-to-r from-pink-100/90 via-pink-50/70 to-white backdrop-blur-md shadow-sm hover:shadow-md hover:border-pink-500 transition-all duration-200 text-left flex flex-col justify-between gap-1.5 active:scale-[0.98]">
-        <div class="flex items-center justify-between w-full">
-            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 text-white flex-shrink-0 flex items-center justify-center text-sm sm:text-base shadow-sm group-hover:scale-105 transition-transform">
-                <i class="fa-solid fa-chart-line"></i>
+                        <!-- TOMBOL ACCORDION (LABEL & CHEVRON SESUAI KONDISI AVAL: TERBUKA) -->
+                        <button type="button" id="btnToggleExpandShift" onclick="toggleExpandShiftWidget()" 
+                            class="relative z-10 w-full mt-3 py-1.5 px-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-pink-100 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-inner">
+                            <span id="labelToggleShift">TUTUP JADWAL</span>
+                            <i id="iconToggleShift" class="fa-solid fa-chevron-up text-xs transition-transform duration-300"></i>
+                        </button>
+                    </div>
+
+                    <!-- BODY WIDGET (TANPA CLASS hidden = DEFAULT TERBUKA) -->
+                    <div id="expandableShiftBody" class="transition-all duration-300">
+                        <div class="p-2 sm:p-4 bg-white text-slate-800">
+                            
+                            <div class="flex justify-between items-center mb-2.5 px-0.5">
+                                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Jadwal Shift:</span>
+                                <div>
+                                    <button type="button" onclick="openDatePickerShift()" class="px-2.5 py-1 bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-700 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
+                                        <i class="fa-solid fa-calendar-days text-pink-500 text-xs"></i>
+                                        <span>Cari Riwayat</span>
+                                    </button>
+                                    <input type="date" id="inputPickerShift" class="hidden" onchange="onShiftDateSelected(this.value)">
+                                </div>
+                            </div>
+
+                            <div class="w-full">
+                                <table id="tableShiftApotek" class="w-full table-fixed text-center border-collapse text-xs">
+                                    <thead>
+                                        <tr class="bg-pink-50/80 text-slate-700 border-b border-pink-200">
+                                            <th class="w-[28%] p-1.5 font-bold border-r border-pink-100 text-left text-[10px] sm:text-xs">Hari, Tgl</th>
+                                            <th class="w-[24%] p-1.5 font-bold border-r border-pink-100 text-[11px] sm:text-xs">Dea<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Nove Asyari</span></th>
+                                            <th class="w-[24%] p-1.5 font-bold border-r border-pink-100 text-[11px] sm:text-xs">Eka<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Ainun Nisa</span></th>
+                                            <th class="w-[24%] p-1.5 font-bold text-[11px] sm:text-xs">Fadilla<br><span class="text-[8px] sm:text-[10px] font-normal text-slate-400 block -mt-0.5 truncate">Nailul Wafa</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyShiftApotek" class="divide-y divide-slate-100">
+                                        <tr>
+                                            <td colspan="4" class="py-8 text-slate-400 font-medium italic text-center">
+                                                <i class="fa-solid fa-circle-notch animate-spin text-pink-500 mr-2"></i> Memuat jadwal shift...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="mt-3 pt-3 border-t border-slate-100 flex flex-col gap-3">
+                                <div class="w-full">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <label class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Catatan Minggu Ini:</label>
+                                        <button type="button" id="btnAutoNoteShift" onclick="generateAutoNote()" 
+                                            class="hidden text-pink-600 hover:text-pink-700 text-[10px] font-bold flex items-center gap-1 transition-all">
+                                            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto Catatan
+                                        </button>
+                                    </div>
+                                    <textarea id="txtCatatanShift" readonly 
+                                        oninput="autoResizeTextarea(this)"
+                                        class="w-full p-2 text-[11px] rounded-xl border border-slate-200 bg-slate-50 text-slate-700 resize-none focus:outline-none transition-all block box-border"
+                                        style="height: auto; min-height: 50px; overflow: hidden;"
+                                        placeholder="Belum ada catatan..."></textarea>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <button type="button" onclick="toggleMenuShiftOptions()" 
+                                            class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all border border-slate-200 active:scale-95 flex items-center gap-1.5">
+                                            <i class="fa-solid fa-bars text-xs"></i>
+                                            <span class="text-[11px]">Menu</span>
+                                        </button>
+                                        <div id="dropdownShiftMenu" class="hidden absolute left-0 bottom-full mb-2 w-56 bg-white rounded-2xl shadow-2xl border border-pink-100 p-1.5 z-50">
+                                            <button type="button" onclick="openModalNextWeek()" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-pink-50 hover:text-pink-600 rounded-xl flex items-center gap-2 transition-colors">
+                                                <i class="fa-solid fa-calendar-plus text-pink-500"></i> Buat Jadwal Minggu Selanjutnya
+                                            </button>
+                                            <button type="button" onclick="shareShiftSchedule()" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-pink-50 hover:text-pink-600 rounded-xl flex items-center gap-2 transition-colors">
+                                                <i class="fa-solid fa-share-nodes text-pink-500"></i> Bagikan Jadwal Ini
+                                            </button>
+                                            <button type="button" onclick="downloadShiftSchedule()" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-pink-50 hover:text-pink-600 rounded-xl flex items-center gap-2 transition-colors border-t border-slate-100 mt-1 pt-2">
+                                                <i class="fa-solid fa-download text-pink-500"></i> Unduh Jadwal
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" id="btnCancelEditShift" onclick="cancelEditShift()" 
+                                        class="hidden py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition-all border border-slate-200 active:scale-95">
+                                        Batal
+                                    </button>
+
+                                    <button type="button" id="btnToggleEditShift" onclick="handleEditShiftToggle()" 
+                                        class="flex-1 py-2 px-4 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
+                                        <i id="iconBtnEditShift" class="fa-solid fa-pen-to-square"></i>
+                                        <span id="labelBtnEditShift">ISI / UBAH</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <span class="text-[7px] sm:text-[8px] font-black uppercase tracking-wider px-1.5 py-[1px] bg-pink-600 text-white rounded shadow-sm leading-none">
-                GRAFIK
-            </span>
+
         </div>
-        <div class="flex items-end justify-between w-full min-w-0">
-            <div class="flex-grow min-w-0 pr-1">
-                <h4 class="text-xs sm:text-sm font-black text-gray-900 leading-tight group-hover:text-pink-700 transition-colors whitespace-nowrap truncate">
-                    Statistik Harian
-                </h4>
-                <p class="text-[8.5px] sm:text-[10px] text-gray-600 font-medium leading-tight mt-0.5 whitespace-nowrap truncate">
-                    Statistik kotor bulan ini
-                </p>
-            </div>
-            <div class="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-full bg-pink-200/70 text-pink-800 flex-shrink-0 flex items-center justify-center text-[8px] group-hover:translate-x-0.5 transition-transform">
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-        </div>
-    </button>
-
-    <!-- Tombol 2: Statistik Bulanan (Aksen Rose Red Apotek) -->
-    <button onclick="bukaModalGrafikApotek('modal-grafik-bulanan-apotek')" class="group relative overflow-hidden py-2 px-2.5 sm:py-2.5 sm:px-3.5 rounded-[16px] sm:rounded-[18px] border-2 border-rose-400/90 bg-gradient-to-r from-rose-100/90 via-rose-50/70 to-white backdrop-blur-md shadow-sm hover:shadow-md hover:border-rose-500 transition-all duration-200 text-left flex flex-col justify-between gap-1.5 active:scale-[0.98]">
-        <div class="flex items-center justify-between w-full">
-            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-rose-600 to-red-700 text-white flex-shrink-0 flex items-center justify-center text-sm sm:text-base shadow-sm group-hover:scale-105 transition-transform">
-                <i class="fa-solid fa-chart-column"></i>
-            </div>
-            <span class="text-[7px] sm:text-[8px] font-black uppercase tracking-wider px-1.5 py-[1px] bg-rose-600 text-white rounded shadow-sm leading-none">
-                GRAFIK
-            </span>
-        </div>
-        <div class="flex items-end justify-between w-full min-w-0">
-            <div class="flex-grow min-w-0 pr-1">
-                <h4 class="text-xs sm:text-sm font-black text-gray-900 leading-tight group-hover:text-rose-700 transition-colors whitespace-nowrap truncate">
-                    Statistik Bulanan
-                </h4>
-                <p class="text-[8.5px] sm:text-[10px] text-gray-600 font-medium leading-tight mt-0.5 whitespace-nowrap truncate">
-                    Tren omset tahunan
-                </p>
-            </div>
-            <div class="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-full bg-rose-200/70 text-rose-800 flex-shrink-0 flex items-center justify-center text-[8px] group-hover:translate-x-0.5 transition-transform">
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-        </div>
-    </button>
-
-</div>
-
-<!-- SECTION FITUR UTAMA LAINNYA (TIPE GRID APP ICON 4 KOLOM APOTEK) -->
-<div class="max-w-md md:max-w-5xl mx-auto mt-2 pt-5 border-t border-slate-200/80">
-    <div class="grid grid-cols-4 gap-2 sm:gap-4">
-        
-        <!-- 1. CEK SLIP GAJI (GRADASI PINK - ROSE) -->
-        <button type="button" 
-                id="btn-buka-arsip-slip-apotek" 
-                onclick="bukaModalArsipSlipApotek();" 
-                class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-pink-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
-            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-pink-600 to-rose-500 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-pink-500/25 group-hover:scale-110 transition-transform duration-200 mb-2">
-                <i class="fas fa-file-invoice-dollar"></i>
-            </div>
-            <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-pink-600 tracking-tight leading-tight transition-colors">
-                Cek Slip Gaji
-            </span>
-        </button>
-
-        <!-- 2. DATA KEUANGAN (GRADASI EMERALD - TEAL) -->
-        <button type="button" 
-                onclick="bukaModalSpreadsheet()" 
-                class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-emerald-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
-            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-emerald-500/25 group-hover:scale-110 transition-transform duration-200 mb-2">
-                <i class="fa-solid fa-table"></i>
-            </div>
-            <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-emerald-600 tracking-tight leading-tight transition-colors">
-                Data Keuangan
-            </span>
-        </button>
-
-        <!-- 3. KEMBALI KE PORTAL (GRADASI INDIGO - BLUE) -->
-        <button type="button" 
-                id="btn-switch-ke-fotokopi" 
-                onclick="navigasiKeFotokopi()" 
-                class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-indigo-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
-            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-indigo-600 to-blue-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-indigo-600/25 group-hover:scale-110 transition-transform duration-200 mb-2">
-                <i class="fas fa-globe"></i>
-            </div>
-            <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-indigo-600 tracking-tight leading-tight transition-colors">
-                Kembali Ke Portal
-            </span>
-        </button>
-
-        <!-- 4. PENGATURAN (GRADASI SLATE - AMBER) -->
-        <button type="button" 
-                id="btnOpenDevApotek" 
-                onclick="bukaModalDevApotek();" 
-                class="group flex flex-col items-center justify-center text-center p-2.5 sm:p-3.5 rounded-[22px] bg-white border border-slate-100 hover:border-amber-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95">
-            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-slate-600 to-amber-600 text-white flex items-center justify-center text-lg sm:text-xl shadow-md shadow-slate-600/25 group-hover:scale-110 transition-transform duration-200 mb-2">
-                <i class="fas fa-cog"></i>
-            </div>
-            <span class="text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-amber-600 tracking-tight leading-tight transition-colors">
-                Pengaturan/ Lainnya
-            </span>
-        </button>
-
-    </div>
-</div>
 
     </div>
 
@@ -4919,12 +4939,14 @@ function tutupModalDriveCustom() {
 </script>
 
 
-<!-- MODAL DEVELOPER APOTEK -->
+<!-- ================================================================= -->
+<!-- 1. MODAL DEVELOPER APOTEK -->
+<!-- ================================================================= -->
 <div id="modalDevApotek" class="fixed inset-0 z-[10020] flex items-center justify-center hidden p-4 transform-gpu">
     
-    <div id="overlayDevApotek" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px] transition-opacity duration-300 opacity-0" onclick="tutupModalDevApotek()"></div>
+    <div id="overlayDevApotek" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px] transition-opacity duration-300 opacity-0" onclick="tutupModalDevApotek(event)"></div>
 
-    <div id="boxKontenDevApotek" class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden transform flex flex-col border border-pink-50 shadow-pink-100/10">
+    <div id="boxKontenDevApotek" class="relative bg-white w-full max-w-sm rounded-[30px] shadow-2xl overflow-hidden transform flex flex-col border border-pink-50 shadow-pink-100/10 z-10" onclick="event.stopPropagation()">
         
         <div class="bg-pink-50/70 p-4 text-center border-b border-pink-100/50">
             <div class="w-12 h-12 bg-white text-pink-600 rounded-xl flex items-center justify-center mx-auto mb-2 shadow-sm border border-pink-100/80">
@@ -4935,7 +4957,7 @@ function tutupModalDriveCustom() {
         </div>
 
         <div class="p-6 space-y-3 flex-1">
-            <button onclick="openModalNotifApotek()" 
+            <button type="button" onclick="openModalNotifApotek(event)" 
                 class="flex items-center gap-4 w-full p-4 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl transition-all active:scale-95 shadow-sm shadow-pink-600/10 group">
                 <div class="w-8 flex justify-center">
                     <i class="fas fa-bullhorn fa-lg group-hover:rotate-12 transition-transform duration-300"></i>
@@ -4951,7 +4973,7 @@ function tutupModalDriveCustom() {
                 <i class="fas fa-arrow-right ml-auto opacity-30 text-xs"></i>
             </a>
 
-            <button onclick="bukaTentangAplikasiApotek()" 
+            <button type="button" onclick="bukaTentangAplikasiApotek(event)" 
                 class="flex items-center gap-4 w-full p-4 bg-white hover:bg-pink-50 text-pink-700 border border-pink-200 rounded-2xl transition-all active:scale-95 shadow-xs">
                 <div class="w-8 flex justify-center"><i class="fas fa-circle-info fa-lg"></i></div>
                 <span class="font-black text-sm tracking-tight">Tentang Aplikasi</span>
@@ -4960,7 +4982,7 @@ function tutupModalDriveCustom() {
         </div>
 
         <div class="px-6 pb-6">
-            <button onclick="tutupModalDevApotek()" 
+            <button type="button" onclick="tutupModalDevApotek(event)" 
                 class="w-full py-3.5 bg-slate-50 hover:bg-slate-100 text-slate-500 rounded-2xl font-black text-sm transition-all active:scale-98 border border-slate-200/60 tracking-wide uppercase">
                 TUTUP MENU
             </button>
@@ -4969,6 +4991,111 @@ function tutupModalDriveCustom() {
     </div>
 </div>
 
+
+<!-- ================================================================= -->
+<!-- 2. MODAL SIARKAN NOTIFIKASI APOTEK -->
+<!-- ================================================================= -->
+<div id="modalNotifApotek" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[10040] p-4">
+    
+    <!-- BACKDROP (Menutup modal jika diklik di luar) -->
+    <div class="absolute inset-0" onclick="closeModalNotifApotek(event)"></div>
+
+    <!-- KOTAK UTAMA MODAL -->
+    <div class="bg-white w-full max-w-md rounded-[35px] overflow-hidden shadow-2xl transform transition-all border border-pink-50 relative z-10" onclick="event.stopPropagation()">
+        <div class="p-6">
+            
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-3 bg-pink-100 text-pink-600 rounded-xl border border-pink-200">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="flex flex-col">
+                    <h3 class="font-black text-md text-gray-800 uppercase tracking-tight">Siaran Baru Apotek</h3>
+                    <p class="text-[9px] text-pink-600 font-bold tracking-wider uppercase">Push Notification System</p>
+                </div>
+                <button type="button" onclick="closeModalNotifApotek(event)" class="ml-auto w-8 h-8 bg-slate-50 hover:bg-pink-50 text-slate-400 hover:text-pink-600 rounded-full flex items-center justify-center transition-all">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Judul Notifikasi</label>
+                    <input type="text" id="notif_title_apotek" placeholder="Contoh: Info Apotek Nurjaya" 
+                        class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white text-sm font-semibold mt-1 text-gray-800 transition-all">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider ml-1">Isi Pesan Siaran</label>
+                    <textarea id="notif_message_apotek" rows="3" placeholder="Tulis pesan siaran maklumat di sini..." 
+                        class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:bg-white text-sm font-semibold mt-1 text-gray-800 transition-all"></textarea>
+                </div>
+            </div>
+
+            <button type="button" id="btnKirimNotifApotek" onclick="siarkanNotifikasiLangsungApotek(event)" 
+                class="w-full mt-6 p-4 bg-pink-600 hover:bg-pink-700 text-white font-black text-sm uppercase tracking-wider rounded-2xl transition-all active:scale-95 shadow-md shadow-pink-600/10">
+                Siarkan Notifikasi
+            </button>
+            
+        </div>
+    </div>
+</div> <!-- Tag penutup </div> ini yang tadi HIBAH/HILANG -->
+
+
+<!-- ================================================================= -->
+<!-- 3. MODAL TENTANG APLIKASI -->
+<!-- ================================================================= -->
+<div id="modalTentangAplikasi" class="fixed inset-0 z-[10050] flex items-center justify-center hidden p-4">
+    
+    <!-- BACKDROP -->
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px]" onclick="tutupTentangAplikasiApotek(event)"></div>
+
+    <!-- KOTAK MODAL UTAMA -->
+    <div class="relative bg-white w-full max-w-sm rounded-[35px] shadow-2xl overflow-hidden flex flex-col border border-pink-100 z-10" onclick="event.stopPropagation()">
+        
+        <div class="bg-gradient-to-b from-pink-50 to-white p-6 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-pink-100/40 rounded-full blur-xl"></div>
+            <div class="absolute -bottom-6 -left-6 w-20 h-20 bg-blue-50/50 rounded-full blur-lg"></div>
+
+            <div class="w-16 h-16 bg-gradient-to-tr from-pink-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md shadow-pink-500/20 relative z-10">
+                <i class="fas fa-box-archive text-2xl animate-pulse-subtle"></i>
+            </div>
+            
+            <h3 class="text-xl font-black text-gray-800 tracking-tight">Nurjaya Smart Archive</h3>
+            <p class="text-[10px] text-pink-600 font-black uppercase tracking-[0.2em] mt-0.5">Sistem Tata Kelola Digital v5.0.26</p>
+        </div>
+
+        <div class="px-6 pb-2 text-center flex-1">
+            <p class="text-xs text-gray-600 leading-relaxed font-medium">
+                <strong class="text-gray-800 font-bold">NSA (Nurjaya Smart Archive)</strong> adalah platform manajemen internal terintegrasi yang berfungsi sebagai sistem pengarsipan digital, pengelola data operasional harian, serta media bantu kalkulasi data keuangan. 
+            </p>
+            
+            <div class="my-4 p-2.5 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center gap-2">
+                <span class="text-[9px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 px-2 py-1 rounded-lg border border-blue-200">
+                    <i class="fas fa-print mr-1"></i> Photocopy
+                </span>
+                <span class="text-slate-300 text-xs font-light">|</span>
+                <span class="text-[9px] font-black uppercase tracking-wider bg-pink-100 text-pink-700 px-2 py-1 rounded-lg border border-pink-200">
+                    <i class="fas fa-heart-pulse mr-1"></i> Apotek
+                </span>
+            </div>
+
+            <p class="text-[11px] text-gray-500 leading-relaxed">
+                Dilengkapi dengan dual-mode ekosistem untuk menyelaraskan efisiensi kinerja operasional pada <span class="font-bold text-gray-700">Nurjaya Abadi Photocopy</span> dan <span class="font-bold text-gray-700">Apotek Nurjaya</span> secara aman dan responsif.
+            </p>
+        </div>
+
+        <div class="p-6 mt-2 border-t border-gray-50 bg-slate-50/50 text-center">
+            <button type="button" onclick="tutupTentangAplikasiApotek(event)" 
+                class="w-full py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl font-black text-xs tracking-widest uppercase transition-all active:scale-95 shadow-md shadow-pink-600/10 mb-4">
+                Selesai
+            </button>
+            
+            <div class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                &copy; 2026 <span class="text-gray-700 font-bold">Nurjaya</span>. All Rights Reserved.
+            </div>
+        </div>
+         
+    </div>
+</div>
 
 <script>
 /**
@@ -5027,14 +5154,30 @@ function tutupModalDevApotek() {
     }
 }
 
-// Fungsi Trigger untuk Menyiarkan Pesan/Notifikasi Khusus Apotek
-function openModalNotifApotek() {
-    tutupModalDevApotek(); // Tutup modal dev dulu agar tidak tumpang tindih
-    if (typeof openModalNotif === "function") {
-        openModalNotif();
-    } else {
-        alert("Fungsi penyiaran notifikasi sistem sedang dipersiapkan!");
+// Fungsi Buka Modal Siaran Notifikasi Apotek
+function openModalNotifApotek(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
     }
+    
+    if (typeof playClickSound === "function") playClickSound();
+
+    // 1. Sembunyikan Modal Developer
+    const modalDev = document.getElementById('modalDevApotek');
+    if (modalDev) {
+        modalDev.classList.add('hidden');
+    }
+
+    // 2. Buka Modal Notifikasi setelah 50ms (Diubah class hidden & flex-nya)
+    setTimeout(() => {
+        const modalNotif = document.getElementById('modalNotifApotek');
+        if (modalNotif) {
+            modalNotif.classList.remove('hidden');
+            modalNotif.classList.add('flex');
+        }
+    }, 50);
 }
 
 // Fungsi Trigger untuk Menampilkan Profil / Informasi Mengenai Aplikasi
@@ -5046,88 +5189,58 @@ function bukaTentangAplikasiApotek() {
 }
 </script>
 
-<div id="modalTentangAplikasi" class="fixed inset-0 z-[10030] flex items-center justify-center hidden p-4 animate-fade-in">
-    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px]" onclick="tutupTentangAplikasiApotek()"></div>
 
-    <div class="relative bg-white w-full max-w-sm rounded-[35px] shadow-2xl overflow-hidden transform transition-all flex flex-col border border-pink-100 animate-scale-in">
-        
-        <div class="bg-gradient-to-b from-pink-50 to-white p-6 text-center relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-24 h-24 bg-pink-100/40 rounded-full blur-xl"></div>
-            <div class="absolute -bottom-6 -left-6 w-20 h-20 bg-blue-50/50 rounded-full blur-lg"></div>
-
-            <div class="w-16 h-16 bg-gradient-to-tr from-pink-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md shadow-pink-500/20 relative z-10">
-                <i class="fas fa-box-archive text-2xl animate-pulse-subtle"></i>
-            </div>
-            
-            <h3 class="text-xl font-black text-gray-800 tracking-tight">Nurjaya Smart Archive</h3>
-            <p class="text-[10px] text-pink-600 font-black uppercase tracking-[0.2em] mt-0.5">Sistem Tata Kelola Digital v5.0.26</p>
-        </div>
-
-        <div class="px-6 pb-2 text-center flex-1">
-            <p class="text-xs text-gray-600 leading-relaxed font-medium">
-                <strong class="text-gray-800 font-bold">NSA (Nurjaya Smart Archive)</strong> adalah platform manajemen internal terintegrasi yang berfungsi sebagai sistem pengarsipan digital, pengelola data operasional harian, serta media bantu kalkulasi data keuangan. 
-            </p>
-            
-            <div class="my-4 p-2.5 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center gap-2">
-                <span class="text-[9px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 px-2 py-1 rounded-lg border border-blue-200">
-                    <i class="fas fa-print mr-1"></i> Photocopy
-                </span>
-                <span class="text-slate-300 text-xs font-light">|</span>
-                <span class="text-[9px] font-black uppercase tracking-wider bg-pink-100 text-pink-700 px-2 py-1 rounded-lg border border-pink-200">
-                    <i class="fas fa-heart-pulse mr-1"></i> Apotek
-                </span>
-            </div>
-
-            <p class="text-[11px] text-gray-500 leading-relaxed">
-                Dilengkapi dengan dual-mode ekosistem untuk menyelaraskan efisiensi kinerja operasional pada <span class="font-bold text-gray-700">Nurjaya Abadi Photocopy</span> dan <span class="font-bold text-gray-700">Apotek Nurjaya</span> secara aman dan responsif.
-            </p>
-        </div>
-
-        <div class="p-6 mt-2 border-t border-gray-50 bg-slate-50/50 text-center">
-            <button onclick="tutupTentangAplikasiApotek()" 
-                class="w-full py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl font-black text-xs tracking-widest uppercase transition-all active:scale-95 shadow-md shadow-pink-600/10 mb-4">
-                Selesai
-            </button>
-            
-            <div class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
-                &copy; 2026 <span class="text-gray-700 font-bold">Nurjaya</span>. All Rights Reserved.
-            </div>
-        </div>
-         
-    </div>
-</div>
 
 <script>
-// Fungsi untuk membuka Modal Custom "Tentang Aplikasi"
-function bukaTentangAplikasiApotek() {
-    if (typeof playClickSound === "function") playClickSound();
-    
-    // Tutup modal kontrol dev terlebih dahulu agar tidak menumpuk kaku
-    tutupModalDevApotek(); 
-
-    const modalTentang = document.getElementById('modalTentangAplikasi');
-    if (modalTentang) {
-        modalTentang.classList.remove('hidden');
-        modalTentang.classList.add('flex');
+// Fungsi Buka Modal tentang Aplikasi (Bebas Flicker & Auto-Close)
+function bukaTentangAplikasiApotek(e) {
+    // 1. Matikan propagasi event bawaan secara total
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
     }
+    
+    if (typeof playClickSound === "function") playClickSound();
+
+    // 2. Tutup Modal Developer lebih dulu
+    const modalDev = document.getElementById('modalDevApotek');
+    if (modalDev) {
+        modalDev.classList.add('hidden');
+    }
+
+    // 3. Beri delay 50ms untuk menghindari event collision/flicker
+    setTimeout(() => {
+        const modalAbout = document.getElementById('modalTentangAplikasi');
+        if (modalAbout) {
+            modalAbout.classList.remove('hidden');
+        }
+    }, 50);
 }
 
-// Fungsi untuk menutup Modal Custom "Tentang Aplikasi"
-function tutupTentangAplikasiApotek() {
-    if (typeof playClickSound === "function") playClickSound();
+// Fungsi Tutup Modal Tentang Aplikasi
+function tutupTentangAplikasiApotek(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     
-    const modalTentang = document.getElementById('modalTentangAplikasi');
-    if (modalTentang) {
-        modalTentang.classList.remove('flex');
-        modalTentang.classList.add('hidden');
+    const modalAbout = document.getElementById('modalTentangAplikasi');
+    if (modalAbout) {
+        modalAbout.classList.add('hidden');
     }
 }
 </script>
 
 
 <!-- MODAL SIARKAN NOTIFIKASI APOTEK -->
-<div id="modalNotifApotek" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-[10040] p-4 animate-fade-in">
-    <div class="bg-white w-full max-w-md rounded-[35px] overflow-hidden shadow-2xl transform transition-all border border-pink-50">
+<div id="modalNotifApotek" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[10040] p-4">
+    
+    <!-- BACKDROP (Menutup modal jika diklik di luar) -->
+    <div class="absolute inset-0" onclick="closeModalNotifApotek(event)"></div>
+
+    <!-- KOTAK UTAMA MODAL -->
+    <div class="bg-white w-full max-w-md rounded-[35px] overflow-hidden shadow-2xl transform transition-all border border-pink-50 relative z-10" onclick="event.stopPropagation()">
         <div class="p-6">
             
             <div class="flex items-center gap-3 mb-6">
@@ -5138,7 +5251,7 @@ function tutupTentangAplikasiApotek() {
                     <h3 class="font-black text-md text-gray-800 uppercase tracking-tight">Siaran Baru Apotek</h3>
                     <p class="text-[9px] text-pink-600 font-bold tracking-wider uppercase">Push Notification System</p>
                 </div>
-                <button onclick="closeModalNotifApotek()" class="ml-auto w-8 h-8 bg-slate-50 hover:bg-pink-50 text-slate-400 hover:text-pink-600 rounded-full flex items-center justify-center transition-all">
+                <button type="button" onclick="closeModalNotifApotek(event)" class="ml-auto w-8 h-8 bg-slate-50 hover:bg-pink-50 text-slate-400 hover:text-pink-600 rounded-full flex items-center justify-center transition-all">
                     <i class="fas fa-times text-xs"></i>
                 </button>
             </div>
@@ -5156,7 +5269,7 @@ function tutupTentangAplikasiApotek() {
                 </div>
             </div>
 
-            <button id="btnKirimNotifApotek" onclick="siarkanNotifikasiLangsungApotek(event)" 
+            <button type="button" id="btnKirimNotifApotek" onclick="siarkanNotifikasiLangsungApotek(event)" 
                 class="w-full mt-6 p-4 bg-pink-600 hover:bg-pink-700 text-white font-black text-sm uppercase tracking-wider rounded-2xl transition-all active:scale-95 shadow-md shadow-pink-600/10">
                 Siarkan Notifikasi
             </button>
@@ -5190,8 +5303,13 @@ function openModalNotifApotek() {
     }
 }
 
-// Fungsi untuk menutup Modal Input Notifikasi Apotek
-function closeModalNotifApotek() {
+// Fungsi Tutup Modal Siaran Notifikasi Apotek
+function closeModalNotifApotek(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
     if (typeof playClickSound === "function") playClickSound();
     
     const modalNotif = document.getElementById('modalNotifApotek');
@@ -5203,24 +5321,27 @@ function closeModalNotifApotek() {
 
 // Fungsi Eksekusi Penyiaran Data Langsung ke Server Google Apps Script
 function siarkanNotifikasiLangsungApotek(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
     if (typeof playClickSound === "function") playClickSound();
 
     const judul = document.getElementById('notif_title_apotek').value.trim();
     const pesan = document.getElementById('notif_message_apotek').value.trim();
-    const btn = event.currentTarget || document.getElementById('btnKirimNotifApotek');
+    const btn = event ? (event.currentTarget || document.getElementById('btnKirimNotifApotek')) : document.getElementById('btnKirimNotifApotek');
     
     if (!judul || !pesan) {
         alert("Judul dan pesan tidak boleh kosong ya!");
         return;
     }
 
-    // Mengunci tombol agar user tidak melakukan klik ganda saat proses kirim sedang berjalan
     const originalText = btn.innerText;
     btn.innerText = "SEDANG MENGIRIM...";
     btn.disabled = true;
     btn.classList.add('opacity-50', 'cursor-not-allowed');
 
-    // URL Web App murni milikmu (Aman, Tidak Diubah sesuai Instruksi)
     const webAppUrl = "https://script.google.com/macros/s/AKfycbzEXd5dw2wxjyS1AkgSi7iWisnkOxwdWVrZEMV_e3BKq0-KhrSMWTbRwQI1H37lrubI/exec";
 
     fetch(webAppUrl, {
@@ -5239,7 +5360,6 @@ function siarkanNotifikasiLangsungApotek(event) {
         alert("🚀 Notifikasi NSA Berhasil Disiarkan!");
         closeModalNotifApotek();
         
-        // Reset isi form input ke kondisi semula setelah sukses
         document.getElementById('notif_title_apotek').value = "";
         document.getElementById('notif_message_apotek').value = "";
     })
@@ -5248,7 +5368,6 @@ function siarkanNotifikasiLangsungApotek(event) {
         alert("Gagal koneksi server: " + err);
     })
     .finally(() => {
-        // Mengembalikan state tombol kirim ke semula
         btn.innerText = originalText;
         btn.disabled = false;
         btn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -7814,7 +7933,6 @@ function loadShiftDataToday(targetDate = '') {
       alert('Terjadi kesalahan koneksi saat mengambil data shift.');
     });
 }
-
 function renderMainShiftTable(data) {
   const tbody = document.getElementById('tbodyShiftApotek');
   tbody.innerHTML = '';
@@ -8630,5 +8748,36 @@ function toggleExpandShiftWidget() {
     });
   })();
 </script>
+
+<script>
+  /* JS STABIL & SMOOTH UNTUK MODAL */
+  window.showModalSmooth = function(target, showClass = 'active') {
+    const el = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!el) return;
+
+    el.classList.remove('hidden', 'd-none');
+    el.style.display = ''; 
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.classList.add(showClass);
+      });
+    });
+  };
+
+  window.hideModalSmooth = function(target, showClass = 'active', delayMs = 200) {
+    const el = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!el) return;
+
+    el.classList.remove(showClass);
+    
+    setTimeout(() => {
+      el.classList.add('hidden');
+    }, delayMs);
+  };
+  </script>
+  
+
+
 </body>
 </html>
