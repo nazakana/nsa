@@ -14,8 +14,60 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Library Panzoom (Ultra ringan untuk Zoom & Drag) -->
     <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+	
+	
+<style>
+  /* ============================================================
+     PATCH UNIVERSAL GPU STABLE (MODAL SMOOTH + GLASS NAV ALIVE)
+     ============================================================ */
+
+  /* 1. Akselerasi GPU untuk Seluruh Elemen Modal, Popup & Overlay */
+  [id*="modal"], [id*="popup"], [id*="dialog"], [id*="drawer"],
+  [class*="modal"], [class*="popup"], [class*="dialog"], [class*="drawer"],
+  [class*="backdrop"], [class*="overlay"],
+  dialog, .fixed.inset-0 {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 2. Matikan Blur HANYA pada Modal/Popup di Mobile agar Bebas Flicker */
+  @media (max-width: 1024px) {
+    [id*="modal"] [class*="backdrop-blur"],
+    [id*="popup"] [class*="backdrop-blur"],
+    [class*="backdrop-blur"]:not(aside *):not(aside) {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+  }
+
+  /* 3. KHUSUS FLOATING LIQUID GLASS BOTTOM NAV (iOS GLASS PRESERVED) */
+  aside [class*="backdrop-blur"],
+  aside .backdrop-blur-xl {
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    isolation: isolate;
+  }
+
+  /* 4. PERBAIKAN OVERLAY SIDEBAR: Kunci Agar Tidak Kebuka Sendiri saat Load */
+  #menuSidebarOverlay.hidden {
+    display: none !important;
+    -webkit-transform: none !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+</style>
 
     <style>
+	
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
         :root {
@@ -6597,27 +6649,39 @@ let currentFilterBK = "semua"; // "semua" | "habis"
  * HELPER FORMAT TANGGAL KE FORMAT INDONESIA
  */
 function formatTanggalIndo(rawDateStr) {
-    if (!rawDateStr || rawDateStr === "-" || rawDateStr === "") return "-";
+    if (!rawDateStr || rawDateStr === "-" || rawDateStr === "undefined" || rawDateStr === "null") return "-";
     
-    const daftarHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    let str = rawDateStr.toString().trim();
 
-    if (typeof rawDateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(rawDateStr.trim())) {
-        const parts = rawDateStr.trim().split('-');
-        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-        if (!isNaN(dateObj.getTime())) {
-            return `${daftarHari[dateObj.getDay()]}, ${dateObj.getDate()} ${daftarBulan[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+    // 1. LANGSUNG CEK FORMAT YYYY-MM-DD ATAU ISO (Contoh: 2026-10-05)
+    if (str.includes("-")) {
+        let cleanStr = str.split("T")[0]; // Buang format jam jika ada
+        let parts = cleanStr.split("-");
+        if (parts.length === 3 && parts[0].length === 4) {
+            // parts[0] = YYYY, parts[1] = MM, parts[2] = DD
+            return `${parts[2]}/${parts[1]}/${parts[0]}`; // Hasil pasti: 05/10/2026
         }
     }
 
-    const dateObj = new Date(rawDateStr);
-    if (!isNaN(dateObj.getTime())) {
-        return `${daftarHari[dateObj.getDay()]}, ${dateObj.getDate()} ${daftarBulan[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+    // 2. JIKA SUDAH FORMAT DD/MM/YYYY
+    if (str.includes("/")) {
+        let parts = str.split("/");
+        if (parts.length === 3 && parts[2].length === 4) {
+            return `${parts[0].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[2]}`;
+        }
     }
 
-    return rawDateStr;
-}
+    // 3. FALLBACK DATE OBJECT UNTUK FORMAT LAIN
+    const d = new Date(str);
+    if (!isNaN(d.getTime())) {
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yyyy = d.getFullYear();
+        return `${dd}/${mm}/${yyyy}`;
+    }
 
+    return str;
+}
 /**
  * FUNGSI UTAMA SWITCH VIEW (MODAL NAVIGATION)
  */
@@ -6792,8 +6856,13 @@ function renderFilteredListBK() {
     filteredList.forEach((item, index) => {
         const namaBarang = item["Nama Barang"] || "-";
         const stokSaatIni = (item["Stok Saat Ini"] !== undefined && item["Stok Saat Ini"] !== "") ? item["Stok Saat Ini"].toString().trim() : "habis";
-        const tglStokRaw = item["Tanggal Stok"] || "-";
+        
+        // Cek kunci properti tanggal secara presisi
+        const tglStokRaw = item["Tanggal Stok"] || item["tanggal_stok"] || item["Tanggal"] || "-";
+        
+        // PANGGUL FORMATTER DENGAN DUA OPSI
         const tglStokFormatted = formatTanggalIndo(tglStokRaw);
+        
         const harusBelanja = item["Harus Belanja"] || "";
         const catatanBarang = item["Catatan"] || "";
 
@@ -11253,15 +11322,18 @@ async function unduhStrukTerpilih() {
 <!-- DEPENDENCY DOM-TO-IMAGE FOR HD IMAGE RENDER -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
 
+<!-- DEPENDENCY DOM-TO-IMAGE FOR HD IMAGE RENDER -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
 <!-- ================================================================= -->
-<!-- JAVASCRIPT LOGIC KALENDER SHIFT KERJA PHOTOCOPY NSA (REVISED)     -->
+<!-- JAVASCRIPT LOGIC KALENDER SHIFT KERJA PHOTOCOPY NSA (FIXED BUGS)   -->
 <!-- ================================================================= -->
 <script>
     const GAS_URL_PHOTOCOPY = "https://script.google.com/macros/s/AKfycbxlv7esFlVc3XEY7L_rRsNMi1Cj4Ox-ulEvfd0yfp0m1FsSsKfv2xLcANlngwnjYVrh/exec";
 
     let shiftDataPhotocopy = { dadan: [], syamsi: [] };
     let currentYearPhotocopy = new Date().getFullYear();
-    let currentMonthPhotocopy = new Date().getMonth(); // Bulan berjalan (NOW)
+    let currentMonthPhotocopy = new Date().getMonth();
 
     let pendingEditsPhotocopy = {};
     let activeClickedIsoDate = null;
@@ -11289,7 +11361,6 @@ async function unduhStrukTerpilih() {
         }
     }
 
-    // HELPER: Format Tanggal Ringkas/Ramping Side-by-Side (Contoh: "Kamis, 01 Oktober 2026" -> "Kam, 01 Okt")
     function formatCompactDateStr(formattedDateStr) {
         if (!formattedDateStr) return "";
         let clean = formattedDateStr.replace(/\s+\d{4}$/, "");
@@ -11309,7 +11380,7 @@ async function unduhStrukTerpilih() {
         return clean;
     }
 
-    // 2. RENDER MAIN EXPANDABLE CALENDAR (LIGHT MODE & COMPACT SIDE-BY-SIDE)
+    // 2. RENDER MAIN EXPANDABLE CALENDAR
     function renderMainShiftPhotocopy() {
         document.getElementById("chipTahunPhotocopy").innerText = currentYearPhotocopy;
         document.getElementById("shiftPeriodeTextPhotocopy").innerText = `${MONTH_NAMES_IND[currentMonthPhotocopy]} ${currentYearPhotocopy}`;
@@ -11357,7 +11428,6 @@ async function unduhStrukTerpilih() {
                 syamsiLiburList.push(`<li class="truncate"><span class="text-rose-500">•</span> ${compactTgl} : <span class="uppercase font-black">${ketText}</span></li>`);
             }
 
-            // WARNA GRID LIGHT MODE
             let colorClass = "bg-emerald-50 border-emerald-200 text-emerald-800 font-bold";
             if (dadanLibur && syamsiLibur) {
                 colorClass = "bg-rose-100 border-rose-300 text-rose-800 font-black";
@@ -11372,12 +11442,10 @@ async function unduhStrukTerpilih() {
             `;
         }
 
-        // Render Uraian Libur Dadan (Side-by-Side Ramping)
         listDadanEl.innerHTML = dadanLiburList.length > 0 
             ? dadanLiburList.join("")
             : `<li class="text-emerald-600 font-semibold">• Hadir Penuh</li>`;
 
-        // Render Uraian Libur Syamsi (Side-by-Side Ramping)
         listSyamsiEl.innerHTML = syamsiLiburList.length > 0 
             ? syamsiLiburList.join("")
             : `<li class="text-emerald-600 font-semibold">• Hadir Penuh</li>`;
@@ -11401,22 +11469,27 @@ async function unduhStrukTerpilih() {
         }
     }
 
-    // 4. DROPDOWN MENU
+    // 4. DROPDOWN MENU & CLICK OUTSIDE SAFE
     function toggleMenuShiftOptionsPhotocopy(e) {
-        e.stopPropagation();
+        if (e) e.stopPropagation();
         const menu = document.getElementById("dropdownShiftMenuPhotocopy");
-        menu.classList.toggle("hidden");
+        if (menu) menu.classList.toggle("hidden");
     }
 
-    document.addEventListener("click", () => {
+    // [FIXED] Event Click Outside secara spesifik agar tidak menutup modal sembarangan
+    document.addEventListener("click", (e) => {
         const menu = document.getElementById("dropdownShiftMenuPhotocopy");
-        if (menu && !menu.classList.contains("hidden")) {
+        if (menu && !menu.contains(e.target) && !menu.classList.contains("hidden")) {
             menu.classList.add("hidden");
         }
-        hideFloatingDropdown();
+
+        const floating = document.getElementById("floatingStatusDropdownPhotocopy");
+        if (floating && !floating.contains(e.target) && !e.target.closest("#gridEditKalenderPhotocopy")) {
+            hideFloatingDropdown();
+        }
     });
 
-    // 5. MODAL EDIT JADWAL LIGHT MODE
+    // 5. MODAL EDIT JADWAL
     function bukaModalEditShiftPhotocopy() {
         pendingEditsPhotocopy = {};
         const modal = document.getElementById("modalEditShiftPhotocopy");
@@ -11437,7 +11510,7 @@ async function unduhStrukTerpilih() {
 
     function tutupModalEditShiftPhotocopy() {
         const modal = document.getElementById("modalEditShiftPhotocopy");
-        modal.classList.add("hidden");
+        if (modal) modal.classList.add("hidden");
         document.body.style.overflow = "auto";
         hideFloatingDropdown();
     }
@@ -11539,14 +11612,78 @@ async function unduhStrukTerpilih() {
         renderEditCalendarGridPhotocopy();
     }
 
+    // =================================================================
+    // [FIXED] FUNGSI VIEW SWITCHING FORM CUSTOM TEKS STATUS
+    // =================================================================
     function promptCustomStatusForDate() {
         if (!activeClickedIsoDate) return;
-        const customText = prompt("Masukkan Teks Kustom Keterangan:");
-        if (customText !== null) {
-            pendingEditsPhotocopy[activeClickedIsoDate] = customText.trim();
-            hideFloatingDropdown();
-            renderEditCalendarGridPhotocopy();
+        hideFloatingDropdown();
+
+        // Sembunyikan View Kalender & Footer Utama
+        const viewCalendar = document.getElementById("viewShiftCalendarMain");
+        const footerCalendar = document.getElementById("footerShiftCalendarMain");
+        if (viewCalendar) viewCalendar.classList.add("hidden");
+        if (footerCalendar) footerCalendar.classList.add("hidden");
+
+        // Tampilkan View Form Custom Text
+        const viewCustom = document.getElementById("viewShiftCustomText");
+        if (viewCustom) viewCustom.classList.remove("hidden");
+
+        // Update Judul & Subjudul Header Modal
+        const headerTitle = document.getElementById("headerTitleShiftPhotocopy");
+        const headerSubTitle = document.getElementById("headerSubTitleShiftPhotocopy");
+        if (headerTitle) headerTitle.innerText = "STATUS KUSTOM";
+        if (headerSubTitle) headerSubTitle.innerText = "Masukkan teks keterangan khusus";
+
+        // Set Label Tanggal Terpilih
+        const labelTgl = document.getElementById("labelTanggalCustomShift");
+        if (labelTgl) {
+            const dateParts = activeClickedIsoDate.split("-");
+            const tglNum = parseInt(dateParts[2], 10);
+            labelTgl.innerText = `KUSTOM STATUS - TANGGAL ${tglNum} ${MONTH_NAMES_IND[currentMonthPhotocopy].toUpperCase()}`;
         }
+
+        // Reset & Fokuskan Input Text
+        const input = document.getElementById("inputCustomStatusText");
+        if (input) {
+            input.value = "";
+            setTimeout(() => input.focus(), 100);
+        }
+    }
+
+    function simpanCustomStatusForm() {
+        const input = document.getElementById("inputCustomStatusText");
+        if (input) {
+            const customText = input.value.trim();
+            if (customText !== "" && activeClickedIsoDate) {
+                // Catat ke memori perubahan temporary
+                pendingEditsPhotocopy[activeClickedIsoDate] = customText;
+                
+                // Render ulang grid kalender agar ditandai warna merah
+                renderEditCalendarGridPhotocopy();
+            }
+        }
+
+        // Kembali ke Tampilan Kalender Utama
+        kembaliKeKalenderMain();
+    }
+
+    function kembaliKeKalenderMain() {
+        // Sembunyikan Form Custom Text
+        const viewCustom = document.getElementById("viewShiftCustomText");
+        if (viewCustom) viewCustom.classList.add("hidden");
+
+        // Tampilkan Kembali View Kalender & Footer Utama
+        const viewCalendar = document.getElementById("viewShiftCalendarMain");
+        const footerCalendar = document.getElementById("footerShiftCalendarMain");
+        if (viewCalendar) viewCalendar.classList.remove("hidden");
+        if (footerCalendar) footerCalendar.classList.remove("hidden");
+
+        // Kembalikan Teks Header Modal
+        const headerTitle = document.getElementById("headerTitleShiftPhotocopy");
+        const headerSubTitle = document.getElementById("headerSubTitleShiftPhotocopy");
+        if (headerTitle) headerTitle.innerText = "EDIT JADWAL SHIFT";
+        if (headerSubTitle) headerSubTitle.innerText = "Klik tanggal untuk merubah status libur/absen";
     }
 
     // 6. SIMPAN PERUBAHAN KE SPREADSHEET
@@ -11605,7 +11742,7 @@ async function unduhStrukTerpilih() {
         }
     }
 
-    // 7. GENERATE BULAN SELANJUTNYA DENGAN ALGORITMA SMART ROTASI LIBUR 2 WINGGU
+    // 7. GENERATE BULAN SELANJUTNYA
     async function triggerGenerateNextMonthPhotocopy() {
         if (!confirm("Otomatis buat baris tanggal & rotasi shift 2 minggu untuk bulan selanjutnya di Spreadsheet?")) return;
 
@@ -11613,7 +11750,6 @@ async function unduhStrukTerpilih() {
         updateProgressBarPhotocopy(20);
 
         try {
-            // Langkah 1: Minta Code GS buat baris tanggal kosong bulan berikutnya
             const resp = await fetch(GAS_URL_PHOTOCOPY, {
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -11623,7 +11759,6 @@ async function unduhStrukTerpilih() {
 
             const resJson = await resp.json();
             if (resJson.status === "success") {
-                // Langkah 2: Jalankan algoritma rotasi libur 2 minggu secara otomatis
                 document.getElementById("loadingSubTitleShiftPhotocopy").innerText = "Menerapkan rumus rotasi libur 2 minggu...";
                 updateProgressBarPhotocopy(70);
 
@@ -11633,7 +11768,6 @@ async function unduhStrukTerpilih() {
                 setTimeout(() => {
                     hideLoadingModalPhotocopy();
                     alert("Jadwal bulan selanjutnya berhasil dibuat & disesuaikan penuh!");
-                    // Tampilan tetap fokus pada bulan berjalan (NOW)
                     loadShiftDataPhotocopy();
                 }, 400);
             } else {
@@ -11646,18 +11780,16 @@ async function unduhStrukTerpilih() {
         }
     }
 
-    // Algoritma Rotasi Libur 2 Minggu (Berselang Sabtu & Minggu)
     async function applySmartShiftPatternNextMonth() {
         const targetMonth = (currentMonthPhotocopy + 1) % 12;
         const targetYear = currentMonthPhotocopy === 11 ? currentYearPhotocopy + 1 : currentYearPhotocopy;
         const daysInNextMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
 
-        // Cari minggu libur Sabtu/Minggu terakhir Dadan dari data global
         let dadanLastOffWeek = 0;
         shiftDataPhotocopy.dadan.forEach(item => {
             if (item.is_libur) {
                 const d = new Date(item.iso_date);
-                if (d.getDay() === 0 || d.getDay() === 6) { // 0 = Minggu, 6 = Sabtu
+                if (d.getDay() === 0 || d.getDay() === 6) {
                     dadanLastOffWeek = getWeekNumber(d);
                 }
             }
@@ -11667,12 +11799,10 @@ async function unduhStrukTerpilih() {
             const dateObj = new Date(targetYear, targetMonth, day);
             const dayOfWeek = dateObj.getDay();
 
-            if (dayOfWeek === 0 || dayOfWeek === 6) { // Sabtu atau Minggu
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
                 const weekNum = getWeekNumber(dateObj);
                 const isoStr = formatIsoDate(dateObj);
 
-                // Jika berselang 2 minggu dari libur terakhir, Dadan Libur. Syamsi masuk.
-                // Minggu lainnya: Syamsi Libur, Dadan masuk.
                 if ((weekNum - dadanLastOffWeek) % 2 === 0) {
                     await sendSetSchedule("Dadan", isoStr, "Libur");
                     await sendSetSchedule("Syamsi", isoStr, "");
@@ -11700,25 +11830,22 @@ async function unduhStrukTerpilih() {
         document.getElementById("modalLoadingShiftPhotocopy").classList.add("hidden");
     }
 
-    // 9. SHARE & DOWNLOAD GAMBAR HD (FIXED RENDER HD TANPA TERPOTONG/CROP)
+    // 9. SHARE & DOWNLOAD GAMBAR HD
     async function renderShiftCaptureToDataUrl() {
         const captureArea = document.getElementById("areaCaptureMainShift");
         const header = document.getElementById("captureHeaderPhotocopy");
 
-        // 1. Tampilkan header khusus hasil gambar capture
         header.classList.remove("hidden");
         document.getElementById("captureSubjudulPhotocopy").innerText = `Jadwal Shift ${MONTH_NAMES_IND[currentMonthPhotocopy]} ${currentYearPhotocopy}`;
 
-        // 2. Ambil ukuran asli elemen HTML
         const origWidth = captureArea.offsetWidth;
         const origHeight = captureArea.offsetHeight;
 
-        // Faktor skala HD 
         const scaleFactor = 3.5;
 
         try {
-            const dataUrl = await domtoimage.toJpeg(captureArea, {
-                quality: 0.95,
+            const canvas = await domtoimage.toCanvas(captureArea, {
+                quality: 1.0,
                 bgcolor: '#ffffff',
                 width: origWidth * scaleFactor,
                 height: origHeight * scaleFactor,
@@ -11730,7 +11857,7 @@ async function unduhStrukTerpilih() {
                 }
             });
 
-            // Sembunyikan kembali header capture setelah selesai render
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.98);
             header.classList.add("hidden");
             return dataUrl;
         } catch (e) {
@@ -11772,7 +11899,6 @@ async function unduhStrukTerpilih() {
         }
     }
 
-    // UTILS FORMATTING TANGGAL & MINGGU
     function formatIsoDate(date) {
         const y = date.getFullYear();
         const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -12857,9 +12983,166 @@ async function simpanPerubahanRequest(event) {
     });
   })();
 </script>
+<script>
+  /* JS STABIL & SMOOTH UNTUK MODAL */
+  window.showModalSmooth = function(target, showClass = 'active') {
+    const el = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!el) return;
 
+    el.classList.remove('hidden', 'd-none');
+    el.style.display = ''; 
 
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.classList.add(showClass);
+      });
+    });
+  };
 
+  window.hideModalSmooth = function(target, showClass = 'active', delayMs = 200) {
+    const el = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!el) return;
+
+    el.classList.remove(showClass);
+    
+    setTimeout(() => {
+      el.classList.add('hidden');
+    }, delayMs);
+  };
+</script>
+
+<!-- ================================================================= -->
+<!-- MODAL EDIT JADWAL SHIFT (INTEGRATED VIEW SWITCHING)              -->
+<!-- ================================================================= -->
+<div id="modalEditShiftPhotocopy" class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+        
+        <!-- HEADER MODAL -->
+        <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-slate-800 p-3.5 text-white flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-white/15 backdrop-blur-md flex items-center justify-center text-xs text-emerald-200 border border-white/20">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-white" id="headerTitleShiftPhotocopy">EDIT JADWAL SHIFT</h3>
+                    <p class="text-[9.5px] text-emerald-100 font-medium" id="headerSubTitleShiftPhotocopy">Klik tanggal untuk merubah status libur/absen</p>
+                </div>
+            </div>
+            <button type="button" onclick="tutupModalEditShiftPhotocopy()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- ================= VIEW 1: KALENDER SHIFT MAIN ================= -->
+        <div id="viewShiftCalendarMain" class="p-3.5 space-y-3 overflow-y-auto">
+            
+            <!-- PILIH KARYAWAN -->
+            <div>
+                <label class="block text-[10px] font-extrabold uppercase text-slate-600 mb-1">Pilih Karyawan:</label>
+                <select id="editNamaKaryawanPhotocopy" onchange="renderEditCalendarGridPhotocopy()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl p-2 font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    <option value="Dadan">Dadan Nurfaizal</option>
+                    <option value="Syamsi">Syamsi Nurhakim</option>
+                </select>
+            </div>
+
+            <!-- GRID TANGGAL MINGGUAN HEADER -->
+            <div>
+                <div class="grid grid-cols-7 gap-1 text-center font-black text-[9px] uppercase tracking-wider text-slate-400 mb-1">
+                    <span class="text-rose-500">Min</span>
+                    <span>Sen</span>
+                    <span>Sel</span>
+                    <span>Rab</span>
+                    <span>Kam</span>
+                    <span>Jum</span>
+                    <span class="text-amber-500">Sab</span>
+                </div>
+
+                <!-- GRID TANGGAL UNTUK DIKLIK -->
+                <div id="gridEditKalenderPhotocopy" class="grid grid-cols-7 gap-1.5">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+            </div>
+
+            <!-- PETUNJUK RINGKAS -->
+            <div class="bg-slate-100 p-2 rounded-xl text-[9.5px] text-slate-600 font-medium flex items-center gap-2 border border-slate-200">
+                <i class="fa-solid fa-circle-info text-emerald-600 text-xs shrink-0"></i>
+                <span>Status tanggal yang diubah akan ditandai dengan warna merah. Klik tombol simpan untuk menerapkan ke Spreadsheet.</span>
+            </div>
+        </div>
+
+        <!-- ================= VIEW 2: FORM INPUT CUSTOM TEKS (HIDDEN DEFAULT) ================= -->
+<div id="viewShiftCustomText" class="p-4 space-y-3 hidden">
+    <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+        <span class="text-[10px] font-bold text-emerald-800 block uppercase" id="labelTanggalCustomShift">TANGGAL TERPILIH</span>
+        <p class="text-[10.5px] text-emerald-600 mt-0.5">Masukkan keterangan kustom untuk tanggal ini (misal: Acara Keluarga, dll.).</p>
+    </div>
+
+    <div>
+        <label class="block text-[10px] font-extrabold uppercase text-slate-600 mb-1">Keterangan / Status Custom:</label>
+        <input type="text" id="inputCustomStatusText" placeholder="isi di sini" 
+            class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl p-2.5 font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none uppercase placeholder:normal-case" 
+            onkeydown="if(event.key==='Enter'){ event.preventDefault(); simpanCustomStatusForm(); }">
+    </div>
+
+    <div class="flex items-center justify-between pt-2">
+        <button type="button" onclick="kembaliKeKalenderMain()" class="px-3 py-2 rounded-xl border border-slate-300 text-slate-600 font-bold text-xs hover:bg-slate-100 flex items-center gap-1.5 transition-colors">
+            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+            <span>Kembali</span>
+        </button>
+        <button type="button" onclick="simpanCustomStatusForm()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md shadow-emerald-600/20 active:scale-95 transition-all">
+            Terapkan Kustom
+        </button>
+    </div>
+</div>
+
+        <!-- FOOTER MODAL EDIT (UTAMA) -->
+        <div id="footerShiftCalendarMain" class="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2 shrink-0">
+            <button type="button" onclick="tutupModalEditShiftPhotocopy()" class="px-3 py-1.5 rounded-xl border border-slate-300 text-slate-600 font-bold text-xs hover:bg-slate-100 transition-colors">
+                Batal
+            </button>
+            <button type="button" onclick="simpanPerubahanShiftPhotocopy()" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md shadow-emerald-600/20 active:scale-95 transition-all">
+                Simpan Perubahan
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- FLOATING DROPDOWN STATUS MELAYANG -->
+<div id="floatingStatusDropdownPhotocopy" class="hidden fixed z-[10002] w-48 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 space-y-1 animate-in fade-in zoom-in-95 duration-150">
+    <span class="text-[9px] font-black uppercase text-emerald-700 block px-2 pb-1 border-b border-slate-100" id="floatingDropdownTitle">Status Tanggal</span>
+    <button type="button" onclick="setPendingStatusForDate('Hadir')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 text-xs font-bold text-emerald-700 flex items-center justify-between transition-colors">
+        <span>Hadir (Masuk)</span>
+        <i class="fa-solid fa-check text-[10px]"></i>
+    </button>
+    <button type="button" onclick="setPendingStatusForDate('Libur')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-rose-50 text-xs font-bold text-rose-600 flex items-center justify-between transition-colors">
+        <span>Libur</span>
+        <i class="fa-solid fa-bed text-[10px]"></i>
+    </button>
+    <button type="button" onclick="setPendingStatusForDate('Izin')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-blue-50 text-xs font-bold text-blue-600 transition-colors">Izin</button>
+    <button type="button" onclick="setPendingStatusForDate('Sakit')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-amber-50 text-xs font-bold text-amber-600 transition-colors">Sakit</button>
+    <button type="button" onclick="setPendingStatusForDate('Absen')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-purple-50 text-xs font-bold text-purple-600 transition-colors">Absen</button>
+    <button type="button" onclick="promptCustomStatusForDate()" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-xs font-bold text-slate-600 border-t border-slate-100 pt-1 transition-colors">Custom Teks...</button>
+</div>
+<!-- ================================================================= -->
+<!-- MODAL LOADING PROGRESS BAR INDEPENDEN (LIGHT/DARK HYBRID)         -->
+<!-- ================================================================= -->
+<div id="modalLoadingShiftPhotocopy" class="fixed inset-0 z-[10000] hidden bg-slate-900/70 backdrop-blur-md p-4 flex items-center justify-center">
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl">
+        <div class="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto text-emerald-600 text-2xl">
+            <i class="fa-solid fa-rotate animate-spin"></i>
+        </div>
+        <div>
+            <h4 class="text-sm font-black text-slate-800 uppercase tracking-wider" id="loadingTitleShiftPhotocopy">MEMPROSES DATA...</h4>
+            <p class="text-xs text-slate-500 mt-1 font-medium" id="loadingSubTitleShiftPhotocopy">Menghubungkan ke Spreadsheet NSA</p>
+        </div>
+        
+        <!-- BAR PROGRES -->
+        <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200 p-0.5">
+            <div id="progressBarShiftPhotocopy" class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full w-0 transition-all duration-300"></div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
