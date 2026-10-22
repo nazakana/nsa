@@ -14,6 +14,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Library Panzoom (Ultra ringan untuk Zoom & Drag) -->
     <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+	<!-- PDF.js & Panzoom Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<!-- Swiper CSS & JS CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 	
 	
 <style>
@@ -451,6 +457,7 @@
     animation: neon-border-flash 0.4s infinite ease-in-out;
 }
 
+
     </style>
 
     <!-- SMART INVERSION DARK MODE PATCH -->
@@ -580,73 +587,57 @@ html.dark-mode-active #page-title {
  <!-- MAIN CONTENT (ALL) -->
 <body class="flex flex-col md:flex-row">
 
-<!-- FLOATING LIQUID GLASS BOTTOM NAV (iOS DOCK STYLE) -->
-<aside class="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-transparent p-0 m-0 border-none shadow-none outline-none">
+<!-- FLOATING LIQUID GLASS BOTTOM NAV (NATIVE STABLE ENGINE) -->
+<aside class="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-[40] w-[90%] max-w-md bg-transparent p-0 m-0 border-none shadow-none outline-none select-none">
     
-    <!-- Main Liquid Glass Capsule Container (Transparan & Blur Lebih Kuat) -->
-    <div class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden">
+    <!-- Main Container Kaca -->
+    <div id="nav-glass-container" class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden">
         
-        <!-- Glossy Specular Light Reflection (Pantulan Kaca Soft) -->
-        <div class="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent rounded-t-full"></div>
+        <!-- FLUID BUBBLE KAPSUL (INDIKATOR AKTIF PRESISI) -->
+        <div id="nav-active-bubble" 
+             class="absolute top-1.5 bottom-1.5 left-0 w-0 rounded-full bg-gradient-to-b from-emerald-400/30 via-emerald-500/25 to-teal-600/35 border border-emerald-400/60 shadow-md shadow-emerald-900/10 pointer-events-none z-0 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] opacity-0">
+            <!-- Inner Specular Light Gloss -->
+            <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/60 to-transparent rounded-t-full"></div>
+        </div>
+
+        <!-- Glossy Specular Light Reflection -->
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent rounded-t-full z-10"></div>
 
         <!-- Home Button -->
         <button onclick="showTab('dashboard')" id="btn-dashboard" 
-            class="nav-link active group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90">
-            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
-            
+            class="nav-link active group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
             <i class="fa-solid fa-house-user text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Home</span>
-            
-            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Home</span>
         </button>
 
         <!-- Database Button -->
         <button onclick="showTab('dailyinput')" id="btn-dailyinput" 
-            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90" data-search="daily input">
-            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
-            
+            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20" data-search="daily input">
             <i class="fa-solid fa-pen-to-square text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Database</span>
-            
-            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Database</span>
         </button>
 
         <!-- Arsip Button -->
         <button onclick="showTab('archive')" id="btn-archive" 
-            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 focus:outline-none" data-search="arsip laporan">
-            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
-            
+            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 focus:outline-none z-20" data-search="arsip laporan">
             <i class="fa-solid fa-folder-open text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Arsip</span>
-            
-            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Arsip</span>
         </button>
 
-        <!-- Slip Gaji -->
-<button onclick="showTab('presensi')" id="btn-presensi" 
-    class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90" data-search="presensi absensi jadwal kerja">
-    <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
-    
-    <!-- SVG Icon Slip Gaji / Money Check / Receipt -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300 fill-slate-500 group-hover:fill-slate-700 group-[.active]:fill-emerald-700 group-[.active]:-translate-y-0.5 relative z-10">
-        <!-- FontAwesome Free Solid: File Invoice Dollar / Receipt -->
-        <path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-288-160 0c-17.7 0-32-14.3-32-32L320 0 64 0zM256 0l0 128 128 0L256 0zM128 224c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm0 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm32 64l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-96 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/>
-    </svg>
-
-    <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
-    
-    <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
-</button>
+        <!-- Slip Gaji Button -->
+        <button onclick="showTab('presensi')" id="btn-presensi" 
+            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20" data-search="presensi absensi jadwal kerja">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300 fill-slate-500 group-hover:fill-slate-700 group-[.active]:fill-emerald-700 group-[.active]:-translate-y-0.5 relative z-10">
+                <path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-288-160 0c-17.7 0-32-14.3-32-32L320 0 64 0zM256 0l0 128 128 0L256 0zM128 224c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm0 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm32 64l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-96 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/>
+            </svg>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
+        </button>
 
         <!-- Profil Button -->
         <button onclick="showTab('about')" id="btn-about" 
-            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90" data-search="profil nurjaya tentang about">
-            <span class="nav-pill absolute inset-0 bg-emerald-500/20 rounded-full opacity-0 scale-90 transition-all duration-300 pointer-events-none"></span>
-            
+            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20" data-search="profil nurjaya tentang about">
             <i class="fa-solid fa-info-circle text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-bold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Profil</span>
-            
-            <span class="dot-active absolute bottom-1 w-1 h-1 rounded-full bg-emerald-600 opacity-0 transition-all duration-300 group-[.active]:opacity-100 z-10"></span>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Profil</span>
         </button>
 
     </div>
@@ -1131,6 +1122,14 @@ html.dark-mode-active #page-title {
                         </div>
                         <span class="text-[9px] sm:text-[10px] font-extrabold text-slate-700 group-hover:text-emerald-600 tracking-tight leading-tight transition-colors">Apotek<br>Nurjaya</span>
                     </button>
+					
+					<!-- 10. RIWAYAT NOTA BELANJA -->
+<button type="button" id="btnNavigasiNotaBelanja" onclick="bukaModalNotaBelanja()" class="group flex flex-col items-center justify-center text-center p-2 rounded-[18px] bg-white border border-slate-100 hover:border-rose-200 shadow-xs hover:shadow-sm transition-all duration-200 active:scale-95">
+    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-rose-400 to-red-400 text-white flex items-center justify-center text-sm sm:text-base shadow-xs shadow-rose-400/20 group-hover:scale-105 transition-transform duration-200 mb-1">
+        <i class="fas fa-receipt"></i>
+    </div>
+    <span class="text-[9px] sm:text-[10px] font-extrabold text-slate-700 group-hover:text-rose-600 tracking-tight leading-tight transition-colors">Nota<br>Belanja</span>
+</button>
 
                 </div>
             </div>
@@ -2465,123 +2464,6 @@ function closePdfModal() {
 
 
 
-
-
-
-
-    <script>
-        const clickSfx = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU1vT19fV0FWRWZtdCAQAAAAAQABAFAfAABQHwAAAQAgAGRhdGE=");
-        
-        const ENCODED_PASS = "TnVyamF5YSBNYXJlbWE="; 
-
-        function attemptLogin() {
-            const input = document.getElementById('pass-input');
-            const overlay = document.getElementById('login-overlay');
-            const card = document.querySelector('.login-card');
-            const msg = document.getElementById('login-msg');
-
-            if (btoa(input.value) === ENCODED_PASS) {
-                playClickSound();
-                overlay.classList.add('login-exit');
-                document.body.style.overflow = 'auto';
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                }, 800);
-            } else {
-                input.value = "";
-                card.classList.add('shake');
-                msg.innerText = "Akses Ditolak. Silakan coba lagi.";
-                msg.classList.remove('text-gray-500');
-                msg.classList.add('text-red-500');
-                
-                setTimeout(() => {
-                    card.classList.remove('shake');
-                }, 400);
-            }
-        }
-
-        function togglePassword() {
-            playClickSound();
-            const input = document.getElementById('pass-input');
-            const icon = document.getElementById('toggle-icon');
-            
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = "password";
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-
-        function playClickSound() {
-            clickSfx.currentTime = 0;
-            clickSfx.volume = 0.4;
-            clickSfx.play().catch(e => console.log("Audio play deferred"));
-        }
-
-        function showTab(tabId) {
-            playClickSound();
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            document.getElementById('btn-' + tabId).classList.add('active');
-
-            const pageData = {
-                'dashboard': ['Dashboard', 'Ringkasan Keuangan Terbaru'],
-                'dailyinput': ['Daily Input', 'Formulir Laporan Operasional Harian'], // Data untuk tab baru
-                'archive': ['Arsip Digital Laporan', 'Pusat Dokumentasi Keuangan'],
-                'presensi': ['Asisten Slip Gaji', 'Menu Khusus Pembuatan Slip Gaji'],
-                'calendar': ['Jadwal & Shift Kerja', 'Pengaturan Operasional Toko'],
-                'about': ['Profil Nurjaya Abadi', 'Informasi Kepemilikan & Manajemen']
-            };
-
-            document.getElementById('page-title').innerText = pageData[tabId][0];
-            document.getElementById('page-subtitle').innerText = pageData[tabId][1];
-
-            document.querySelector('.main-content').scrollTop = 0;
-        }
-
-        function loadDrive(fileId, element) {
-            loadDriveSub(fileId, element, 'viewer-container-archive');
-        }
-
-        function loadDriveSub(fileId, element, containerId) {
-            playClickSound();
-            const groupClass = element.classList.contains('month-btn') ? '.month-btn' : '.sub-tab-btn';
-            document.querySelectorAll(groupClass).forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-
-            const container = document.getElementById(containerId);
-            const url = `https://drive.google.com/file/d/${fileId}/preview`;
-            container.innerHTML = `<iframe src="${url}" allow="autoplay" loading="lazy"></iframe>`;
-        }
-
-        function infoPending(msg) {
-            playClickSound();
-            const container = document.getElementById('viewer-container-archive');
-            container.innerHTML = `
-                <div class="flex flex-col items-center justify-center h-full text-blue-400 p-10 text-center animate-pulse">
-                    <i class="fa-solid fa-clock-rotate-left text-6xl mb-6"></i>
-                    <p class="font-black text-lg md:text-2xl">${msg}</p>
-                </div>
-            `;
-        }
-
-        function openPreview(src) {
-            playClickSound();
-            document.getElementById('modal-img').src = src;
-            document.getElementById('photo-modal').style.display = 'flex';
-        }
-
-        // Auto focus input on load
-        window.onload = () => {
-            document.getElementById('pass-input').focus();
-        }
-    </script>
 	<script>
         const modal = document.getElementById('devModal');
         const openBtn = document.getElementById('openDevModal');
@@ -5405,7 +5287,6 @@ function pemicuTombolSinkronasi() {
         <p class="text-[10px] text-green-600/70 mt-4 uppercase tracking-widest font-bold">SISTEM PENGINGAT OTOMATIS NURJAYA ABADI</p>
     </div>
 </div>
-
 
 <script>
 // GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
@@ -11865,40 +11746,39 @@ async function unduhStrukTerpilih() {
     }
 
     // 9. SHARE & DOWNLOAD GAMBAR HD
-    async function renderShiftCaptureToDataUrl() {
-        const captureArea = document.getElementById("areaCaptureMainShift");
-        const header = document.getElementById("captureHeaderPhotocopy");
+async function renderShiftCaptureToDataUrl() {
+    const captureArea = document.getElementById("areaCaptureMainShift");
+    const header = document.getElementById("captureHeaderPhotocopy");
 
-        header.classList.remove("hidden");
-        document.getElementById("captureSubjudulPhotocopy").innerText = `Jadwal Shift ${MONTH_NAMES_IND[currentMonthPhotocopy]} ${currentYearPhotocopy}`;
+    header.classList.remove("hidden");
+    document.getElementById("captureSubjudulPhotocopy").innerText = `Jadwal Shift ${MONTH_NAMES_IND[currentMonthPhotocopy]} ${currentYearPhotocopy}`;
 
-        const origWidth = captureArea.offsetWidth;
-        const origHeight = captureArea.offsetHeight;
+    const origWidth = captureArea.offsetWidth;
+    const origHeight = captureArea.offsetHeight;
+    const scaleFactor = 3.5;
 
-        const scaleFactor = 3.5;
+    try {
+        // Gunakan domtoimage.toJpeg langsung (bukan toCanvas)
+        const dataUrl = await domtoimage.toJpeg(captureArea, {
+            quality: 0.98,
+            bgcolor: '#ffffff',
+            width: origWidth * scaleFactor,
+            height: origHeight * scaleFactor,
+            style: {
+                transform: `scale(${scaleFactor})`,
+                transformOrigin: 'top left',
+                width: `${origWidth}px`,
+                height: `${origHeight}px`
+            }
+        });
 
-        try {
-            const canvas = await domtoimage.toCanvas(captureArea, {
-                quality: 1.0,
-                bgcolor: '#ffffff',
-                width: origWidth * scaleFactor,
-                height: origHeight * scaleFactor,
-                style: {
-                    transform: `scale(${scaleFactor})`,
-                    transformOrigin: 'top left',
-                    width: `${origWidth}px`,
-                    height: `${origHeight}px`
-                }
-            });
-
-            const dataUrl = canvas.toDataURL("image/jpeg", 0.98);
-            header.classList.add("hidden");
-            return dataUrl;
-        } catch (e) {
-            header.classList.add("hidden");
-            throw e;
-        }
+        header.classList.add("hidden");
+        return dataUrl;
+    } catch (e) {
+        header.classList.add("hidden");
+        throw e;
     }
+}
 
     async function shareShiftPhotocopy() {
         try {
@@ -13160,6 +13040,262 @@ async function simpanPerubahanRequest(event) {
 })();
 </script>
 
+<script>
+const GAS_NOTA_BELANJA_URL = "https://script.google.com/macros/s/AKfycbwnWdHz6E0HJQi9vs-VN9U-UhRl7NefkafWpOLft8ChsjgvsNOHfky8Iy8buxj_OrMZjA/exec";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+let currentPdfDocNota = null;
+let pdfRenderScale = 1.2; // Skala render native awal (1.2 = 120%)
+
+async function bukaModalNotaBelanja() {
+    const modal = document.getElementById("modalNotaBelanja");
+    const cardContent = document.getElementById("cardNotaBelanjaContent");
+    
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    
+    setTimeout(() => {
+        cardContent.classList.remove("scale-95", "opacity-0");
+        cardContent.classList.add("scale-100", "opacity-100");
+    }, 10);
+    
+    document.getElementById("wrapperUploadNota").classList.add("hidden");
+    resetViewerNotaState();
+    
+    await muatDaftarNota();
+}
+
+function tutupModalNotaBelanja() {
+    const modal = document.getElementById("modalNotaBelanja");
+    const cardContent = document.getElementById("cardNotaBelanjaContent");
+    
+    cardContent.classList.remove("scale-100", "opacity-100");
+    cardContent.classList.add("scale-95", "opacity-0");
+    
+    setTimeout(() => {
+        modal.classList.remove("flex");
+        modal.classList.add("hidden");
+    }, 300);
+}
+
+function toggleUploadFormNota() {
+    document.getElementById("wrapperUploadNota").classList.toggle("hidden");
+}
+
+function resetViewerNotaState() {
+    currentPdfDocNota = null;
+    pdfRenderScale = 1.2;
+    updateZoomLabel();
+    
+    const targetContainer = document.getElementById("pdfPagesTarget");
+    const placeholder = document.getElementById("placeholderNota");
+    const labelInfo = document.getElementById("labelDetailNota");
+    
+    targetContainer.innerHTML = "";
+    targetContainer.classList.add("hidden");
+    
+    placeholder.classList.remove("hidden");
+    labelInfo.innerHTML = `<i class="fas fa-info-circle mr-1 text-rose-500"></i> Silakan pilih nota dari daftar`;
+}
+
+async function muatDaftarNota() {
+    const select = document.getElementById("selectNotaBulan");
+    select.innerHTML = `<option value="">Memuat Bulan...</option>`;
+
+    try {
+        const response = await fetch(`${GAS_NOTA_BELANJA_URL}?action=getFiles`);
+        const result = await response.json();
+
+        if (result.status === "success" && result.files.length > 0) {
+            select.innerHTML = `<option value="">-- Pilih Bulan Nota --</option>`;
+            result.files.forEach((file) => {
+                const opt = document.createElement("option");
+                opt.value = file.id;
+                opt.textContent = file.name;
+                select.appendChild(opt);
+            });
+        } else {
+            select.innerHTML = `<option value="">Belum ada riwayat nota</option>`;
+        }
+    } catch (err) {
+        console.error(err);
+        select.innerHTML = `<option value="">Gagal memuat data nota</option>`;
+    }
+}
+
+// Ambil & Render Dokumen PDF dengan Indikator Overlay Terkunci Pas
+async function muatDokumenNota(fileId) {
+    if (!fileId) {
+        resetViewerNotaState();
+        return;
+    }
+
+    const loader = document.getElementById("loaderPdfNota");
+    const textLoader = document.getElementById("textLoaderNota");
+    const labelInfo = document.getElementById("labelDetailNota");
+    const container = document.getElementById("pdfScrollContainer");
+    const placeholder = document.getElementById("placeholderNota");
+    const targetContainer = document.getElementById("pdfPagesTarget");
+
+    // 1. Tampilkan Overlay Loading Instan
+    textLoader.textContent = "Memuat Dokumen PDF...";
+    loader.classList.remove("pointer-events-none", "opacity-0");
+    loader.classList.add("opacity-100");
+
+    // Beri waktu browser merender layer loader
+    await new Promise(r => setTimeout(r, 40));
+
+    try {
+        const res = await fetch(`${GAS_NOTA_BELANJA_URL}?action=getFileData&fileId=${fileId}`);
+        const data = await res.json();
+
+        if (data.status === "success") {
+            const loadingTask = pdfjsLib.getDocument(data.base64);
+            currentPdfDocNota = await loadingTask.promise;
+            
+            labelInfo.innerHTML = `<i class="fas fa-file-pdf text-rose-500 mr-1"></i> Menampilkan: <strong>${data.name}</strong> (${currentPdfDocNota.numPages} Halaman)`;
+
+            placeholder.classList.add("hidden");
+            targetContainer.classList.remove("hidden");
+
+            // Render ulang halaman dengan Native Canvas Scale
+            await renderSemuaHalamanNota();
+
+            container.scrollTop = 0;
+            container.scrollLeft = 0;
+        } else {
+            alert("Gagal memuat file PDF: " + data.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Terjadi kesalahan saat memanggil dokumen PDF.");
+    } finally {
+        // Sembunyikan Overlay Smooth
+        setTimeout(() => {
+            loader.classList.remove("opacity-100");
+            loader.classList.add("opacity-0", "pointer-events-none");
+        }, 100);
+    }
+}
+
+// Render Semua Halaman PDF dengan Auto Scroll Re-centering
+async function renderSemuaHalamanNota() {
+    if (!currentPdfDocNota) return;
+
+    const targetContainer = document.getElementById("pdfPagesTarget");
+    const container = document.getElementById("pdfScrollContainer");
+    
+    targetContainer.innerHTML = "";
+
+    // Render semua halaman canvas
+    for (let pageNum = 1; pageNum <= currentPdfDocNota.numPages; pageNum++) {
+        const page = await currentPdfDocNota.getPage(pageNum);
+        const viewport = page.getViewport({ scale: pdfRenderScale });
+
+        const canvas = document.createElement("canvas");
+        canvas.className = "shadow-md rounded-md bg-white inline-block max-w-none transition-all duration-150 mx-auto";
+        const context = canvas.getContext("2d");
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        targetContainer.appendChild(canvas);
+
+        const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+        };
+        await page.render(renderContext).promise;
+    }
+
+    // Hitung ulang posisi scroll horizontal agar tepat di tengah layar
+    setTimeout(() => {
+        if (container.scrollWidth > container.clientWidth) {
+            container.scrollLeft = (container.scrollWidth - container.clientWidth) / 2;
+        }
+    }, 40);
+}
+
+// Tombol Control Zoom Native
+async function zoomInPdf() {
+    if (!currentPdfDocNota) return;
+    if (pdfRenderScale < 2.8) {
+        pdfRenderScale += 0.3;
+        updateZoomLabel();
+        await renderSemuaHalamanNota();
+    }
+}
+
+async function zoomOutPdf() {
+    if (!currentPdfDocNota) return;
+    if (pdfRenderScale > 0.6) {
+        pdfRenderScale -= 0.3;
+        updateZoomLabel();
+        await renderSemuaHalamanNota();
+    }
+}
+
+async function resetZoomPdf() {
+    if (!currentPdfDocNota) return;
+    pdfRenderScale = 1.2;
+    updateZoomLabel();
+    await renderSemuaHalamanNota();
+}
+
+function updateZoomLabel() {
+    const lbl = document.getElementById("labelZoomScale");
+    if (lbl) {
+        lbl.textContent = `${Math.round((pdfRenderScale / 1.2) * 100)}%`;
+    }
+}
+
+// Upload Form Handler
+async function prosesUploadNota(event) {
+    event.preventDefault();
+    const input = document.getElementById("inputNotaPdf");
+    const btnSubmit = document.getElementById("btnSubmitNota");
+
+    if (input.files.length === 0) return;
+
+    const file = input.files[0];
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengunggah...`;
+
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        const base64Data = e.target.result;
+
+        try {
+            const response = await fetch(GAS_NOTA_BELANJA_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    fileName: file.name,
+                    fileData: base64Data
+                })
+            });
+
+            const res = await response.json();
+            if (res.status === "success") {
+                alert("Nota berhasil diunggah!");
+                input.value = "";
+                toggleUploadFormNota();
+                await muatDaftarNota();
+            } else {
+                alert("Upload gagal: " + res.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Terjadi kesalahan koneksi saat mengunggah.");
+        } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = `<i class="fas fa-cloud-upload-alt"></i> Unggah File`;
+        }
+    };
+
+    reader.readAsDataURL(file);
+}
+</script>
+
 <!-- ================================================================= -->
 <!-- MODAL EDIT JADWAL SHIFT (INTEGRATED VIEW SWITCHING)              -->
 <!-- ================================================================= -->
@@ -13292,6 +13428,327 @@ async function simpanPerubahanRequest(event) {
         </div>
     </div>
 </div>
+
+<!-- ========================================== -->
+<!-- MODAL: RIWAYAT NOTA BELANJA (LAYOUT FIXED) -->
+<!-- ========================================== -->
+<div id="modalNotaBelanja" 
+     class="fixed inset-0 w-screen h-screen bg-black/70 backdrop-blur-md z-[10000] hidden items-center justify-center p-2 sm:p-4 transition-all duration-300 overscroll-none touch-none"
+     style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;">
+    
+    <div id="cardNotaBelanjaContent" class="bg-white rounded-[2rem] shadow-2xl border border-rose-200 w-full max-w-4xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 modal-card-content flex flex-col h-[90vh] max-h-[90vh] my-auto">
+        
+        <!-- Modal Header -->
+        <div class="bg-gradient-to-r from-rose-600 via-red-600 to-rose-700 p-4 sm:p-5 flex items-center justify-between text-white shadow-lg shrink-0 z-20">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm shrink-0">
+                    <i class="fas fa-receipt text-lg text-rose-100"></i>
+                </div>
+                <div class="truncate">
+                    <h3 class="text-base sm:text-lg font-bold leading-none tracking-wide truncate">
+                        Riwayat Nota Belanja
+                    </h3>
+                    <p class="text-[10px] opacity-90 mt-1 uppercase tracking-wider font-medium flex items-center gap-1.5">
+                        <span>Nurjaya Abadi Photocopy</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button type="button" 
+                        onclick="toggleUploadFormNota()" 
+                        class="px-3 py-1.5 bg-white/20 hover:bg-white/30 active:scale-95 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all backdrop-blur-sm">
+                    <i class="fas fa-plus"></i>
+                    <span class="hidden sm:inline">Upload Nota</span>
+                </button>
+                <button type="button" 
+                        onclick="tutupModalNotaBelanja()" 
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/10 transition-colors focus:outline-none shrink-0">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- FORM UPLOAD INLINE -->
+        <div id="wrapperUploadNota" class="hidden bg-rose-50/80 border-b border-rose-100 p-3.5 sm:p-4 shrink-0 transition-all z-20">
+            <form id="formUploadNota" onsubmit="prosesUploadNota(event)" class="flex flex-col sm:flex-row items-end gap-3">
+                <div class="w-full sm:flex-1">
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Pilih File PDF Nota</label>
+                    <input type="file" id="inputNotaPdf" accept="application/pdf" required class="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-600 file:text-white hover:file:bg-rose-700 cursor-pointer bg-white rounded-xl border border-rose-200 p-1">
+                </div>
+                <div class="w-full sm:w-auto flex items-center gap-2">
+                    <button type="submit" id="btnSubmitNota" class="w-full sm:w-auto px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5">
+                        <i class="fas fa-cloud-upload-alt"></i> Unggah File
+                    </button>
+                    <button type="button" onclick="toggleUploadFormNota()" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-600 text-xs font-semibold rounded-xl transition-all">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Filter Bar: Dropdown & Zoom Controls -->
+        <div class="p-3.5 sm:p-4 bg-rose-50/80 border-b border-rose-100 flex flex-wrap items-center justify-between gap-2.5 shrink-0 z-20">
+            <div class="relative flex-1 min-w-[180px]">
+                <select id="selectNotaBulan" 
+                        onchange="muatDokumenNota(this.value)" 
+                        class="w-full bg-white border border-rose-200 text-gray-800 text-xs font-bold rounded-xl px-3 py-2.5 focus:outline-none focus:border-rose-500 shadow-xs appearance-none pr-8 transition-all cursor-pointer">
+                    <option value="">Memuat Bulan...</option>
+                </select>
+                <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-rose-600 text-xs">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <!-- Native Redraw Zoom Controls -->
+            <div class="flex items-center gap-1 bg-white border border-rose-200 rounded-xl p-1 shadow-xs">
+                <button type="button" onclick="zoomOutPdf()" title="Perkecil" class="w-8 h-8 rounded-lg hover:bg-rose-50 flex items-center justify-center text-slate-600 font-bold transition-colors active:scale-90">
+                    <i class="fas fa-search-minus text-rose-600"></i>
+                </button>
+                <button type="button" onclick="resetZoomPdf()" title="Reset Ukuran" class="w-8 h-8 rounded-lg hover:bg-rose-50 flex items-center justify-center text-slate-600 font-bold transition-colors active:scale-90">
+                    <span id="labelZoomScale" class="text-[10px] font-extrabold text-rose-600">100%</span>
+                </button>
+                <button type="button" onclick="zoomInPdf()" title="Perbesar" class="w-8 h-8 rounded-lg hover:bg-rose-50 flex items-center justify-center text-slate-600 font-bold transition-colors active:scale-90">
+                    <i class="fas fa-search-plus text-rose-600"></i>
+                </button>
+            </div>
+        </div>
+
+<!-- WORKSPACE MAIN BODY -->
+<div class="flex-1 relative bg-slate-800/95 overflow-hidden w-full h-full">
+    
+    <!-- OVERLAY LOADING FIT TO WORKSPACE -->
+    <div id="loaderPdfNota" class="absolute inset-0 bg-slate-900/80 backdrop-blur-xs flex flex-col items-center justify-center text-white z-30 transition-opacity duration-200 opacity-0 pointer-events-none">
+        <div class="w-12 h-12 rounded-2xl bg-slate-800/80 border border-rose-500/30 flex items-center justify-center mb-3 shadow-lg">
+            <i class="fas fa-circle-notch fa-spin text-2xl text-rose-400"></i>
+        </div>
+        <span id="textLoaderNota" class="text-xs font-semibold tracking-wide text-slate-200">Memuat Dokumen PDF...</span>
+    </div>
+
+    <!-- AREA SCROLL DOKUMEN (TEXT-ALIGN CENTER UNTUK SCROLL SYMMETRY) -->
+    <div id="pdfScrollContainer" class="w-full h-full overflow-auto p-4 sm:p-6 text-center block">
+        
+        <!-- Placeholder awal -->
+        <div id="placeholderNota" class="my-auto text-center text-slate-400 py-12 px-4">
+            <div class="w-16 h-16 rounded-2xl bg-slate-700/50 flex items-center justify-center text-2xl mx-auto mb-3 text-rose-400">
+                <i class="fas fa-file-invoice"></i>
+            </div>
+            <p class="font-bold text-sm text-slate-200">Silakan Pilih Nota Belanja</p>
+            <p class="text-xs text-slate-400 mt-1">Gunakan dropdown di atas untuk memilih bulan riwayat nota.</p>
+        </div>
+
+        <!-- Container Target Canvas (Inline-Block + Padding Dinamis) -->
+        <div id="pdfPagesTarget" class="inline-block text-center space-y-4 py-2 hidden">
+            <!-- Canvas di-render dinamis oleh JS -->
+        </div>
+    </div>
+</div>
+
+        <!-- Modal Footer -->
+        <div class="bg-rose-50/60 border-t border-rose-100 p-3 sm:p-4 shrink-0 flex items-center justify-between text-xs z-20">
+            <span id="labelDetailNota" class="text-[11px] text-slate-600 font-medium truncate">
+                <i class="fas fa-info-circle mr-1 text-rose-500"></i> Silakan pilih nota dari daftar
+            </span>
+            <button type="button" 
+                    onclick="tutupModalNotaBelanja()" 
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-xl font-bold text-xs active:scale-95 transition-all focus:outline-none">
+                Tutup
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // ====================================================
+    // 1. AUDIO & AUTHENTICATION SYSTEM (LOGIN)
+    // ====================================================
+    const clickSfx = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU1vT19fV0FWRWZtdCAQAAAAAQABAFAfAABQHwAAAQAgAGRhdGE=");
+    const ENCODED_PASS = "TnVyamF5YSBNYXJlbWE="; 
+
+    function playClickSound() {
+        clickSfx.currentTime = 0;
+        clickSfx.volume = 0.4;
+        clickSfx.play().catch(e => console.log("Audio play deferred"));
+    }
+
+    function attemptLogin() {
+        const input = document.getElementById('pass-input');
+        const overlay = document.getElementById('login-overlay');
+        const card = document.querySelector('.login-card');
+        const msg = document.getElementById('login-msg');
+
+        if (btoa(input.value) === ENCODED_PASS) {
+            playClickSound();
+            overlay.classList.add('login-exit');
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 800);
+        } else {
+            input.value = "";
+            card.classList.add('shake');
+            msg.innerText = "Akses Ditolak. Silakan coba lagi.";
+            msg.classList.remove('text-gray-500');
+            msg.classList.add('text-red-500');
+            
+            setTimeout(() => {
+                card.classList.remove('shake');
+            }, 400);
+        }
+    }
+
+    function togglePassword() {
+        playClickSound();
+        const input = document.getElementById('pass-input');
+        const icon = document.getElementById('toggle-icon');
+        
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    // ====================================================
+    // 2. GOOGLE DRIVE PREVIEW & MODAL SYSTEM
+    // ====================================================
+    function loadDrive(fileId, element) {
+        loadDriveSub(fileId, element, 'viewer-container-archive');
+    }
+
+    function loadDriveSub(fileId, element, containerId) {
+        playClickSound();
+        const groupClass = element.classList.contains('month-btn') ? '.month-btn' : '.sub-tab-btn';
+        document.querySelectorAll(groupClass).forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
+
+        const container = document.getElementById(containerId);
+        const url = `https://drive.google.com/file/d/${fileId}/preview`;
+        container.innerHTML = `<iframe src="${url}" allow="autoplay" loading="lazy"></iframe>`;
+    }
+
+    function infoPending(msg) {
+        playClickSound();
+        const container = document.getElementById('viewer-container-archive');
+        container.innerHTML = `
+            <div class="flex flex-col items-center justify-center h-full text-blue-400 p-10 text-center animate-pulse">
+                <i class="fa-solid fa-clock-rotate-left text-6xl mb-6"></i>
+                <p class="font-black text-lg md:text-2xl">${msg}</p>
+            </div>
+        `;
+    }
+
+    function openPreview(src) {
+        playClickSound();
+        document.getElementById('modal-img').src = src;
+        document.getElementById('photo-modal').style.display = 'flex';
+    }
+
+    // Auto focus input password saat halaman pertama terbuka
+    window.onload = () => {
+        const passInput = document.getElementById('pass-input');
+        if (passInput) passInput.focus();
+    }
+
+    // ====================================================
+    // 3. NATIVE SHOWTAB + SLIDING BUBBLE ENGINE (SWIPER-LESS)
+    // ====================================================
+    const BUBBLE_WIDTH = 60; // Ukuran kapsul ideal (px)
+
+    // FUNGSI UTAMA SHOWTAB (MURNI LOGIKA LAMA + BUBBLE REVISI)
+    window.showTab = function(tabId) {
+        playClickSound();
+
+        // 1. Sembunyikan semua tab & matikan status active tombol
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+        
+        // 2. Tampilkan tab target & aktifkan tombol target
+        const targetTab = document.getElementById('tab-' + tabId);
+        const targetBtn = document.getElementById('btn-' + tabId);
+        
+        if (targetTab) targetTab.classList.remove('hidden');
+        if (targetBtn) targetBtn.classList.add('active');
+
+        // 3. Update data judul & subtitle header
+        const pageData = {
+            'dashboard': ['Dashboard', 'Ringkasan Keuangan Terbaru'],
+            'dailyinput': ['Daily Input', 'Formulir Laporan Operasional Harian'],
+            'archive': ['Arsip Digital Laporan', 'Pusat Dokumentasi Keuangan'],
+            'presensi': ['Asisten Slip Gaji', 'Menu Khusus Pembuatan Slip Gaji'],
+            'calendar': ['Jadwal & Shift Kerja', 'Pengaturan Operasional Toko'],
+            'about': ['Profil Nurjaya Abadi', 'Informasi Kepemilikan & Manajemen']
+        };
+
+        if (pageData[tabId]) {
+            const titleEl = document.getElementById('page-title');
+            const subtitleEl = document.getElementById('page-subtitle');
+            if (titleEl) titleEl.innerText = pageData[tabId][0];
+            if (subtitleEl) subtitleEl.innerText = pageData[tabId][1];
+        }
+
+        // 4. Reset scroll ke paling atas
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) mainContent.scrollTop = 0;
+
+        // 5. Geser gelembung hijau meluncur presisi ke tombol aktif
+        requestAnimationFrame(() => {
+            moveBubbleToTab(tabId);
+        });
+    };
+
+    // LOGIKA PEMINDAH GELEMBUNG PRESISI MILIMETER
+    function moveBubbleToTab(activeTabName) {
+        const activeBtn = document.getElementById(`btn-${activeTabName}`);
+        const bubble = document.getElementById('nav-active-bubble');
+
+        if (activeBtn && bubble) {
+            const btnLeft = activeBtn.offsetLeft;
+            const btnWidth = activeBtn.offsetWidth;
+
+            // Rumus Presisi Center Point Sumbu Ikon
+            const centerPos = btnLeft + (btnWidth / 2) - (BUBBLE_WIDTH / 2);
+
+            bubble.style.width = `${BUBBLE_WIDTH}px`;
+            bubble.style.transform = `translate3d(${centerPos}px, 0px, 0px)`;
+            bubble.style.opacity = '1';
+        }
+    }
+
+    // Tampilan awal saat DOM selesai dimuat
+    document.addEventListener("DOMContentLoaded", () => {
+        showTab('dashboard');
+    });
+
+    // Re-kalkulasi gelembung saat layar HP di-resize / rotate
+    window.addEventListener('resize', () => {
+        const activeBtn = document.querySelector('.nav-link.active');
+        if (activeBtn) {
+            const currentTab = activeBtn.id.replace('btn-', '');
+            moveBubbleToTab(currentTab);
+        }
+    });
+
+    // FUNGSI SCROLL KARTU DASHBOARD (ISOLASI INTERNAL TANPA BIKIN GESER LAYAR)
+    function scrollKeCard2() {
+        if (typeof playClickSound === "function") playClickSound();
+
+        const container = document.getElementById('cardSnapContainer');
+        const card2 = document.getElementById('card-2');
+
+        if (container && card2) {
+            container.scrollTo({
+                left: card2.offsetLeft,
+                behavior: 'smooth'
+            });
+        }
+    }
+</script>
 
 </body>
 </html>
