@@ -15,7 +15,55 @@
     <script src="https://cdn.tailwindcss.com"></script>
 	<script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 	
-    
+<style>
+  /* ============================================================
+     PATCH UNIVERSAL GPU STABLE (MODAL SMOOTH + GLASS NAV ALIVE)
+     ============================================================ */
+
+  /* 1. Akselerasi GPU untuk Seluruh Elemen Modal, Popup & Overlay */
+  [id*="modal"], [id*="popup"], [id*="dialog"], [id*="drawer"],
+  [class*="modal"], [class*="popup"], [class*="dialog"], [class*="drawer"],
+  [class*="backdrop"], [class*="overlay"],
+  dialog, .fixed.inset-0 {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 2. Matikan Blur HANYA pada Modal/Popup di Mobile agar Bebas Flicker */
+  @media (max-width: 1024px) {
+    [id*="modal"] [class*="backdrop-blur"],
+    [id*="popup"] [class*="backdrop-blur"],
+    [class*="backdrop-blur"]:not(aside *):not(aside) {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+  }
+
+  /* 3. KHUSUS FLOATING LIQUID GLASS BOTTOM NAV (iOS GLASS PRESERVED) */
+  aside [class*="backdrop-blur"],
+  aside .backdrop-blur-xl {
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    isolation: isolate;
+  }
+
+  /* 4. PERBAIKAN OVERLAY SIDEBAR: Kunci Agar Tidak Kebuka Sendiri saat Load */
+  #menuSidebarOverlay.hidden {
+    display: none !important;
+    -webkit-transform: none !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+</style>
 <style>
 /* ========================================================================= */
 /* LOCK TOTAL LAYAR FULLSCREEN                                               */
@@ -4439,13 +4487,49 @@ function formatMenitKeTeksJam(totalMenit) {
 
 function formatSingkatTanggalIndo(strTanggalFull) {
     if (!strTanggalFull) return "-";
-    const parts = strTanggalFull.split(",");
-    if (parts.length >= 2) {
-        const hariStr = parts[0].trim();
-        const tglFullStr = parts[1].trim();
-        const tglAngka = tglFullStr.split(" ")[0];
-        return `${tglAngka.padStart(2, '0')}/${hariStr.substring(0, 3)}`;
+
+    const NAMA_HARI = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+    
+    // Jika format input adalah 'YYYY-MM-DD' (contoh: '2026-10-17')
+    if (strTanggalFull.includes("-")) {
+        const parts = strTanggalFull.split("-");
+        if (parts.length === 3) {
+            const tahun = parseInt(parts[0], 10);
+            const bulan = parseInt(parts[1], 10) - 1; // Month di JS Date dimulai dari 0
+            const tanggal = parseInt(parts[2], 10);
+            
+            const objDate = new Date(tahun, bulan, tanggal);
+            if (!isNaN(objDate.getTime())) {
+                const hari = NAMA_HARI[objDate.getDay()];
+                const tglPadded = String(tanggal).padStart(2, '0');
+                const blnPadded = String(bulan + 1).padStart(2, '0');
+                
+                return `${hari}, ${tglPadded}/${blnPadded}`;
+            }
+        }
     }
+
+    // Fallback jika data dari API berbentuk string teks (contoh: "Sabtu, 17 Oktober 2026")
+    const partsKoma = strTanggalFull.split(",");
+    if (partsKoma.length >= 2) {
+        const hariStr = partsKoma[0].trim().substring(0, 3);
+        const tglFullStr = partsKoma[1].trim().split(" ");
+        const tglAngka = (tglFullStr[0] || "").padStart(2, '0');
+        
+        // Peta bulan jika dikirim nama bulan teks
+        const petaBulan = {
+            "january": "01", "januari": "01", "february": "02", "februari": "02",
+            "march": "03", "maret": "03", "april": "04", "may": "05", "mei": "05",
+            "june": "06", "juni": "06", "july": "07", "juli": "07", "august": "08",
+            "agustus": "08", "september": "09", "october": "10", "oktober": "10",
+            "november": "11", "desember": "12", "december": "12"
+        };
+        const bulanStr = (tglFullStr[1] || "").toLowerCase();
+        const blnAngka = petaBulan[bulanStr] || "01";
+
+        return `${hariStr}, ${tglAngka}/${blnAngka}`;
+    }
+
     return strTanggalFull;
 }
 
@@ -4543,82 +4627,141 @@ function uploadKartuApotekKeDrive() {
 </script>
 
 <script>
+// ====================================================================
+// SYSTEM ALERT & OVERRIDE FOTOKOPI (ISOLATED & PROMISE-BASED)
+// ====================================================================
+
+let resolveAlertPromise = null;
+let bodyOverflowSebelumnya = '';
+
 /**
- * UTILITY: Membuka Modal Alert Kustom Fotokopi (Dinamis Sukses/Gagal)
- * @param {string} tipe - 'sukses' atau 'error'
- * @param {string} judul - Judul modal
- * @param {string} deskripsi - Pesan detail
+ * GLOBAL OVERRIDE: Mengalihkan window.alert bawaan
+ */
+window.alert = function(pesan) {
+    if (pesan === undefined || pesan === null) return Promise.resolve();
+
+    const kataKunciError = ['gagal', 'error', 'salah', 'periksa', 'ditolak', 'kosong', 'ulang', 'ulangi', 'tidak berhasil'];
+    const apakahError = kataKunciError.some(kata => String(pesan).toLowerCase().includes(kata));
+
+    const tipe = apakahError ? "error" : "sukses";
+    const judul = apakahError ? "Sistem Peringatan" : "Notifikasi Baru";
+    const deskripsiFormatted = String(pesan).replace(/\n/g, "<br>");
+
+    return bukaAlertFotokopi(tipe, judul, deskripsiFormatted);
+};
+
+/**
+ * UTILITY: Membuka Modal Alert Kustom
  */
 function bukaAlertFotokopi(tipe, judul, deskripsi) {
-    const modal = document.getElementById('modal-alert-fotokopi');
-    const box = document.getElementById('fotokopi-box-content');
-    const iconBox = document.getElementById('fotokopi-alert-icon-box');
-    const icon = document.getElementById('fotokopi-alert-icon');
-    const judulElem = document.getElementById('fotokopi-alert-judul');
-    const deskripsiElem = document.getElementById('fotokopi-alert-deskripsi');
-    const btn = document.getElementById('fotokopi-alert-btn');
+    return new Promise((resolve) => {
+        // Jika masih ada alert aktif sebelumnya, selesaikan promise lama terlebih dahulu
+        if (typeof resolveAlertPromise === 'function') {
+            resolveAlertPromise();
+        }
+        resolveAlertPromise = resolve;
 
-    if (!modal || !box || !iconBox || !icon || !judulElem || !deskripsiElem || !btn) return;
+        const modal = document.getElementById('modal-alert-fotokopi');
+        const box = document.getElementById('fotokopi-box-content');
+        const iconBox = document.getElementById('fotokopi-alert-icon-box');
+        const icon = document.getElementById('fotokopi-alert-icon');
+        const judulElem = document.getElementById('fotokopi-alert-judul');
+        const deskripsiElem = document.getElementById('fotokopi-alert-deskripsi');
+        const btn = document.getElementById('fotokopi-alert-btn');
 
-    // Setel konten teks
-    judulElem.innerHTML = judul;
-    deskripsiElem.innerHTML = deskripsi;
+        if (!modal || !box) {
+            resolve();
+            return;
+        }
 
-    // Atur visual berdasarkan tipe respon
-    if (tipe === 'sukses') {
-        box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
-        iconBox.className = "mx-auto w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-2xl animate-bounce border border-emerald-200";
-        icon.className = "fa-solid fa-cloud-arrow-up";
-        btn.className = "w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
-    } else {
-        box.className = "bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-rose-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4";
-        iconBox.className = "mx-auto w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center text-2xl animate-pulse border border-rose-200";
-        icon.className = "fa-solid fa-circle-exclamation";
-        btn.className = "w-full py-3 bg-gradient-to-r from-rose-500 to-red-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all";
-    }
+        // Simpan gaya overflow body awal (hanya jika belum disimpan)
+        if (!modal.classList.contains('flex')) {
+            bodyOverflowSebelumnya = document.body.style.overflow;
+        }
 
-    // Aktifkan layout modal
-    modal.classList.remove('hidden');
-    modal.classList.add('grid');
-    
-    setTimeout(() => {
-        box.classList.remove('scale-95', 'opacity-0');
-        box.classList.add('scale-100', 'opacity-100');
-    }, 50);
+        // Setel Teks
+        if (judulElem) judulElem.innerHTML = judul;
+        if (deskripsiElem) deskripsiElem.innerHTML = deskripsi;
+
+        // Setel Visual Tipe
+        if (tipe === 'sukses') {
+            if (iconBox) iconBox.className = "mx-auto w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-3xl";
+            if (icon) icon.className = "fa-solid fa-bell";
+            if (btn) btn.className = "w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold tracking-wide uppercase rounded-full shadow-lg shadow-emerald-200 active:scale-95 transition-all";
+        } else {
+            if (iconBox) iconBox.className = "mx-auto w-20 h-20 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center text-3xl";
+            if (icon) icon.className = "fa-solid fa-triangle-exclamation";
+            if (btn) btn.className = "w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold tracking-wide uppercase rounded-full shadow-lg shadow-rose-200 active:scale-95 transition-all";
+        }
+
+        // Tampilkan Modal Alert
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+
+        // Trigger Animasi Slide Up
+        requestAnimationFrame(() => {
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+            box.classList.remove('translate-y-8');
+            box.classList.add('translate-y-0');
+        });
+    });
 }
 
 /**
- * UTILITY: Menutup Modal Alert Kustom Fotokopi
+ * UTILITY: Menutup Modal Alert Kustom
  */
-function tutupAlertFotokopi() {
+function tutupAlertFotokopi(e) {
+    if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+    }
+
     const modal = document.getElementById('modal-alert-fotokopi');
     const box = document.getElementById('fotokopi-box-content');
 
     if (!modal || !box) return;
 
-    box.classList.remove('scale-100', 'opacity-100');
-    box.classList.add('scale-95', 'opacity-0');
+    // Trigger Animasi Slide Down
+    modal.classList.remove('opacity-100');
+    modal.classList.add('opacity-0');
+    box.classList.remove('translate-y-0');
+    box.classList.add('translate-y-8');
 
     setTimeout(() => {
-        modal.classList.remove('grid');
+        modal.classList.remove('flex');
         modal.classList.add('hidden');
-    }, 300);
+
+        // Kembalikan overflow body ke kondisi semula sebelum alert dipanggil
+        document.body.style.overflow = bodyOverflowSebelumnya;
+
+        // Resolve Promise agar baris `await alert(...)` di kode utama dapat berlanjut
+        if (typeof resolveAlertPromise === 'function') {
+            const currentResolve = resolveAlertPromise;
+            resolveAlertPromise = null;
+            currentResolve();
+        }
+    }, 200);
 }
 
-/**
- * OVERRIDE: Menimpa alert bawaan browser
- */
-window.alert = function(message) {
-    const msgString = String(message || '');
-    
-    // Kata kunci penentu tipe error
-    const isError = /gagal|error|salah|terjadi kesalahan|batal|invalid|failed/i.test(msgString);
-    
-    const tipe = isError ? 'error' : 'sukses';
-    const judul = isError ? 'Pemberitahuan' : 'Informasi';
-    
-    bukaAlertFotokopi(tipe, judul, msgString);
-};
+// Mencegah Klik Backdrop Lolos Ke Element Lain
+document.addEventListener('DOMContentLoaded', () => {
+    const alertModal = document.getElementById('modal-alert-fotokopi');
+    if (alertModal) {
+        alertModal.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (e.target === alertModal) {
+                tutupAlertFotokopi(e);
+            }
+        });
+        
+        // Mencegah Mousedown/Pointerdown Lolos ke Listener Modal Lain
+        alertModal.addEventListener('mousedown', (e) => e.stopPropagation());
+        alertModal.addEventListener('touchstart', (e) => e.stopPropagation());
+    }
+});
 </script>
 
 <!-- MODAL ALAT BANTU BELANJA (MATERIAL UI ROUNDY CHIP) -->
@@ -5406,23 +5549,31 @@ window.alert = function(message) {
 </div>
 
 <!-- ================= MODAL ALERT UNIVERSAL CLOUD FOTOKOPI ================= -->
-<div id="modal-alert-fotokopi" class="fixed inset-0 z-[15000] hidden grid place-items-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
-    <div id="fotokopi-box-content" class="bg-white rounded-[28px] w-full max-w-sm p-6 text-center shadow-2xl border-4 border-emerald-500 transform scale-95 opacity-0 transition-all duration-300 space-y-4">
+<div id="modal-alert-fotokopi" 
+     class="fixed inset-0 z-[999999] hidden items-end justify-center p-4 sm:p-6 bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-200 ease-out select-none"
+     onclick="event.stopPropagation();">
+    
+    <!-- Box Alert -->
+    <div id="fotokopi-box-content" 
+         onclick="event.stopPropagation();" 
+         class="bg-white w-full max-w-sm rounded-[32px] p-6 text-center shadow-2xl border border-slate-100 transform translate-y-8 transition-all duration-200 ease-out space-y-4 mb-2 pointer-events-auto">
         
-        <!-- Wadah Lingkaran Icon (Warna & Icon akan diatur dinamis lewat JS) -->
-        <div id="fotokopi-alert-icon-box" class="mx-auto w-16 h-16 rounded-full flex items-center justify-center text-2xl animate-bounce">
+        <!-- Wadah Ikon Lingkaran Pastel -->
+        <div id="fotokopi-alert-icon-box" class="mx-auto w-20 h-20 rounded-full flex items-center justify-center text-3xl transition-colors">
             <i id="fotokopi-alert-icon" class="fa-solid"></i>
         </div>
 
         <!-- Wadah Teks Informasi -->
-        <div class="space-y-1">
-            <h3 id="fotokopi-alert-judul" class="text-lg font-black text-gray-900 uppercase tracking-wide leading-tight"></h3>
-            <p id="fotokopi-alert-deskripsi" class="text-xs font-bold text-gray-500 leading-relaxed px-2"></p>
+        <div class="space-y-1.5 px-2">
+            <h3 id="fotokopi-alert-judul" class="text-lg font-bold text-slate-900 tracking-tight leading-snug"></h3>
+            <p id="fotokopi-alert-deskripsi" class="text-xs font-normal text-slate-500 leading-relaxed"></p>
         </div>
 
         <!-- Tombol Konfirmasi -->
-        <button type="button" onclick="tutupAlertFotokopi()" id="fotokopi-alert-btn"
-            class="w-full py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-black tracking-widest uppercase rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all">
+        <button type="button" 
+                onclick="tutupAlertFotokopi(event)" 
+                id="fotokopi-alert-btn"
+                class="w-full py-3.5 text-xs font-bold tracking-wide uppercase rounded-full shadow-md active:scale-95 transition-all duration-150">
             SAYA MENGERTI
         </button>
     </div>
