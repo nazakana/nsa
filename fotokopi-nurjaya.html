@@ -14481,7 +14481,9 @@ function showArchiveDetailSection() {
     const totTabunganGabungan = totTabA + totTabB;
 
     // Injeksi Nilai ke HTML
-    document.getElementById("val-card-c").textContent = formatRupiah(totKotor);
+    // Gabungkan total kotor tunai dengan total QRIS untuk Card C
+const totKotorGabungan = totKotor + totQris;
+document.getElementById("val-card-c").textContent = formatRupiah(totKotorGabungan);
     document.getElementById("val-card-d").textContent = formatRupiah(totMeteraiRp);
     document.getElementById("sub-card-d").textContent = `Total: ${totMeteraiPcs} pcs × Rp12.000`;
     
