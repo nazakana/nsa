@@ -10654,7 +10654,9 @@ window.card3NominalData = { val: 'Rp 0', hidden: false };
                     maximumFractionDigits: 0
                 }).format(val);
 
-                window.card0NominalData.val = formatRupiah(totalKotorBulan);
+                // Gabungkan Pendapatan Kotor Tunai + Non-Tunai (QRIS)
+const totalKotorGabungan = totalKotorBulan + totalQrisBulan;
+window.card0NominalData.val = formatRupiah(totalKotorGabungan);
                 window.card0HariData = totalHariTercatat;
                 window.card3NominalData.val = formatRupiah(totalQrisBulan);
 
