@@ -16,6 +16,8 @@
     <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 	<!-- PDF.js & Panzoom Library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 	
 	
@@ -1335,42 +1337,43 @@ html.dark-mode-active #page-title {
 		
 
 <!-- KONTEN TAB: DAILY INPUT -->
-<div id="tab-dailyinput" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
-    
-    <!-- BOX 1: SINKRONISASI DATA -->
-    <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
+<div id="tab-dailyinput" class="tab-content p-4 sm:p-8 md:p-12 lg:p-16 fade-in hidden space-y-6">
+
+    <!-- BOX 1: PEMUTAKHIRAN DATA DATA KASIR -->
+    <div class="glass-element p-6 sm:p-8 rounded-[24px] border border-emerald-100/80 shadow-xl bg-white/80 max-w-4xl mx-auto space-y-5">
         
-        <!-- Header Modal -->
-        <div class="p-5 border-b border-green-100 bg-gradient-to-r from-white to-green-50/30 flex justify-between items-center flex-shrink-0">
+        <!-- Header Section -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
             <div class="flex items-center gap-3">
-                <div class="w-2 h-8 bg-green-500 rounded-full"></div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 border border-emerald-200 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
                 <div>
-                    <h3 class="text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight">Sinkronisasi Data</h3>
-                    <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Update Data Kasir Harian</p>
+                    <h3 class="text-lg md:text-xl font-black text-slate-800 tracking-tight">Pemutakhiran Data</h3>
+                    <p class="text-xs text-emerald-600 font-bold">Update Data Kasir Harian</p>
                 </div>
             </div>
-            <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-1 rounded-full whitespace-nowrap flex-nowrap">
-                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></span>
-                <small class="text-green-700 text-[10px] font-black uppercase tracking-wider block whitespace-nowrap">Form Siap</small>
-            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-extrabold uppercase tracking-widest hidden sm:inline-block">
+                NJA-SYNC
+            </span>
         </div>
 
-        <!-- Banner Informasi Riwayat Data & Fitur Seleksi Bulan -->
-        <div class="px-6 md:px-8 pt-6 pb-6 space-y-4">
-            <!-- Riwayat Entri Terakhir dari Cloud -->
-            <div id="banner_last_entry" class="w-full px-4 py-3 bg-blue-50 border-2 border-blue-200 rounded-[18px] text-xs md:text-sm text-blue-800 font-bold flex items-center gap-3 transition-all duration-300">
-                <i class="fa-solid fa-clock-rotate-left text-blue-600 text-base animate-pulse"></i>
-                <span>Menghubungkan ke cloud untuk membaca riwayat data terakhir...</span>
-            </div>
+        <!-- Banner Informasi Riwayat Data Cloud -->
+        <div id="banner_last_entry" class="w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs md:text-sm text-slate-700 font-bold flex items-center gap-3 transition-all duration-300">
+            <i class="fa-solid fa-clock-rotate-left text-emerald-600 text-base animate-pulse shrink-0"></i>
+            <span class="line-clamp-2">Menghubungkan ke cloud untuk membaca riwayat data terakhir...</span>
+        </div>
 
-            <!-- Dropdown Seleksi Bulan Operasional Kerja -->
-            <div class="p-4 bg-gray-50 border-2 border-gray-200 rounded-[22px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                <div>
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-filter text-green-600"></i> Pilih Target Periode
-                    </label>
+        <!-- Form Kontrol Seleksi Periode -->
+        <div class="p-4 sm:p-5 bg-slate-50/60 border border-slate-200/80 rounded-2xl grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            
+            <div class="md:col-span-2">
+                <label for="select_bulan_operasional" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-filter text-emerald-600"></i> Pilih Target Periode
+                </label>
+                <div class="relative">
                     <select id="select_bulan_operasional" required
-                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-xs">
+                        class="w-full appearance-none px-4 py-3 pr-10 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-800 font-bold text-xs sm:text-sm cursor-pointer transition-all shadow-sm">
                         <option value="" disabled selected>-- Pilih Bulan Buku Kerja --</option>
                         <option value="Mei2026">Mei 2026</option>
                         <option value="Juni2026">Juni 2026</option>
@@ -1381,54 +1384,51 @@ html.dark-mode-active #page-title {
                         <option value="November2026">November 2026</option>
                         <option value="Desember2026">Desember 2026</option>
                     </select>
-                </div>
-
-                <!-- Status Validasi Cloud Indicator -->
-                <div>
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-cloud text-green-600"></i> Sinkronisasi NSA Kasir
-                    </label>
-                    <div class="flex gap-2">
-                        <button type="button" 
-                            onclick="pemicuTombolSinkronasi()"
-                            class="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs rounded-[14px] uppercase tracking-wider shadow-md transition-all duration-200 flex items-center gap-2 shrink-0">
-                            <i class="fa-solid fa-rotate"></i> sinkronkan
-                        </button>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-emerald-600">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
                     </div>
                 </div>
             </div>
+
+            <!-- Tombol Action Perbarui -->
+            <button type="button" 
+                onclick="pemicuTombolSinkronasi()"
+                class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs rounded-xl uppercase tracking-wider shadow-md shadow-emerald-900/10 transition-all duration-200 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-rotate text-xs"></i>
+                <span>Perbarui Data</span>
+            </button>
+
         </div>
+
     </div>
 
-    <!-- BOX 2: UPLOAD LAPORAN PDF BULANAN (DIBAWAH SINKRONISASI DATA) -->
-    <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
+    <!-- BOX 2: UPLOAD LAPORAN PDF BULANAN -->
+    <div class="glass-element p-6 sm:p-8 rounded-[24px] border border-emerald-100/80 shadow-xl bg-white/80 max-w-4xl mx-auto space-y-5">
         
-        <!-- Header Modal -->
-        <div class="p-5 border-b border-green-100 bg-gradient-to-r from-white to-green-50/30 flex justify-between items-center flex-shrink-0">
+        <!-- Header Section -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
             <div class="flex items-center gap-3">
-                <div class="w-2 h-8 bg-green-500 rounded-full"></div>
+                <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 border border-teal-200 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-file-arrow-up"></i>
+                </div>
                 <div>
-                    <h3 class="text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight">Upload Laporan Tutup Buku</h3>
-                    <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Integrasi NSA Cloud</p>
+                    <h3 class="text-lg md:text-xl font-black text-slate-800 tracking-tight">Upload Laporan Tutup Buku</h3>
+                    <p class="text-xs text-emerald-600 font-bold">Integrasi NSA Cloud</p>
                 </div>
             </div>
-            <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-1 rounded-full whitespace-nowrap flex-nowrap">
-                <i class="fa-solid fa-file-pdf text-green-700 text-xs"></i>
-                <small class="text-green-700 text-[10px] font-black uppercase tracking-wider block whitespace-nowrap">Format PDF</small>
-            </div>
+         
         </div>
 
-        <!-- Form Body Upload -->
-        <div class="p-6 md:p-8 space-y-5">
+        <!-- Grid Pilihan Bulan & Tahun -->
+        <div class="p-4 sm:p-5 bg-slate-50/60 border border-slate-200/80 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-4">
             
-            <!-- Grid Pilihan Bulan & Tahun -->
-            <div class="p-4 bg-gray-50 border-2 border-gray-200 rounded-[22px] grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-calendar-days text-green-600"></i> Pilih Bulan Laporan
-                    </label>
+            <div>
+                <label for="upload_pdf_bulan" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-calendar-days text-emerald-600"></i> Pilih Bulan Laporan
+                </label>
+                <div class="relative">
                     <select id="upload_pdf_bulan" onchange="perbaruiPratinjauNamaFile()"
-                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-xs">
+                        class="w-full appearance-none px-4 py-3 pr-10 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-800 font-bold text-xs sm:text-sm cursor-pointer transition-all shadow-sm">
                         <option value="Januari">Januari</option>
                         <option value="Februari">Februari</option>
                         <option value="Maret">Maret</option>
@@ -1442,85 +1442,90 @@ html.dark-mode-active #page-title {
                         <option value="November">November</option>
                         <option value="Desember">Desember</option>
                     </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-emerald-600">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
                 </div>
+            </div>
 
-                <div>
-                    <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-clock text-green-600"></i> Pilih Tahun Laporan
-                    </label>
+            <div>
+                <label for="upload_pdf_tahun" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock text-emerald-600"></i> Pilih Tahun Laporan
+                </label>
+                <div class="relative">
                     <select id="upload_pdf_tahun" onchange="perbaruiPratinjauNamaFile()"
-                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-[14px] focus:outline-none focus:border-green-500 text-gray-800 transition-colors duration-200 cursor-pointer font-black text-xs">
+                        class="w-full appearance-none px-4 py-3 pr-10 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-800 font-bold text-xs sm:text-sm cursor-pointer transition-all shadow-sm">
                         <option value="2025">2025</option>
                         <option value="2026" selected>2026</option>
                         <option value="2027">2027</option>
                         <option value="2028">2028</option>
                     </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-emerald-600">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
                 </div>
             </div>
 
- 
-
-           <!-- Area Upload / Drag & Drop -->
-<div id="drop_zone_pdf" 
-    class="relative border-2 border-dashed border-emerald-400 hover:border-emerald-600 bg-gradient-to-b from-emerald-50/40 to-white hover:bg-emerald-50/80 rounded-[22px] p-6 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[160px] shadow-sm hover:shadow-md group">
-    
-    <input type="file" id="input_file_pdf" accept="application/pdf" onchange="tanganiSeleksiFilePdf(this)"
-        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-    
-    <!-- Placeholder Kosong -->
-    <div id="placeholder_upload_pdf" class="space-y-3 pointer-events-none flex flex-col items-center">
-        <!-- Ikon Awan Utama dengan Ring Kontras -->
-        <div class="w-14 h-14 bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white rounded-2xl flex items-center justify-center text-2xl transition-all duration-200 shadow-sm">
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-        </div>
-        
-        <div class="space-y-1">
-            <p class="text-xs md:text-sm font-black text-emerald-950 uppercase tracking-wide">
-                Seret & Lepas Berkas PDF ke Sini
-            </p>
-            <p class="text-[10px] text-emerald-600/80 font-bold">
-                Atau klik area ini untuk menjelajah berkas
-            </p>
         </div>
 
-        <!-- Tombol Visual Bantuan -->
-        <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-600 group-hover:bg-emerald-700 text-white rounded-xl text-xs font-black shadow-sm transition-all duration-150">
-            <i class="fa-solid fa-folder-open text-xs"></i>
-            Pilih Berkas PDF
-        </span>
+        <!-- Area Upload / Drag & Drop File PDF -->
+        <div id="drop_zone_pdf" 
+            class="relative border-2 border-dashed border-emerald-300 hover:border-emerald-500 bg-gradient-to-b from-emerald-50/20 via-white to-emerald-50/30 hover:bg-emerald-50/50 rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center min-h-[170px] shadow-sm group">
+            
+            <input type="file" id="input_file_pdf" accept="application/pdf" onchange="tanganiSeleksiFilePdf(this)"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+            
+            <!-- Placeholder Kosong -->
+            <div id="placeholder_upload_pdf" class="space-y-3 pointer-events-none flex flex-col items-center">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white rounded-2xl flex items-center justify-center text-xl transition-all duration-200 shadow-sm border border-emerald-200/60">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                
+                <div class="space-y-0.5">
+                    <p class="text-xs sm:text-sm font-black text-slate-800 uppercase tracking-wide">
+                        Seret & Lepas Berkas ke Sini
+                    </p>
+                    <p class="text-[11px] text-slate-500 font-semibold">
+                        Atau klik area ini untuk menjelajah berkas lokal
+                    </p>
+                </div>
 
-        <p class="text-[10px] text-gray-400 font-semibold pt-1">
-            Maksimal ukuran file: <span class="font-bold text-gray-600">15 MB</span>
-        </p>
-    </div>
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-600 group-hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all duration-150">
+                    <i class="fa-solid fa-folder-open text-xs"></i>
+                    Pilih Berkas PDF
+                </span>
 
-    <!-- Indikator Berkas Terpilih -->
-    <div id="indikator_file_terpilih" class="hidden flex items-center gap-3 bg-white px-4 py-3 rounded-2xl border-2 border-emerald-500 shadow-md z-20 transition-all">
-        <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center text-lg shrink-0">
-            <i class="fa-solid fa-file-pdf"></i>
+                <p class="text-[10px] text-slate-400 font-medium">
+                    Maksimal ukuran file: <span class="font-bold text-slate-600">15 MB</span>
+                </p>
+            </div>
+
+            <!-- Indikator Berkas Terpilih -->
+            <div id="indikator_file_terpilih" class="hidden flex items-center gap-3 bg-white px-4 py-3 rounded-xl border border-emerald-300 shadow-md z-20 transition-all">
+                <div class="w-10 h-10 bg-rose-50 text-rose-500 rounded-xl border border-rose-100 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </div>
+                <div class="text-left min-w-0">
+                    <p id="nama_file_terpilih" class="text-xs font-black text-slate-800 truncate max-w-[180px] sm:max-w-[240px]">laporan.pdf</p>
+                    <p id="ukuran_file_terpilih" class="text-[10px] font-bold text-emerald-600">0 KB</p>
+                </div>
+                <button type="button" onclick="batalSeleksiFilePdf(event)" 
+                    class="ml-2 text-slate-400 hover:text-rose-600 text-base font-black p-1.5 hover:bg-rose-50 rounded-lg transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
         </div>
-        <div class="text-left min-w-0">
-            <p id="nama_file_terpilih" class="text-xs font-black text-gray-800 truncate max-w-[180px] sm:max-w-[240px]">laporan.pdf</p>
-            <p id="ukuran_file_terpilih" class="text-[10px] font-bold text-emerald-600">0 KB</p>
-        </div>
-        <button type="button" onclick="batalSeleksiFilePdf(event)" 
-            class="ml-2 text-gray-400 hover:text-red-600 text-base font-black p-1.5 hover:bg-red-50 rounded-lg transition-colors">
-            <i class="fa-solid fa-xmark"></i>
+
+        <!-- Tombol Kirim ke Drive -->
+        <button type="button" id="tombol_kirim_pdf" onclick="prosesUnggahLaporanPdf()"
+            class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs sm:text-sm rounded-xl uppercase tracking-wider shadow-md shadow-emerald-900/10 transition-all duration-200 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+            <span>Unggah Laporan Ke NSA Cloud</span>
         </button>
-    </div>
-</div>
 
-            <!-- Tombol Kirim ke Drive -->
-            <button type="button" id="tombol_kirim_pdf" onclick="prosesUnggahLaporanPdf()"
-                class="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white font-black text-xs md:text-sm rounded-[16px] uppercase tracking-wider shadow-lg shadow-green-600/20 transition-all duration-200 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-paper-plane"></i>
-                <span>Unggah Laporan Ke NSA Cloud</span>
-            </button>
+        <!-- Status Banner Respons Upload -->
+        <div id="banner_status_upload" class="hidden text-center p-3.5 rounded-xl text-xs font-bold transition-all"></div>
 
-            <!-- Status Banner Respons Upload -->
-            <div id="banner_status_upload" class="hidden text-center p-3.5 rounded-[16px] text-xs font-black transition-all"></div>
-
-        </div>
     </div>
 
 </div>
@@ -1656,38 +1661,273 @@ function konversiFileKeBase64(file) {
 
 
 <!-- KONTEN TAB: ARSIP LAPORAN -->
-<div id="tab-archive" class="tab-content p-6 sm:p-10 md:p-16 lg:p-20 fade-in hidden">
+<!-- KONTEN TAB: ARSIP LAPORAN & DASHBOARD FINANSIAL -->
+<div id="tab-archive" class="tab-content p-4 sm:p-8 md:p-12 lg:p-16 fade-in hidden space-y-6">
+
+
+
+<!-- CARD A & B: GRAFIK TAHUNAN & BULANAN -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     
-    <!-- Header & Controls -->
-    <div class="glass-element p-6 sm:p-8 rounded-[24px] mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border border-emerald-100 shadow-xl bg-white/80">
-        <div>
-            <h3 class="text-xl md:text-2xl font-black text-slate-800 flex items-center gap-3">
-                <i class="fa-solid fa-folder-open text-emerald-600"></i>
-                Arsip Laporan Bulanan
-            </h3>
-            <p class="text-xs md:text-sm text-slate-500 mt-1">Pilih periode laporan untuk menampilkan dokumen PDF secara langsung.</p>
+    <!-- CARD A: PROGRES TAHUNAN (Grafik Batang Horizontal) -->
+    <div class="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-900 p-5 text-white shadow-xl border border-emerald-500/30 min-h-[230px] flex flex-col justify-between">
+        <div class="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-emerald-500/20 blur-2xl pointer-events-none"></div>
+        
+        <div class="relative z-10 flex justify-between items-start mb-2">
+            <div>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-emerald-300 block">IKHTISAR TAHUNAN</span>
+                <h4 id="card-a-title" class="text-base sm:text-lg font-extrabold text-white">Progres 2026</h4>
+            </div>
+          
         </div>
 
-        <!-- Dynamic Dropdown Selector -->
-        <div class="relative min-w-[240px]">
-            <select id="archive-month-select" onchange="handleArchiveSelect(this)" 
-                class="w-full appearance-none px-5 py-3.5 pr-12 rounded-xl text-sm md:text-base font-bold text-slate-800 bg-slate-50 border border-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 cursor-pointer transition-all shadow-sm">
-                <option value="" disabled selected class="bg-white text-slate-400">⏳ Memuat daftar laporan...</option>
-                <!-- Option otomatis diisi oleh JS dari Google Drive API -->
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-emerald-600">
-                <i class="fa-solid fa-chevron-down text-sm"></i>
+        <!-- CANVAS CONTAINER DENGAN LOADER MATERIAL UI (CARD A) -->
+        <div class="relative z-10 w-full h-36">
+            <!-- Overlay Loading Material Style -->
+            <div id="loader-card-a" class="absolute inset-0 z-20 bg-slate-900/90 backdrop-blur-md rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-300">
+                <!-- Dual Ring Spinner Animation -->
+                <div class="relative w-9 h-9 flex items-center justify-center">
+                    <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20 border-t-emerald-400 animate-spin"></div>
+                    <div class="w-5 h-5 rounded-full border-2 border-teal-500/20 border-b-teal-300 animate-spin [animation-direction:reverse]"></div>
+                </div>
+                
+                <div class="text-center">
+                    <span id="loader-text-card-a" class="text-xs font-bold text-emerald-100 tracking-wide block">
+                        Mengambil data...
+                    </span>
+                    <!-- Animated Bouncing Dots -->
+                    <div class="flex items-center justify-center gap-1 mt-1.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                    </div>
+                </div>
             </div>
+
+            <canvas id="chartProgresTahun"></canvas>
+        </div>
+
+        <div class="relative z-10 pt-2 border-t border-white/10 mt-1 flex items-center justify-between text-[10px] text-emerald-200/70">
+            <span class="flex items-center gap-1.5 font-medium">
+                <i class="fa-solid fa-hand-pointer text-emerald-400"></i>
+                Klik pada bar untuk melihat nominal
+            </span>
         </div>
     </div>
 
-    <!-- Empty State Container -->
-    <div class="bg-white/90 rounded-[24px] p-12 text-center border border-slate-100 shadow-sm flex flex-col items-center justify-center min-h-[300px]">
-        <div class="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mb-4 border border-emerald-100">
-            <i class="fa-solid fa-file-invoice text-4xl text-emerald-600/60"></i>
+    <!-- CARD B: PROGRES BULAN BERJALAN (Grafik Garis / Linear) -->
+    <div class="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-teal-800 via-emerald-900 to-slate-950 p-5 text-white shadow-xl border border-teal-400/30 min-h-[230px] flex flex-col justify-between">
+        <div class="absolute -bottom-12 -left-12 w-40 h-40 rounded-full bg-teal-400/20 blur-2xl pointer-events-none"></div>
+        
+        <div class="relative z-10 flex justify-between items-start mb-2">
+            <div>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-teal-300 block">IKHTISAR BULAN INI</span>
+                <h4 id="card-b-title" class="text-base sm:text-lg font-extrabold text-white">Progres Bulan Berjalan</h4>
+            </div>
+           
         </div>
-        <h4 class="font-bold text-lg text-slate-800">Belum Ada Laporan Dipilih</h4>
-        <p class="text-xs md:text-sm text-slate-500 max-w-sm mt-1">Pilih salah satu bulan pada menu dropdown di atas untuk membuka laporan PDF dalam mode popup.</p>
+
+        <!-- CANVAS CONTAINER DENGAN LOADER MATERIAL UI (CARD B) -->
+        <div class="relative z-10 w-full h-36">
+            <!-- Overlay Loading Material Style -->
+            <div id="loader-card-b" class="absolute inset-0 z-20 bg-slate-950/90 backdrop-blur-md rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-300">
+                <div class="relative w-9 h-9 flex items-center justify-center">
+                    <div class="absolute inset-0 rounded-full border-2 border-teal-500/20 border-t-teal-300 animate-spin"></div>
+                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500/20 border-b-emerald-400 animate-spin [animation-direction:reverse]"></div>
+                </div>
+                
+                <div class="text-center">
+                    <span id="loader-text-card-b" class="text-xs font-bold text-teal-100 tracking-wide block">
+                        Mengambil data...
+                    </span>
+                    <div class="flex items-center justify-center gap-1 mt-1.5">
+                        <span class="w-1.5 h-1.5 bg-teal-300 rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                        <span class="w-1.5 h-1.5 bg-teal-300 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                        <span class="w-1.5 h-1.5 bg-teal-300 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                    </div>
+                </div>
+            </div>
+
+            <canvas id="chartProgresBulan"></canvas>
+        </div>
+
+        <div class="relative z-10 pt-2 border-t border-white/10 mt-1 flex items-center justify-between text-[10px] text-teal-200/70">
+            <span class="flex items-center gap-1.5 font-medium">
+                <i class="fa-solid fa-wave-square text-teal-400"></i>
+                Fluktuasi transaksi harian kasir
+            </span>
+        </div>
+    </div>
+
+</div>
+    <!-- SEKSI NAVIGASI DROPDOWN & STATUS BUKU -->
+    <div class="glass-element p-6 rounded-[24px] border border-slate-200/80 shadow-md bg-white space-y-4">
+        <label for="archive-sheet-selector" class="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <i class="fa-solid fa-magnifying-glass text-emerald-600 mr-1.5"></i>Cari Bulan Laporan
+        </label>
+        
+        <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
+            <!-- Custom Dropdown -->
+            <div class="relative flex-1">
+                <select id="archive-sheet-selector" onchange="handleArchiveSheetChange(this)"
+                    class="w-full appearance-none px-5 py-3.5 pr-12 rounded-xl text-sm md:text-base font-bold text-slate-800 bg-slate-50 border border-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 cursor-pointer transition-all shadow-sm">
+                    <option value="" disabled selected class="bg-white text-slate-400">Memuat daftar lembar laporan...</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-emerald-600">
+                    <i class="fa-solid fa-chevron-down text-sm"></i>
+                </div>
+            </div>
+
+            <!-- Indicator & Trigger Button -->
+<div id="archive-status-box" class="hidden flex-1 flex flex-col gap-3.5 p-4 rounded-xl bg-slate-50 border border-slate-200">
+    <!-- Status Indicator Row -->
+    <div class="flex items-center gap-3">
+        <div id="archive-status-icon" class="w-3 h-3 rounded-full bg-emerald-500 animate-ping shrink-0"></div>
+        <div class="text-xs sm:text-sm">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">Status Pembukuan</span>
+            <span id="archive-status-text" class="font-black text-slate-800">Status: Selesai</span>
+        </div>
+    </div>
+
+    <!-- Full-Width Button ke Bawah -->
+    <button id="btn-open-report-detail" onclick="showArchiveDetailSection()"
+        class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-900/10">
+        <span>BUKA LAPORAN</span>
+        <i class="fa-solid fa-chevron-down text-xs"></i>
+    </button>
+</div>
+        </div>
+    </div>
+
+    <!-- DETAIL PANEL URUTAN KARTU RINCAN FINANSIAL (HIDDEN SECARA DEFAULT) -->
+    <div id="archive-detail-panel" class="hidden space-y-6 pt-2">
+        
+        <!-- JUDUL PERIODE -->
+<div class="border-b border-slate-200/80 pb-4 flex flex-col items-center justify-center text-center">
+    <h2 id="archive-detail-title" class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight uppercase flex flex-col items-center justify-center gap-1.5">
+        <i class="fa-solid fa-calendar-check text-emerald-600 text-2xl sm:text-3xl"></i>
+        <span>OKTOBER 2026</span>
+    </h2>
+</div>
+
+        <!-- CARD C: TOTAL PENDAPATAN KOTOR -->
+        <div class="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 p-5 sm:p-6 text-white shadow-lg border border-emerald-400/30 min-h-[140px] flex flex-col justify-between">
+            <div class="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
+            <div class="relative z-10 flex justify-between items-center">
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-emerald-200 block">PENDAPATAN UTAMA</span>
+                <i class="fa-solid fa-sack-dollar text-emerald-200 text-xl"></i>
+            </div>
+            <div class="relative z-10 my-2">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200/80">TOTAL PENDAPATAN KOTOR</p>
+                <div id="val-card-c" class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight drop-shadow-md">
+                    Rp 0
+                </div>
+            </div>
+            <div class="relative z-10 pt-2 border-t border-white/15 text-[10px] text-emerald-200/80">
+                Akumulasi seluruh pendapatan kotor pada periode terpilih
+            </div>
+        </div>
+
+<!-- GRID 2 KOLOM (CARD D SAMPAI K) -->
+<div class="grid grid-cols-2 gap-2.5 sm:gap-3.5">
+    
+    <!-- CARD D: Penjualan Meterai -->
+    <div class="rounded-[16px] bg-gradient-to-br from-slate-800 to-slate-900 p-3 sm:p-3.5 text-white shadow border border-slate-700/50 flex flex-col justify-between gap-1.5">
+        <div>
+            <p class="text-[10px] font-medium text-slate-300">Penjualan Meterai</p>
+            <p id="val-card-d" class="text-sm sm:text-base lg:text-lg font-black text-emerald-400 mt-0.5 leading-tight">Rp 0</p>
+        </div>
+        <p id="sub-card-d" class="text-[9px] text-slate-400 leading-none">Total: 0 pcs × Rp12.000</p>
+    </div>
+
+    <!-- CARD E: Laba Bersih Meterai -->
+    <div class="rounded-[16px] bg-gradient-to-br from-emerald-900/90 to-slate-900 p-3 sm:p-3.5 text-white shadow border border-emerald-700/50 flex flex-col justify-between gap-1.5">
+        <div>
+            <p class="text-[10px] font-medium text-slate-300">Laba Bersih Meterai</p>
+            <p id="val-card-e" class="text-sm sm:text-base lg:text-lg font-black text-emerald-300 mt-0.5 leading-tight">Rp 0</p>
+        </div>
+        <p id="sub-card-e" class="text-[9px] text-slate-300/80 leading-none">Margin: 0 pcs × Rp2.000</p>
+    </div>
+
+    <!-- CARD F: Transaksi QRIS -->
+    <div class="rounded-[16px] bg-gradient-to-br from-cyan-900/80 to-slate-900 p-3 sm:p-3.5 text-white shadow border border-cyan-700/50 flex flex-col justify-between gap-1.5">
+        <div>
+            <p class="text-[10px] font-medium text-slate-300">Transaksi QRIS</p>
+            <p id="val-card-f" class="text-sm sm:text-base lg:text-lg font-black text-cyan-300 mt-0.5 leading-tight">Rp 0</p>
+        </div>
+        <p class="text-[9px] text-slate-400 leading-none">Tercatat di Buku</p>
+    </div>
+
+    <!-- CARD G: Uang Makan Karyawan -->
+    <div class="rounded-[16px] bg-gradient-to-br from-amber-950/80 to-slate-900 p-3 sm:p-3.5 text-white shadow border border-amber-800/50 flex flex-col justify-between gap-1.5">
+        <div>
+            <p class="text-[10px] font-medium text-slate-300">Uang Makan Karyawan</p>
+            <p id="val-card-g" class="text-sm sm:text-base lg:text-lg font-black text-amber-400 mt-0.5 leading-tight">Rp 0</p>
+        </div>
+        <p class="text-[9px] text-slate-400 leading-none">Operasional Konsumsi</p>
+    </div>
+
+    <!-- CARD H: Pengeluaran Kasir -->
+    <div class="rounded-[16px] bg-gradient-to-br from-rose-950/80 to-slate-900 p-3 sm:p-3.5 text-white shadow border border-rose-800/50 flex flex-col justify-between gap-1.5">
+        <div>
+            <p class="text-[10px] font-medium text-slate-300">Pengeluaran Kasir</p>
+            <p id="val-card-h" class="text-sm sm:text-base lg:text-lg font-black text-rose-400 mt-0.5 leading-tight">Rp 0</p>
+        </div>
+        <p class="text-[9px] text-slate-400 leading-none">Non Operasional</p>
+    </div>
+
+    <!-- CARD I: SPACE KOSONG -->
+    <div class="rounded-[16px] bg-slate-100/30 border border-dashed border-slate-200/60 p-3 sm:p-3.5 flex items-center justify-center">
+        <span class="text-[9px] font-bold text-slate-300 uppercase tracking-widest"> </span>
+    </div>
+
+    <!-- CARD J: Performa Tabungan A -->
+    <div class="rounded-[16px] bg-gradient-to-br from-blue-950/80 to-slate-900 p-3 sm:p-3.5 text-white shadow border border-blue-800/50 flex flex-col justify-between gap-1.5">
+        <div>
+            <p class="text-[10px] font-medium text-slate-300">Performa Tabungan A</p>
+            <p id="val-card-j" class="text-sm sm:text-base lg:text-lg font-black text-blue-300 mt-0.5 leading-tight">Rp 0</p>
+        </div>
+        <p class="text-[9px] text-slate-400 leading-none">Total Pencapaian</p>
+    </div>
+
+    <!-- CARD K: Performa Tabungan B -->
+    <div class="rounded-[16px] bg-gradient-to-br from-indigo-950/80 to-slate-900 p-3 sm:p-3.5 text-white shadow border border-indigo-800/50 flex flex-col justify-between gap-1.5">
+        <div>
+            <p class="text-[10px] font-medium text-slate-300">Performa Tabungan B</p>
+            <p id="val-card-k" class="text-sm sm:text-base lg:text-lg font-black text-indigo-300 mt-0.5 leading-tight">Rp 0</p>
+        </div>
+        <p class="text-[9px] text-slate-400 leading-none">Total Pencapaian</p>
+    </div>
+
+</div>
+
+        <!-- CARD L: TOTAL TABUNGAN GABUNGAN (LEBAR BESAR) -->
+        <div class="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-950 p-5 sm:p-6 text-white shadow-xl border border-indigo-500/30 min-h-[130px] flex flex-col justify-between">
+            <div class="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-purple-500/20 blur-xl pointer-events-none"></div>
+            <div class="relative z-10 flex justify-between items-center">
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-indigo-200 block">TOTAL TABUNGAN GABUNGAN</span>
+                <i class="fa-solid fa-piggy-bank text-indigo-200 text-xl"></i>
+            </div>
+            <div class="relative z-10 my-1.5">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-200/80">TOTAL AKUMULASI (A + B)</p>
+                <div id="val-card-l" class="text-2xl sm:text-3xl font-black text-white tracking-tight drop-shadow-md">
+                    Rp 0
+                </div>
+            </div>
+            <div class="relative z-10 pt-2 border-t border-white/15 text-[10px] text-indigo-200/70">
+                Penggabungan akumulasi Tabungan A dan Tabungan B
+            </div>
+        </div>
+
+        <!-- TOMBOL MODAL PDF VIEWER (MELEKAT KE POPUP MODAL ASLI) -->
+        <div class="pt-4 flex justify-center">
+            <button onclick="triggerOriginalPdfViewerModal()" 
+                class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white font-extrabold text-sm md:text-base flex items-center justify-center gap-3 transition-all shadow-xl shadow-emerald-900/20 border border-emerald-400/30">
+                <i class="fa-solid fa-file-pdf text-xl"></i>
+                <span>Lihat Laporan Lengkap</span>
+            </button>
+        </div>
+
     </div>
 
 </div>
@@ -1835,328 +2075,346 @@ function closePdfModal() {
 
 
 <!-- ========================================== -->
-<!-- KONTEN TAB: ASISTEN SLIP GAJI              -->
+<!-- KONTEN TAB: ASISTEN SLIP GAJI               -->
 <!-- ========================================== -->
 <div id="tab-presensi" class="tab-content p-4 sm:p-6 md:p-10 lg:p-12 fade-in hidden">
     
-    <div class="bg-white w-full max-w-4xl mx-auto rounded-[28px] border-4 border-green-400 shadow-[0_12px_40px_rgba(34,197,94,0.12)] overflow-hidden flex flex-col mb-6">
+    <div class="glass-element w-full max-w-4xl mx-auto rounded-[24px] border border-emerald-100/80 shadow-xl bg-white/80 overflow-hidden flex flex-col mb-6">
         
         <!-- HEADER TAB -->
-        <div class="p-5 border-b border-green-100 bg-gradient-to-r from-white to-green-50/30 flex justify-between items-center flex-shrink-0">
+        <div class="p-5 border-b border-slate-100 bg-white flex justify-between items-center flex-shrink-0">
             <div class="flex items-center gap-3">
-                <div class="w-2 h-8 bg-green-500 rounded-full"></div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 border border-emerald-200 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                </div>
                 <div>
-                    <h3 class="text-lg md:text-xl font-black text-gray-900 uppercase tracking-tight flex items-center gap-2">
-                        <i class="fa-solid fa-id-card-clip text-green-600"></i> Asisten Slip Gaji
+                    <h3 class="text-lg md:text-xl font-black text-slate-800 tracking-tight uppercase flex items-center gap-2">
+                        Asisten Slip Gaji
                     </h3>
-                    <p class="text-[11px] text-green-600 font-bold uppercase tracking-wider">Nurjaya Abadi Photocopy • Mode Khusus Owner</p>
+                    <p class="text-[11px] text-emerald-600 font-bold tracking-wider uppercase">Nurjaya Abadi Photocopy</p>
                 </div>
             </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-extrabold uppercase tracking-widest hidden sm:inline-block">
+                PAYROLL ASSISTANT
+            </span>
         </div>
 
         <!-- FORM UTAMA ASISTEN SLIP GAJI -->
-        <div class="p-5 sm:p-7 bg-slate-50 flex flex-col gap-5">
+        <div class="p-5 sm:p-7 bg-slate-50/50 flex flex-col gap-5">
             
             <!-- SELEKSI KARYAWAN -->
-            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex flex-col gap-2">
+            <div class="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm flex flex-col gap-2">
                 <label for="gaji-pilih-karyawan" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Nama Karyawan:</label>
-                <select id="gaji-pilih-karyawan" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 rounded-xl focus:border-green-600 focus:ring-1 focus:ring-green-600 focus:outline-none transition-all cursor-pointer shadow-inner">
-                    <option value="" disabled selected>-- Pilih Karyawan --</option>
-                    <option value="Dadan">Dadan Nurfaizal</option>
-                    <option value="Cahya">M. Cahya Ardiansyah</option>
-                    <option value="Syamsi">Syamsi Nurhakim</option>
-                </select>
-            </div>
-
-<!-- CONTAINER KARTU PRESENSI -->
-<div class="flex flex-col gap-2">
-    <div class="flex justify-between items-center px-1">
-        <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Kartu Presensi</span>
-        <span id="status-loading-pdf" class="text-[10px] font-bold text-green-600 hidden animate-pulse">
-            <i class="fa-solid fa-spinner fa-spin mr-1"></i> Mencari data kehadiran...
-        </span>
-    </div>
-    
-    <div class="bg-white border-2 border-dashed border-slate-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-xl w-full aspect-square max-w-md mx-auto group">
-        <!-- Placeholder Awal -->
-        <div id="placeholder-pdf-text" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
-            <i class="fa-solid fa-image text-4xl text-slate-300 mb-3"></i>
-            <p class="text-xs font-bold">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
-        </div>
-
-        <!-- Indikator Loading -->
-        <div id="loading-pdf-animation" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/90 z-50 select-none transition-all duration-200">
-            <div class="relative mb-4">
-                <div class="absolute -inset-4 bg-emerald-100 rounded-full blur-xl opacity-70 animate-ping"></div>
-                <i class="fa-solid fa-file-invoice-dollar text-5xl text-emerald-500 relative animate-bounce"></i>
-            </div>
-            <div class="space-y-2 w-2/3 mx-auto">
-                <p id="teks-progres-loading" class="text-xs font-black text-emerald-700 tracking-wide">Menghubungkan ke NSA Cloud...</p>
-                <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
-                    <div class="h-full w-1/2 bg-emerald-500 rounded-full absolute top-0 left-0" style="animation: slide 1.5s infinite"></div>
+                <div class="relative">
+                    <select id="gaji-pilih-karyawan" class="w-full appearance-none bg-white border border-slate-300 text-slate-800 font-bold text-xs p-3 pr-10 rounded-xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all cursor-pointer shadow-sm">
+                        <option value="" disabled selected>-- Pilih Karyawan --</option>
+                        <option value="Dadan">Dadan Nurfaizal</option>
+                        <option value="Cahya">M. Cahya Ardiansyah</option>
+                        <option value="Syamsi">Syamsi Nurhakim</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-emerald-600">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Image Preview Output -->
-        <img id="iframe-preview-pdf" 
-             class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300 cursor-pointer" 
-             src="" 
-             alt="Preview Kartu Presensi"
-             onclick="bukaModalZoomFotokopi()">
+            <!-- CONTAINER KARTU PRESENSI -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Kartu Presensi</span>
+                    <span id="status-loading-pdf" class="text-[10px] font-bold text-emerald-600 hidden animate-pulse">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Mencari data kehadiran...
+                    </span>
+                </div>
+                
+                <div class="bg-white border-2 border-dashed border-emerald-200/80 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-2xl w-full aspect-square max-w-md mx-auto group">
+                    <!-- Placeholder Awal -->
+                    <div id="placeholder-pdf-text" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
+                        <i class="fa-solid fa-image text-4xl text-slate-300 mb-3"></i>
+                        <p class="text-xs font-bold text-slate-500">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
+                    </div>
 
-        <!-- Floating Button Petunjuk Fullscreen -->
-        <div id="btn-fullscreen-hint-fotokopi" 
-             onclick="bukaModalZoomFotokopi()" 
-             class="hidden absolute bottom-3 right-3 z-40 bg-slate-900/75 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg backdrop-blur-md cursor-pointer transition-all duration-200 flex items-center gap-2 border border-white/20 active:scale-95">
-            <i class="fa-solid fa-expand text-emerald-400"></i>
-            <span>Klik untuk Layar Penuh</span>
-        </div>
-    </div>
-</div>
+                    <!-- Indikator Loading -->
+                    <div id="loading-pdf-animation" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/95 z-50 select-none transition-all duration-200">
+                        <div class="relative mb-4">
+                            <div class="absolute -inset-4 bg-emerald-100 rounded-full blur-xl opacity-70 animate-ping"></div>
+                            <i class="fa-solid fa-file-invoice-dollar text-5xl text-emerald-500 relative animate-bounce"></i>
+                        </div>
+                        <div class="space-y-2 w-2/3 mx-auto">
+                            <p id="teks-progres-loading" class="text-xs font-black text-emerald-700 tracking-wide">Menghubungkan ke NSA Cloud...</p>
+                            <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
+                                <div class="h-full w-1/2 bg-emerald-500 rounded-full absolute top-0 left-0" style="animation: slide 1.5s infinite"></div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- Image Preview Output -->
+                    <img id="iframe-preview-pdf" 
+                         class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300 cursor-pointer" 
+                         src="" 
+                         alt="Preview Kartu Presensi"
+                         onclick="bukaModalZoomFotokopi()">
 
+                    <!-- Floating Button Petunjuk Fullscreen -->
+                    <div id="btn-fullscreen-hint-fotokopi" 
+                         onclick="bukaModalZoomFotokopi()" 
+                         class="hidden absolute bottom-3 right-3 z-40 bg-slate-900/75 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg backdrop-blur-md cursor-pointer transition-all duration-200 flex items-center gap-2 border border-white/20 active:scale-95">
+                        <i class="fa-solid fa-expand text-emerald-400"></i>
+                        <span>Klik untuk Layar Penuh</span>
+                    </div>
+                </div>
+            </div>
 
             <!-- RINCIAN & CALCULATOR FORM OWNER -->
-            <div id="sg-container-form-owner" class="flex flex-col gap-4 border-t border-slate-200 pt-4">
+<div id="sg-container-form-owner" class="flex flex-col gap-4 border-t border-slate-200/80 pt-4">
+    
+    <!-- SUMMARY PERIODE KERJA (SUSUNAN VERTIKAL) -->
+    <div class="flex flex-col gap-3">
+        <div class="bg-emerald-800 text-white border border-emerald-900 p-3.5 rounded-2xl shadow-md text-center">
+            <span class="block text-[9px] font-black text-emerald-200 uppercase tracking-wider">Periode Kerja</span>
+            <span id="sg-text-periode" class="text-xs sm:text-sm font-black text-white block mt-1">-</span>
+        </div>
+        <div class="bg-emerald-800 text-white border border-emerald-900 p-3.5 rounded-2xl shadow-md text-center">
+            <span class="block text-[9px] font-black text-emerald-200 uppercase tracking-wider">Hari Periode Kerja</span>
+            <span id="sg-text-total-hari" class="text-xs sm:text-sm font-black text-white block mt-1">-</span>
+        </div>
+    </div>
+
+    <h4 class="text-[11px] font-black text-emerald-900 uppercase tracking-widest mt-2 px-1">Rincian Hari Kerja:</h4>
+
+    <!-- CARD 1: JADWAL 2 KARYAWAN -->
+    <div class="bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-900 p-4 rounded-2xl text-white shadow-md border border-emerald-700/50 flex flex-col gap-3">
+        <!-- BARIS 1: JUDUL & HARI -->
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-emerald-100 block">1. Jadwal 2 Karyawan</span>
+            <span id="sg-lbl-jadwal2" class="text-[11px] font-extrabold text-emerald-900 bg-emerald-300 px-2.5 py-0.5 rounded-lg inline-block">0 hari</span>
+        </div>
+
+        <!-- BARIS 2: KALKULASI RATE & TOTAL -->
+        <div class="flex items-center justify-between gap-2 pt-2 border-t border-emerald-700/60">
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-emerald-300">X</span>
+                <!-- ISIAN FORM OWNER (PUTIH) -->
+                <div class="relative rounded-xl shadow-md bg-white">
+                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                    <input type="text" id="sg-in-rate-jadwal2" class="sg-input-clean w-28 sm:w-36 bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-emerald-600 focus:outline-none text-right" placeholder="0">
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-1.5 bg-slate-950/80 border border-emerald-500/30 px-3 py-2 rounded-xl text-emerald-300 font-mono">
+                <span class="text-xs font-bold text-emerald-400">=</span>
+                <span id="sg-out-total-jadwal2" class="text-xs font-black text-emerald-200">Rp 0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD 2: JADWAL 1 KARYAWAN -->
+    <div class="bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-900 p-4 rounded-2xl text-white shadow-md border border-emerald-700/50 flex flex-col gap-3">
+        <!-- BARIS 1: JUDUL & HARI -->
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-emerald-100 block">2. Jadwal 1 Karyawan</span>
+            <span id="sg-lbl-jadwal1" class="text-[11px] font-extrabold text-amber-950 bg-amber-300 px-2.5 py-0.5 rounded-lg inline-block">0 hari</span>
+        </div>
+
+        <!-- BARIS 2: KALKULASI RATE & TOTAL -->
+        <div class="flex items-center justify-between gap-2 pt-2 border-t border-emerald-700/60">
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-emerald-300">X</span>
+                <!-- ISIAN FORM OWNER (PUTIH) -->
+                <div class="relative rounded-xl shadow-md bg-white">
+                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                    <input type="text" id="sg-in-rate-jadwal1" class="sg-input-clean w-28 sm:w-36 bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-emerald-600 focus:outline-none text-right" placeholder="0">
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-1.5 bg-slate-950/80 border border-emerald-500/30 px-3 py-2 rounded-xl text-emerald-300 font-mono">
+                <span class="text-xs font-bold text-emerald-400">=</span>
+                <span id="sg-out-total-jadwal1" class="text-xs font-black text-emerald-200">Rp 0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD 3 & 4: LIBUR & ABSEN -->
+    <div class="grid grid-cols-2 gap-3">
+        <div class="bg-emerald-900 text-white border border-emerald-700/60 p-3.5 rounded-2xl shadow-md">
+            <span class="block text-[10px] font-black text-emerald-200 uppercase tracking-wider">3. Libur Wajib</span>
+            <span id="sg-out-libur" class="text-xs sm:text-sm font-black text-teal-300 block mt-1">0 hari</span>
+        </div>
+        <div class="bg-emerald-900 text-white border border-emerald-700/60 p-3.5 rounded-2xl shadow-md">
+            <span class="block text-[10px] font-black text-emerald-200 uppercase tracking-wider">4. Absen Lainnya</span>
+            <span id="sg-out-absen-lain" class="text-xs sm:text-sm font-black text-rose-300 block mt-1">0 hari</span>
+        </div>
+    </div>
+
+    <!-- CARD 5: POTONGAN JAM KERJA -->
+    <div class="bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-900 p-4 rounded-2xl text-white shadow-md border border-emerald-700/50 flex flex-col gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div class="max-w-md">
+                <span class="text-xs font-black text-emerald-100 block">5. Potongan Jam Kerja <span class="text-emerald-300 font-normal">(Opsional)</span></span>
+                <p class="text-[10px] text-emerald-200/80 italic leading-normal mt-0.5">
+                    (Potongan diberlakukan jika ada: Terlambat masuk sekian menit/jam, atau ada izin pribadi dalam menit/jam tertentu di waktu operasional)
+                </p>
+                <span id="sg-lbl-total-potongan-jam" class="text-[11px] font-extrabold text-rose-950 bg-rose-300 px-2.5 py-0.5 rounded-lg inline-block mt-2">0 jam 0 menit</span>
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-center">
+                <span class="text-rose-300 uppercase tracking-wider text-[10px] font-bold">Pengurangan (-)</span>
+                <!-- ISIAN FORM OWNER (PUTIH) -->
+                <div class="relative rounded-xl shadow-md bg-white">
+                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                    <input type="text" id="sg-in-minus-potongan" class="sg-input-clean w-36 bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-rose-600 focus:outline-none text-right" placeholder="0">
+                </div>
+            </div>
+        </div>
+        
+        <div id="sg-wrapper-alasan-potongan-list" class="hidden border-t border-emerald-700/60 pt-2 flex flex-col gap-1">
+            <span class="text-[10px] font-black text-emerald-300 uppercase tracking-wider block">Rincian/Alasan:</span>
+            <ul id="sg-list-alasan-potongan" class="text-[11px] font-medium text-emerald-100 list-disc list-inside space-y-0.5 pl-1">
+            </ul>
+        </div>
+    </div>
+
+    <!-- CARD 6: TAMBAHAN JAM KERJA -->
+    <div class="bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-900 p-4 rounded-2xl text-white shadow-md border border-emerald-700/50 flex flex-col gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div class="max-w-md">
+                <span class="text-xs font-black text-emerald-100 block">6. Tambahan Jam Kerja <span class="text-emerald-300 font-normal">(Opsional)</span></span>
+                <p class="text-[10px] text-emerald-200/80 italic leading-normal mt-0.5">
+                    (Tambahan diberikan jika ada: Jam Tutup Toko yang jauh melebihi batas wajar / overtime. Atau situasi lain yang memungkinkan, namun kembali lagi kepada kebijakan Owner Nurjaya)
+                </p>
+                <span id="sg-lbl-total-tambahan-jam" class="text-[11px] font-extrabold text-cyan-950 bg-cyan-300 px-2.5 py-0.5 rounded-lg inline-block mt-2">0 jam 0 menit</span>
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-center">
+                <span class="text-cyan-300 uppercase tracking-wider text-[10px] font-bold">Penambahan (+)</span>
+                <!-- ISIAN FORM OWNER (PUTIH) -->
+                <div class="relative rounded-xl shadow-md bg-white">
+                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                    <input type="text" id="sg-in-plus-tambahan" class="sg-input-clean w-36 bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-blue-600 focus:outline-none text-right" placeholder="0">
+                </div>
+            </div>
+        </div>
+        
+        <div id="sg-wrapper-alasan-tambahan-list" class="hidden border-t border-emerald-700/60 pt-2 flex flex-col gap-1">
+            <span class="text-[10px] font-black text-emerald-300 uppercase tracking-wider block">Rincian/Alasan:</span>
+            <ul id="sg-list-alasan-tambahan" class="text-[11px] font-medium text-emerald-100 list-disc list-inside space-y-0.5 pl-1">
+            </ul>
+        </div>
+    </div>
+
+    <!-- CARD 7: POIN TAMBAHAN -->
+    <div class="bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-900 p-4 rounded-2xl text-white shadow-md border border-emerald-700/50 flex flex-col gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div class="max-w-md">
+                <span class="text-xs font-black text-emerald-100 block">7. Poin Tambahan <span class="text-emerald-300 font-normal">(Opsional)</span></span>
+                <p class="text-[10px] text-emerald-200/80 italic leading-normal mt-0.5">
+                    (Bersifat opsional dan hanya Owner Nurjaya yang menentukan, max 3 poin)
+                </p>
+            </div>
+            <div class="self-end sm:self-start">
+                <!-- ISIAN FORM OWNER (PUTIH) -->
+                <select id="sg-sel-poin" class="bg-white border border-slate-300 text-slate-800 font-bold text-xs p-2.5 rounded-xl focus:border-emerald-600 focus:outline-none cursor-pointer w-28 shadow-md">
+                    <option value="0">0 Poin</option>
+                    <option value="1">1 Poin</option>
+                    <option value="2">2 Poin</option>
+                    <option value="3">3 Poin</option>
+                </select>
+            </div>
+        </div>
+        <div id="sg-wrapper-poin-dinamis" class="flex flex-col gap-2"></div>
+    </div>
+
+    <!-- CARD 8: UANG RAJIN -->
+    <div class="bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-900 p-4 rounded-2xl text-white shadow-md border border-emerald-700/50 flex flex-col gap-3">
+        <div class="border-b border-emerald-700/60 pb-2">
+            <span class="text-xs font-black text-emerald-100">8. Uang Rajin</span>
+        </div>
+
+        <div class="bg-slate-950/80 border border-emerald-700/50 p-3.5 rounded-xl flex flex-col gap-2">
+            <div class="text-[10px] uppercase font-black tracking-wider text-emerald-400">
+                INDIKATOR KEDISIPLINAN:
+            </div>
+            <p class="text-[11px] font-medium text-emerald-100/90 leading-relaxed">
+                Uang Rajin adalah Reward yang diberikan jika karyawan <span class="font-bold text-emerald-300">HADIR SECARA PENUH</span> tanpa ada absen (contoh: tanpa keterangan, izin, sakit, dll) (Yang tidak diberikan / diinstruksikan Owner).
+            </p>
+            
+            <hr class="border-dashed border-emerald-700/60 my-0.5">
+            
+            <div class="flex flex-col gap-1">
+                <p class="text-[11px] font-bold text-emerald-200">
+                    Absen Bulan Ini: 
+                    <span id="sg-ur-indikator-absen" class="font-black text-rose-950 bg-rose-300 px-2 py-0.5 rounded-md text-xs">0 hari</span>
+                </p>
                 
-               <!-- SUMMARY PERIODE KERJA (SUSUNAN VERTIKAL) -->
-<div class="flex flex-col gap-3">
-    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-center">
-        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Periode Kerja</span>
-        <span id="sg-text-periode" class="text-xs font-extrabold text-slate-700 block mt-1">-</span>
-    </div>
-    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-center">
-        <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Hari Periode Kerja</span>
-        <span id="sg-text-total-hari" class="text-xs font-extrabold text-slate-700 block mt-1">-</span>
-    </div>
-</div>
-
-                <h4 class="text-[11px] font-black text-green-700 uppercase tracking-widest mt-2 px-1">Rincian Hari Kerja:</h4>
-
-               <!-- CARD 1: JADWAL 2 KARYAWAN -->
-<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-    <!-- BARIS 1: JUDUL & HARI -->
-    <div class="flex items-center justify-between">
-        <span class="text-xs font-black text-slate-700 block">1. Jadwal 2 Karyawan</span>
-        <span id="sg-lbl-jadwal2" class="text-[11px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-md inline-block">0 hari</span>
-    </div>
-
-    <!-- BARIS 2: KALKULASI RATE & TOTAL -->
-    <div class="flex items-center justify-between gap-2 pt-2 border-t border-dashed border-slate-100">
-        <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-slate-400">X</span>
-            <div class="relative rounded-xl shadow-inner">
-                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                <input type="text" id="sg-in-rate-jadwal2" class="sg-input-clean w-28 sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
+                <p id="sg-ur-petunjuk-dinamis" class="text-[11px] font-medium text-emerald-200 italic bg-emerald-950/90 p-2.5 border border-emerald-800/80 rounded-lg">
+                    Menunggu data karyawan...
+                </p>
             </div>
         </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1 pt-1 border-t border-emerald-700/60">
+            <!-- ISIAN FORM OWNER (PUTIH) -->
+            <select id="sg-sel-uang-rajin" class="bg-white border border-slate-300 text-slate-800 font-bold text-xs p-2.5 rounded-xl focus:border-emerald-600 focus:outline-none cursor-pointer w-full sm:w-auto shadow-md" autocomplete="off">
+                <option value="" selected disabled>Pilih Dahulu</option>
+                <option value="full">Dapat Full</option>
+                <option value="tidak">Tidak Dapat</option>
+                <option value="penyesuaian">Penyesuaian</option>
+            </select>
+
+            <div id="sg-wrapper-uang-rajin-dinamis" class="flex items-center gap-2 justify-end">
+                <span class="text-xs font-bold text-emerald-300">Total =</span>
+                <span id="sg-out-rajin-status" class="text-[11px] font-bold text-emerald-200 bg-slate-950/80 border border-emerald-500/30 px-3 py-1.5 rounded-xl italic">
+                    Pilih status terlebih dahulu
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD PEMBULATAN KHUSUS -->
+    <div class="bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-900 p-4 rounded-2xl text-white shadow-md border border-emerald-700/50 flex flex-col gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div class="max-w-md">
+                <span class="text-xs font-black text-emerald-100 block">Pembulatan Khusus <span class="text-emerald-300 font-normal">(Kebijakan Owner)</span></span>
+                <p class="text-[10px] text-emerald-200/80 italic leading-normal mt-0.5">
+                    (Bersifat opsional, jika tidak ingin menerapkan pembulatan, maka kosongkan)
+                </p>
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-start">
+                <!-- ISIAN FORM OWNER (PUTIH) -->
+                <div class="relative rounded-xl shadow-md bg-white">
+                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                    <input type="text" id="sg-in-pembulatan" class="sg-input-clean w-44 bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-emerald-600 focus:outline-none text-right" placeholder="0">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HITUNGAN AKHIR & TOMBOL GENERATE -->
+    <div class="border-t-2 border-dashed border-slate-200/80 pt-4 mt-2 flex flex-col gap-3">
+        <!-- TOTAL HITUNGAN GAJI -->
+<div class="bg-emerald-700 text-white p-4 rounded-2xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 border border-emerald-600">
+    <span class="text-xs font-black uppercase tracking-wider shrink-0">Total Hitungan Gaji:</span>
+    <span id="sg-out-total-gaji-bersih" class="text-lg sm:text-xl font-black tracking-wide text-right block">Rp 0</span>
+</div>
+
+<!-- GAJI BERSIH DITERIMA -->
+<div class="bg-slate-950 text-amber-400 p-4 rounded-2xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 border border-slate-800">
+    <span class="text-xs font-black uppercase tracking-wider shrink-0">Gaji Bersih Diterima:</span>
+    <span id="sg-out-final-gaji" class="text-lg sm:text-xl font-black tracking-wide text-right block">Rp 0</span>
+</div>
         
-        <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl">
-            <span class="text-xs font-bold text-slate-400">=</span>
-            <span id="sg-out-total-jadwal2" class="text-xs font-black text-slate-800">Rp 0</span>
+        <!-- ISIAN FORM OWNER (PUTIH) -->
+        <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-1.5">
+            <label for="owner-input-catatan" class="block text-[11px] font-black text-slate-700 uppercase tracking-wider">
+                <i class="fa-solid fa-pen-to-square text-emerald-600 mr-1"></i> Catatan Khusus dari Owner:
+            </label>
+            <textarea id="owner-input-catatan" rows="4" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-medium text-xs p-3 rounded-xl focus:border-emerald-600 focus:outline-none transition-all resize-none placeholder-slate-400 min-h-[96px] leading-relaxed shadow-inner" placeholder="Contoh: Uang Rajin tidak full karena ada absen 1 hari. Tingkatkan kualitas pelayanan ke pelanggan."></textarea>
         </div>
+
+        <button type="button" id="btn-generate-slip-gaji" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-widest py-4 px-6 rounded-2xl shadow-md shadow-emerald-900/20 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-receipt text-sm"></i> Generate Slip Gaji Karyawan
+        </button>
     </div>
+
 </div>
-
-<!-- CARD 2: JADWAL 1 KARYAWAN -->
-<div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-    <!-- BARIS 1: JUDUL & HARI -->
-    <div class="flex items-center justify-between">
-        <span class="text-xs font-black text-slate-700 block">2. Jadwal 1 Karyawan</span>
-        <span id="sg-lbl-jadwal1" class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md inline-block">0 hari</span>
-    </div>
-
-    <!-- BARIS 2: KALKULASI RATE & TOTAL -->
-    <div class="flex items-center justify-between gap-2 pt-2 border-t border-dashed border-slate-100">
-        <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-slate-400">X</span>
-            <div class="relative rounded-xl shadow-inner">
-                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                <input type="text" id="sg-in-rate-jadwal1" class="sg-input-clean w-28 sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
-            </div>
-        </div>
-        
-        <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl">
-            <span class="text-xs font-bold text-slate-400">=</span>
-            <span id="sg-out-total-jadwal1" class="text-xs font-black text-slate-800">Rp 0</span>
-        </div>
-    </div>
-</div>
-
-                <!-- CARD 3 & 4: LIBUR & ABSEN -->
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
-                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">3. Libur Wajib</span>
-                        <span id="sg-out-libur" class="text-xs font-extrabold text-indigo-600 block mt-1">0 hari</span>
-                    </div>
-                    <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
-                        <span class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">4. Absen Lainnya</span>
-                        <span id="sg-out-absen-lain" class="text-xs font-extrabold text-rose-600 block mt-1">0 hari</span>
-                    </div>
-                </div>
-
-                <!-- CARD 5: POTONGAN JAM KERJA -->
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                        <div class="max-w-md">
-                            <span class="text-xs font-black text-slate-700 block">5. Potongan Jam Kerja <span class="text-slate-400 font-normal">(Opsional)</span></span>
-                            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                                (Potongan diberlakukan jika ada: Terlambat masuk sekian menit/jam, atau ada izin pribadi dalam menit/jam tertentu di waktu operasional)
-                            </p>
-                            <span id="sg-lbl-total-potongan-jam" class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md inline-block mt-2">0 jam 0 menit</span>
-                        </div>
-                        <div class="flex items-center gap-2 self-end sm:self-center">
-                            <span class="text-rose-600 uppercase tracking-wider text-[10px] font-bold">Pengurangan (-)</span>
-                            <div class="relative rounded-xl shadow-inner">
-                                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                                <input type="text" id="sg-in-minus-potongan" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-rose-600 focus:outline-none text-right" placeholder="0">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="sg-wrapper-alasan-potongan-list" class="hidden border-t border-dashed border-slate-100 pt-2 flex flex-col gap-1">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Rincian/Alasan:</span>
-                        <ul id="sg-list-alasan-potongan" class="text-[11px] font-medium text-slate-600 list-disc list-inside space-y-0.5 pl-1">
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- CARD 6: TAMBAHAN JAM KERJA -->
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                        <div class="max-w-md">
-                            <span class="text-xs font-black text-slate-700 block">6. Tambahan Jam Kerja <span class="text-slate-400 font-normal">(Opsional)</span></span>
-                            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                                (Tambahan diberikan jika ada: Jam Tutup Toko yang jauh melebihi batas wajar / overtime. Atau situasi lain yang memungkinkan, namun kembali lagi kepada kebijakan Owner Nurjaya)
-                            </p>
-                            <span id="sg-lbl-total-tambahan-jam" class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md inline-block mt-2">0 jam 0 menit</span>
-                        </div>
-                        <div class="flex items-center gap-2 self-end sm:self-center">
-                            <span class="text-blue-600 uppercase tracking-wider text-[10px] font-bold">Penambahan (+)</span>
-                            <div class="relative rounded-xl shadow-inner">
-                                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                                <input type="text" id="sg-in-plus-tambahan" class="sg-input-clean w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-blue-600 focus:outline-none text-right" placeholder="0">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="sg-wrapper-alasan-tambahan-list" class="hidden border-t border-dashed border-slate-100 pt-2 flex flex-col gap-1">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Rincian/Alasan:</span>
-                        <ul id="sg-list-alasan-tambahan" class="text-[11px] font-medium text-slate-600 list-disc list-inside space-y-0.5 pl-1">
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- CARD 7: POIN TAMBAHAN -->
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                        <div class="max-w-md">
-                            <span class="text-xs font-black text-slate-700 block">7. Poin Tambahan <span class="text-slate-400 font-normal">(Opsional)</span></span>
-                            <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                                (Bersifat opsional dan hanya Owner Nurjaya yang menentukan, max 3 poin)
-                            </p>
-                        </div>
-                        <div class="self-end sm:self-start">
-                            <select id="sg-sel-poin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer w-24">
-                                <option value="0">0 Poin</option>
-                                <option value="1">1 Poin</option>
-                                <option value="2">2 Poin</option>
-                                <option value="3">3 Poin</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="sg-wrapper-poin-dinamis" class="flex flex-col gap-2"></div>
-                </div>
-
-                <!-- CARD 8: UANG RAJIN -->
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-                    <div class="border-b border-slate-100 pb-2">
-                        <span class="text-xs font-black text-slate-700">8. Uang Rajin</span>
-                    </div>
-
-                    <div class="bg-slate-50 border border-slate-100 p-3 rounded-xl flex flex-col gap-2">
-                        <div class="text-[10px] uppercase font-black tracking-wider text-indigo-600">
-                            INDIKATOR KEDISIPLINAN:
-                        </div>
-                        <p class="text-[11px] font-medium text-slate-500 leading-relaxed">
-                            Uang Rajin adalah Reward yang diberikan jika karyawan <span class="font-bold text-slate-700">HADIR SECARA PENUH</span> tanpa ada absen (contoh: tanpa keterangan, izin, sakit, dll) (Yang tidak diberikan / diinstruksikan Owner).
-                        </p>
-                        
-                        <hr class="border-dashed border-slate-200 my-0.5">
-                        
-                        <div class="flex flex-col gap-1">
-                            <p class="text-[11px] font-bold text-slate-700">
-                                Absen Bulan Ini: 
-                                <span id="sg-ur-indikator-absen" class="font-black text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md text-xs">0 hari</span>
-                            </p>
-                            
-                            <p id="sg-ur-petunjuk-dinamis" class="text-[11px] font-medium text-slate-500 italic bg-white p-2 border border-slate-200 rounded-lg shadow-inner">
-                                Menunggu data karyawan...
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1 pt-1 border-t border-slate-50">
-                        <select id="sg-sel-uang-rajin" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-green-600 focus:outline-none cursor-pointer w-full sm:w-auto" autocomplete="off">
-                            <option value="" selected disabled>Pilih Dahulu</option>
-                            <option value="full">Dapat Full</option>
-                            <option value="tidak">Tidak Dapat</option>
-                            <option value="penyesuaian">Penyesuaian</option>
-                        </select>
-
-                        <div id="sg-wrapper-uang-rajin-dinamis" class="flex items-center gap-2 justify-end">
-                            <span class="text-xs font-bold text-slate-400">Total =</span>
-                            <span id="sg-out-rajin-status" class="text-[11px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-xl italic">
-                                Pilih status terlebih dahulu
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- HITUNGAN AKHIR & TOMBOL GENERATE -->
-                <div class="border-t-2 border-dashed border-slate-200 pt-4 mt-2 flex flex-col gap-3">
-                    <div class="bg-green-700 text-white p-4 rounded-2xl shadow-md flex justify-between items-center">
-                        <span class="text-xs font-black uppercase tracking-wider">Total Hitungan Gaji:</span>
-                        <span id="sg-out-total-gaji-bersih" class="text-xl font-black tracking-wide">Rp 0</span>
-                    </div>
-
-                    <!-- CARD PEMBULATAN KHUSUS -->
-                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-                        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                            <div class="max-w-md">
-                                <span class="text-xs font-black text-slate-700 block">Pembulatan Khusus <span class="text-slate-400 font-normal">(Kebijakan Owner)</span></span>
-                                <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                                    (Bersifat opsional, jika tidak ingin menerapkan pembulatan, maka kosongkan)
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-2 self-end sm:self-start">
-                                <div class="relative rounded-xl shadow-inner">
-                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                                    <input type="text" id="sg-in-pembulatan" class="sg-input-clean w-44 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-green-600 focus:outline-none text-right" placeholder="0">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-900 text-amber-400 p-4 rounded-2xl shadow-md flex justify-between items-center">
-                        <span class="text-xs font-black uppercase tracking-wider">Gaji Bersih Diterima:</span>
-                        <span id="sg-out-final-gaji" class="text-xl font-black tracking-wide">Rp 0</span>
-                    </div>
-                    
-                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col gap-1.5">
-                        <label for="owner-input-catatan" class="block text-[11px] font-black text-slate-700 uppercase tracking-wider">
-                            <i class="fa-solid fa-pen-to-square text-green-600 mr-1"></i> Catatan Khusus dari Owner:
-                        </label>
-                        <textarea id="owner-input-catatan" rows="4" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-medium text-xs p-3 rounded-xl focus:border-green-600 focus:outline-none transition-all resize-none placeholder-slate-400 min-h-[96px] leading-relaxed" placeholder="Contoh: Uang Rajin tidak full karena ada absen 1 hari. Tingkatkan kualitas pelayanan ke pelanggan."></textarea>
-                    </div>
-
-                    <button type="button" id="btn-generate-slip-gaji" class="w-full mt-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-black text-xs uppercase tracking-widest py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-receipt text-sm"></i> Generate Slip Gaji Karyawan
-                    </button>
-                </div>
-
-            </div>
 
         </div>
 
@@ -2509,7 +2767,7 @@ function closePdfModal() {
 
 
 <!-- PLUGIN DATALABELS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 <script>
     const API_URL_BULANAN = 'https://script.google.com/macros/s/AKfycbzjeAbDnG-4OS0L09i2NziXoi1JL40ORe7t8g3NMaEBM5twdtxyhA6njD9FJxUWXbG6/exec';
@@ -3612,11 +3870,7 @@ function togglePassword() {
 
 
 <!-- 2. SKRIP PEMROSES DATA (Taruh di paling bawah sebelum </body>) -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
-<script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 
@@ -5322,6 +5576,8 @@ function pemicuTombolSinkronasi() {
         <p class="text-[10px] text-green-600/70 mt-4 uppercase tracking-widest font-bold">SISTEM PENGINGAT OTOMATIS NURJAYA ABADI</p>
     </div>
 </div>
+
+
 
 <script>
 // GANTIKAN fungsi cekIzinNotifikasi lama dengan ini
@@ -13783,6 +14039,530 @@ async function prosesUploadNota(event) {
             });
         }
     }
+</script>
+
+<!-- Sertakan Chart.js jika belum ada di header HTML -->
+
+
+<script>
+// =========================================================================
+// MODUL TERISOLASI: TAB ARSIP & DASHBOARD FINANSIAL
+// =========================================================================
+
+// Endpoint Apps Script khusus sheet data
+const NSA_FINANCE_API_URL = "https://script.google.com/macros/s/AKfycbysOqOqetjMttC9qyCLkOia9G4oor44nzyrlRN1TddAe7L0dJEMqHArXs0JQOLd6uKK/exec";
+
+// Endpoint Google Drive PDF (dikorelasikan dari data Drive API)
+const NSA_DRIVE_API_URL = "https://script.google.com/macros/s/AKfycbxguP0YRWlZnap1GwqLTFnGxZfdCp4fSpR2l64TS5IgKaFat-9TfkWmnn97PNw68-e5/exec";
+
+let nsaSheetList = [];
+let nsaDrivePdfMap = {};
+let nsaCurrentSheetData = [];
+let nsaSelectedSheetName = "";
+
+let chartInstanceA = null;
+let chartInstanceB = null;
+let loadingTextInterval = null;
+
+const NAMA_BULAN_INDONESIA = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+];
+
+const LOADING_MESSAGES = [
+    "Mengambil data...",
+    "Menghitung Pembukuan...",
+    "Menerapkan rumus...",
+    "Mengkalkulasi Kasir...",
+    "Menyusun Grafik..."
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+    initTabArchiveModule();
+});
+
+async function initTabArchiveModule() {
+    startLoadingTextLoop();
+    try {
+        await Promise.all([
+            fetchDrivePdfCatalog(),
+            loadYearlyAndMonthlyCharts()
+        ]);
+    } catch (err) {
+        console.error("Gagal inisialisasi tab arsip:", err);
+    } finally {
+        stopAndHideLoaders();
+    }
+}
+
+// -------------------------------------------------------------------------
+// LOGIKA ANIMASI TEKS LOADING MATERIAL UI
+// -------------------------------------------------------------------------
+
+function startLoadingTextLoop() {
+    let index = 0;
+    const elA = document.getElementById("loader-text-card-a");
+    const elB = document.getElementById("loader-text-card-b");
+
+    if (loadingTextInterval) clearInterval(loadingTextInterval);
+
+    loadingTextInterval = setInterval(() => {
+        index = (index + 1) % LOADING_MESSAGES.length;
+        const msg = LOADING_MESSAGES[index];
+
+        [elA, elB].forEach(el => {
+            if (el) {
+                el.style.transition = "opacity 0.2s ease";
+                el.style.opacity = "0";
+                setTimeout(() => {
+                    el.textContent = msg;
+                    el.style.opacity = "1";
+                }, 200);
+            }
+        });
+    }, 850);
+}
+
+function stopAndHideLoaders() {
+    if (loadingTextInterval) {
+        clearInterval(loadingTextInterval);
+        loadingTextInterval = null;
+    }
+
+    ["a", "b"].forEach(card => {
+        const loader = document.getElementById(`loader-card-${card}`);
+        if (loader) {
+            loader.style.transition = "opacity 0.4s ease";
+            loader.style.opacity = "0";
+            loader.style.pointerEvents = "none";
+            setTimeout(() => {
+                loader.classList.add("hidden");
+            }, 400);
+        }
+    });
+}
+
+// -------------------------------------------------------------------------
+// LOGIKA UTAMA FETCH DATA & RENDER CHARTS
+// -------------------------------------------------------------------------
+
+// 1. Ambil Katalog PDF dari Drive untuk pemetaan popup modal
+async function fetchDrivePdfCatalog() {
+    try {
+        const res = await fetch(NSA_DRIVE_API_URL);
+        const json = await res.json();
+        if (json.status === "success" && json.data) {
+            json.data.forEach(item => {
+                nsaDrivePdfMap[item.label.trim().toLowerCase()] = item.driveId;
+            });
+        }
+    } catch (err) {
+        console.error("Gagal sinkronisasi Drive PDF Map:", err);
+    }
+}
+
+// 2. Load Grafik Card A & Card B saat pertama kali tab dimuat
+async function loadYearlyAndMonthlyCharts() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonthIdx = now.getMonth();
+    const currentMonthName = NAMA_BULAN_INDONESIA[currentMonthIdx];
+    const currentSheetName = `${currentMonthName}${currentYear}`;
+
+    const titleA = document.getElementById("card-a-title");
+    const titleB = document.getElementById("card-b-title");
+    const subB = document.getElementById("card-b-sub");
+
+    if (titleA) titleA.textContent = `Progres ${currentYear}`;
+    if (titleB) titleB.textContent = `Progres ${currentMonthName} ${currentYear}`;
+    if (subB) subB.textContent = `${currentMonthName} ${currentYear}`;
+
+    let yearlyLabels = [];
+    let yearlyTotals = [];
+
+    const selector = document.getElementById("archive-sheet-selector");
+    if (selector) {
+        selector.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">Memuat daftar lembar...</option>`;
+    }
+
+    // Paralel Fetch untuk semua bulan hingga bulan berjalan
+    const fetchPromises = [];
+    for (let i = 0; i <= currentMonthIdx; i++) {
+        const sheetName = `${NAMA_BULAN_INDONESIA[i]}${currentYear}`;
+        fetchPromises.push(
+            fetch(`${NSA_FINANCE_API_URL}?bulan=${sheetName}`)
+                .then(r => r.json())
+                .then(json => ({ sheetName, monthName: NAMA_BULAN_INDONESIA[i], json }))
+                .catch(e => ({ sheetName, monthName: NAMA_BULAN_INDONESIA[i], error: e }))
+        );
+    }
+
+    const results = await Promise.all(fetchPromises);
+
+    results.forEach(res => {
+        if (res.json && res.json.status === "success" && res.json.data) {
+            let totalKotorBulan = res.json.data.reduce((acc, row) => acc + (Number(row.pendapatan_kotor) || 0), 0);
+            yearlyLabels.push(res.monthName);
+            yearlyTotals.push(totalKotorBulan);
+
+            if (!nsaSheetList.includes(res.sheetName)) {
+                nsaSheetList.push(res.sheetName);
+            }
+        }
+    });
+
+    // Isi Dropdown Selector
+    if (selector) {
+        if (nsaSheetList.length > 0) {
+            selector.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">-- Pilih Bulan Laporan --</option>`;
+            [...nsaSheetList].reverse().forEach(sName => {
+                const opt = document.createElement("option");
+                opt.value = sName;
+                opt.textContent = formatSheetNameToReadable(sName);
+                selector.appendChild(opt);
+            });
+        } else {
+            selector.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">Tidak ada sheet ditemukan</option>`;
+        }
+    }
+
+    // Render Grafik Card A
+    renderChartCardA(yearlyLabels, yearlyTotals);
+
+    // Fetch & Render Grafik Card B (Bulan Berjalan)
+    try {
+        const resB = await fetch(`${NSA_FINANCE_API_URL}?bulan=${currentSheetName}`);
+        const jsonB = await resB.json();
+        if (jsonB.status === "success" && jsonB.data) {
+            let dailyLabels = jsonB.data.map(d => d.tanggal ? d.tanggal.split('/')[0] : '');
+            let dailyValues = jsonB.data.map(d => Number(d.pendapatan_kotor) || 0);
+            renderChartCardB(dailyLabels, dailyValues);
+        }
+    } catch (e) {
+        console.warn("Gagal memuat chart Card B:", e);
+    }
+}
+
+// 3. Renderer Chart.js untuk Card A
+function renderChartCardA(labels, dataValues) {
+    const canvas = document.getElementById("chartProgresTahun");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (chartInstanceA) chartInstanceA.destroy();
+
+    chartInstanceA = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Pendapatan Kotor',
+                data: dataValues,
+                backgroundColor: 'rgba(52, 211, 153, 0.85)',
+                borderColor: '#10b981',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'nearest',
+                intersect: true
+            },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0f172a',
+                    titleColor: '#34d399',
+                    bodyColor: '#ffffff',
+                    borderColor: '#059669',
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            let val = context.raw || 0;
+                            return 'Pendapatan Kotor: Rp ' + Number(val).toLocaleString('id-ID');
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { 
+                    ticks: { 
+                        color: '#94a3b8', 
+                        font: { size: 9 },
+                        callback: function(value) {
+                            if (value >= 1000000) return (value / 1000000) + ' Jt';
+                            if (value >= 1000) return (value / 1000) + ' Rb';
+                            return value;
+                        }
+                    }, 
+                    grid: { color: 'rgba(255,255,255,0.05)' } 
+                },
+                y: { 
+                    ticks: { color: '#f8fafc', font: { size: 10, weight: 'bold' } }, 
+                    grid: { display: false } 
+                }
+            }
+        }
+    });
+}
+
+// 4. Renderer Chart.js untuk Card B
+function renderChartCardB(labels, dataValues) {
+    const canvas = document.getElementById("chartProgresBulan");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (chartInstanceB) chartInstanceB.destroy();
+
+    chartInstanceB = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Harian',
+                data: dataValues,
+                borderColor: '#2dd4bf',
+                backgroundColor: 'rgba(45, 212, 191, 0.15)',
+                fill: true,
+                tension: 0.35,
+                pointRadius: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } },
+                y: { ticks: { color: '#f8fafc', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+            }
+        }
+    });
+}
+
+// Helper Format nama sheet
+function formatSheetNameToReadable(sName) {
+    const match = sName.match(/^([A-Za-z]+)\s*([0-9]{4})$/);
+    if (match) {
+        return `${match[1].charAt(0).toUpperCase() + match[1].slice(1)} ${match[2]}`;
+    }
+    return sName;
+}
+
+// 4. Renderer Chart.js untuk Card B
+function renderChartCardB(labels, dataValues) {
+    const ctx = document.getElementById("chartProgresBulan").getContext("2d");
+    if (chartInstanceB) chartInstanceB.destroy();
+
+    chartInstanceB = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Harian',
+                data: dataValues,
+                borderColor: '#2dd4bf',
+                backgroundColor: 'rgba(45, 212, 191, 0.15)',
+                fill: true,
+                tension: 0.35,
+                pointRadius: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } },
+                y: { ticks: { color: '#f8fafc', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+            }
+        }
+    });
+}
+
+// Helper Format nama sheet
+function formatSheetNameToReadable(sName) {
+    const match = sName.match(/^([A-Za-z]+)\s*([0-9]{4})$/);
+    if (match) {
+        return `${match[1].charAt(0).toUpperCase() + match[1].slice(1)} ${match[2]}`;
+    }
+    return sName;
+}
+
+// 5. Handler Perubahan Dropdown Pencarian Sheet
+async function handleArchiveSheetChange(selectEl) {
+    const sheetName = selectEl.value;
+    if (!sheetName) return;
+
+    nsaSelectedSheetName = sheetName;
+    const statusBox = document.getElementById("archive-status-box");
+    const statusText = document.getElementById("archive-status-text");
+    const statusIcon = document.getElementById("archive-status-icon");
+
+    // Sembunyikan panel detail dahulu jika memilih ulang
+    document.getElementById("archive-detail-panel").classList.add("hidden");
+    statusBox.classList.remove("hidden");
+
+    // 1. TAMPILKAN ANIMASI 3-DOT WAVING SAAT MEMERIKSA DATA
+    statusIcon.className = "hidden"; // Sembunyikan titik tunggal sementara
+    statusText.className = "font-black text-slate-600 flex items-center gap-1.5";
+    statusText.innerHTML = `
+        <span>Memeriksa baris pembukuan</span>
+        <span class="inline-flex items-center gap-0.5 ml-1">
+            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-duration:0.6s]"></span>
+            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+        </span>
+    `;
+
+    try {
+        const res = await fetch(`${NSA_FINANCE_API_URL}?bulan=${sheetName}`);
+        const json = await res.json();
+
+        // Tampilkan kembali icon dot indikator setelah status diperoleh
+        statusIcon.classList.remove("hidden");
+
+        if (json.status === "success" && json.data) {
+            nsaCurrentSheetData = json.data;
+            
+            // Hitung deteksi kelengkapan tanggal bulan
+            const parsedInfo = parseSheetName(sheetName);
+            const totalDaysInMonth = new Date(parsedInfo.year, parsedInfo.monthIdx + 1, 0).getDate();
+            const lastDataRow = json.data[json.data.length - 1];
+            
+            let isComplete = false;
+            if (lastDataRow && lastDataRow.tanggal) {
+                const dayNum = parseInt(lastDataRow.tanggal.split('/')[0], 10);
+                if (dayNum >= totalDaysInMonth) {
+                    isComplete = true;
+                }
+            }
+
+            if (isComplete) {
+                statusText.textContent = "Status: Selesai";
+                statusText.className = "font-black text-emerald-600";
+                statusIcon.className = "w-3 h-3 rounded-full bg-emerald-500 shrink-0";
+            } else {
+                statusText.textContent = "Status: Belum (Masih Berjalan)";
+                statusText.className = "font-black text-amber-600";
+                statusIcon.className = "w-3 h-3 rounded-full bg-amber-500 animate-pulse shrink-0";
+            }
+
+        } else {
+            statusText.textContent = "Status: Belum Ada Data";
+            statusText.className = "font-black text-slate-400";
+            statusIcon.className = "w-3 h-3 rounded-full bg-slate-300 shrink-0";
+        }
+    } catch (err) {
+        console.error("Gagal memeriksa database:", err);
+        statusIcon.classList.remove("hidden");
+        statusText.textContent = "Status: Gagal Memuat Data";
+        statusText.className = "font-black text-rose-600";
+        statusIcon.className = "w-3 h-3 rounded-full bg-rose-500 shrink-0";
+    }
+}
+
+// 6. Tampilkan Seksi Detail & Kalkulasi Card C s/d L
+function showArchiveDetailSection() {
+    if (!nsaCurrentSheetData || nsaCurrentSheetData.length === 0) {
+        alert("Data laporan tidak ditemukan untuk bulan ini!");
+        return;
+    }
+
+    const panel = document.getElementById("archive-detail-panel");
+    const titleEl = document.getElementById("archive-detail-title");
+    
+    const readablePeriod = formatSheetNameToReadable(nsaSelectedSheetName);
+    titleEl.querySelector("span").textContent = readablePeriod;
+
+    // Akumulasi Finansial
+    let totKotor = 0;
+    let totMeteraiPcs = 0;
+    let totQris = 0;
+    let totUangMakan = 0;
+    let totPengeluaranKasir = 0;
+    let totTabA = 0;
+    let totTabB = 0;
+
+    nsaCurrentSheetData.forEach(r => {
+        totKotor += Number(r.pendapatan_kotor) || 0;
+        totMeteraiPcs += (Number(r.meterai_terjual) || 0) + (Number(r.meterai_terjual_qris) || 0);
+        totQris += Number(r.pendapatan_qris) || 0;
+        totUangMakan += Number(r.uang_makan) || 0;
+        totPengeluaranKasir += Number(r.pengeluaran_kasir) || 0;
+        totTabA += Number(r.tabungan_a) || 0;
+        totTabB += Number(r.tabungan_b) || 0;
+    });
+
+    const totMeteraiRp = totMeteraiPcs * 12000;
+    const totLabaMeteraiRp = totMeteraiPcs * 2000;
+    const totTabunganGabungan = totTabA + totTabB;
+
+    // Injeksi Nilai ke HTML
+    document.getElementById("val-card-c").textContent = formatRupiah(totKotor);
+    document.getElementById("val-card-d").textContent = formatRupiah(totMeteraiRp);
+    document.getElementById("sub-card-d").textContent = `Total: ${totMeteraiPcs} pcs × Rp12.000`;
+    
+    document.getElementById("val-card-e").textContent = formatRupiah(totLabaMeteraiRp);
+    document.getElementById("sub-card-e").textContent = `Margin: ${totMeteraiPcs} pcs × Rp2.000`;
+
+    document.getElementById("val-card-f").textContent = formatRupiah(totQris);
+    document.getElementById("val-card-g").textContent = formatRupiah(totUangMakan);
+    document.getElementById("val-card-h").textContent = formatRupiah(totPengeluaranKasir);
+    
+    document.getElementById("val-card-j").textContent = formatRupiah(totTabA);
+    document.getElementById("val-card-k").textContent = formatRupiah(totTabB);
+    document.getElementById("val-card-l").textContent = formatRupiah(totTabunganGabungan);
+
+    panel.classList.remove("hidden");
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// 7. Pemicu Modal PDF Viewer Bawaan Asli
+function triggerOriginalPdfViewerModal() {
+    const readableKey = formatSheetNameToReadable(nsaSelectedSheetName).toLowerCase();
+    const driveId = nsaDrivePdfMap[readableKey];
+
+    if (!driveId) {
+        alert(`Dokumen untuk periode '${formatSheetNameToReadable(nsaSelectedSheetName)}' belum diunggah ke NSA Cloud.`);
+        return;
+    }
+
+    // Memanggil fungsi global bawaan openPdfModal(title, driveId)
+    if (typeof openPdfModal === "function") {
+        openPdfModal(formatSheetNameToReadable(nsaSelectedSheetName), driveId);
+    } else {
+        alert("Fungsi penampil PDF Modal bawaan tidak ditemukan.");
+    }
+}
+
+// Helper Formatters
+function formatRupiah(num) {
+    return "Rp " + Number(num).toLocaleString("id-ID");
+}
+
+function parseSheetName(sName) {
+    const match = sName.match(/^([A-Za-z]+)\s*([0-9]{4})$/);
+    if (match) {
+        const mStr = match[1];
+        const year = parseInt(match[2], 10);
+        const mIdx = NAMA_BULAN_INDONESIA.findIndex(b => b.toLowerCase() === mStr.toLowerCase());
+        return { monthStr: mStr, year: year, monthIdx: mIdx };
+    }
+    return { monthStr: "", year: 2026, monthIdx: 0 };
+}
+
+function formatSheetNameToReadable(sName) {
+    const p = parseSheetName(sName);
+    if (p.monthStr) {
+        return `${p.monthStr.charAt(0).toUpperCase() + p.monthStr.slice(1)} ${p.year}`;
+    }
+    return sName;
+}
 </script>
 
 </body>
