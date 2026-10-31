@@ -14164,18 +14164,34 @@ async function fetchDrivePdfCatalog() {
 // 2. Load Grafik Card A & Card B saat pertama kali tab dimuat
 async function loadYearlyAndMonthlyCharts() {
     const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonthIdx = now.getMonth();
-    const currentMonthName = NAMA_BULAN_INDONESIA[currentMonthIdx];
-    const currentSheetName = `${currentMonthName}${currentYear}`;
+    const currentDateNum = now.getDate(); // Ambil tanggal hari ini (1 - 31)
 
+    let targetYear = now.getFullYear();
+    let targetMonthIdx = now.getMonth();
+
+    // -------------------------------------------------------------------------
+    // LOGIKA TOLERANSI DELAY (GRACE PERIOD TANGGAL 1-3)
+    // Jika tanggal 1, 2, atau 3, Card B menampilkan bulan sebelumnya
+    // -------------------------------------------------------------------------
+    if (currentDateNum <= 3) {
+        targetMonthIdx = targetMonthIdx - 1;
+        if (targetMonthIdx < 0) {
+            targetMonthIdx = 11; // Kembali ke Desember jika bulan sekarang Januari
+            targetYear = targetYear - 1;
+        }
+    }
+
+    const targetMonthName = NAMA_BULAN_INDONESIA[targetMonthIdx];
+    const targetSheetName = `${targetMonthName}${targetYear}`;
+
+    // Update Judul Card A & B
     const titleA = document.getElementById("card-a-title");
     const titleB = document.getElementById("card-b-title");
     const subB = document.getElementById("card-b-sub");
 
-    if (titleA) titleA.textContent = `Progres ${currentYear}`;
-    if (titleB) titleB.textContent = `Progres ${currentMonthName} ${currentYear}`;
-    if (subB) subB.textContent = `${currentMonthName} ${currentYear}`;
+    if (titleA) titleA.textContent = `Progres ${targetYear}`;
+    if (titleB) titleB.textContent = `Progres ${targetMonthName} ${targetYear}`;
+    if (subB) subB.textContent = `${targetMonthName} ${targetYear}`;
 
     let yearlyLabels = [];
     let yearlyTotals = [];
@@ -14185,10 +14201,10 @@ async function loadYearlyAndMonthlyCharts() {
         selector.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">Memuat daftar lembar...</option>`;
     }
 
-    // Paralel Fetch untuk semua bulan hingga bulan berjalan
+    // Fetch Paralel untuk semua bulan hingga target bulan berjalan
     const fetchPromises = [];
-    for (let i = 0; i <= currentMonthIdx; i++) {
-        const sheetName = `${NAMA_BULAN_INDONESIA[i]}${currentYear}`;
+    for (let i = 0; i <= targetMonthIdx; i++) {
+        const sheetName = `${NAMA_BULAN_INDONESIA[i]}${targetYear}`;
         fetchPromises.push(
             fetch(`${NSA_FINANCE_API_URL}?bulan=${sheetName}`)
                 .then(r => r.json())
@@ -14229,9 +14245,9 @@ async function loadYearlyAndMonthlyCharts() {
     // Render Grafik Card A
     renderChartCardA(yearlyLabels, yearlyTotals);
 
-    // Fetch & Render Grafik Card B (Bulan Berjalan)
+    // Fetch & Render Grafik Card B (Menggunakan targetSheetName sesuai logika toleransi)
     try {
-        const resB = await fetch(`${NSA_FINANCE_API_URL}?bulan=${currentSheetName}`);
+        const resB = await fetch(`${NSA_FINANCE_API_URL}?bulan=${targetSheetName}`);
         const jsonB = await resB.json();
         if (jsonB.status === "success" && jsonB.data) {
             let dailyLabels = jsonB.data.map(d => d.tanggal ? d.tanggal.split('/')[0] : '');
@@ -14316,46 +14332,6 @@ function renderChartCardB(labels, dataValues) {
     const canvas = document.getElementById("chartProgresBulan");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    if (chartInstanceB) chartInstanceB.destroy();
-
-    chartInstanceB = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Harian',
-                data: dataValues,
-                borderColor: '#2dd4bf',
-                backgroundColor: 'rgba(45, 212, 191, 0.15)',
-                fill: true,
-                tension: 0.35,
-                pointRadius: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } },
-                y: { ticks: { color: '#f8fafc', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
-            }
-        }
-    });
-}
-
-// Helper Format nama sheet
-function formatSheetNameToReadable(sName) {
-    const match = sName.match(/^([A-Za-z]+)\s*([0-9]{4})$/);
-    if (match) {
-        return `${match[1].charAt(0).toUpperCase() + match[1].slice(1)} ${match[2]}`;
-    }
-    return sName;
-}
-
-// 4. Renderer Chart.js untuk Card B
-function renderChartCardB(labels, dataValues) {
-    const ctx = document.getElementById("chartProgresBulan").getContext("2d");
     if (chartInstanceB) chartInstanceB.destroy();
 
     chartInstanceB = new Chart(ctx, {
