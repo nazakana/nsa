@@ -1238,98 +1238,112 @@ html.dark-mode-active #page-title {
 </div>
 
 
-<!-- MODAL 2: PROGRES HARIAN -->
-<div id="modal-harian" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4 transition-all duration-300">
-    <div class="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[28px] bg-white relative my-auto animate-in fade-in zoom-in-95 duration-200">
-        <div class="sticky top-0 bg-white/90 backdrop-blur px-6 py-4 border-b border-green-100 flex justify-between items-center z-10 rounded-t-[28px]">
-            <span class="text-xs font-black text-white uppercase tracking-widest bg-teal-600 px-3 py-1 rounded-full">Progres Harian</span>
-            <button onclick="tutupModal('modal-harian')" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-green-100 hover:text-green-700 flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-xmark"></i>
+<!-- MODAL 2: PROGRES HARIAN (CLEAN FULL-WIDTH BAR HARIAN & CACHED) -->
+<div id="modal-harian" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[99999] hidden items-center justify-center p-3 sm:p-4 transition-opacity duration-200">
+    <div class="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[24px] bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-950 p-5 text-white shadow-2xl border border-emerald-500/30 relative my-auto">
+        
+        <!-- Glow Effect Background -->
+        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-teal-500/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none"></div>
+
+        <!-- STICKY HEADER MODAL 2 -->
+        <div class="relative z-10 pb-4 border-b border-emerald-500/20 flex justify-between items-center mb-4">
+            <div class="flex flex-col justify-center min-w-0 pr-2">
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-teal-300">IKHTISAR HARIAN</span>
+                <h4 id="modal-harian-title" class="text-base sm:text-lg font-extrabold text-white leading-tight mt-0.5">Statistik Harian</h4>
+            </div>
+            <button onclick="tutupModal('modal-harian')" class="w-8 h-8 rounded-full bg-white/10 text-teal-200 hover:bg-emerald-500/30 hover:text-white flex items-center justify-center transition-colors border border-white/10 focus:outline-none shrink-0">
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
         </div>
 
-        <div class="p-4 md:p-6">
-            <div class="n-box-grafik bg-white border-2 border-green-400 rounded-[24px] overflow-hidden shadow-sm relative flex flex-col justify-between">
+        <div class="p-0 sm:p-1 relative z-10">
+            <div class="n-box-grafik bg-slate-900/80 border border-emerald-500/30 rounded-[20px] overflow-hidden shadow-inner relative flex flex-col justify-between backdrop-blur-sm">
                 
-                <div id="loading-layer-harian" class="absolute top-0 left-0 w-full h-full bg-white/90 z-50 flex flex-col justify-center items-center transition-opacity duration-300">
-                    <div class="spinner-putar w-8 h-8 border-4 border-green-100 border-t-4 border-green-500 rounded-full animate-spin"></div>
-                    <span class="text-[10px] text-green-600 font-bold mt-2 tracking-wide">Memuat Data Keuangan...</span>
+                <!-- Overlay Loading Material Style -->
+                <div id="loading-layer-harian" class="absolute inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex flex-col justify-center items-center transition-opacity duration-300">
+                    <div class="relative w-9 h-9 flex items-center justify-center">
+                        <div class="absolute inset-0 rounded-full border-2 border-teal-500/20 border-t-teal-400 animate-spin"></div>
+                        <div class="w-5 h-5 rounded-full border-2 border-emerald-500/20 border-b-emerald-300 animate-spin [animation-direction:reverse]"></div>
+                    </div>
+                    <span class="text-xs font-bold text-teal-100 tracking-wide mt-3">Memuat Data Keuangan...</span>
                 </div>
 
-                <div class="p-3 md:p-5 border-b border-green-100 flex justify-between items-center bg-gradient-to-r from-white to-green-50/30">
-                    <h2 class="text-xs md:text-sm font-medium text-gray-900 m-0 leading-tight">
-                        <span class="text-green-600 text-[10px] font-black uppercase tracking-wider">Progres Harian</span><br>
-                        <strong>Pendapatan Kotor Bulan Ini</strong>
-                    </h2>
-                    <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-0.5 rounded-full">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span>
-                        <small class="text-green-700 text-[10px] font-bold tracking-wide">Geser &rarr;</small>
+                <!-- KONTEN GRAFIK (FULL-WIDTH 100%) -->
+                <div class="n-container-harian w-full h-[450px] md:h-[500px] overflow-y-auto p-3 md:p-4 bg-transparent custom-scrollbar">
+                    <div class="w-full h-[750px] relative">
+                        <canvas id="statistik_bulan_ini"></canvas>
                     </div>
                 </div>
 
-                <div class="n-container-harian flex flex-nowrap h-[200px] md:h-[260px] overflow-hidden flex-grow">
-                    <div class="w-[110px] md:w-[140px] flex-shrink-0 overflow-y-auto border-r border-green-50 p-2 bg-gray-50/50">
-                        <table class="w-full text-[11px] md:text-xs border-collapse font-medium text-gray-700">
-                            <thead class="sticky top-0 bg-gray-50 z-10">
-                                <tr>
-                                    <th class="text-left py-1 px-1.5 text-gray-500 font-bold text-[9px] uppercase">Tgl</th>
-                                    <th class="text-right py-1 px-1.5 text-gray-500 font-bold text-[9px] uppercase">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabel_ringkasan_bulan_ini"></tbody>
-                        </table>
-                    </div>
-
-                    <div class="flex-grow overflow-x-auto p-2 md:p-4 bg-white flex items-center" style="-webkit-overflow-scrolling: touch;">
-                        <div class="w-[850px] min-w-[850px] h-[170px] md:h-[220px] relative">
-                            <canvas id="statistik_bulan_ini"></canvas>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
+
+        <!-- FOOTER INFO -->
+        <div class="relative z-10 pt-3 border-t border-emerald-500/20 mt-3 flex items-center justify-between text-[11px] text-teal-200/70">
+            <span class="flex items-center gap-1.5 font-medium">
+                <i class="fa-solid fa-chart-bar text-teal-400"></i>
+                Nominal harian tertera langsung di dalam batang (Tunai + QRIS)
+            </span>
+        </div>
+
     </div>
 </div>
 
+<!-- MODAL 3: PROGRES BULANAN / TAHUNAN (PERMANENT HEADER STRUCTURE) -->
+<div id="modal-bulanan" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[99999] hidden items-center justify-center p-3 sm:p-4 transition-opacity duration-200">
+    <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[24px] bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-950 p-5 text-white shadow-2xl border border-emerald-500/30 relative my-auto">
+        
+        <!-- Glow Effect Background -->
+        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-teal-500/15 blur-3xl pointer-events-none"></div>
 
-<!-- MODAL 3: PROGRES BULANAN -->
-<div id="modal-bulanan" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[9999] hidden items-center justify-center p-4 transition-all duration-300">
-    <div class="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[28px] bg-white relative my-auto animate-in fade-in zoom-in-95 duration-200">
-        <div class="sticky top-0 bg-white/90 backdrop-blur px-6 py-4 border-b border-green-100 flex justify-between items-center z-10 rounded-t-[28px]">
-            <span class="text-xs font-black text-white uppercase tracking-widest bg-green-600 px-3 py-1 rounded-full">Progres Bulanan</span>
-            <button onclick="tutupModal('modal-bulanan')" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-green-100 hover:text-green-700 flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-xmark"></i>
+        <!-- STICKY HEADER MODAL 3 (FIXED TAG STRUCTURE) -->
+        <div class="relative z-10 pb-4 border-b border-emerald-500/20 flex justify-between items-center mb-4">
+            <div class="flex flex-col justify-center min-w-0 pr-2">
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">IKHTISAR BULANAN</span>
+                <h4 class="text-base sm:text-lg font-extrabold text-white leading-tight mt-0.5">
+                    Progres Pendapatan <span id="modal-card-a-year-text">2026</span>
+                </h4>
+            </div>
+            <button type="button" onclick="tutupModal('modal-bulanan')" class="w-8 h-8 rounded-full bg-white/10 text-emerald-200 hover:bg-emerald-500/30 hover:text-white flex items-center justify-center transition-colors border border-white/10 focus:outline-none shrink-0">
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
         </div>
 
-        <div class="p-4 md:p-6">
-            <div id="sesi-grafik" class="searchable-content bg-white border-2 border-green-400 rounded-[24px] overflow-hidden shadow-sm flex flex-col justify-between relative">
+        <!-- CONTAINER CANVAS DENGAN LOADER MATERIAL STYLED -->
+        <div class="relative z-10 w-full h-64 sm:h-72 my-2">
+            
+            <!-- Overlay Loading Material Style -->
+            <div id="loader-modal-card-a" class="absolute inset-0 z-20 bg-slate-900/90 backdrop-blur-md rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-300">
+                <div class="relative w-9 h-9 flex items-center justify-center">
+                    <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20 border-t-emerald-400 animate-spin"></div>
+                    <div class="w-5 h-5 rounded-full border-2 border-teal-500/20 border-b-teal-300 animate-spin [animation-direction:reverse]"></div>
+                </div>
                 
-                <div id="loading-grafik-bulanan" class="absolute top-0 left-0 w-full h-full bg-white/90 z-40 flex flex-col justify-center items-center transition-opacity duration-300">
-                    <div class="spinner-putar w-8 h-8 border-4 border-green-100 border-t-4 border-green-500 rounded-full animate-spin"></div>
-                    <span class="text-[10px] text-green-600 font-bold mt-2 tracking-wide">Mengambil Data Spreadsheet...</span>
-                </div>
-
-                <div class="p-3 md:p-5 border-b border-green-100 flex justify-between items-center bg-gradient-to-r from-white to-green-50/30 z-10">
-                    <h2 class="text-xs md:text-sm font-medium text-gray-900 m-0 leading-tight">
-                        <span class="text-green-600 text-[10px] font-black uppercase tracking-wider">PROGRES BULANAN</span><br>
-                        <strong id="judul-rentang-bulan">Memuat Rentang Bulan...</strong>
-                    </h2>
-                    <div class="flex items-center gap-1.5 bg-green-100 px-2.5 py-0.5 rounded-full">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span>
-                        <small class="text-green-700 text-[10px] font-bold tracking-wide">Bulan</small>
-                    </div>
-                </div>
-
-                <div id="wadah-grafik" class="w-full bg-white relative">
-                    <div id="container-canvas" class="w-full p-3 md:p-4 overflow-x-auto overflow-y-hidden" style="-webkit-overflow-scrolling: touch;">
-                        <div id="wrapper-chart-inner" class="h-[210px] md:h-[240px] relative">
-                            <canvas id="grafikPendapatan"></canvas>
-                        </div>
+                <div class="text-center">
+                    <span id="loader-text-modal-card-a" class="text-xs font-bold text-emerald-100 tracking-wide block">Mengambil data...</span>
+                    <div class="flex items-center justify-center gap-1 mt-1.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
                     </div>
                 </div>
             </div>
+
+            <!-- Canvas Utama -->
+            <canvas id="chartProgresTahunModal"></canvas>
         </div>
+
+        <!-- FOOTER INFO -->
+        <div class="relative z-10 pt-3 border-t border-white/10 mt-3 flex items-center justify-between text-[11px] text-emerald-200/70">
+            <span class="flex items-center gap-1.5 font-medium">
+                <i class="fa-solid fa-hand-pointer text-emerald-400"></i>
+                Hover / sentuh batang untuk detail akumulasi
+            </span>
+            
+        </div>
+
     </div>
 </div>
 
@@ -1715,49 +1729,52 @@ function konversiFileKeBase64(file) {
         </div>
     </div>
 
-    <!-- CARD B: PROGRES BULAN BERJALAN (Grafik Garis / Linear) -->
-    <div class="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-teal-800 via-emerald-900 to-slate-950 p-5 text-white shadow-xl border border-teal-400/30 min-h-[230px] flex flex-col justify-between">
-        <div class="absolute -bottom-12 -left-12 w-40 h-40 rounded-full bg-teal-400/20 blur-2xl pointer-events-none"></div>
-        
-        <div class="relative z-10 flex justify-between items-start mb-2">
-            <div>
-                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-teal-300 block">IKHTISAR BULAN INI</span>
-                <h4 id="card-b-title" class="text-base sm:text-lg font-extrabold text-white">Progres Bulan Berjalan</h4>
-            </div>
-           
-        </div>
-
-        <!-- CANVAS CONTAINER DENGAN LOADER MATERIAL UI (CARD B) -->
-        <div class="relative z-10 w-full h-36">
-            <!-- Overlay Loading Material Style -->
-            <div id="loader-card-b" class="absolute inset-0 z-20 bg-slate-950/90 backdrop-blur-md rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-300">
-                <div class="relative w-9 h-9 flex items-center justify-center">
-                    <div class="absolute inset-0 rounded-full border-2 border-teal-500/20 border-t-teal-300 animate-spin"></div>
-                    <div class="w-5 h-5 rounded-full border-2 border-emerald-500/20 border-b-emerald-400 animate-spin [animation-direction:reverse]"></div>
-                </div>
-                
-                <div class="text-center">
-                    <span id="loader-text-card-b" class="text-xs font-bold text-teal-100 tracking-wide block">
-                        Mengambil data...
-                    </span>
-                    <div class="flex items-center justify-center gap-1 mt-1.5">
-                        <span class="w-1.5 h-1.5 bg-teal-300 rounded-full animate-bounce [animation-duration:0.6s]"></span>
-                        <span class="w-1.5 h-1.5 bg-teal-300 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
-                        <span class="w-1.5 h-1.5 bg-teal-300 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
-                    </div>
-                </div>
-            </div>
-
-            <canvas id="chartProgresBulan"></canvas>
-        </div>
-
-        <div class="relative z-10 pt-2 border-t border-white/10 mt-1 flex items-center justify-between text-[10px] text-teal-200/70">
-            <span class="flex items-center gap-1.5 font-medium">
-                <i class="fa-solid fa-wave-square text-teal-400"></i>
-                Fluktuasi transaksi harian kasir
-            </span>
+<!-- CARD B: PROGRES BULAN BERJALAN (Grafik Batang Horizontal) -->
+<div class="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-teal-800 via-emerald-900 to-slate-950 p-5 text-white shadow-xl border border-teal-400/30 min-h-[280px] flex flex-col justify-between">
+    <div class="absolute -bottom-12 -left-12 w-40 h-40 rounded-full bg-teal-400/20 blur-2xl pointer-events-none"></div>
+    
+    <div class="relative z-10 flex justify-between items-start mb-2">
+        <div>
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-teal-300 block">IKHTISAR BULAN INI</span>
+            <h4 id="card-b-title" class="text-base sm:text-lg font-extrabold text-white">Progres Bulan Berjalan</h4>
         </div>
     </div>
+
+    <!-- CANVAS CONTAINER DENGAN AREA SCROLL VERTIKAL & LOADER MATERIAL UI -->
+    <div class="relative z-10 w-full h-64 sm:h-72 overflow-y-auto pr-1 custom-scrollbar">
+        <!-- Overlay Loading Material Style -->
+        <div id="loader-card-b" class="absolute inset-0 z-20 bg-slate-950/90 backdrop-blur-md rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-300">
+            <div class="relative w-9 h-9 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full border-2 border-teal-500/20 border-t-teal-300 animate-spin"></div>
+                <div class="w-5 h-5 rounded-full border-2 border-emerald-500/20 border-b-emerald-400 animate-spin [animation-direction:reverse]"></div>
+            </div>
+            
+            <div class="text-center">
+                <span id="loader-text-card-b" class="text-xs font-bold text-teal-100 tracking-wide block">
+                    Mengambil data...
+                </span>
+                <div class="flex items-center justify-center gap-1 mt-1.5">
+                    <span class="w-1.5 h-1.5 bg-teal-300 rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                    <span class="w-1.5 h-1.5 bg-teal-300 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                    <span class="w-1.5 h-1.5 bg-teal-300 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wadah Tinggi Dinamis untuk Canvas Horizontal Bar -->
+        <div class="h-[650px] w-full relative">
+            <canvas id="chartProgresBulan"></canvas>
+        </div>
+    </div>
+
+    <div class="relative z-10 pt-2 border-t border-white/10 mt-2 flex items-center justify-between text-[10px] text-teal-200/70">
+        <span class="flex items-center gap-1.5 font-medium">
+            <i class="fa-solid fa-hand-pointer text-teal-400"></i>
+            Hover / sentuh batang untuk detail harian
+        </span>
+
+    </div>
+</div>
 
 </div>
     <!-- SEKSI NAVIGASI DROPDOWN & STATUS BUKU -->
@@ -4668,33 +4685,13 @@ function siarkanNotifikasiLangsung() {
 
 
 <script>
-// URL Web App All-In-One Fotokopi resmi milik Zero
+// ==========================================
+// KONSTANTA API
+// ==========================================
 const API_URL_FOTOKOPI = "https://script.google.com/macros/s/AKfycbysOqOqetjMttC9qyCLkOia9G4oor44nzyrlRN1TddAe7L0dJEMqHArXs0JQOLd6uKK/exec";
 const API_URL_SPREADSHEET_B = "https://script.google.com/macros/s/AKfycbwsB1-Pg5rewhEC_uAgoE52wqrDNWsTbMaj2t0QkqrY6-8UGqmGkeH0A9vOgdFtXP8z/exec";
 
-// ==========================================
-// KONTROL MODAL UTAMA
-// ==========================================
-function bukaModal(idModal) {
-    const modal = document.getElementById(idModal);
-    if (!modal) return;
-    
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
 
-    // Jika yang dibuka adalah modal harian, panggil otomatis fungsi muat grafik
-    if (idModal === 'modal-harian') {
-        muatStatistikBulanIni();
-    }
-}
-
-function tutupModal(idModal) {
-    const modal = document.getElementById(idModal);
-    if (!modal) return;
-    
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-}
 
 // ==========================================
 // FUNGSI SINKRONISASI KASIR B KE A
@@ -4834,218 +4831,7 @@ async function sinkronkanFullSheetBKeA(namaBulanTarget) {
     }
 }
 
-// ==========================================
-// FUNGSI MEMUAT DATA STATISTIK BULAN INI
-// ==========================================
-function muatStatistikBulanIni() {
-    // Reset dan tampilkan kembali loading layer
-    const loadingLayer = document.getElementById('loading-layer-harian');
-    if (loadingLayer) {
-        loadingLayer.style.display = 'flex';
-        loadingLayer.style.opacity = '1';
-        loadingLayer.innerHTML = `
-            <div class="spinner-putar w-8 h-8 border-4 border-green-100 border-t-4 border-green-500 rounded-full animate-spin"></div>
-            <span class="text-[10px] text-green-600 font-bold mt-2 tracking-wide">Memuat Data Keuangan...</span>
-        `;
-    }
 
-    const daftarBulan = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-    
-    const waktuSekarang = new Date();
-    const namaBulanSekarang = daftarBulan[waktuSekarang.getMonth()];
-    const tahunSekarang = waktuSekarang.getFullYear(); 
-    
-    // Default nama sheet memakai gabungan tanpa spasi (misal: "Oktober2026")
-    const namaSheetBulanIni = `${namaBulanSekarang}${tahunSekarang}`;
-    const urlOtomatis = `${API_URL_FOTOKOPI}?bulan=${encodeURIComponent(namaSheetBulanIni)}`;
-
-    fetch(urlOtomatis, {
-        method: "GET",
-        mode: "cors",
-        redirect: "follow"
-    })
-    .then(response => response.json())
-    .then(hasil => {
-        // Jika pencarian pertama tanpa spasi gagal, coba dengan format pakai spasi ("Oktober 2026")
-        if (hasil.status !== "success" || !hasil.data || hasil.data.length === 0) {
-            const namaSheetDua = `${namaBulanSekarang} ${tahunSekarang}`;
-            return fetch(`${API_URL_FOTOKOPI}?bulan=${encodeURIComponent(namaSheetDua)}`).then(r => r.json());
-        }
-        return hasil;
-    })
-    .then(hasil => {
-        if (hasil.status !== "success" || !hasil.data || hasil.data.length === 0) {
-            console.error("Gagal mengambil data dari Google Sheets:", hasil.message || "Data kosong");
-            tampilkanStatusGagalLoading();
-            return;
-        }
-
-        const dataMaster = hasil.data; 
-
-        const labelTanggal = dataMaster.map(item => {
-            if (item.tanggal && String(item.tanggal).includes("/")) {
-                const pecah = String(item.tanggal).split("/");
-                return Number(pecah[0]); 
-            }
-            
-            const tanggalObjek = new Date(item.tanggal);
-            return isNaN(tanggalObjek.getTime()) ? item.tanggal : tanggalObjek.getDate();
-        });
-
-        const dataPendapatan = dataMaster.map(item => Number(item.pendapatan_kotor) || 0);
-        
-        // Render Tabel Ringkasan Kiri
-        const tabelBody = document.getElementById('tabel_ringkasan_bulan_ini');
-        if (tabelBody) {
-            let htmlBaris = "";
-            dataMaster.forEach((item, indeks) => {
-                let angkaTanggal = labelTanggal[indeks]; 
-                htmlBaris += `
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 5px; color: #7f8c8d; font-weight: bold; text-align: left;">${angkaTanggal}</td>
-                        <td style="padding: 5px; text-align: right; font-weight: bold; color: #2c3e50;">
-                            ${Number(item.pendapatan_kotor || 0).toLocaleString('id-ID')}
-                        </td>
-                    </tr>`;
-            });
-            tabelBody.innerHTML = htmlBaris;
-        }
-        
-        // Beri jeda 100ms agar DOM ter-render sempurna sebelum Canvas mengukur lebar
-        setTimeout(() => {
-            buatGrafikHarian(labelTanggal, dataPendapatan);
-            hilangkanLayerLoading();
-        }, 100);
-    })
-    .catch(err => {
-        console.error("Proses fetch data gagal total:", err);
-        tampilkanStatusGagalLoading();
-    });
-}
-
-// ==========================================
-// FUNGSI RENDER CHART.JS
-// ==========================================
-function buatGrafikHarian(labels, dataValues) {
-    const canvasElement = document.getElementById('statistik_bulan_ini');
-    if (!canvasElement) return;
-
-    const ctx = canvasElement.getContext('2d');
-    
-    const gradientHijau = ctx.createLinearGradient(0, 0, 0, 160);
-    gradientHijau.addColorStop(0, 'rgba(34, 197, 94, 0.15)');
-    gradientHijau.addColorStop(1, 'rgba(34, 197, 94, 0.0)');
-
-    if (window.grafikHarianFotokopi) {
-        window.grafikHarianFotokopi.destroy();
-    }
-
-    window.grafikHarianFotokopi = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Pendapatan Kotor',
-                data: dataValues,
-                borderWidth: 3.5,
-                fill: true, 
-                backgroundColor: gradientHijau,
-                tension: 0.3, 
-                pointRadius: 4, 
-                pointHoverRadius: 6,
-                pointBackgroundColor: '#ffffff',
-                pointBorderColor: '#22c55e',
-                pointBorderWidth: 2,
-                segment: {
-                    borderColor: ctxSegment => {
-                        if (!ctxSegment || !ctxSegment.p0 || !ctxSegment.p1 || 
-                            ctxSegment.p0.parsed === undefined || ctxSegment.p1.parsed === undefined) {
-                            return '#22c55e'; 
-                        }
-                        
-                        const val1 = ctxSegment.p0.parsed.y;
-                        const val2 = ctxSegment.p1.parsed.y;
-                        
-                        if (val2 > val1) {
-                            return '#22c55e'; // Naik (Hijau)
-                        } else if (val2 < val1 && val2 < (val1 * 0.5)) {
-                            return '#ef4444'; // Turun Parah >50% (Merah)
-                        } else if (val2 < val1) {
-                            return '#eab308'; // Turun Tipis (Kuning)
-                        }
-                        return '#22c55e'; 
-                    }
-                }
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: { 
-                    beginAtZero: true,
-                    grid: { color: '#f0fdf4' },
-                    ticks: {
-                        color: '#94a3b8',
-                        font: { size: 10 },
-                        callback: function(value) {
-                            return value.toLocaleString('id-ID'); 
-                        }
-                    }
-                },
-                x: { 
-                    grid: { display: false },
-                    ticks: {
-                        color: '#64748b', 
-                        font: { 
-                            size: 11,          
-                            weight: 'bold', 
-                            family: 'system-ui' 
-                        },
-                        maxRotation: 0,
-                        minRotation: 0,
-                        autoSkip: false
-                    }
-                }
-            }
-        }
-    });
-}
-
-// ==========================================
-// FUNGSI HELPER LOADING LAYER
-// ==========================================
-function hilangkanLayerLoading() {
-    const loadingLayer = document.getElementById('loading-layer-harian');
-    if (loadingLayer) {
-        loadingLayer.style.opacity = '0';
-        setTimeout(() => {
-            loadingLayer.style.display = 'none';
-        }, 300);
-    }
-}
-
-function tampilkanStatusGagalLoading() {
-    const loadingLayer = document.getElementById('loading-layer-harian');
-    if (loadingLayer) {
-        loadingLayer.innerHTML = `
-            <span style="font-family: system-ui, sans-serif; font-size: 0.75rem; color: #e74c3c; font-weight: bold; text-align: center; padding: 0 15px;">
-                &times; Sepertinya bulan ini belum ada data masuk. Jika ada kesalahan silakan hubungi maintainer atau refresh halaman!
-            </span>
-        `;
-    }
-}
-
-// Load otomatis saat halaman pertama kali siap
-window.addEventListener('DOMContentLoaded', () => {
-    muatStatistikBulanIni();
-});
 </script>
 
 
@@ -5576,7 +5362,6 @@ function pemicuTombolSinkronasi() {
         <p class="text-[10px] text-green-600/70 mt-4 uppercase tracking-widest font-bold">SISTEM PENGINGAT OTOMATIS NURJAYA ABADI</p>
     </div>
 </div>
-
 
 
 <script>
@@ -10266,53 +10051,7 @@ function tampilkanStatusGantiPinFK(pesan, tipe) {
     </div>
 </div>
 
-<script>
-function bukaModal(idModal) {
-    const modal = document.getElementById(idModal);
-    if (modal) {
-        // Pindahkan modal ke body secara otomatis agar tidak terjebak efek CSS transform/fade-in parent
-        if (modal.parentElement !== document.body) {
-            document.body.appendChild(modal);
-        }
 
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-
-        // Kunci scroll latar belakang halaman
-        document.body.style.overflow = 'hidden';
-
-        // Reset scroll posisi modal ke paling atas saat baru dibuka
-        const innerContent = modal.querySelector('div');
-        if (innerContent) innerContent.scrollTop = 0;
-
-        // Memicu Chart.js agar re-render presisi
-        setTimeout(() => {
-            window.dispatchEvent(new Event('resize'));
-        }, 50);
-    }
-}
-
-function tutupModal(idModal) {
-    const modal = document.getElementById(idModal);
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-
-        // Kembalikan scroll halaman
-        document.body.style.overflow = '';
-    }
-}
-
-// Tutup modal saat area luar (backdrop) diklik
-window.addEventListener('click', function(e) {
-    ['modal-pendapatan', 'modal-harian', 'modal-bulanan'].forEach(id => {
-        const modal = document.getElementById(id);
-        if (e.target === modal) {
-            tutupModal(id);
-        }
-    });
-});
-</script>
 
 
 <script>
@@ -14048,13 +13787,10 @@ async function prosesUploadNota(event) {
 
 <script>
 // =========================================================================
-// MODUL TERISOLASI: TAB ARSIP & DASHBOARD FINANSIAL
+// MODUL TERISOLASI: TAB ARSIP & DASHBOARD FINANSIAL (FIXED DROPDOWN & CACHED MODAL 2)
 // =========================================================================
 
-// Endpoint Apps Script khusus sheet data
 const NSA_FINANCE_API_URL = "https://script.google.com/macros/s/AKfycbysOqOqetjMttC9qyCLkOia9G4oor44nzyrlRN1TddAe7L0dJEMqHArXs0JQOLd6uKK/exec";
-
-// Endpoint Google Drive PDF (dikorelasikan dari data Drive API)
 const NSA_DRIVE_API_URL = "https://script.google.com/macros/s/AKfycbxguP0YRWlZnap1GwqLTFnGxZfdCp4fSpR2l64TS5IgKaFat-9TfkWmnn97PNw68-e5/exec";
 
 let nsaSheetList = [];
@@ -14063,13 +13799,42 @@ let nsaCurrentSheetData = [];
 let nsaSelectedSheetName = "";
 
 let chartInstanceA = null;
+let chartInstanceAModal = null;
 let chartInstanceB = null;
 let loadingTextInterval = null;
+
+// CACHE GLOBAL FINANCIAL DATA (TAB ARSIP)
+let cachedYearlyLabels = [];
+let cachedYearlyTotals = [];
+let cachedDailyLabels = [];
+let cachedDailyTotals = [];
+
+// CACHE KHUSUS MODAL 2 (REALTIME BULAN INI)
+let cachedRealtimeDailyLabels = [];
+let cachedRealtimeDailyTotals = [];
 
 const NAMA_BULAN_INDONESIA = [
     "Januari", "Februari", "Maret", "April", "Mei", "Juni",
     "Juli", "Agustus", "September", "Oktober", "November", "Desember"
 ];
+
+// 1. VARIABEL REALTIME BULAN SAAT INI (KHUSUS MODAL 2 / DASHBOARD REALTIME)
+const nowRealtime = new Date();
+const nsaRealtimeYear = nowRealtime.getFullYear();
+const nsaRealtimeMonthName = NAMA_BULAN_INDONESIA[nowRealtime.getMonth()];
+
+// 2. VARIABEL BULAN ATURAN DELAY 3 HARI (KHUSUS TAB ARSIP & CARD B)
+const nowInit = new Date();
+let nsaTargetYear = nowInit.getFullYear();
+let targetMonthIdxInit = nowInit.getMonth();
+if (nowInit.getDate() <= 3) {
+    targetMonthIdxInit = targetMonthIdxInit - 1;
+    if (targetMonthIdxInit < 0) {
+        targetMonthIdxInit = 11;
+        nsaTargetYear = nsaTargetYear - 1;
+    }
+}
+let nsaTargetMonthName = NAMA_BULAN_INDONESIA[targetMonthIdxInit];
 
 const LOADING_MESSAGES = [
     "Mengambil data...",
@@ -14080,8 +13845,27 @@ const LOADING_MESSAGES = [
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
+    updateHeaderTitlesExplicit();
     initTabArchiveModule();
 });
+
+function updateHeaderTitlesExplicit() {
+    const titleA = document.getElementById("card-a-title");
+    const titleB = document.getElementById("card-b-title");
+    const subB = document.getElementById("card-b-sub");
+    
+    const yearSpanModal = document.getElementById("modal-card-a-year-text");
+    const titleHarianModal = document.getElementById("modal-harian-title");
+
+    // Judul Card A & B mengikuti aturan delay 3 hari
+    if (titleA) titleA.textContent = `Progres ${nsaTargetYear}`;
+    if (titleB) titleB.textContent = `Progres ${nsaTargetMonthName} ${nsaTargetYear}`;
+    if (subB) subB.textContent = `${nsaTargetMonthName} ${nsaTargetYear}`;
+    if (yearSpanModal) yearSpanModal.textContent = nsaTargetYear;
+    
+    // Judul Modal 2 MURNI REALTIME (Bulan berjalan saat ini)
+    if (titleHarianModal) titleHarianModal.textContent = `Statistik ${nsaRealtimeMonthName} ${nsaRealtimeYear}`;
+}
 
 async function initTabArchiveModule() {
     startLoadingTextLoop();
@@ -14098,31 +13882,73 @@ async function initTabArchiveModule() {
 }
 
 // -------------------------------------------------------------------------
-// LOGIKA ANIMASI TEKS LOADING MATERIAL UI
+// MANAJEMEN MODAL UTAMA (PROTEKSI DARI UNWANTED CLOSING)
+// -------------------------------------------------------------------------
+
+function bukaModal(idModal) {
+    const modal = document.getElementById(idModal);
+    if (!modal) return;
+
+    updateHeaderTitlesExplicit();
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+
+    const innerContent = modal.querySelector('div');
+    if (innerContent) innerContent.scrollTop = 0;
+
+    setTimeout(() => {
+        if (idModal === 'modal-harian') {
+            // Panggil muatStatistikBulanIni (Akan cek cache internal dulu)
+            muatStatistikBulanIni();
+        }
+
+        if (idModal === 'modal-bulanan') {
+            bukaModalBulananGrafik();
+        }
+
+        window.dispatchEvent(new Event('resize'));
+    }, 60);
+}
+
+function tutupModal(idModal) {
+    const modal = document.getElementById(idModal);
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+}
+
+window.addEventListener('click', function(e) {
+    ['modal-harian', 'modal-bulanan'].forEach(id => {
+        const modal = document.getElementById(id);
+        if (modal && e.target === modal) {
+            if (e.composedPath && e.composedPath()[0] === modal) {
+                tutupModal(id);
+            }
+        }
+    });
+});
+
+// -------------------------------------------------------------------------
+// LOGIKA FETCH DATA & RENDER CHARTS
 // -------------------------------------------------------------------------
 
 function startLoadingTextLoop() {
     let index = 0;
     const elA = document.getElementById("loader-text-card-a");
     const elB = document.getElementById("loader-text-card-b");
+    const elModal = document.getElementById("loader-text-modal-card-a");
 
     if (loadingTextInterval) clearInterval(loadingTextInterval);
 
     loadingTextInterval = setInterval(() => {
         index = (index + 1) % LOADING_MESSAGES.length;
         const msg = LOADING_MESSAGES[index];
-
-        [elA, elB].forEach(el => {
-            if (el) {
-                el.style.transition = "opacity 0.2s ease";
-                el.style.opacity = "0";
-                setTimeout(() => {
-                    el.textContent = msg;
-                    el.style.opacity = "1";
-                }, 200);
-            }
-        });
-    }, 850);
+        [elA, elB, elModal].forEach(el => { if (el) el.textContent = msg; });
+    }, 1000);
 }
 
 function stopAndHideLoaders() {
@@ -14134,21 +13960,29 @@ function stopAndHideLoaders() {
     ["a", "b"].forEach(card => {
         const loader = document.getElementById(`loader-card-${card}`);
         if (loader) {
-            loader.style.transition = "opacity 0.4s ease";
             loader.style.opacity = "0";
             loader.style.pointerEvents = "none";
-            setTimeout(() => {
-                loader.classList.add("hidden");
-            }, 400);
+            setTimeout(() => loader.classList.add("hidden"), 300);
         }
     });
+
+    if (cachedYearlyLabels.length > 0) {
+        sembunyikanLoaderModal3();
+    }
 }
 
-// -------------------------------------------------------------------------
-// LOGIKA UTAMA FETCH DATA & RENDER CHARTS
-// -------------------------------------------------------------------------
+function sembunyikanLoaderModal3() {
+    const loaderModal = document.getElementById("loader-modal-card-a");
+    if (loaderModal) {
+        loaderModal.style.transition = "opacity 0.3s ease";
+        loaderModal.style.opacity = "0";
+        loaderModal.style.pointerEvents = "none";
+        setTimeout(() => {
+            loaderModal.classList.add("hidden");
+        }, 350);
+    }
+}
 
-// 1. Ambil Katalog PDF dari Drive untuk pemetaan popup modal
 async function fetchDrivePdfCatalog() {
     try {
         const res = await fetch(NSA_DRIVE_API_URL);
@@ -14163,38 +13997,8 @@ async function fetchDrivePdfCatalog() {
     }
 }
 
-// 2. Load Grafik Card A & Card B saat pertama kali tab dimuat
 async function loadYearlyAndMonthlyCharts() {
-    const now = new Date();
-    const currentDateNum = now.getDate(); // Ambil tanggal hari ini (1 - 31)
-
-    let targetYear = now.getFullYear();
-    let targetMonthIdx = now.getMonth();
-
-    // -------------------------------------------------------------------------
-    // LOGIKA TOLERANSI DELAY (GRACE PERIOD TANGGAL 1-3)
-    // Jika tanggal 1, 2, atau 3, Card B menampilkan bulan sebelumnya
-    // -------------------------------------------------------------------------
-    if (currentDateNum <= 3) {
-        targetMonthIdx = targetMonthIdx - 1;
-        if (targetMonthIdx < 0) {
-            targetMonthIdx = 11; // Kembali ke Desember jika bulan sekarang Januari
-            targetYear = targetYear - 1;
-        }
-    }
-
-    const targetMonthName = NAMA_BULAN_INDONESIA[targetMonthIdx];
-    const targetSheetName = `${targetMonthName}${targetYear}`;
-
-    // Update Judul Card A & B
-    const titleA = document.getElementById("card-a-title");
-    const titleB = document.getElementById("card-b-title");
-    const subB = document.getElementById("card-b-sub");
-
-    if (titleA) titleA.textContent = `Progres ${targetYear}`;
-    if (titleB) titleB.textContent = `Progres ${targetMonthName} ${targetYear}`;
-    if (subB) subB.textContent = `${targetMonthName} ${targetYear}`;
-
+    const targetSheetName = `${nsaTargetMonthName}${nsaTargetYear}`;
     let yearlyLabels = [];
     let yearlyTotals = [];
 
@@ -14203,10 +14007,9 @@ async function loadYearlyAndMonthlyCharts() {
         selector.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">Memuat daftar lembar...</option>`;
     }
 
-    // Fetch Paralel untuk semua bulan hingga target bulan berjalan
     const fetchPromises = [];
-    for (let i = 0; i <= targetMonthIdx; i++) {
-        const sheetName = `${NAMA_BULAN_INDONESIA[i]}${targetYear}`;
+    for (let i = 0; i <= targetMonthIdxInit; i++) {
+        const sheetName = `${NAMA_BULAN_INDONESIA[i]}${nsaTargetYear}`;
         fetchPromises.push(
             fetch(`${NSA_FINANCE_API_URL}?bulan=${sheetName}`)
                 .then(r => r.json())
@@ -14219,7 +14022,12 @@ async function loadYearlyAndMonthlyCharts() {
 
     results.forEach(res => {
         if (res.json && res.json.status === "success" && res.json.data) {
-            let totalKotorBulan = res.json.data.reduce((acc, row) => acc + (Number(row.pendapatan_kotor) || 0), 0);
+            let totalKotorBulan = res.json.data.reduce((acc, row) => {
+                const kotorTunai = Number(row.pendapatan_kotor) || 0;
+                const qris = Number(row.pendapatan_qris) || 0;
+                return acc + kotorTunai + qris;
+            }, 0);
+
             yearlyLabels.push(res.monthName);
             yearlyTotals.push(totalKotorBulan);
 
@@ -14229,7 +14037,7 @@ async function loadYearlyAndMonthlyCharts() {
         }
     });
 
-    // Isi Dropdown Selector
+    // POPULASI DROPDOWN ARSIP SELECTOR
     if (selector) {
         if (nsaSheetList.length > 0) {
             selector.innerHTML = `<option value="" disabled selected class="bg-white text-slate-400">-- Pilih Bulan Laporan --</option>`;
@@ -14244,31 +14052,385 @@ async function loadYearlyAndMonthlyCharts() {
         }
     }
 
-    // Render Grafik Card A
-    renderChartCardA(yearlyLabels, yearlyTotals);
+    cachedYearlyLabels = yearlyLabels;
+    cachedYearlyTotals = yearlyTotals;
 
-    // Fetch & Render Grafik Card B (Menggunakan targetSheetName sesuai logika toleransi)
+    // Render grafik Card A Dashboard utama
+    renderChartCardA(yearlyLabels, yearlyTotals, "chartProgresTahun");
+
+    // Render grafik modal jika sedang dibuka
+    const modalBulanan = document.getElementById("modal-bulanan");
+    if (modalBulanan && !modalBulanan.classList.contains("hidden")) {
+        renderChartCardA(cachedYearlyLabels, cachedYearlyTotals, "chartProgresTahunModal");
+        sembunyikanLoaderModal3();
+    }
+
     try {
         const resB = await fetch(`${NSA_FINANCE_API_URL}?bulan=${targetSheetName}`);
         const jsonB = await resB.json();
         if (jsonB.status === "success" && jsonB.data) {
-            let dailyLabels = jsonB.data.map(d => d.tanggal ? d.tanggal.split('/')[0] : '');
-            let dailyValues = jsonB.data.map(d => Number(d.pendapatan_kotor) || 0);
-            renderChartCardB(dailyLabels, dailyValues);
+            cachedDailyLabels = jsonB.data.map(d => {
+                if (d.tanggal && String(d.tanggal).includes("/")) return Number(String(d.tanggal).split("/")[0]);
+                const dObj = new Date(d.tanggal);
+                return isNaN(dObj.getTime()) ? d.tanggal : dObj.getDate();
+            });
+
+            cachedDailyTotals = jsonB.data.map(d => (Number(d.pendapatan_kotor) || 0) + (Number(d.pendapatan_qris) || 0));
+            
+            renderChartCardB(cachedDailyLabels, cachedDailyTotals);
         }
     } catch (e) {
         console.warn("Gagal memuat chart Card B:", e);
     }
 }
 
-// 3. Renderer Chart.js untuk Card A
-function renderChartCardA(labels, dataValues) {
-    const canvas = document.getElementById("chartProgresTahun");
+// -------------------------------------------------------------------------
+// HANDLER PERUBAHAN DROPDOWN ARSIP & RINCIAN DETAIL (KARTU C - L)
+// -------------------------------------------------------------------------
+
+async function handleArchiveSheetChange(selectEl) {
+    const sheetName = selectEl.value;
+    if (!sheetName) return;
+
+    nsaSelectedSheetName = sheetName;
+    const statusBox = document.getElementById("archive-status-box");
+    const statusText = document.getElementById("archive-status-text");
+    const statusIcon = document.getElementById("archive-status-icon");
+
+    const detailPanel = document.getElementById("archive-detail-panel");
+    if (detailPanel) detailPanel.classList.add("hidden");
+    if (statusBox) statusBox.classList.remove("hidden");
+
+    if (statusIcon && statusText) {
+        statusIcon.className = "hidden";
+        statusText.className = "font-black text-slate-600 flex items-center gap-1.5";
+        statusText.innerHTML = `
+            <span>Memeriksa baris pembukuan</span>
+            <span class="inline-flex items-center gap-0.5 ml-1">
+                <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-duration:0.6s]"></span>
+                <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
+                <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
+            </span>
+        `;
+    }
+
+    try {
+        const res = await fetch(`${NSA_FINANCE_API_URL}?bulan=${sheetName}`);
+        const json = await res.json();
+
+        if (statusIcon) statusIcon.classList.remove("hidden");
+
+        if (json.status === "success" && json.data) {
+            nsaCurrentSheetData = json.data;
+            
+            const parsedInfo = parseSheetName(sheetName);
+            const totalDaysInMonth = new Date(parsedInfo.year, parsedInfo.monthIdx + 1, 0).getDate();
+            const lastDataRow = json.data[json.data.length - 1];
+            
+            let isComplete = false;
+            if (lastDataRow && lastDataRow.tanggal) {
+                const dayNum = parseInt(String(lastDataRow.tanggal).split('/')[0], 10);
+                if (dayNum >= totalDaysInMonth) {
+                    isComplete = true;
+                }
+            }
+
+            if (statusText && statusIcon) {
+                if (isComplete) {
+                    statusText.textContent = "Status: Selesai";
+                    statusText.className = "font-black text-emerald-600";
+                    statusIcon.className = "w-3 h-3 rounded-full bg-emerald-500 shrink-0";
+                } else {
+                    statusText.textContent = "Status: Belum (Masih Berjalan)";
+                    statusText.className = "font-black text-amber-600";
+                    statusIcon.className = "w-3 h-3 rounded-full bg-amber-500 animate-pulse shrink-0";
+                }
+            }
+        } else {
+            if (statusText && statusIcon) {
+                statusText.textContent = "Status: Belum Ada Data";
+                statusText.className = "font-black text-slate-400";
+                statusIcon.className = "w-3 h-3 rounded-full bg-slate-300 shrink-0";
+            }
+        }
+    } catch (err) {
+        console.error("Gagal memeriksa database:", err);
+        if (statusIcon && statusText) {
+            statusIcon.classList.remove("hidden");
+            statusText.textContent = "Status: Gagal Memuat Data";
+            statusText.className = "font-black text-rose-600";
+            statusIcon.className = "w-3 h-3 rounded-full bg-rose-500 shrink-0";
+        }
+    }
+}
+
+function showArchiveDetailSection() {
+    if (!nsaCurrentSheetData || nsaCurrentSheetData.length === 0) {
+        alert("Data laporan tidak ditemukan untuk bulan ini!");
+        return;
+    }
+
+    const panel = document.getElementById("archive-detail-panel");
+    const titleEl = document.getElementById("archive-detail-title");
+    
+    if (titleEl) {
+        const readablePeriod = formatSheetNameToReadable(nsaSelectedSheetName);
+        const spanEl = titleEl.querySelector("span");
+        if (spanEl) spanEl.textContent = readablePeriod;
+    }
+
+    let totKotor = 0;
+    let totMeteraiPcs = 0;
+    let totQris = 0;
+    let totUangMakan = 0;
+    let totPengeluaranKasir = 0;
+    let totTabA = 0;
+    let totTabB = 0;
+
+    nsaCurrentSheetData.forEach(r => {
+        totKotor += Number(r.pendapatan_kotor) || 0;
+        totMeteraiPcs += (Number(r.meterai_terjual) || 0) + (Number(r.meterai_terjual_qris) || 0);
+        totQris += Number(r.pendapatan_qris) || 0;
+        totUangMakan += Number(r.uang_makan) || 0;
+        totPengeluaranKasir += Number(r.pengeluaran_kasir) || 0;
+        totTabA += Number(r.tabungan_a) || 0;
+        totTabB += Number(r.tabungan_b) || 0;
+    });
+
+    const totMeteraiRp = totMeteraiPcs * 12000;
+    const totLabaMeteraiRp = totMeteraiPcs * 2000;
+    const totTabunganGabungan = totTabA + totTabB;
+    const totKotorGabungan = totKotor + totQris;
+
+    if (document.getElementById("val-card-c")) document.getElementById("val-card-c").textContent = formatRupiah(totKotorGabungan);
+    if (document.getElementById("val-card-d")) document.getElementById("val-card-d").textContent = formatRupiah(totMeteraiRp);
+    if (document.getElementById("sub-card-d")) document.getElementById("sub-card-d").textContent = `Total: ${totMeteraiPcs} pcs × Rp12.000`;
+    
+    if (document.getElementById("val-card-e")) document.getElementById("val-card-e").textContent = formatRupiah(totLabaMeteraiRp);
+    if (document.getElementById("sub-card-e")) document.getElementById("sub-card-e").textContent = `Margin: ${totMeteraiPcs} pcs × Rp2.000`;
+
+    if (document.getElementById("val-card-f")) document.getElementById("val-card-f").textContent = formatRupiah(totQris);
+    if (document.getElementById("val-card-g")) document.getElementById("val-card-g").textContent = formatRupiah(totUangMakan);
+    if (document.getElementById("val-card-h")) document.getElementById("val-card-h").textContent = formatRupiah(totPengeluaranKasir);
+    
+    if (document.getElementById("val-card-j")) document.getElementById("val-card-j").textContent = formatRupiah(totTabA);
+    if (document.getElementById("val-card-k")) document.getElementById("val-card-k").textContent = formatRupiah(totTabB);
+    if (document.getElementById("val-card-l")) document.getElementById("val-card-l").textContent = formatRupiah(totTabunganGabungan);
+
+    if (panel) {
+        panel.classList.remove("hidden");
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function triggerOriginalPdfViewerModal() {
+    const readableKey = formatSheetNameToReadable(nsaSelectedSheetName).toLowerCase();
+    const driveId = nsaDrivePdfMap[readableKey];
+
+    if (!driveId) {
+        alert(`Dokumen untuk periode '${formatSheetNameToReadable(nsaSelectedSheetName)}' belum diunggah ke NSA Cloud.`);
+        return;
+    }
+
+    if (typeof openPdfModal === "function") {
+        openPdfModal(formatSheetNameToReadable(nsaSelectedSheetName), driveId);
+    } else {
+        alert("Fungsi penampil PDF Modal bawaan tidak ditemukan.");
+    }
+}
+
+// -------------------------------------------------------------------------
+// MODAL 3 BULANAN
+// -------------------------------------------------------------------------
+
+function bukaModalBulananGrafik() {
+    const loaderModal = document.getElementById("loader-modal-card-a");
+    
+    if (cachedYearlyLabels.length === 0 && loaderModal) {
+        loaderModal.style.display = "flex";
+        loaderModal.classList.remove("hidden");
+        loaderModal.style.opacity = "1";
+        loaderModal.style.pointerEvents = "auto";
+    }
+
+    if (cachedYearlyLabels.length > 0) {
+        renderChartCardA(cachedYearlyLabels, cachedYearlyTotals, "chartProgresTahunModal");
+        sembunyikanLoaderModal3();
+    } else {
+        const checkInterval = setInterval(() => {
+            if (cachedYearlyLabels.length > 0) {
+                renderChartCardA(cachedYearlyLabels, cachedYearlyTotals, "chartProgresTahunModal");
+                sembunyikanLoaderModal3();
+                clearInterval(checkInterval);
+            }
+        }, 150);
+
+        setTimeout(() => {
+            clearInterval(checkInterval);
+            sembunyikanLoaderModal3();
+        }, 10000);
+    }
+}
+
+// -------------------------------------------------------------------------
+// FETCH REALTIME MODAL 2 (DENGAN PROTEKSI CACHE MURNI)
+// -------------------------------------------------------------------------
+
+function muatStatistikBulanIni() {
+    // 1. CEK CACHE: Jika data realtime sudah ada di memori, LANGSUNG PAKAI & SKIP FETCH!
+    if (cachedRealtimeDailyLabels.length > 0) {
+        buatGrafikHarian(cachedRealtimeDailyLabels, cachedRealtimeDailyTotals);
+        hilangkanLayerLoading();
+        return;
+    }
+
+    // 2. Jika belum ada cache, baru tampilkan loader dan lakukan fetch
+    const loadingLayer = document.getElementById('loading-layer-harian');
+    if (loadingLayer) {
+        loadingLayer.style.display = 'flex';
+        loadingLayer.style.opacity = '1';
+    }
+
+    const namaSheetRealtime = `${nsaRealtimeMonthName}${nsaRealtimeYear}`;
+    
+    fetch(`${NSA_FINANCE_API_URL}?bulan=${encodeURIComponent(namaSheetRealtime)}`)
+        .then(r => r.json())
+        .then(hasil => {
+            if (hasil.status === "success" && hasil.data) {
+                // Simpan ke Cache Realtime
+                cachedRealtimeDailyLabels = hasil.data.map(d => {
+                    if (d.tanggal && String(d.tanggal).includes("/")) return Number(String(d.tanggal).split("/")[0]);
+                    const dObj = new Date(d.tanggal);
+                    return isNaN(dObj.getTime()) ? d.tanggal : dObj.getDate();
+                });
+
+                cachedRealtimeDailyTotals = hasil.data.map(d => (Number(d.pendapatan_kotor) || 0) + (Number(d.pendapatan_qris) || 0));
+                
+                // Render Grafik & Sembunyikan Loading Layer
+                buatGrafikHarian(cachedRealtimeDailyLabels, cachedRealtimeDailyTotals);
+                hilangkanLayerLoading();
+            } else {
+                tampilkanStatusGagalLoading();
+            }
+        })
+        .catch(() => tampilkanStatusGagalLoading());
+}
+
+function buatGrafikHarian(labels, dataValues) {
+    const canvasElement = document.getElementById('statistik_bulan_ini');
+    if (!canvasElement) return;
+    const ctx = canvasElement.getContext('2d');
+
+    if (window.grafikHarianFotokopi) window.grafikHarianFotokopi.destroy();
+
+    const formattedLabels = labels.map(l => l ? `Tgl ${l.toString().padStart(2, '0')}` : '');
+
+    const pluginBarText = {
+        id: 'barTextInside',
+        afterDatasetsDraw(chart) {
+            const { ctx } = chart;
+            chart.data.datasets.forEach((dataset, i) => {
+                const meta = chart.getDatasetMeta(i);
+                meta.data.forEach((bar, index) => {
+                    const value = dataset.data[index];
+                    if (value > 0) {
+                        const formattedText = 'Rp ' + Number(value).toLocaleString('id-ID');
+                        ctx.save();
+                        ctx.font = 'bold 10px sans-serif';
+                        ctx.fillStyle = '#ffffff';
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'middle';
+                        const xPos = bar.base + 8;
+                        const yPos = bar.y;
+
+                        if (bar.x - bar.base > 40) {
+                            ctx.fillText(formattedText, xPos, yPos);
+                        } else {
+                            ctx.fillStyle = '#2dd4bf';
+                            ctx.fillText(formattedText, bar.x + 6, yPos);
+                        }
+                        ctx.restore();
+                    }
+                });
+            });
+        }
+    };
+
+    window.grafikHarianFotokopi = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: formattedLabels,
+            datasets: [{
+                label: 'Pendapatan Kotor',
+                data: dataValues,
+                backgroundColor: 'rgba(20, 184, 166, 0.85)',
+                borderColor: '#2dd4bf',
+                borderWidth: 1,
+                borderRadius: 4,
+                barPercentage: 0.75
+            }]
+        },
+        plugins: [pluginBarText],
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: { top: 10, bottom: 10, left: 5, right: 35 } },
+            interaction: { mode: 'nearest', intersect: true },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: '#0f172a',
+                    titleColor: '#2dd4bf',
+                    bodyColor: '#ffffff',
+                    borderColor: '#14b8a6',
+                    borderWidth: 1,
+                    padding: 8,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            let val = context.raw || 0;
+                            return 'Total (Tunai + QRIS): Rp ' + Number(val).toLocaleString('id-ID');
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#94a3b8',
+                        font: { size: 9 },
+                        callback: function(value) {
+                            if (value >= 1000000) return (value / 1000000) + ' Jt';
+                            if (value >= 1000) return (value / 1000) + ' Rb';
+                            return value;
+                        }
+                    },
+                    grid: { color: 'rgba(255,255,255,0.05)' }
+                },
+                y: {
+                    ticks: { color: '#f8fafc', font: { size: 10, weight: 'bold' } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+function renderChartCardA(labels, dataValues, targetCanvasId = "chartProgresTahun") {
+    const canvas = document.getElementById(targetCanvasId);
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    if (chartInstanceA) chartInstanceA.destroy();
 
-    chartInstanceA = new Chart(ctx, {
+    const isModal = targetCanvasId === "chartProgresTahunModal";
+    if (isModal) {
+        if (chartInstanceAModal) chartInstanceAModal.destroy();
+    } else {
+        if (chartInstanceA) chartInstanceA.destroy();
+    }
+
+    const newChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -14285,10 +14447,7 @@ function renderChartCardA(labels, dataValues) {
             indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
-            interaction: {
-                mode: 'nearest',
-                intersect: true
-            },
+            interaction: { mode: 'nearest', intersect: true },
             plugins: { 
                 legend: { display: false },
                 tooltip: {
@@ -14302,7 +14461,7 @@ function renderChartCardA(labels, dataValues) {
                     callbacks: {
                         label: function(context) {
                             let val = context.raw || 0;
-                            return 'Pendapatan Kotor: Rp ' + Number(val).toLocaleString('id-ID');
+                            return 'Total Kotor (Tunai + QRIS): Rp ' + Number(val).toLocaleString('id-ID');
                         }
                     }
                 }
@@ -14327,202 +14486,94 @@ function renderChartCardA(labels, dataValues) {
             }
         }
     });
+
+    if (isModal) chartInstanceAModal = newChart;
+    else chartInstanceA = newChart;
 }
 
-// 4. Renderer Chart.js untuk Card B
 function renderChartCardB(labels, dataValues) {
     const canvas = document.getElementById("chartProgresBulan");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (chartInstanceB) chartInstanceB.destroy();
 
+    const formattedLabels = labels.map(l => l ? `Tgl ${l.toString().padStart(2, '0')}` : '');
+
     chartInstanceB = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
-            labels: labels,
+            labels: formattedLabels,
             datasets: [{
-                label: 'Harian',
+                label: 'Pendapatan Kotor',
                 data: dataValues,
+                backgroundColor: 'rgba(45, 212, 191, 0.85)',
                 borderColor: '#2dd4bf',
-                backgroundColor: 'rgba(45, 212, 191, 0.15)',
-                fill: true,
-                tension: 0.35,
-                pointRadius: 2
+                borderWidth: 1,
+                borderRadius: 4
             }]
         },
         options: {
+            indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            interaction: { mode: 'nearest', intersect: true },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0f172a',
+                    titleColor: '#2dd4bf',
+                    bodyColor: '#ffffff',
+                    borderColor: '#14b8a6',
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            let val = context.raw || 0;
+                            return 'Pendapatan Harian (Tunai + QRIS): Rp ' + Number(val).toLocaleString('id-ID');
+                        }
+                    }
+                }
+            },
             scales: {
-                x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } },
-                y: { ticks: { color: '#f8fafc', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
-            }
-        }
-    });
-}
-
-// Helper Format nama sheet
-function formatSheetNameToReadable(sName) {
-    const match = sName.match(/^([A-Za-z]+)\s*([0-9]{4})$/);
-    if (match) {
-        return `${match[1].charAt(0).toUpperCase() + match[1].slice(1)} ${match[2]}`;
-    }
-    return sName;
-}
-
-// 5. Handler Perubahan Dropdown Pencarian Sheet
-async function handleArchiveSheetChange(selectEl) {
-    const sheetName = selectEl.value;
-    if (!sheetName) return;
-
-    nsaSelectedSheetName = sheetName;
-    const statusBox = document.getElementById("archive-status-box");
-    const statusText = document.getElementById("archive-status-text");
-    const statusIcon = document.getElementById("archive-status-icon");
-
-    // Sembunyikan panel detail dahulu jika memilih ulang
-    document.getElementById("archive-detail-panel").classList.add("hidden");
-    statusBox.classList.remove("hidden");
-
-    // 1. TAMPILKAN ANIMASI 3-DOT WAVING SAAT MEMERIKSA DATA
-    statusIcon.className = "hidden"; // Sembunyikan titik tunggal sementara
-    statusText.className = "font-black text-slate-600 flex items-center gap-1.5";
-    statusText.innerHTML = `
-        <span>Memeriksa baris pembukuan</span>
-        <span class="inline-flex items-center gap-0.5 ml-1">
-            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-duration:0.6s]"></span>
-            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
-            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
-        </span>
-    `;
-
-    try {
-        const res = await fetch(`${NSA_FINANCE_API_URL}?bulan=${sheetName}`);
-        const json = await res.json();
-
-        // Tampilkan kembali icon dot indikator setelah status diperoleh
-        statusIcon.classList.remove("hidden");
-
-        if (json.status === "success" && json.data) {
-            nsaCurrentSheetData = json.data;
-            
-            // Hitung deteksi kelengkapan tanggal bulan
-            const parsedInfo = parseSheetName(sheetName);
-            const totalDaysInMonth = new Date(parsedInfo.year, parsedInfo.monthIdx + 1, 0).getDate();
-            const lastDataRow = json.data[json.data.length - 1];
-            
-            let isComplete = false;
-            if (lastDataRow && lastDataRow.tanggal) {
-                const dayNum = parseInt(lastDataRow.tanggal.split('/')[0], 10);
-                if (dayNum >= totalDaysInMonth) {
-                    isComplete = true;
+                x: { 
+                    ticks: { 
+                        color: '#94a3b8', 
+                        font: { size: 9 },
+                        callback: function(value) {
+                            if (value >= 1000000) return (value / 1000000) + ' Jt';
+                            if (value >= 1000) return (value / 1000) + ' Rb';
+                            return value;
+                        }
+                    }, 
+                    grid: { color: 'rgba(255,255,255,0.05)' } 
+                },
+                y: { 
+                    ticks: { color: '#f8fafc', font: { size: 9, weight: 'bold' } }, 
+                    grid: { display: false } 
                 }
             }
-
-            if (isComplete) {
-                statusText.textContent = "Status: Selesai";
-                statusText.className = "font-black text-emerald-600";
-                statusIcon.className = "w-3 h-3 rounded-full bg-emerald-500 shrink-0";
-            } else {
-                statusText.textContent = "Status: Belum (Masih Berjalan)";
-                statusText.className = "font-black text-amber-600";
-                statusIcon.className = "w-3 h-3 rounded-full bg-amber-500 animate-pulse shrink-0";
-            }
-
-        } else {
-            statusText.textContent = "Status: Belum Ada Data";
-            statusText.className = "font-black text-slate-400";
-            statusIcon.className = "w-3 h-3 rounded-full bg-slate-300 shrink-0";
         }
-    } catch (err) {
-        console.error("Gagal memeriksa database:", err);
-        statusIcon.classList.remove("hidden");
-        statusText.textContent = "Status: Gagal Memuat Data";
-        statusText.className = "font-black text-rose-600";
-        statusIcon.className = "w-3 h-3 rounded-full bg-rose-500 shrink-0";
-    }
-}
-
-// 6. Tampilkan Seksi Detail & Kalkulasi Card C s/d L
-function showArchiveDetailSection() {
-    if (!nsaCurrentSheetData || nsaCurrentSheetData.length === 0) {
-        alert("Data laporan tidak ditemukan untuk bulan ini!");
-        return;
-    }
-
-    const panel = document.getElementById("archive-detail-panel");
-    const titleEl = document.getElementById("archive-detail-title");
-    
-    const readablePeriod = formatSheetNameToReadable(nsaSelectedSheetName);
-    titleEl.querySelector("span").textContent = readablePeriod;
-
-    // Akumulasi Finansial
-    let totKotor = 0;
-    let totMeteraiPcs = 0;
-    let totQris = 0;
-    let totUangMakan = 0;
-    let totPengeluaranKasir = 0;
-    let totTabA = 0;
-    let totTabB = 0;
-
-    nsaCurrentSheetData.forEach(r => {
-        totKotor += Number(r.pendapatan_kotor) || 0;
-        totMeteraiPcs += (Number(r.meterai_terjual) || 0) + (Number(r.meterai_terjual_qris) || 0);
-        totQris += Number(r.pendapatan_qris) || 0;
-        totUangMakan += Number(r.uang_makan) || 0;
-        totPengeluaranKasir += Number(r.pengeluaran_kasir) || 0;
-        totTabA += Number(r.tabungan_a) || 0;
-        totTabB += Number(r.tabungan_b) || 0;
     });
-
-    const totMeteraiRp = totMeteraiPcs * 12000;
-    const totLabaMeteraiRp = totMeteraiPcs * 2000;
-    const totTabunganGabungan = totTabA + totTabB;
-
-    // Injeksi Nilai ke HTML
-    // Gabungkan total kotor tunai dengan total QRIS untuk Card C
-const totKotorGabungan = totKotor + totQris;
-document.getElementById("val-card-c").textContent = formatRupiah(totKotorGabungan);
-    document.getElementById("val-card-d").textContent = formatRupiah(totMeteraiRp);
-    document.getElementById("sub-card-d").textContent = `Total: ${totMeteraiPcs} pcs × Rp12.000`;
-    
-    document.getElementById("val-card-e").textContent = formatRupiah(totLabaMeteraiRp);
-    document.getElementById("sub-card-e").textContent = `Margin: ${totMeteraiPcs} pcs × Rp2.000`;
-
-    document.getElementById("val-card-f").textContent = formatRupiah(totQris);
-    document.getElementById("val-card-g").textContent = formatRupiah(totUangMakan);
-    document.getElementById("val-card-h").textContent = formatRupiah(totPengeluaranKasir);
-    
-    document.getElementById("val-card-j").textContent = formatRupiah(totTabA);
-    document.getElementById("val-card-k").textContent = formatRupiah(totTabB);
-    document.getElementById("val-card-l").textContent = formatRupiah(totTabunganGabungan);
-
-    panel.classList.remove("hidden");
-    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// 7. Pemicu Modal PDF Viewer Bawaan Asli
-function triggerOriginalPdfViewerModal() {
-    const readableKey = formatSheetNameToReadable(nsaSelectedSheetName).toLowerCase();
-    const driveId = nsaDrivePdfMap[readableKey];
-
-    if (!driveId) {
-        alert(`Dokumen untuk periode '${formatSheetNameToReadable(nsaSelectedSheetName)}' belum diunggah ke NSA Cloud.`);
-        return;
-    }
-
-    // Memanggil fungsi global bawaan openPdfModal(title, driveId)
-    if (typeof openPdfModal === "function") {
-        openPdfModal(formatSheetNameToReadable(nsaSelectedSheetName), driveId);
-    } else {
-        alert("Fungsi penampil PDF Modal bawaan tidak ditemukan.");
+function hilangkanLayerLoading() {
+    const loadingLayer = document.getElementById('loading-layer-harian');
+    if (loadingLayer) {
+        loadingLayer.style.opacity = '0';
+        setTimeout(() => loadingLayer.style.display = 'none', 300);
     }
 }
 
-// Helper Formatters
-function formatRupiah(num) {
-    return "Rp " + Number(num).toLocaleString("id-ID");
+function tampilkanStatusGagalLoading() {
+    const loadingLayer = document.getElementById('loading-layer-harian');
+    if (loadingLayer) {
+        loadingLayer.innerHTML = `
+            <span class="text-xs text-rose-400 font-bold text-center px-4">
+                &times; Bulan ini belum ada data masuk atau gagal memuat data.
+            </span>
+        `;
+    }
 }
 
 function parseSheetName(sName) {
@@ -14543,7 +14594,10 @@ function formatSheetNameToReadable(sName) {
     }
     return sName;
 }
-</script>
 
+function formatRupiah(num) {
+    return "Rp " + Number(num).toLocaleString("id-ID");
+}
+</script>
 </body>
 </html>
