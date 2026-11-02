@@ -432,6 +432,19 @@ html.dark-mode-active #headerSubtitle,
 html.dark-mode-active #headerSubtitle {
   filter: invert(1) hue-rotate(180deg) !important;
 }
+/* FIX KHUSUS AT A GLANCE GREETINGS DI DARK MODE */
+html.dark-mode-active #top-dynamic-greeting,
+html.dark-mode-active #dynamic-greeting,
+html.dark-mode-active .at-a-glance-heading {
+  /* Memastikan teks h2/h3 pada greeting mengikuti inversi alami halaman tanpa double-invert */
+  filter: none !important;
+}
+
+/* Pastikan Canvas & Icon Container tetap memiliki kontras yang pas */
+html.dark-mode-active #top-greeting-icon-container,
+html.dark-mode-active #greeting-icon-container {
+  filter: none !important;
+}
 </style>
 
     <!-- SCRIPT TEMA & LOCKOUT AUTO DARK (LANGSUNG EKSEKUSI DI HEAD) -->
@@ -739,12 +752,41 @@ document.addEventListener('keydown', function(e) {
 <!-- ================= TAB 1: BERANDA ================= -->
 <div id="tab-beranda" class="tab-content active space-y-4">
     
+	
+	<!-- AT A GLANCE TOP GREETING (Nurjaya - 1 Baris & Dynamic Text 3s) -->
+<div class="px-2 py-3 mb-1 flex items-center justify-between">
+    <!-- Sisi Kiri: Dynamic Greeting 1 Baris + Rotasi Teks -->
+    <div class="space-y-0.5">
+        <!-- Line 1: Greeting & Nama -->
+        <h2 class="at-a-glance-heading text-base sm:text-lg font-bold text-slate-800 tracking-tight">
+            <span id="top-dynamic-greeting" class="font-semibold text-slate-700">Selamat Pagi</span>, Nurjaya!
+        </h2>
+
+        <!-- Line 2: Deskripsi Dinamis Berganti Tiap 3 Detik -->
+        <p class="text-xs text-slate-600 flex items-center gap-1.5 pt-0.5">
+            <span id="top-dynamic-quote" class="transition-opacity duration-500 opacity-100">
+                Semoga hari ini berkah.
+            </span>
+        </p>
+    </div>
+
+    <!-- Sisi Kanan: Animasi Ikon Dinamis Sesuai Waktu -->
+    <div class="pl-3 flex-shrink-0">
+        <div id="top-greeting-icon-container" class="w-11 h-11 rounded-full flex items-center justify-center text-xl shadow-sm border transition-all duration-500">
+            <i id="top-dynamic-icon" class="fa-solid fa-sun transition-all duration-500"></i>
+        </div>
+    </div>
+</div>
+
+
     <!-- CONTAINER UTAMA DASHBOARD APOTEK (CSS Grid 2 Kolom di md/lg) -->
     <div class="max-w-md md:max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
 
         <!-- ================= KOLOM KIRI (CARD UTAMA, GRAFIK & SHORTCUT APP) ================= -->
         <div class="space-y-3">
             
+			
+			
             <!-- ================= CARD 0: PROGRES BULAN INI ================= -->
             <div id="card-0-apotek" class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-800 to-slate-900 p-3 sm:p-3.5 text-white shadow-lg shadow-blue-900/20 border border-blue-400/30 min-h-[85px] flex items-center justify-between">
                 
@@ -2093,7 +2135,30 @@ document.addEventListener('keydown', function(e) {
 
 <!-- ================= TAB 5: SLIP GAJI APOTEK ================= -->
 <div id="tab-gaji" class="tab-content hidden space-y-6">
-    
+    <!-- AT A GLANCE SECTION (Siti Nurjanah - Dynamic Time & Animated Icon) -->
+<div class="px-2 py-3 mb-5 flex items-center justify-between">
+    <!-- Sisi Kiri: Teks Informasi -->
+    <div class="space-y-0.5">
+        <!-- Line 1: Dynamic Greeting -->
+        <h3 id="dynamic-greeting" class="text-sm sm:text-base font-semibold text-slate-700 tracking-tight">
+            Selamat Pagi
+        </h3>
+
+        <!-- Line 2: Nama User -->
+        <h2 class="at-a-glance-heading text-base sm:text-lg font-bold text-slate-800 tracking-tight">
+            apt. Siti Nurjanah, S.Farm.
+        </h2>
+
+       
+    </div>
+
+    <!-- Sisi Kanan: Animasi Ikon Dinamis Sesuai Waktu -->
+    <div class="pl-3 flex-shrink-0">
+        <div id="greeting-icon-container" class="w-11 h-11 rounded-full flex items-center justify-center text-xl shadow-sm border transition-all duration-500">
+            <i id="dynamic-icon" class="fa-solid fa-sun transition-all duration-500"></i>
+        </div>
+    </div>
+</div>
     <!-- CARD UTAMA: ASISTEN SLIP GAJI -->
     <div class="bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-full overflow-hidden flex flex-col space-y-5">
         
@@ -8793,7 +8858,128 @@ function toggleExpandShiftWidget() {
   };
   </script>
   
+<script>
+// Data daftar pesan acak / bergantian
+const dynamicQuotes = [
+    "Semoga hari ini berkah.",
+    "Bismillah untuk hari ini.",
+    "Selalu tersenyum kepada konsumen.",
+    "Kepuasan pelanggan adalah prioritas kita."
+];
 
+let currentQuoteIndex = 0;
 
+// Logika Rotasi Teks Tiap 3 Detik
+function startQuoteRotation() {
+    const quoteEl = document.getElementById('top-dynamic-quote');
+    if (!quoteEl) return;
+
+    setInterval(() => {
+        // Fade out
+        quoteEl.classList.remove('opacity-100');
+        quoteEl.classList.add('opacity-0');
+
+        setTimeout(() => {
+            // Ganti teks
+            currentQuoteIndex = (currentQuoteIndex + 1) % dynamicQuotes.length;
+            quoteEl.textContent = dynamicQuotes[currentQuoteIndex];
+
+            // Fade in
+            quoteEl.classList.remove('opacity-0');
+            quoteEl.classList.add('opacity-100');
+        }, 500); // Waktu jeda transisi
+    }, 4500); // Berganti tiap 3 detik
+}
+
+// Logika Greeting & Icon Dinamis
+function updateTopGreetingAndIcon() {
+    const greetingEl = document.getElementById('top-dynamic-greeting');
+    const iconEl = document.getElementById('top-dynamic-icon');
+    const containerEl = document.getElementById('top-greeting-icon-container');
+
+    if (!greetingEl || !iconEl || !containerEl) return;
+
+    const hour = new Date().getHours();
+
+    let greeting = 'Selamat Pagi';
+    let iconClass = '';
+    let containerClass = '';
+
+    if (hour >= 3 && hour < 11) {
+        greeting = 'Selamat Pagi';
+        iconClass = 'fa-solid fa-sun-plant-wilt text-amber-500 animate-bounce [animation-duration:2s]';
+        containerClass = 'bg-amber-500/10 border-amber-500/30';
+    } else if (hour >= 11 && hour < 15) {
+        greeting = 'Selamat Siang';
+        iconClass = 'fa-solid fa-sun text-orange-500 animate-spin [animation-duration:8s]';
+        containerClass = 'bg-orange-500/10 border-orange-500/30';
+    } else if (hour >= 15 && hour < 18) {
+        greeting = 'Selamat Sore';
+        iconClass = 'fa-solid fa-cloud-sun text-amber-600 animate-pulse [animation-duration:1.5s]';
+        containerClass = 'bg-amber-600/10 border-amber-600/30';
+    } else {
+        greeting = 'Selamat Malam';
+        iconClass = 'fa-solid fa-moon text-indigo-500 animate-bounce [animation-duration:3s]';
+        containerClass = 'bg-indigo-500/10 border-indigo-500/30';
+    }
+
+    greetingEl.textContent = greeting;
+    iconEl.className = `fa-solid ${iconClass} transition-all duration-500`;
+    containerEl.className = `w-11 h-11 rounded-full flex items-center justify-center text-xl shadow-sm border transition-all duration-500 ${containerClass}`;
+}
+
+// Jalankan fungsi saat DOM siap
+document.addEventListener('DOMContentLoaded', () => {
+    updateTopGreetingAndIcon();
+    startQuoteRotation();
+});
+</script>
+<script>
+function updateGreetingAndIcon() {
+    const greetingEl = document.getElementById('dynamic-greeting');
+    const iconEl = document.getElementById('dynamic-icon');
+    const containerEl = document.getElementById('greeting-icon-container');
+
+    if (!greetingEl || !iconEl || !containerEl) return;
+
+    const hour = new Date().getHours();
+
+    let greeting = 'Selamat Pagi';
+    let iconClass = '';
+    let containerClass = '';
+
+    if (hour >= 3 && hour < 11) {
+        // PAGI: Matahari terbit / Pagi cerah (Warna Amber/Kuning Emas, Animasi Naik Melayang)
+        greeting = 'Selamat Pagi';
+        iconClass = 'fa-solid fa-sun-plant-wilt text-amber-500 animate-bounce [animation-duration:2s]';
+        containerClass = 'bg-amber-500/10 border-amber-500/30';
+
+    } else if (hour >= 11 && hour < 15) {
+        // SIANG: Matahari Terik (Warna Oranye Terang, Matahari Berputar Aktif)
+        greeting = 'Selamat Siang';
+        iconClass = 'fa-solid fa-sun text-orange-500 animate-spin [animation-duration:8s]';
+        containerClass = 'bg-orange-500/10 border-orange-500/30';
+
+    } else if (hour >= 15 && hour < 18) {
+        // SORE: Senja / Sunset (Warna Oranye/Merah Bata, Awan & Matahari Melayang)
+        greeting = 'Selamat Sore';
+        iconClass = 'fa-solid fa-cloud-sun text-amber-600 animate-pulse [animation-duration:1.5s]';
+        containerClass = 'bg-amber-600/10 border-amber-600/30';
+
+    } else {
+        // MALAM: Bulan & Bintang (Warna Indigo/Biru Malam, Bulan Berayun/Melayang Halus)
+        greeting = 'Selamat Malam';
+        iconClass = 'fa-solid fa-moon text-indigo-500 animate-bounce [animation-duration:3s]';
+        containerClass = 'bg-indigo-500/10 border-indigo-500/30';
+    }
+
+    greetingEl.textContent = greeting;
+    iconEl.className = `fa-solid ${iconClass} transition-all duration-500`;
+    containerEl.className = `w-11 h-11 rounded-full flex items-center justify-center text-xl shadow-sm border transition-all duration-500 ${containerClass}`;
+}
+
+// Jalankan saat pertama kali dimuat
+document.addEventListener('DOMContentLoaded', updateGreetingAndIcon);
+</script>
 </body>
 </html>
