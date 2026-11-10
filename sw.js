@@ -15,33 +15,31 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// 3. Menangani Notifikasi Latar Belakang (Cegah Notifikasi Dobel)
+// 3. Menangani Notifikasi Latar Belakang (Fix Anti-Gagal & Anti-Dobel)
 messaging.onBackgroundMessage((payload) => {
   console.log('[sw.js] Pesan background masuk:', payload);
 
-  // Jika payload membawa objek 'notification', Firebase SDK / Browser akan menampilkannya secara otomatis.
-  // Hentikan eksekusi di sini agar tidak memicu showNotification() manual yang menyebabkan notifikasi ganda.
-  if (payload.notification) {
-    console.log('[sw.js] Ditangani otomatis oleh Firebase SDK, skip manual showNotification.');
-    return;
-  }
-
-  // Baris di bawah HANYA dipanggil jika backend mengirim payload tipe 'data' murni (tanpa objek notification)
-  const title = payload.data?.title || "Notifikasi NSA";
+  // Ambil isi teks baik dari payload.notification maupun payload.data
+  const title = payload.notification?.title || payload.data?.title || "Notifikasi NSA";
+  const body = payload.notification?.body || payload.data?.body || "Ada pembaruan informasi baru.";
   const clickUrl = payload.data?.url || payload.fcmOptions?.link || "https://nazakana.github.io/nsa/";
 
+  // Gunakan ID/Tag unik atau bawaan pesan agar browser menimpa notifikasi bawaan SDK (mencegah dobel)
+  const notificationTag = payload.data?.tag || payload.messageId || 'nsa-single-notification';
+
   const notificationOptions = {
-    body: payload.data?.body || "Ada pembaruan informasi baru.",
+    body: body,
     icon: 'icon-192.png',
     badge: 'icon-192.png',
     vibrate: [200, 100, 200],
-    tag: payload.data?.tag || 'nsa-notification',
+    tag: notificationTag, // KUNCI ANTI-DOBEL: menimpa notifikasi dengan tag sama
     renotify: true,
     data: {
       url: clickUrl
     }
   };
 
+  // Paksa tampilkan 1 notifikasi secara eksplisit
   return self.registration.showNotification(title, notificationOptions);
 });
 
@@ -53,14 +51,14 @@ self.addEventListener('notificationclick', function(event) {
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
-      // Jika tab NSA sudah terbuka di browser/PWA, langsung fokuskan ke tab tersebut
+      // Jika tab NSA sudah terbuka, fokuskan tab tersebut
       for (let i = 0; i < clientList.length; i++) {
         const client = clientList[i];
         if (client.url.includes('nazakana.github.io/nsa') && 'focus' in client) {
           return client.focus();
         }
       }
-      // Jika tab belum terbuka, buka window/tab baru
+      // Jika belum terbuka, buka window baru
       if (clients.openWindow) {
         return clients.openWindow(targetUrl);
       }
