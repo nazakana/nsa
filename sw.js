@@ -2,7 +2,7 @@
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
 
-// 2. Konfigurasi Firebase (Harus sama persis dengan index.html)
+// 2. Konfigurasi Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAAVlFcF5gs5ik0ESDg1Ka0Mxuy8Hh6uw8",
   authDomain: "nurjaya-smart-archive.firebaseapp.com",
@@ -15,41 +15,50 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// 4. Menangani Notifikasi saat Browser di Background
+// 3. Menangani Notifikasi Latar Belakang (Fix untuk HyperOS / MIUI)
 messaging.onBackgroundMessage((payload) => {
-  console.log('Isi payload:', JSON.stringify(payload));
   console.log('[sw.js] Pesan background masuk:', payload);
 
-  // JIKA payload dikirim via Apps Script menggunakan objek 'notification' bawaan Firebase,
-  // hentikan fungsi ini agar browser tidak memicu notifikasi manual kedua (mencegah duplikat).
-  if (payload.notification) {
-    console.log('[sw.js] Ditangani otomatis oleh Firebase SDK, skip manual showNotification.');
-    return;
-  }
+  // Ambil isi pesan dari payload.notification ATAU payload.data
+  const title = payload.notification?.title || payload.data?.title || "Notifikasi NSA";
+  const body = payload.notification?.body || payload.data?.body || "Ada pembaruan informasi baru.";
+  const clickUrl = payload.data?.url || payload.fcmOptions?.link || "https://nazakana.github.io/nsa/";
 
-  // Logika di bawah ini HANYA akan berjalan jika di masa depan kamu mengirimkan payload tipe 'data' murni
-  const notificationTitle = payload.data?.title || "Notifikasi NSA";
   const notificationOptions = {
-    body: payload.data?.body || "Ada pesan baru untukmu.",
-    icon: 'icon-192.png', 
+    body: body,
+    icon: 'icon-192.png',
     badge: 'icon-192.png',
     vibrate: [200, 100, 200],
+    tag: payload.data?.tag || 'nsa-notification', // Mencegah penumpukan berlebih
+    renotify: true,
     data: {
-      url: payload.data?.url || "https://nazakana.github.io/nsa/"
+      url: clickUrl
     }
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  // Selalu panggil showNotification secara eksplisit agar tereksekusi di MIUI/HyperOS
+  return self.registration.showNotification(title, notificationOptions);
 });
 
-// 5. Efek klik pada notifikasi
+// 4. Efek klik notifikasi
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   
-  // Ambil URL tujuan, jika tidak ada fallback ke halaman utama NSA
   const targetUrl = event.notification.data?.url || "https://nazakana.github.io/nsa/";
-  
+
   event.waitUntil(
-    clients.openWindow(targetUrl)
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+      // Jika tab NSA sudah terbuka, fokuskan tab tersebut
+      for (let i = 0; i < clientList.length; i++) {
+        const client = clientList[i];
+        if (client.url.includes('nazakana.github.io/nsa') && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // Jika tab belum terbuka, buka window baru
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
   );
 });
