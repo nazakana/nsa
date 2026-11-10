@@ -15,31 +15,28 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// 3. Menangani Notifikasi Latar Belakang (Fix Anti-Gagal & Anti-Dobel)
+// 3. Menangani Notifikasi Latar Belakang (Fix untuk HyperOS / MIUI)
 messaging.onBackgroundMessage((payload) => {
   console.log('[sw.js] Pesan background masuk:', payload);
 
-  // Ambil isi teks baik dari payload.notification maupun payload.data
+  // Ambil isi pesan dari payload.notification ATAU payload.data
   const title = payload.notification?.title || payload.data?.title || "Notifikasi NSA";
   const body = payload.notification?.body || payload.data?.body || "Ada pembaruan informasi baru.";
   const clickUrl = payload.data?.url || payload.fcmOptions?.link || "https://nazakana.github.io/nsa/";
-
-  // Gunakan ID/Tag unik atau bawaan pesan agar browser menimpa notifikasi bawaan SDK (mencegah dobel)
-  const notificationTag = payload.data?.tag || payload.messageId || 'nsa-single-notification';
 
   const notificationOptions = {
     body: body,
     icon: 'icon-192.png',
     badge: 'icon-192.png',
     vibrate: [200, 100, 200],
-    tag: notificationTag, // KUNCI ANTI-DOBEL: menimpa notifikasi dengan tag sama
+    tag: payload.data?.tag || 'nsa-notification', // Mencegah penumpukan berlebih
     renotify: true,
     data: {
       url: clickUrl
     }
   };
 
-  // Paksa tampilkan 1 notifikasi secara eksplisit
+  // Selalu panggil showNotification secara eksplisit agar tereksekusi di MIUI/HyperOS
   return self.registration.showNotification(title, notificationOptions);
 });
 
@@ -58,7 +55,7 @@ self.addEventListener('notificationclick', function(event) {
           return client.focus();
         }
       }
-      // Jika belum terbuka, buka window baru
+      // Jika tab belum terbuka, buka window baru
       if (clients.openWindow) {
         return clients.openWindow(targetUrl);
       }
