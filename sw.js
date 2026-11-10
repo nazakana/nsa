@@ -15,32 +15,33 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// 3. Menangani Notifikasi Latar Belakang (Fix untuk HyperOS / MIUI)
+// 3. Menangani Notifikasi Latar Belakang (Cegah Notifikasi Dobel)
 messaging.onBackgroundMessage((payload) => {
   console.log('[sw.js] Pesan background masuk:', payload);
 
-  // Ambil isi pesan dari payload.notification ATAU payload.data
-  const title = payload.notification?.title || payload.data?.title || "Notifikasi NSA";
-  const body = payload.notification?.body || payload.data?.body || "Ada pembaruan informasi baru.";
-  const clickUrl = payload.data?.url || payload.fcmOptions?.link || "https://nazakana.github.io/nsa/";
+  // Jika payload mengandung objek 'notification', biarkan Firebase SDK menampilkannya otomatis.
+  // Skip pemanggilan manual agar tidak terjadi notifikasi ganda.
+  if (payload.notification) {
+    console.log('[sw.js] Ditangani otomatis oleh Firebase SDK, skip manual showNotification.');
+    return;
+  }
 
+  // Hanya berjalan jika payload dikirim sebagai 'data' murni tanpa objek 'notification'
+  const notificationTitle = payload.data?.title || "Notifikasi NSA";
   const notificationOptions = {
-    body: body,
-    icon: 'icon-192.png',
+    body: payload.data?.body || "Ada pesan baru untukmu.",
+    icon: 'icon-192.png', 
     badge: 'icon-192.png',
     vibrate: [200, 100, 200],
-    tag: payload.data?.tag || 'nsa-notification', // Mencegah penumpukan berlebih
-    renotify: true,
     data: {
-      url: clickUrl
+      url: payload.data?.url || "https://nazakana.github.io/nsa/"
     }
   };
 
-  // Selalu panggil showNotification secara eksplisit agar tereksekusi di MIUI/HyperOS
-  return self.registration.showNotification(title, notificationOptions);
+  return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-// 4. Efek klik notifikasi
+// 4. Efek klik pada notifikasi
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   
@@ -48,14 +49,12 @@ self.addEventListener('notificationclick', function(event) {
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
-      // Jika tab NSA sudah terbuka, fokuskan tab tersebut
       for (let i = 0; i < clientList.length; i++) {
         const client = clientList[i];
         if (client.url.includes('nazakana.github.io/nsa') && 'focus' in client) {
           return client.focus();
         }
       }
-      // Jika tab belum terbuka, buka window baru
       if (clients.openWindow) {
         return clients.openWindow(targetUrl);
       }
