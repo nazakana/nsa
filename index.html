@@ -2693,14 +2693,6 @@ function scrollMenuSlider(direction) {
 
 
 <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker terdaftar!', reg))
-        .catch(err => console.error('Gagal daftar Service Worker:', err));
-    });
-  }
-  
   // =========================================================================
 // FUNGSI MODAL AKSES CEPAT & KIRIM QRIS WHATSAPP
 // =========================================================================
@@ -6287,5 +6279,62 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 
 
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
+
+<script>
+  // 1. Konfigurasi Firebase (samakan dengan sw.js)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAVlFcF5gs5ik0ESDg1Ka0Mxuy8Hh6uw8",
+    authDomain: "nurjaya-smart-archive.firebaseapp.com",
+    projectId: "nurjaya-smart-archive",
+    storageBucket: "nurjaya-smart-archive.firebasestorage.app",
+    messagingSenderId: "930477308354",
+    appId: "1:930477308354:web:b69a818a7ff73eb88f3e5b"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  // 2. Registrasi Service Worker & Minta Izin Notifikasi
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => {
+          console.log('Service Worker terdaftar!', reg);
+          
+          // Minta izin notifikasi ke pengguna
+          return Notification.requestPermission();
+        })
+        .then(permission => {
+          if (permission === 'granted') {
+            console.log('Izin notifikasi diberikan.');
+          }
+        })
+        .catch(err => console.error('Gagal daftar Service Worker / Izin:', err));
+    });
+  }
+
+  // 3. Tangani Pesan Masuk Saat App Terbuka (Foreground)
+  messaging.onMessage((payload) => {
+    console.log('[Foreground] Pesan masuk saat aplikasi terbuka:', payload);
+
+    const title = payload.notification?.title || payload.data?.title || "Notifikasi NSA";
+    const options = {
+      body: payload.notification?.body || payload.data?.body || "Ada pesan baru untukmu.",
+      icon: 'icon-192.png',
+      badge: 'icon-192.png',
+      vibrate: [200, 100, 200],
+      data: {
+        url: payload.data?.url || "https://nazakana.github.io/nsa/"
+      }
+    };
+
+    // Paksa tampilkan ke status bar HP lewat Service Worker
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.showNotification(title, options);
+    });
+  });
+</script>
 </body>
 </html>
