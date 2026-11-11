@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.nazakana.twa",
+        "sha256_cert_fingerprints": ["25:79:CD:D7:55:D7:4E:C0:1E:27:66:B9:AA:13:64:05:73:65:95:48:A8:0D:29:6B:B9:AA:D1:08:9C:D2:48:23"]
+      }
+    }]
