@@ -28,6 +28,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+<!-- Cropper.js & jsPDF untuk Multi-Page PDF Faktur -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+
 <style>
 /* Efek Shimmer Mengkilap Kiri ke Kanan pada Ikon */
 @keyframes shimmer-anim {
@@ -1947,73 +1951,333 @@ document.addEventListener('keydown', function(e) {
 
 
 
-       <!-- ================= TAB 3: ARSIP SUMMARY APOTEK ================= -->
+<!-- ================= TAB: SUMMARY & ARSIP FAKTUR ================= -->
 <div id="tab-summary" class="tab-content space-y-6">
-    
-    <div class="bg-gradient-to-r from-pink-500/5 via-pink-500/[0.02] to-transparent p-5 rounded-3xl border border-pink-100/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="space-y-1">
-            <h4 class="text-sm font-bold text-gray-800 flex items-center gap-2">
-                <i class="fa-solid fa-cloud-sun text-pink-500"></i>
-                Pengecekan Arsip Summary Apotek
-            </h4>
-            <p class="text-xs text-gray-500 leading-relaxed max-w-xl">
-                Silakan pilih bulan laporan pada menu dropdown berikut untuk memuat Arsip Summary Apotek Nurjaya.
-            </p>
-        </div>
 
-        <div class="flex items-center gap-2.5 self-start md:self-center w-full md:w-auto">
-            
-            <div class="relative inline-block w-full md:w-56">
-                <select id="dropdown-bulan-apotek" onchange="aksiPilihBulanDropdown(this.value)"
-                    class="w-full px-4 py-3 bg-white text-gray-700 text-xs font-bold rounded-2xl border border-pink-200 shadow-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-pink-500/40 pr-10 transition-all">
-                    <option value="" disabled selected>⏳ Menghubungkan ke Cloud...</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-pink-500">
-                    <i class="fa-solid fa-chevron-down text-xs"></i>
-                </div>
-            </div>
+    <!-- TOGGLE SWITCH MODE SIDE-TO-SIDE (SERAGAM DENGAN TAB PEMBUKUAN) -->
+    <div class="bg-white/80 backdrop-blur-md p-1.5 rounded-full border border-pink-100/60 shadow-xs max-w-md mx-auto">
+        <div class="grid grid-cols-2 gap-1 relative">
+            <!-- Tombol Kiri: Default Aktif (Arsip Faktur) -->
+            <button type="button" id="btn-mode-faktur" onclick="switchSubModeApotek('faktur')"
+                class="py-2.5 px-4 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md shadow-pink-200/50">
+                <i class="fa-solid fa-file-invoice"></i> Arsip Faktur
+            </button>
 
-            <button type="button" onclick="muatUlangDaftarArsipDrive()" title="Sinkronisasi Ulang"
-                class="p-3 bg-white hover:bg-pink-50 text-pink-600 border border-pink-200 active:scale-[0.95] rounded-2xl shadow-sm transition-all flex items-center justify-center shrink-0">
-                <i class="fa-solid fa-rotate text-xs"></i>
+            <!-- Tombol Kanan: Trigger Summary Bawaan -->
+            <button type="button" id="btn-mode-summary" onclick="switchSubModeApotek('summary')"
+                class="py-2.5 px-4 rounded-full text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 text-gray-500 hover:text-pink-600">
+                <i class="fa-solid fa-cloud-sun"></i> Summary
             </button>
         </div>
     </div>
-    
-    <div id="viewer-container-summary-apotek" class="viewer-container border-2 border-dashed border-pink-200 rounded-3xl bg-pink-50/10 flex flex-col items-center justify-center transition-all duration-300 overflow-hidden relative" style="height: 650px;">
-    
-    <div id="placeholder-viewer-drive" class="flex flex-col items-center justify-center h-full p-10 text-center z-10 bg-white w-full">
-        <div class="w-20 h-20 bg-pink-50 text-pink-400 rounded-full flex items-center justify-center mb-5 border border-pink-100 ring-4 ring-pink-50/50">
-            <i class="fa-solid fa-folder-open text-3xl opacity-80"></i>
-        </div>
-        <p class="font-black text-lg text-gray-700 mb-1">Arsip Summary</p>
-        <p class="text-xs text-gray-400 max-w-xs leading-relaxed">Silakan pilih salah satu bulan pada menu dropdown di atas untuk menampilkan Laporan Penutupan Pembukuan.</p>
-    </div>
 
-    <div id="loading-viewer-pink" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-white z-20 select-none animate-pulse">
-        <div class="relative mb-4">
-            <div class="absolute -inset-4 bg-pink-100 rounded-full blur-xl opacity-70 animate-ping"></div>
-            <i class="fa-solid fa-file-medical text-5xl text-pink-500 relative animate-bounce"></i>
-        </div>
-        <div class="space-y-2 w-2/3 text-center">
-            <p id="teks-loading-summary" class="text-xs font-black text-pink-700 tracking-wide">Menghubungkan jaringan NSA Cloud...</p>
-            <div class="h-1.5 w-full bg-pink-100 rounded-full overflow-hidden relative">
-                <div class="h-full w-1/2 bg-pink-500 rounded-full absolute top-0 left-0" style="animation: slide-pink 1.5s infinite"></div>
+<!-- ===================================================================== -->
+    <!-- SUB-DIVISI 1 (DEFAULT AKTIF): ARSIP FAKTUR (PENCARIAN & PDF BUILDER)  -->
+    <!-- ===================================================================== -->
+    <div id="panel-mode-faktur" class="space-y-6 transition-all duration-300">
+
+        <!-- BAGIAN ATAS: PENCARIAN & LIST ARSIP PDF FAKTUR DARI CLOUD -->
+        <div class="bg-white rounded-[32px] p-6 md:p-8 shadow-sm border border-pink-100/50 space-y-5">
+            
+            <div class="pb-4 border-b border-pink-50 space-y-2.5">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-pink-50 text-pink-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h2 class="text-xl font-bold text-gray-900">Cari Arsip Faktur</h2>
+                        <p class="text-xs text-gray-400">Telusuri dokumen faktur & catatan tersimpan di NSA Cloud</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="button" onclick="muatDataArsipFaktur()" title="Refresh Data Cloud"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-pink-50 hover:bg-pink-100 text-pink-600 border border-pink-200/60 active:scale-95 rounded-xl text-xs font-bold transition-all">
+                        <i class="fa-solid fa-rotate text-xs"></i>
+                        <span>Refresh</span>
+                    </button>
+                </div>
             </div>
+
+            <!-- Baris Filter Vertikal (Lega & Rapi di Mobile) -->
+            <div class="bg-pink-50/30 p-4 rounded-2xl border border-pink-100/50 space-y-3">
+                
+                <!-- Filter Tanggal -->
+                <div>
+                    <label for="filter-faktur-tgl" class="block text-[10px] font-bold text-pink-600 uppercase tracking-wider mb-1">Tanggal</label>
+                    <select id="filter-faktur-tgl"
+                        class="w-full px-3.5 py-2.5 bg-white border border-pink-200 rounded-xl text-xs font-bold text-gray-700 focus:outline-none focus:border-pink-500">
+                        <option value="">Semua Tanggal</option>
+                        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                        <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                        <option value="13">13</option><option value="14">14</option><option value="15">15</option>
+                        <option value="16">16</option><option value="17">17</option><option value="18">18</option>
+                        <option value="19">19</option><option value="20">20</option><option value="21">21</option>
+                        <option value="22">22</option><option value="23">23</option><option value="24">24</option>
+                        <option value="25">25</option><option value="26">26</option><option value="27">27</option>
+                        <option value="28">28</option><option value="29">29</option><option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+                </div>
+
+                <!-- Filter Bulan -->
+                <div>
+                    <label for="filter-faktur-bulan" class="block text-[10px] font-bold text-pink-600 uppercase tracking-wider mb-1">Bulan</label>
+                    <select id="filter-faktur-bulan"
+                        class="w-full px-3.5 py-2.5 bg-white border border-pink-200 rounded-xl text-xs font-bold text-gray-700 focus:outline-none focus:border-pink-500">
+                        <option value="">Semua Bulan</option>
+                        <option value="JANUARI">Januari</option>
+                        <option value="FEBRUARI">Februari</option>
+                        <option value="MARET">Maret</option>
+                        <option value="APRIL">April</option>
+                        <option value="MEI">Mei</option>
+                        <option value="JUNI">Juni</option>
+                        <option value="JULI">Juli</option>
+                        <option value="AGUSTUS">Agustus</option>
+                        <option value="SEPTEMBER">September</option>
+                        <option value="OKTOBER">Oktober</option>
+                        <option value="NOVEMBER">November</option>
+                        <option value="DESEMBER">Desember</option>
+                    </select>
+                </div>
+
+                <!-- Filter Tahun -->
+                <div>
+                    <label for="filter-faktur-tahun" class="block text-[10px] font-bold text-pink-600 uppercase tracking-wider mb-1">Tahun</label>
+                    <select id="filter-faktur-tahun"
+                        class="w-full px-3.5 py-2.5 bg-white border border-pink-200 rounded-xl text-xs font-bold text-gray-700 focus:outline-none focus:border-pink-500">
+                        <option value="">Semua Tahun</option>
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
+
+                <!-- Tombol Cari & Reset -->
+                <div class="flex items-center gap-2 pt-1">
+                    <button type="button" onclick="muatDataArsipFaktur()"
+                        class="flex-1 py-2.5 px-4 bg-gradient-to-r from-pink-500 to-pink-600 hover:brightness-105 active:scale-[0.99] text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass"></i> Cari Faktur
+                    </button>
+                    <button type="button" onclick="resetFilterArsipFaktur()"
+                        class="py-2.5 px-4 bg-white hover:bg-gray-50 text-gray-500 border border-gray-200 text-xs font-bold rounded-xl transition-all">
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Area Hasil Pencarian -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between px-1">
+                    <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Hasil Arsip PDF</span>
+                    <span id="badge-total-faktur" class="text-[10px] font-black bg-gray-100 text-gray-500 px-2.5 py-0.5 rounded-full border border-gray-200/80">Menunggu Pencarian</span>
+                </div>
+
+                <!-- Kondisi Awal (Belum Klik Cari) -->
+                <div id="idle-hasil-faktur" class="border-2 border-dashed border-pink-100 bg-pink-50/10 rounded-2xl p-8 text-center">
+                    <div class="w-11 h-11 bg-pink-50 text-pink-400 rounded-2xl flex items-center justify-center mx-auto mb-2.5">
+                        <i class="fa-solid fa-filter text-lg"></i>
+                    </div>
+                    <p class="text-xs font-bold text-gray-600">Belum ada pencarian dilakukan</p>
+                    <p class="text-[11px] text-gray-400 mt-0.5">Atur filter Tanggal / Bulan / Tahun di atas, lalu tekan tombol <b>Cari Faktur</b>.</p>
+                </div>
+
+                <!-- Loading Spinner (Hanya Muncul Saat Tombol Cari Ditekan) -->
+                <div id="loading-list-faktur" class="hidden py-10 flex flex-col items-center justify-center text-center space-y-2">
+                    <i class="fa-solid fa-circle-notch animate-spin text-2xl text-pink-500"></i>
+                    <p class="text-xs font-bold text-gray-400">Mengambil daftar faktur dari NSA Cloud...</p>
+                </div>
+
+                <!-- Grid Kartu Hasil -->
+                <div id="grid-hasil-faktur" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[420px] overflow-y-auto pr-1 scrollbar-clean"></div>
+
+                <!-- Kondisi Kosong (Sudah Cari Tapi Tidak Ada Hasil) -->
+                <div id="empty-hasil-faktur" class="hidden border-2 border-dashed border-pink-100 rounded-2xl p-8 text-center">
+                    <i class="fa-solid fa-folder-open text-3xl text-pink-300 mb-2"></i>
+                    <p class="text-xs font-bold text-gray-600">Tidak ada arsip faktur yang cocok</p>
+                    <p class="text-[11px] text-gray-400 mt-0.5">Coba ubah filter tanggal/bulan/tahun lalu klik Cari Faktur lagi.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- BAGIAN BAWAH: FORM DIGITALISASI FAKTUR                            -->
+        <!-- ================================================================= -->
+        <div class="bg-white rounded-[32px] p-6 md:p-8 shadow-sm border border-pink-100/50">
+            
+            <div class="flex items-center space-x-4 mb-6 pb-4 border-b border-pink-50">
+                <div class="w-12 h-12 bg-pink-50 text-pink-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-file-invoice-dollar text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900">Digitalisasi Faktur</h2>
+                    <p class="text-xs text-gray-400">Unggah faktur menjadi arsip digital, guna efisiensi manajemen data.</p>
+                </div>
+            </div>
+
+            <form id="form-upload-faktur-apotek" onsubmit="prosesUploadFakturKeCloud(event)" class="space-y-5">
+
+                <!-- 1. UPLOAD MULTI-FOTO FAKTUR -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">
+                            Upload Lembar Foto Faktur (Mendukung beberapa lembar) <span class="text-red-500">*</span>
+                        </label>
+                        <span id="badge-jumlah-halaman-faktur" class="hidden text-[10px] font-black bg-emerald-50 text-emerald-600 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                            0 Halaman
+                        </span>
+                    </div>
+
+                    <input type="file" id="input-file-faktur-raw" accept="image/*" multiple class="hidden" onchange="handlePilihMultiFileFaktur(this)">
+
+                    <!-- Dropzone Awal -->
+                    <div id="box-dropzone-faktur" onclick="document.getElementById('input-file-faktur-raw').click()"
+                        class="border-2 border-dashed border-pink-200 hover:border-pink-400 bg-pink-50/20 hover:bg-pink-50/40 rounded-2xl p-6 text-center cursor-pointer transition-all group">
+                        <div class="w-12 h-12 bg-white text-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xs border border-pink-100 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-images text-xl"></i>
+                        </div>
+                        <p class="text-xs font-extrabold text-gray-700">Klik untuk Pilih Foto Faktur (1 atau Beberapa Lembar)</p>
+                        <p class="text-[11px] text-gray-400 mt-1">Setiap lembar akan dirapikan satu per satu lalu digabung otomatis menjadi PDF</p>
+                    </div>
+
+                    <!-- Galeri Halaman PDF yang Sudah Siap -->
+                    <div id="box-preview-faktur-siap" class="hidden bg-gray-50 border border-pink-200 rounded-2xl p-4 space-y-3">
+                        <div id="grid-halaman-pdf-faktur" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+
+                        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-200/70">
+                            <button type="button" onclick="bukaModalCropperFaktur(0)"
+                                class="flex-1 py-2 px-3 bg-white hover:bg-pink-50 text-pink-600 border border-pink-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-crop-simple"></i> Edit / Crop Ulang
+                            </button>
+                            <button type="button" onclick="document.getElementById('input-file-faktur-raw').click()"
+                                class="flex-1 py-2 px-3 bg-pink-600 hover:bg-pink-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs">
+                                <i class="fa-solid fa-plus"></i> Tambah Lembar Lagi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. PILIH TANGGAL (POPUP KALENDER) -->
+                <div>
+                    <label for="input-tgl-faktur" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                        Tanggal Faktur <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-pink-500 pointer-events-none">
+                            <i class="fa-solid fa-calendar-day"></i>
+                        </span>
+                        <input type="date" id="input-tgl-faktur" required
+                            class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-700 cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- 3. PEDAGANG BESAR FARMASI (PBF) -->
+                <div>
+                    <label for="input-nama-pbf" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                        Pedagang Besar Farmasi (PBF) <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-pink-500 pointer-events-none">
+                            <i class="fa-solid fa-truck-medical"></i>
+                        </span>
+                        <input type="text" id="input-nama-pbf" required placeholder="Isi PBF"
+                            oninput="this.value = this.value.toUpperCase();"
+                            class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-bold uppercase focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-800 placeholder:normal-case placeholder:font-normal">
+                    </div>
+                </div>
+
+                <!-- 4. KETERANGAN FAKTUR INI -->
+                <div>
+                    <label for="input-keterangan-faktur" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                        Keterangan Faktur Ini <span class="text-gray-400 font-normal lowercase">(Catatan Opsional)</span>
+                    </label>
+                    <div class="relative">
+                        <textarea id="input-keterangan-faktur" rows="3"
+                            placeholder="Contoh: Faktur jatuh tempo 30 hari, atau ada barang salah/rusak, harus diretur, dll"
+                            class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl text-xs font-medium text-gray-700 leading-relaxed focus:outline-none focus:border-pink-500 focus:bg-white transition-all resize-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi Form -->
+                <div class="pt-1 flex space-x-3">
+                    <button type="button" onclick="resetFormUploadFaktur()"
+                        class="w-1/3 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-2xl text-xs font-bold tracking-wide transition-all active:scale-95">
+                        Reset
+                    </button>
+                    <button type="submit" id="btn-submit-faktur-cloud"
+                        class="w-2/3 py-3.5 bg-gradient-to-r from-pink-500 to-pink-600 hover:brightness-110 text-white rounded-2xl text-xs font-black tracking-widest uppercase shadow-md shadow-pink-200/60 transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
+                        <span>UPLOAD</span>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+<!-- ===================================================================== -->
+    <!-- SUB-DIVISI 2 (HIDDEN DEFAULT): SUMMARY (RINGKAS + TRIGGER POPUP)      -->
+    <!-- ===================================================================== -->
+    <div id="panel-mode-summary" class="space-y-6 hidden transition-all duration-300">
+        <div class="bg-white rounded-[32px] p-6 md:p-8 shadow-sm border border-pink-100/50 space-y-6">
+            
+            <!-- Header Card Seragam -->
+            <div class="flex items-center space-x-4 pb-4 border-b border-pink-50">
+                <div class="w-12 h-12 bg-pink-50 text-pink-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-cloud-sun text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900">Pengecekan Arsip Summary</h2>
+                    <p class="text-xs text-gray-400">Pilih bulan laporan untuk membuka Arsip Summary Apotek Nurjaya dalam layar penuh</p>
+                </div>
+            </div>
+
+            <!-- Kontrol Dropdown & Sinkronisasi -->
+            <div class="bg-pink-50/30 p-4 rounded-2xl border border-pink-100/50">
+                <label for="dropdown-bulan-apotek" class="block text-xs font-bold text-pink-600 uppercase tracking-wider mb-2">
+                    Pilih Bulan Laporan <span class="text-red-500">*</span>
+                </label>
+                <div class="flex items-center gap-2.5">
+                    <div class="relative flex-1">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-pink-400 pointer-events-none">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </span>
+                        <select id="dropdown-bulan-apotek" onchange="aksiPilihBulanDropdown(this.value)"
+                            class="w-full pl-11 pr-10 py-3 bg-white border border-pink-200 rounded-2xl text-sm focus:outline-none focus:border-pink-500 transition-all text-gray-700 appearance-none font-semibold shadow-sm cursor-pointer">
+                            <option value="" disabled selected>⏳ Menghubungkan ke Cloud...</option>
+                        </select>
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-pink-400 pointer-events-none text-xs">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                    </div>
+
+                    <button type="button" onclick="muatUlangDaftarArsipDrive()" title="Sinkronisasi Ulang"
+                        class="p-3.5 bg-white hover:bg-pink-50 text-pink-600 border border-pink-200 active:scale-95 rounded-2xl shadow-sm transition-all flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-rotate text-sm"></i>
+                    </button>
+                </div>
+                <p class="text-[11px] text-gray-400 mt-2.5 flex items-center gap-1.5">
+                    <i class="fa-solid fa-up-right-from-square text-pink-400"></i>
+                    Laporan akan otomatis terbuka di jendela penuh saat bulan dipilih.
+                </p>
+            </div>
+
         </div>
     </div>
 
-</div>
-
-<style>
-@keyframes slide-pink {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(200%); }
-}
-/* Memperhalus scrollbar internal di HP */
-.scrollbar-clean::-webkit-scrollbar { width: 4px; height: 4px; }
-.scrollbar-clean::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; }
-</style>
+    <style>
+    @keyframes slide-pink {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(200%); }
+    }
+    .scrollbar-clean::-webkit-scrollbar { width: 4px; height: 4px; }
+    .scrollbar-clean::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; }
+    </style>
 
 </div>
 
@@ -2867,11 +3131,11 @@ document.addEventListener('keydown', function(e) {
             <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pembukuan</span>
         </button>
 
-        <!-- Tab 3: Summary -->
+        <!-- Tab 3: Pusat Arsip-->
         <button onclick="switchTab('summary')" id="btn-tab-summary" 
             class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 focus:outline-none z-20">
             <i class="fa-solid fa-folder-closed text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Summary</span>
+            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pusat Arsip</span>
         </button>
 
         <!-- Tab 4: Slip Gaji -->
@@ -2904,7 +3168,7 @@ document.addEventListener('keydown', function(e) {
     const tabs = {
         'beranda': { title: 'Dashboard Utama', subtitle: 'Apotek Nurjaya' },
         'pembukuan': { title: 'Pembukuan Operasional', subtitle: 'Apotek Nurjaya' },
-        'summary': { title: 'Arsip Summary', subtitle: 'Laporan Rekapitulasi' },
+        'summary': { title: 'Pusat Arsip', subtitle: 'Bank Data Laporan Digital' },
         'gaji': { title: 'Asisten Slip Gaji', subtitle: 'Penggajian Karyawan Apotek' },
         'tentang': { title: 'Tentang Apotek', subtitle: 'Profil & Informasi' }
     };
@@ -3353,6 +3617,35 @@ formApotek.addEventListener('submit', function(event) {
 	
 	
 	<script>
+	/**
+     * CONTROLLER SPLIT TAB: Mengatur perpindahan antara 'faktur' dan 'summary'
+     */
+/**
+     * CONTROLLER SPLIT TAB: Seragam dengan gaya tombol switchModePembukuan
+     */
+    function switchSubModeApotek(mode) {
+        const btnFaktur = document.getElementById('btn-mode-faktur');
+        const btnSummary = document.getElementById('btn-mode-summary');
+        const panelFaktur = document.getElementById('panel-mode-faktur');
+        const panelSummary = document.getElementById('panel-mode-summary');
+
+        if (!btnFaktur || !btnSummary || !panelFaktur || !panelSummary) return;
+
+        const classAktif = "py-2.5 px-4 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md shadow-pink-200/50";
+        const classNonAktif = "py-2.5 px-4 rounded-full text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 text-gray-500 hover:text-pink-600";
+
+        if (mode === 'faktur') {
+            btnFaktur.className = classAktif;
+            btnSummary.className = classNonAktif;
+            panelFaktur.classList.remove('hidden');
+            panelSummary.classList.add('hidden');
+        } else if (mode === 'summary') {
+            btnSummary.className = classAktif;
+            btnFaktur.className = classNonAktif;
+            panelSummary.classList.remove('hidden');
+            panelFaktur.classList.add('hidden');
+        }
+    }
     // Global database penyimpan link dari Google Drive
     let listArsipDriveApotek = {}; 
 
@@ -3419,8 +3712,8 @@ formApotek.addEventListener('submit', function(event) {
         });
     }
 
-    /**
-     * EVENT CONTROLLER DROPDOWN: Mengecek pilihan user
+/**
+     * EVENT CONTROLLER DROPDOWN: Membuka Modal Popup jika tersedia
      */
     function aksiPilihBulanDropdown(bulanTerpilih) {
         if (!bulanTerpilih) return;
@@ -3428,24 +3721,27 @@ formApotek.addEventListener('submit', function(event) {
         const linkFileDrive = listArsipDriveApotek[bulanTerpilih];
 
         if (linkFileDrive) {
-            bukaIframePreviewDrive(linkFileDrive);
+            bukaModalSummaryApotek(linkFileDrive, bulanTerpilih);
         } else {
             bukaPopupBelumTersedia(bulanTerpilih);
             const dropdown = document.getElementById('dropdown-bulan-apotek');
             if (dropdown) dropdown.value = "";
         }
     }
-
     /**
-     * PREVIEW ENGINE: Menggunakan Tumpuan Kiri Atas (Mencegah Bug Mentok/Potong di HP)
+     * PREVIEW ENGINE (MODAL FULLSCREEN): Membuka Popup Independen & Memuat PDF Drive
      */
-    function bukaIframePreviewDrive(urlPreview) {
-        const container = document.getElementById('viewer-container-summary-apotek');
-        
+    function bukaModalSummaryApotek(urlPreview, namaBulan) {
+        const modal = document.getElementById('modal-popup-summary-apotek');
+        const iframe = document.getElementById('iframe-core-drive');
+        const loadingScreen = document.getElementById('loading-viewer-pink');
+        const judulBulan = document.getElementById('judul-bulan-modal-summary');
+
         if (!urlPreview) {
             alert("URL file tidak valid atau kosong!");
             return;
         }
+        if (!modal || !iframe) return;
 
         let urlBersih = urlPreview;
         if (urlPreview.includes("drive.google.com")) {
@@ -3457,68 +3753,19 @@ formApotek.addEventListener('submit', function(event) {
         }
 
         urlAksesPDFCurrent = urlBersih;
-        levelZoomPDFCurrent = 1.0; // Reset ke normal (1.0) setiap ganti dokumen
+        if (judulBulan) judulBulan.textContent = namaBulan || "Laporan Bulanan";
 
-        container.className = "viewer-container border border-gray-200 rounded-3xl bg-neutral-900 overflow-hidden flex flex-col transition-all duration-300 relative";
-        
-        container.innerHTML = `
-            <div class="bg-gray-950 text-white px-3 py-2 flex items-center justify-between border-b border-gray-800 shrink-0 shadow-md z-30">
-                <div class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-pink-400">
-                    <i class="fa-solid fa-receipt text-xs"></i>
-                    <span class="text-white hidden sm:inline">Summary Apotek</span>
-                </div>
-                
-                <div class="flex items-center bg-gray-900 rounded-xl p-0.5 border border-gray-800">
-                    <button type="button" onclick="ubahSkalaZoomPDF(0.2)" title="Perbesar"
-                            class="w-7 h-7 flex items-center justify-center hover:bg-gray-800 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
-                        <i class="fa-solid fa-plus text-[10px]"></i>
-                    </button>
-                    
-                    <span id="labelPersentaseZoom" class="text-[10px] font-mono font-black px-2 min-w-[45px] text-center text-pink-400">100%</span>
-                    
-                    <button type="button" onclick="ubahSkalaZoomPDF(-0.2)" title="Perkecil"
-                            class="w-7 h-7 flex items-center justify-center hover:bg-gray-800 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
-                        <i class="fa-solid fa-minus text-[10px]"></i>
-                    </button>
-                    
-                    <div class="w-px h-3 bg-gray-800 mx-1"></div>
-                    
-                    <button type="button" onclick="resetSkalaZoomPDF()" 
-                            class="px-2 h-7 flex items-center justify-center hover:bg-gray-800 text-[9px] font-black rounded-lg text-gray-400 hover:text-white transition-all focus:outline-none">
-                        RESET
-                    </button>
-                </div>
-                
-                <div>
-                    <button type="button" onclick="toggleFullscreenPDF()" id="btnToggleFS"
-                       class="flex items-center gap-1 px-2.5 py-1.5 bg-pink-600 hover:bg-pink-700 text-white text-[9px] font-black uppercase tracking-wider rounded-xl shadow-md transition-all active:scale-95 focus:outline-none">
-                        <span id="textBtnFS">Penuh</span>
-                        <i id="iconBtnFS" class="fa-solid fa-expand text-[8px]"></i>
-                    </button>
-                </div>
-            </div>
+        // Reset zoom ke 100% & tampilkan overlay loading
+        resetSkalaZoomPDF();
+        if (loadingScreen) loadingScreen.classList.remove('hidden');
 
-            <div id="viewportScrollApotek" class="flex-1 overflow-auto p-3 bg-neutral-800 scrollbar-clean relative flex justify-start items-start" style="-webkit-overflow-scrolling: touch;">
-                
-                <div id="loading-viewer-pink" class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-neutral-800 z-20 select-none animate-pulse">
-                    <div class="relative mb-4">
-                        <div class="absolute -inset-4 bg-pink-500/20 rounded-full blur-xl opacity-70 animate-ping"></div>
-                        <i class="fa-solid fa-file-medical text-5xl text-pink-500 relative animate-bounce"></i>
-                    </div>
-                    <div class="space-y-2 w-2/3 text-center">
-                        <p id="teks-loading-summary" class="text-xs font-black text-pink-400 tracking-wide">Menghubungkan jaringan NSA Cloud...</p>
-                        <div class="h-1.5 w-full bg-neutral-700 rounded-full overflow-hidden relative">
-                            <div class="h-full w-1/2 bg-pink-500 rounded-full absolute top-0 left-0" style="animation: slide-pink 1.5s infinite"></div>
-                        </div>
-                    </div>
-                </div>
+        // Muat dokumen ke iframe
+        iframe.src = `${urlBersih}&rm=minimal`;
 
-                <div id="wrapperPenyanggaIframe" class="bg-white shadow-xl rounded-xl overflow-hidden transition-transform duration-200" 
-                     style="width: 100%; height: 580px; transform-origin: top left; transform: scale(1); flex-shrink: 0;">
-                    <iframe id="iframe-core-drive" src="${urlBersih}&rm=minimal" class="w-full h-full border-none bg-white" allow="autoplay" onload="clearLoadingViewApotek()"></iframe>
-                </div>
-            </div>
-        `;
+        // Tampilkan modal fullscreen & kunci scroll latar belakang
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
 
         clearInterval(intervalApotekIdx);
         const txtLoading = document.getElementById('teks-loading-summary');
@@ -3533,8 +3780,26 @@ formApotek.addEventListener('submit', function(event) {
             idx = (idx + 1) % listPesan.length;
             if (txtLoading) txtLoading.textContent = listPesan[idx];
         }, 1200);
+    }
 
-        injectStyleFullscreenDinamis();
+    /**
+     * MENUTUP MODAL POPUP & RESET DROPDOWN
+     */
+    function tutupModalSummaryApotek() {
+        const modal = document.getElementById('modal-popup-summary-apotek');
+        const iframe = document.getElementById('iframe-core-drive');
+        const dropdown = document.getElementById('dropdown-bulan-apotek');
+
+        clearInterval(intervalApotekIdx);
+
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        if (iframe) iframe.src = "";
+        if (dropdown) dropdown.value = "";
+
+        document.body.style.overflow = '';
     }
 
     /**
@@ -3547,7 +3812,7 @@ formApotek.addEventListener('submit', function(event) {
     }
 
     /**
-     * FIX ENGINE: Zooming Menggunakan Kombinasi Scale + Scroll-Width Manual
+     * FIX ENGINE: Zooming Menggunakan Kombinasi Scale + Scroll-Width Manual pada Modal
      */
     function ubahSkalaZoomPDF(nilaiPerubahan) {
         const wrapper = document.getElementById('wrapperPenyanggaIframe');
@@ -3555,25 +3820,26 @@ formApotek.addEventListener('submit', function(event) {
         const viewport = document.getElementById('viewportScrollApotek');
         if (!wrapper || !viewport) return;
 
-        // Batas aman scale: Minimal 1.0x (100%), Maksimal 2.0x (200%)
+        // Batas aman scale: Minimal 1.0x (100%), Maksimal 2.2x (220%)
         let targetZoom = levelZoomPDFCurrent + nilaiPerubahan;
         if (targetZoom < 1.0) targetZoom = 1.0;
-        if (targetZoom > 2.0) targetZoom = 2.0;
+        if (targetZoom > 2.2) targetZoom = 2.2;
 
-        levelZoomPDFCurrent = targetZoom;
+        levelZoomPDFCurrent = Math.round(targetZoom * 10) / 10;
 
         // 1. Eksekusi Pembesaran Skala Visual Objek
         wrapper.style.transform = `scale(${levelZoomPDFCurrent})`;
 
         // 2. ANTIDOTE BUG MOBILE: Melebarkan ruang scroll secara manual agar sisi kiri/kanan tidak mentok
         if (levelZoomPDFCurrent > 1.0) {
-            // Beri ruang tambahan pada viewport agar scrollbar HP muncul secara merata ke kanan-bawah
-            viewport.style.width = "100%";
-            // Siasati elemen penampung agar lebarnya membesar mengikuti skala transform
-            wrapper.style.marginRight = `-${(levelZoomPDFCurrent - 1) * 100}%`;
-            wrapper.style.marginBottom = `-${(levelZoomPDFCurrent - 1) * 580}px`;
+            viewport.classList.remove('justify-center');
+            viewport.classList.add('justify-start');
+            const tinggiDasar = window.innerHeight - 82;
+            wrapper.style.marginRight = `-${(levelZoomPDFCurrent - 1) * wrapper.offsetWidth}px`;
+            wrapper.style.marginBottom = `-${(levelZoomPDFCurrent - 1) * tinggiDasar}px`;
         } else {
-            // Kembalikan ke posisi normal
+            viewport.classList.remove('justify-start');
+            viewport.classList.add('justify-center');
             wrapper.style.marginRight = "0px";
             wrapper.style.marginBottom = "0px";
         }
@@ -3590,7 +3856,12 @@ formApotek.addEventListener('submit', function(event) {
         levelZoomPDFCurrent = 1.0;
         const wrapper = document.getElementById('wrapperPenyanggaIframe');
         const label = document.getElementById('labelPersentaseZoom');
-        
+        const viewport = document.getElementById('viewportScrollApotek');
+
+        if (viewport) {
+            viewport.classList.remove('justify-start');
+            viewport.classList.add('justify-center');
+        }
         if (wrapper) {
             wrapper.style.transform = "scale(1)";
             wrapper.style.marginRight = "0px";
@@ -3602,91 +3873,21 @@ formApotek.addEventListener('submit', function(event) {
     }
 
     /**
-     * HTML5 FULLSCREEN API CONTROLLER
-     */
-    function toggleFullscreenPDF() {
-        const targetElement = document.getElementById('viewer-container-summary-apotek');
-        if (!targetElement) return;
-
-        const isCurrentlyFS = document.fullscreenElement || document.webkitFullscreenElement;
-
-        if (!isCurrentlyFS) {
-            if (targetElement.requestFullscreen) {
-                targetElement.requestFullscreen();
-            } else if (targetElement.webkitRequestFullscreen) {
-                targetElement.webkitRequestFullscreen();
-            }
-            setButtonFSText(true);
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            }
-            setButtonFSText(false);
-        }
-    }
-
-    function deteksiPerubahanLayarPenuh() {
-        const isFS = document.fullscreenElement || document.webkitFullscreenElement;
-        setButtonFSText(isFS);
-    }
-
-    function setButtonFSText(statusFS) {
-        const txtBtn = document.getElementById('textBtnFS');
-        const iconBtn = document.getElementById('iconBtnFS');
-        if (!txtBtn || !iconBtn) return;
-
-        if (statusFS) {
-            txtBtn.innerText = "Keluar";
-            iconBtn.className = "fa-solid fa-compress text-[8px]";
-        } else {
-            txtBtn.innerText = "Penuh";
-            iconBtn.className = "fa-solid fa-expand text-[8px]";
-        }
-    }
-
-    /**
-     * UTILITY STYLE INJECTION
-     */
-    function injectStyleFullscreenDinamis() {
-        const idStyle = "css-override-fullscreen-apotek";
-        if (document.getElementById(idStyle)) return;
-
-        const styleSheet = document.createElement("style");
-        styleSheet.id = idStyle;
-        styleSheet.innerText = `
-            #viewer-container-summary-apotek:fullscreen {
-                width: 100vw !important; height: 100vh !important; max-height: 100vh !important; border-radius: 0px !important; border: none !important;
-            }
-            #viewer-container-summary-apotek:-webkit-full-screen {
-                width: 100vw !important; height: 100vh !important; max-height: 100vh !important; border-radius: 0px !important; border: none !important;
-            }
-            @keyframes slide-pink {
-                0% { transform: translateX(-100%); }
-                100% { transform: translateX(200%); }
-            }
-        `;
-        document.head.appendChild(styleSheet);
-    }
-
-    /**
-     * CONTROLLER MODAL: Mengatur popup info data kosong
+     * CONTROLLER ALERT: Menampilkan info data kosong via native alert()
      */
     function bukaPopupBelumTersedia(namaBulan) {
-        const targetText = document.getElementById('teks-target-bulan-kosong');
-        const popup = document.getElementById('popup-drive-belum-tersedia');
-        if (targetText) targetText.innerText = namaBulan;
-        if (popup) popup.style.display = 'flex';
+        alert(`Data Belum Tersedia\n\nData summary bulan ${namaBulan} belum diarsipkan ke NSA CLOUD. Laporan baru diterbitkan setelah proses tutup buku bulan terpilih selesai dilakukan.`);
     }
 
-    function tutupPopupBelumTersedia() {
-        const popup = document.getElementById('popup-drive-belum-tersedia');
-        if (popup) popup.style.display = 'none';
-    }
-
-    document.addEventListener('fullscreenchange', deteksiPerubahanLayarPenuh);
-    document.addEventListener('webkitfullscreenchange', deteksiPerubahanLayarPenuh);
+    // Tutup modal otomatis jika menekan tombol ESC di keyboard
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('modal-popup-summary-apotek');
+            if (modal && !modal.classList.contains('hidden')) {
+                tutupModalSummaryApotek();
+            }
+        }
+    });
 
     document.addEventListener("DOMContentLoaded", function() {
         muatUlangDaftarArsipDrive();
@@ -5822,16 +6023,16 @@ function setTombolAktif() {
         };
     }
 
-    // Registrasi Service Worker
+    // Registrasi Service Worker + Paksa Cek Pembaruan Otomatis
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
             .then((reg) => {
                 console.log('SW terdaftar:', reg.scope);
+                reg.update(); // <-- Tambahkan baris ini agar selalu cek update sw.js terbaru
                 if (Notification.permission === "granted") setTombolAktif();
             })
             .catch((err) => console.error('SW Error:', err));
     }
-  });
 </script>
 
 
@@ -10294,115 +10495,1107 @@ window.addEventListener('resize', () => {
     </div>
 </div>
 
-<!-- ================= MODAL POPUP FITUR BARU (SHIMMER & MINI HTC-1) ================= -->
+<!-- ================= MODAL POPUP FITUR BARU (ARSIP FAKTUR & MINI HTC-1) ================= -->
 <div id="modal-fitur-baru-suhu" class="fixed inset-0 z-[9999999] hidden flex items-center justify-center p-3 sm:p-4 bg-slate-900/70 backdrop-blur-md transition-all duration-300">
-    <div class="relative bg-white w-full max-w-sm rounded-[32px] shadow-2xl p-5 sm:p-6 text-center overflow-hidden border border-orange-100">
+    <div class="relative bg-white w-full max-w-sm max-h-[88vh] rounded-[32px] shadow-2xl flex flex-col overflow-hidden border border-pink-100">
         
-        <!-- Badge Atas -->
-        <span class="inline-block px-3 py-1 bg-orange-100 text-orange-700 text-[10px] font-black uppercase tracking-widest rounded-full mb-3">
-            Fitur Baru Tersedia!
-        </span>
-
-        <!-- Ikon Suhu Oranye dengan Efek Shimmer Mengkilap -->
-        <div class="shimmer-icon-container mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/30 mb-3">
-            <i class="fas fa-temperature-high"></i>
+        <!-- Header Tetap (Badge Atas) -->
+        <div class="pt-5 px-5 sm:px-6 pb-3 text-center shrink-0 border-b border-gray-100/80 bg-white z-10">
+            <span class="inline-block px-3 py-1 bg-pink-100 text-pink-700 text-[10px] font-black uppercase tracking-widest rounded-full">
+                Fitur Baru Tersedia!
+            </span>
         </div>
 
-        <!-- Judul Bertingkat -->
-        <h3 class="text-sm sm:text-base font-black text-slate-800 tracking-tight leading-snug mb-4">
-            Form Pemantauan<br>Suhu dan Kelembapan Udara
-        </h3>
+        <!-- Area Konten Scrollable -->
+        <div class="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-6 text-center scrollbar-clean">
 
-        <!-- Miniatur Termohigrometer HTC-1 (Tanpa Scroll, Template Statis) -->
-        <div class="mb-5 text-left transform scale-90 sm:scale-95 origin-center my-[-10px]">
-            <div class="bg-white border-4 border-gray-900 rounded-[28px] p-2.5 shadow-md relative overflow-hidden select-none max-w-xs mx-auto">
-                
-                <!-- Casing Hitam Atas HTC-1 -->
-                <div class="bg-gray-900 rounded-[20px] p-3 pt-2 text-white shadow-md">
-                    <div class="flex justify-between items-center mb-1 px-1">
-                        <span class="text-[9px] font-black uppercase tracking-widest text-gray-300">TEMPERATURE</span>
-                    </div>
-
-                    <!-- Layar LCD -->
-                    <div class="bg-lcd-screen rounded-xl p-2.5 border-2 border-gray-700 shadow-inner text-gray-900 font-sans">
-                        <!-- Baris Atas: Temperatur -->
-                        <div class="flex items-baseline justify-end border-b border-gray-600/40 pb-1 mb-1.5">
-                            <span class="font-lcd-digital text-4xl sm:text-5xl text-emerald-700">26.5</span>
-                            <span class="font-lcd-digital text-xl sm:text-2xl ml-1.5 text-emerald-700">°C</span>
-                        </div>
-                        <!-- Baris Bawah: Jam & Kelembapan -->
-                        <div class="grid grid-cols-12 items-end pt-0.5">
-                            <div class="col-span-5 flex flex-col justify-end border-r border-gray-600/40 pr-1.5">
-                                <span class="text-[7px] font-black text-gray-700 uppercase tracking-tight mb-0.5">TIME / CLOCK</span>
-                                <span class="font-lcd-digital text-xs sm:text-sm">08:00</span>
-                            </div>
-                            <div class="col-span-7 flex items-baseline justify-end pl-1.5">
-                                <span class="font-lcd-digital text-3xl sm:text-4xl text-cyan-700">55</span>
-                                <span class="font-lcd-digital text-lg sm:text-xl ml-1 text-cyan-700">%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between items-center mt-1.5 px-1 text-[8px] font-bold text-gray-400 tracking-wider">
-                        <span>CLOCK / HUMIDITY</span>
-                        <span class="font-black text-white">HTC-1</span>
-                    </div>
+            <!-- ========================================================= -->
+            <!-- FITUR 1 (PALING ATAS): ARSIP FAKTUR DIGITAL               -->
+            <!-- ========================================================= -->
+            <div class="space-y-3">
+                <!-- Ikon Arsip Pink dengan Efek Shimmer Mengkilap -->
+                <div class="shimmer-icon-container mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/30">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
                 </div>
 
-                <!-- Casing Putih Bawah & Knop HTC-1 -->
-                <div class="bg-gray-100 rounded-b-[20px] pt-2 pb-0.5 px-3 flex justify-between items-center mt-1">
-                    <span class="text-[8px] font-black text-gray-400 tracking-widest uppercase">
-                        Nurjaya Termohigrometer
-                    </span>
-                    <div class="w-7 h-7 rounded-full bg-gray-200 border border-gray-300 shadow-sm flex flex-col items-center justify-between p-0.5 relative text-[5px] font-black text-gray-500">
-                        <span>MODE</span>
-                        <div class="absolute inset-0 m-auto w-2.5 h-2.5 bg-gray-300 rounded-full border border-gray-400"></div>
-                    </div>
+                <!-- Judul & Deskripsi Singkat -->
+                <div>
+                    <h3 class="text-sm sm:text-base font-black text-slate-800 tracking-tight leading-snug">
+                        Arsip Faktur Digital
+                    </h3>
+                    <p class="text-[11px] text-gray-500 mt-1 leading-relaxed">
+                        Unggah multi-lembar foto faktur menjadi satu dokumen PDF rapi lengkap dengan catatan di NSA Cloud.
+                    </p>
                 </div>
 
+                <!-- Miniatur Demo Form Cari Arsip Faktur (Ringkas & Statis) -->
+                <div class="bg-white border-2 border-pink-100 rounded-2xl p-3 text-left max-w-xs mx-auto shadow-sm select-none pointer-events-none space-y-2.5">
+                    
+                    <!-- Mini Header Cari Arsip -->
+                    <div class="flex items-center justify-between gap-2 pb-2 border-b border-pink-50">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="w-7 h-7 bg-pink-50 text-pink-500 rounded-lg flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[11px] font-bold text-gray-900 leading-none">Cari Arsip Faktur</p>
+                                <p class="text-[8px] text-gray-400 truncate mt-0.5">Telusuri PDF &amp; catatan di Cloud</p>
+                            </div>
+                        </div>
+                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-pink-50 text-pink-600 border border-pink-200/60 rounded-lg text-[8px] font-bold shrink-0">
+                            <i class="fa-solid fa-rotate text-[8px]"></i> Refresh
+                        </span>
+                    </div>
+
+                    <!-- Mini Filter Bulan & Tahun -->
+                    <div class="bg-pink-50/30 p-2 rounded-xl border border-pink-100/60 space-y-1.5">
+                        <div class="grid grid-cols-2 gap-1.5">
+                            <div>
+                                <span class="block text-[7px] font-bold text-pink-600 uppercase mb-0.5">Bulan</span>
+                                <div class="px-2 py-1 bg-white border border-pink-200 rounded-lg text-[9px] font-bold text-gray-700 flex items-center justify-between">
+                                    <span>November</span>
+                                    <i class="fa-solid fa-chevron-down text-[7px] text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="block text-[7px] font-bold text-pink-600 uppercase mb-0.5">Tahun</span>
+                                <div class="px-2 py-1 bg-white border border-pink-200 rounded-lg text-[9px] font-bold text-gray-700 flex items-center justify-between">
+                                    <span>2026</span>
+                                    <i class="fa-solid fa-chevron-down text-[7px] text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Tombol Cari & Reset -->
+                        <div class="flex items-center gap-1.5 pt-0.5">
+                            <div class="flex-1 py-1.5 px-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-[8px] font-black uppercase tracking-wider rounded-lg text-center">
+                                <i class="fa-solid fa-magnifying-glass mr-1"></i> Cari Faktur
+                            </div>
+                            <div class="py-1.5 px-2.5 bg-white text-gray-500 border border-gray-200 text-[8px] font-bold rounded-lg">
+                                Reset
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Preview Hasil File PDF -->
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between px-0.5">
+                            <span class="text-[8px] font-bold text-gray-500 uppercase">Hasil Arsip PDF</span>
+                            <span class="text-[8px] font-black bg-pink-50 text-pink-600 px-1.5 py-0.2 rounded-full border border-pink-200/60">1 PDF</span>
+                        </div>
+                        <div class="bg-pink-50/40 border border-pink-200/80 rounded-xl p-2 flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-rose-50 border border-rose-100 text-rose-500 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-file-pdf text-sm"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1 mb-0.5">
+                                    <span class="text-[7px] font-black text-pink-600 bg-pink-100/80 px-1.5 py-0.2 rounded">13 NOVEMBER 2026</span>
+                                    <span class="text-[7px] font-bold text-amber-700 bg-amber-100/80 px-1 py-0.2 rounded">Catatan</span>
+                                </div>
+                                <p class="text-[10px] font-black text-gray-800 truncate">Faktur PBF ABC.pdf</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
+            <!-- Garis Pemisah Antar Fitur -->
+            <div class="relative flex items-center justify-center">
+                <div class="border-t border-gray-200 w-full"></div>
+                <span class="bg-white px-3 text-[9px] font-black uppercase tracking-widest text-gray-400 shrink-0">
+                    Serta Fitur
+                </span>
+                <div class="border-t border-gray-200 w-full"></div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- FITUR 2 (DI BAWAH): PEMANTAUAN SUHU & KELEMBAPAN UDARA    -->
+            <!-- ========================================================= -->
+            <div class="space-y-3 pb-1">
+                <!-- Ikon Suhu Oranye dengan Efek Shimmer Mengkilap -->
+                <div class="shimmer-icon-container mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center text-xl shadow-lg shadow-orange-500/30">
+                    <i class="fas fa-temperature-high"></i>
+                </div>
+
+                <!-- Judul Bertingkat -->
+                <h3 class="text-sm sm:text-base font-black text-slate-800 tracking-tight leading-snug">
+                    Form Pemantauan<br>Suhu dan Kelembapan Udara
+                </h3>
+
+                <!-- Miniatur Termohigrometer HTC-1 -->
+                <div class="text-left transform scale-90 sm:scale-95 origin-center my-[-6px]">
+                    <div class="bg-white border-4 border-gray-900 rounded-[28px] p-2.5 shadow-md relative overflow-hidden select-none max-w-xs mx-auto">
+                        
+                        <!-- Casing Hitam Atas HTC-1 -->
+                        <div class="bg-gray-900 rounded-[20px] p-3 pt-2 text-white shadow-md">
+                            <div class="flex justify-between items-center mb-1 px-1">
+                                <span class="text-[9px] font-black uppercase tracking-widest text-gray-300">TEMPERATURE</span>
+                            </div>
+
+                            <!-- Layar LCD -->
+                            <div class="bg-lcd-screen rounded-xl p-2.5 border-2 border-gray-700 shadow-inner text-gray-900 font-sans">
+                                <!-- Baris Atas: Temperatur -->
+                                <div class="flex items-baseline justify-end border-b border-gray-600/40 pb-1 mb-1.5">
+                                    <span class="font-lcd-digital text-4xl sm:text-5xl text-emerald-700">26.5</span>
+                                    <span class="font-lcd-digital text-xl sm:text-2xl ml-1.5 text-emerald-700">°C</span>
+                                </div>
+                                <!-- Baris Bawah: Jam & Kelembapan -->
+                                <div class="grid grid-cols-12 items-end pt-0.5">
+                                    <div class="col-span-5 flex flex-col justify-end border-r border-gray-600/40 pr-1.5">
+                                        <span class="text-[7px] font-black text-gray-700 uppercase tracking-tight mb-0.5">TIME / CLOCK</span>
+                                        <span class="font-lcd-digital text-xs sm:text-sm">08:00</span>
+                                    </div>
+                                    <div class="col-span-7 flex items-baseline justify-end pl-1.5">
+                                        <span class="font-lcd-digital text-3xl sm:text-4xl text-cyan-700">55</span>
+                                        <span class="font-lcd-digital text-lg sm:text-xl ml-1 text-cyan-700">%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center mt-1.5 px-1 text-[8px] font-bold text-gray-400 tracking-wider">
+                                <span>CLOCK / HUMIDITY</span>
+                                <span class="font-black text-white">HTC-1</span>
+                            </div>
+                        </div>
+
+                        <!-- Casing Putih Bawah & Knop HTC-1 -->
+                        <div class="bg-gray-100 rounded-b-[20px] pt-2 pb-0.5 px-3 flex justify-between items-center mt-1">
+                            <span class="text-[8px] font-black text-gray-400 tracking-widest uppercase">
+                                Nurjaya Termohigrometer
+                            </span>
+                            <div class="w-7 h-7 rounded-full bg-gray-200 border border-gray-300 shadow-sm flex flex-col items-center justify-between p-0.5 relative text-[5px] font-black text-gray-500">
+                                <span>MODE</span>
+                                <div class="absolute inset-0 m-auto w-2.5 h-2.5 bg-gray-300 rounded-full border border-gray-400"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Tombol Aksi "OKE, PAHAM" -->
-        <button type="button" onclick="tutupModalFiturBaru()"
-                class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:brightness-105 text-white rounded-2xl text-xs font-black tracking-widest uppercase shadow-md shadow-orange-500/25 transition-all active:scale-98">
-            OKE, PAHAM!
-        </button>
+        <!-- Footer Tetap: Tombol Aksi "OKE, PAHAM!" -->
+        <div class="p-4 sm:px-6 sm:pb-5 bg-white border-t border-gray-100/80 shrink-0 z-10">
+            <button type="button" onclick="tutupModalFiturBaru()"
+                class="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-600 hover:brightness-105 text-white rounded-2xl text-xs font-black tracking-widest uppercase shadow-md shadow-pink-500/25 transition-all active:scale-98">
+                OKE, PAHAM!
+            </button>
+        </div>
 
     </div>
 </div>
 
 <script>
 // ============================================================================
-// LOGIKA PEMunculan MODAL SEKALI DENGAN LOCALSTORAGE
+// LOGIKA PEMUNCULAN MODAL PENGUMUMAN FITUR BARU (AUTO-INVALIDATE CACHE LAMA)
 // ============================================================================
-document.addEventListener('DOMContentLoaded', () => {
-    const STORAGE_KEY = 'modal_fitur_suhu_nurjaya_seen_v2';
-    
-    // Cek apakah user sudah pernah melihatnya
-    const sudahPernahLihat = localStorage.getItem(STORAGE_KEY);
+// Ubah string versi ini setiap kali merilis pengumuman fitur baru!
+const VERSI_FITUR_BARU_NSA = 'v4_arsip_faktur_dan_suhu_2026_11_13';
+const PREFIX_KEY_FITUR_NSA = 'nsa_popup_fitur_seen_';
 
-    if (!sudahPernahLihat) {
-        setTimeout(() => {
-            const modal = document.getElementById('modal-fitur-baru-suhu');
-            if (modal) {
-                modal.classList.remove('hidden');
+function tampilkanModalFiturBaruJikaBelumLihat() {
+    const currentKey = PREFIX_KEY_FITUR_NSA + VERSI_FITUR_BARU_NSA;
+
+    // 1. Bersihkan key pengumuman versi lama agar storage bersih & tidak bentrok
+    try {
+        localStorage.removeItem('modal_fitur_suhu_nurjaya_seen_v2');
+        localStorage.removeItem('modal_fitur_baru_nurjaya_seen_v3');
+
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+            const k = localStorage.key(i);
+            if (k && k.startsWith(PREFIX_KEY_FITUR_NSA) && k !== currentKey) {
+                localStorage.removeItem(k);
             }
-        }, 500);
+        }
+    } catch (e) {}
+
+    // 2. Cek apakah user sudah melihat pengumuman versi terbaru ini
+    const sudahLihatVersiIni = localStorage.getItem(currentKey);
+    if (!sudahLihatVersiIni) {
+        const modal = document.getElementById('modal-fitur-baru-suhu');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
     }
-});
+}
 
 function tutupModalFiturBaru() {
-    const STORAGE_KEY = 'modal_fitur_suhu_nurjaya_seen_v2';
+    const currentKey = PREFIX_KEY_FITUR_NSA + VERSI_FITUR_BARU_NSA;
     const modal = document.getElementById('modal-fitur-baru-suhu');
 
     if (modal) {
         modal.classList.add('hidden');
-        // Simpan memori agar tidak muncul lagi
-        localStorage.setItem(STORAGE_KEY, 'true');
+        modal.classList.remove('flex');
+        try {
+            localStorage.setItem(currentKey, 'true');
+        } catch (e) {}
     }
 }
+
+// Jalankan setelah seluruh halaman & elemen modal selesai dimuat
+if (document.readyState === 'complete') {
+    setTimeout(tampilkanModalFiturBaruJikaBelumLihat, 400);
+} else {
+    window.addEventListener('load', () => {
+        setTimeout(tampilkanModalFiturBaruJikaBelumLihat, 400);
+    });
+}
 </script>
+
+<script>
+    const URL_APPS_SCRIPT_FAKTUR = "https://script.google.com/macros/s/AKfycbw_lYGjQiO8pG7JsnbJdbC202YWc2RtHvO4aOT2j-SHjkYAn3DmSUGV8vEQSRW9ZlgR/exec";
+
+    // Struktur tiap elemen:
+    // { rawUrl: string, croppedUrl: string, cropData: object|null, canvasData: object|null }
+    let daftarLembarFaktur = [];
+    let indexLembarAktifCrop = 0;
+    let instanceCropperFaktur = null;
+
+    let levelZoomFakturCurrent = 1.0;
+
+    const NAMA_BULAN_KAPITAL = [
+        "JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI",
+        "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"
+    ];
+
+    function formatTanggalFakturKapital(isoDateString) {
+        if (!isoDateString) return "";
+        const parts = isoDateString.split("-");
+        if (parts.length !== 3) return isoDateString.toUpperCase();
+        const tahun = parts[0];
+        const bulanIndex = parseInt(parts[1], 10) - 1;
+        const tanggalAngka = parseInt(parts[2], 10);
+        const namaBulan = NAMA_BULAN_KAPITAL[bulanIndex] || "";
+        return `${tanggalAngka} ${namaBulan} ${tahun}`;
+    }
+
+    /**
+     * ========================================================================
+     * 1. HANDLER PILIH BANYAK FOTO & MULTI-PAGE CROPPER (ANTI-RESET)
+     * ========================================================================
+     */
+    function handlePilihMultiFileFaktur(inputEl) {
+        const files = Array.from(inputEl.files || []);
+        if (files.length === 0) return;
+
+        const validImages = files.filter(f => f.type.startsWith("image/"));
+        if (validImages.length === 0) {
+            alert("Pilih file gambar (JPG, PNG, atau WebP)!");
+            inputEl.value = "";
+            return;
+        }
+
+        const startIndexBaru = daftarLembarFaktur.length;
+        let selesaiDibaca = 0;
+
+        validImages.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                daftarLembarFaktur.push({
+                    rawUrl: e.target.result,
+                    croppedUrl: e.target.result,
+                    cropData: null,
+                    canvasData: null
+                });
+                selesaiDibaca++;
+
+                if (selesaiDibaca === validImages.length) {
+                    inputEl.value = "";
+                    bukaModalCropperFaktur(startIndexBaru);
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function bukaModalCropperFaktur(indexAwal = 0) {
+        if (daftarLembarFaktur.length === 0) return;
+
+        const modal = document.getElementById('modal-cropper-faktur');
+        if (!modal) return;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+
+        muatLembarKeCropper(indexAwal);
+    }
+
+    function muatLembarKeCropper(index) {
+        if (index < 0 || index >= daftarLembarFaktur.length) return;
+        indexLembarAktifCrop = index;
+
+        const lembar = daftarLembarFaktur[index];
+        const imgTarget = document.getElementById('img-target-cropper-faktur');
+        const subjudul = document.getElementById('subjudul-cropper-faktur');
+        const indikator = document.getElementById('indikator-lembar-cropper');
+        const btnPrev = document.getElementById('btn-crop-prev');
+        const btnNext = document.getElementById('btn-crop-next');
+
+        const total = daftarLembarFaktur.length;
+        if (subjudul) subjudul.textContent = `Lembar ${index + 1} dari ${total}`;
+        if (indikator) indikator.textContent = `${index + 1} / ${total}`;
+        if (btnPrev) btnPrev.disabled = (index === 0);
+        if (btnNext) btnNext.disabled = (index === total - 1);
+
+        if (instanceCropperFaktur) {
+            instanceCropperFaktur.destroy();
+            instanceCropperFaktur = null;
+        }
+
+        imgTarget.src = lembar.rawUrl;
+
+        setTimeout(() => {
+            instanceCropperFaktur = new Cropper(imgTarget, {
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.94,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+                ready() {
+                    // Pulihkan posisi rotasi, kanvas, dan kotak crop jika lembar ini sebelumnya sudah diatur
+                    if (lembar.cropData) {
+                        if (typeof lembar.cropData.rotate === 'number' && lembar.cropData.rotate !== 0) {
+                            instanceCropperFaktur.rotateTo(lembar.cropData.rotate);
+                        }
+                        if (lembar.canvasData) {
+                            instanceCropperFaktur.setCanvasData(lembar.canvasData);
+                        }
+                        instanceCropperFaktur.setData(lembar.cropData);
+                    }
+                }
+            });
+        }, 60);
+    }
+
+    /**
+     * SIMPAN STATE CROP (KOORDINAT + HASIL GAMBAR) LEMBAR SAAT INI AGAR TIDAK TER-RESET
+     */
+    function simpanCropLembarSaatIni() {
+        const lembar = daftarLembarFaktur[indexLembarAktifCrop];
+        if (!instanceCropperFaktur || !lembar) return;
+
+        // Simpan koordinat kotak crop & posisi kanvas agar bisa dipulihkan saat user kembali ke lembar ini
+        lembar.cropData = instanceCropperFaktur.getData(true);
+        lembar.canvasData = instanceCropperFaktur.getCanvasData();
+
+        const canvas = instanceCropperFaktur.getCroppedCanvas({
+            maxWidth: 1600,
+            maxHeight: 2200,
+            fillColor: '#ffffff',
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high'
+        });
+
+        if (canvas) {
+            lembar.croppedUrl = canvas.toDataURL('image/jpeg', 0.85);
+        }
+    }
+
+    /**
+     * TOMBOL PANAH KIRI (-1) & KANAN (+1) UNTUK PINDAH ANTAR LEMBAR
+     */
+    function navigasiLembarCropper(arah) {
+        const targetIndex = indexLembarAktifCrop + arah;
+        if (targetIndex < 0 || targetIndex >= daftarLembarFaktur.length) return;
+
+        // Simpan state & hasil crop lembar sekarang sebelum berpindah
+        simpanCropLembarSaatIni();
+        muatLembarKeCropper(targetIndex);
+    }
+
+    function aksiPutarCropperFaktur(derajat) {
+        if (instanceCropperFaktur) instanceCropperFaktur.rotate(derajat);
+    }
+
+    function aksiResetCropperFaktur() {
+        const lembar = daftarLembarFaktur[indexLembarAktifCrop];
+        if (lembar) {
+            lembar.cropData = null;
+            lembar.canvasData = null;
+        }
+        if (instanceCropperFaktur) instanceCropperFaktur.reset();
+    }
+
+    function batalCropFaktur() {
+        if (instanceCropperFaktur) {
+            instanceCropperFaktur.destroy();
+            instanceCropperFaktur = null;
+        }
+        const modal = document.getElementById('modal-cropper-faktur');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        document.body.style.overflow = '';
+        renderGaleriHalamanFaktur();
+    }
+
+    function konfirmasiSemuaLembarCropFaktur() {
+        // Pastikan lembar yang sedang terbuka ikut tersimpan
+        simpanCropLembarSaatIni();
+
+        if (instanceCropperFaktur) {
+            instanceCropperFaktur.destroy();
+            instanceCropperFaktur = null;
+        }
+
+        const modal = document.getElementById('modal-cropper-faktur');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        document.body.style.overflow = '';
+
+        renderGaleriHalamanFaktur();
+    }
+
+    function hapusSatuLembarFaktur(idx) {
+        daftarLembarFaktur.splice(idx, 1);
+        renderGaleriHalamanFaktur();
+    }
+
+    function renderGaleriHalamanFaktur() {
+        const boxDropzone = document.getElementById('box-dropzone-faktur');
+        const boxPreview = document.getElementById('box-preview-faktur-siap');
+        const gridEl = document.getElementById('grid-halaman-pdf-faktur');
+        const badgeJml = document.getElementById('badge-jumlah-halaman-faktur');
+
+        if (daftarLembarFaktur.length === 0) {
+            if (boxPreview) boxPreview.classList.add('hidden');
+            if (boxDropzone) boxDropzone.classList.remove('hidden');
+            if (badgeJml) badgeJml.classList.add('hidden');
+            return;
+        }
+
+        if (boxDropzone) boxDropzone.classList.add('hidden');
+        if (boxPreview) boxPreview.classList.remove('hidden');
+        if (badgeJml) {
+            badgeJml.classList.remove('hidden');
+            badgeJml.textContent = `${daftarLembarFaktur.length} Halaman PDF`;
+        }
+
+        if (!gridEl) return;
+        gridEl.innerHTML = "";
+
+        daftarLembarFaktur.forEach((lembar, idx) => {
+            const card = document.createElement('div');
+            card.className = "relative group bg-white border border-pink-200 rounded-xl overflow-hidden shadow-2xs";
+            card.innerHTML = `
+                <div onclick="bukaModalCropperFaktur(${idx})" class="aspect-[3/4] bg-neutral-900 flex items-center justify-center overflow-hidden cursor-pointer">
+                    <img src="${lembar.croppedUrl}" alt="Hal ${idx + 1}" class="w-full h-full object-contain group-hover:scale-105 transition-transform">
+                </div>
+                <span class="absolute top-1.5 left-1.5 bg-pink-600 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow">
+                    Hal ${idx + 1}
+                </span>
+                <button type="button" onclick="hapusSatuLembarFaktur(${idx})" title="Hapus Lembar Ini"
+                    class="absolute top-1.5 right-1.5 w-6 h-6 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[10px] flex items-center justify-center shadow">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            `;
+            gridEl.appendChild(card);
+        });
+    }
+
+    /**
+     * ========================================================================
+     * 2. RAKIT SEMUA LEMBAR JADI 1 PDF (jsPDF) & UPLOAD KE CLOUD + CATATAN TXT
+     * ========================================================================
+     */
+    async function bangunPdfDariLembarFaktur() {
+        const { jsPDF } = window.jspdf;
+        let pdfDoc = null;
+
+        for (let i = 0; i < daftarLembarFaktur.length; i++) {
+            const imgData = daftarLembarFaktur[i].croppedUrl;
+            const dimensi = await ambilDimensiGambar(imgData);
+            const orientasi = dimensi.width > dimensi.height ? 'l' : 'p';
+
+            if (i === 0) {
+                pdfDoc = new jsPDF({
+                    orientation: orientasi,
+                    unit: 'pt',
+                    format: [dimensi.width, dimensi.height],
+                    compress: true
+                });
+            } else {
+                pdfDoc.addPage([dimensi.width, dimensi.height], orientasi);
+            }
+
+            pdfDoc.addImage(imgData, 'JPEG', 0, 0, dimensi.width, dimensi.height, undefined, 'FAST');
+        }
+
+        return pdfDoc.output('datauristring');
+    }
+
+    function ambilDimensiGambar(dataUrl) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve({ width: img.naturalWidth || 800, height: img.naturalHeight || 1100 });
+            img.src = dataUrl;
+        });
+    }
+
+    async function prosesUploadFakturKeCloud(event) {
+        event.preventDefault();
+
+        const tglRaw = document.getElementById('input-tgl-faktur')?.value || "";
+        const pbfRaw = (document.getElementById('input-nama-pbf')?.value || "").trim().toUpperCase();
+        const keteranganRaw = (document.getElementById('input-keterangan-faktur')?.value || "").trim();
+        const btnSubmit = document.getElementById('btn-submit-faktur-cloud');
+
+        if (daftarLembarFaktur.length === 0) {
+            alert("Silakan upload minimal 1 lembar foto faktur terlebih dahulu!");
+            return;
+        }
+        if (!tglRaw || !pbfRaw) {
+            alert("Tanggal faktur dan Nama PBF wajib diisi!");
+            return;
+        }
+
+        const tanggalKapital = formatTanggalFakturKapital(tglRaw);
+        const namaDasarKapital = `${tanggalKapital} - ${pbfRaw}`;
+
+        const teksAsliBtn = btnSubmit.innerHTML;
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> <span>MERAKIT PDF...</span>`;
+
+        try {
+            const pdfDataUri = await bangunPdfDariLembarFaktur();
+
+            btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> <span>MENGUPLOAD...</span>`;
+
+            const payload = {
+                action: "upload",
+                baseName: namaDasarKapital,
+                pdfBase64: pdfDataUri,
+                keterangan: keteranganRaw
+            };
+
+            const res = await fetch(URL_APPS_SCRIPT_FAKTUR, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            });
+
+            const hasil = await res.json();
+
+            if (hasil.success) {
+                const infoTxt = keteranganRaw ? `\nCatatan (.txt) juga ikut tersimpan.` : "";
+                alert(`Berhasil!\n\nArsip "${namaDasarKapital}.PDF" (${daftarLembarFaktur.length} halaman) telah tersimpan ke NSA Cloud.${infoTxt}`);
+                resetFormUploadFaktur();
+                muatDataArsipFaktur();
+            } else {
+                alert("Gagal mengarsipkan PDF: " + (hasil.message || "Terjadi kesalahan."));
+            }
+        } catch (err) {
+            console.error("Error merakit/upload PDF faktur:", err);
+            alert("Terjadi kesalahan saat merakit atau mengupload PDF ke NSA Cloud.");
+        } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = teksAsliBtn;
+        }
+    }
+
+    function resetFormUploadFaktur() {
+        const form = document.getElementById('form-upload-faktur-apotek');
+        if (form) form.reset();
+
+        daftarLembarFaktur = [];
+        indexLembarAktifCrop = 0;
+
+        renderGaleriHalamanFaktur();
+        setDefaultTanggalFakturHariIni();
+    }
+
+    function setDefaultTanggalFakturHariIni() {
+        const inputTgl = document.getElementById('input-tgl-faktur');
+        if (inputTgl && !inputTgl.value) {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            inputTgl.value = `${yyyy}-${mm}-${dd}`;
+        }
+    }
+
+    /**
+     * ========================================================================
+     * 3. PENCARIAN & LIST ARSIP PDF DARI GOOGLE DRIVE (TANPA FILTER NAMA PBF)
+     * ========================================================================
+     */
+    function muatDataArsipFaktur() {
+        const tgl = document.getElementById('filter-faktur-tgl')?.value || "";
+        const bulan = document.getElementById('filter-faktur-bulan')?.value || "";
+        const tahun = document.getElementById('filter-faktur-tahun')?.value || "";
+
+        const idleEl = document.getElementById('idle-hasil-faktur');
+        const loadingEl = document.getElementById('loading-list-faktur');
+        const gridEl = document.getElementById('grid-hasil-faktur');
+        const emptyEl = document.getElementById('empty-hasil-faktur');
+        const badgeTotal = document.getElementById('badge-total-faktur');
+
+        if (idleEl) idleEl.classList.add('hidden');
+        if (loadingEl) loadingEl.classList.remove('hidden');
+        if (gridEl) gridEl.classList.add('hidden');
+        if (emptyEl) emptyEl.classList.add('hidden');
+        if (badgeTotal) {
+            badgeTotal.className = "text-[10px] font-black bg-pink-50 text-pink-600 px-2.5 py-0.5 rounded-full border border-pink-200/60";
+            badgeTotal.textContent = "Mencari...";
+        }
+
+        const queryParams = new URLSearchParams();
+        if (tgl) queryParams.append("tanggal", tgl);
+        if (bulan) queryParams.append("bulan", bulan);
+        if (tahun) queryParams.append("tahun", tahun);
+
+        const urlFinal = queryParams.toString()
+            ? `${URL_APPS_SCRIPT_FAKTUR}?${queryParams.toString()}`
+            : URL_APPS_SCRIPT_FAKTUR;
+
+        fetch(urlFinal)
+            .then(res => res.json())
+            .then(hasil => {
+                if (loadingEl) loadingEl.classList.add('hidden');
+
+                if (hasil.success && Array.isArray(hasil.data) && hasil.data.length > 0) {
+                    if (badgeTotal) badgeTotal.textContent = `${hasil.data.length} PDF`;
+                    renderKartuArsipFaktur(hasil.data);
+                } else {
+                    if (badgeTotal) badgeTotal.textContent = "0 PDF";
+                    if (emptyEl) emptyEl.classList.remove('hidden');
+                }
+            })
+            .catch(err => {
+                console.error("Gagal memuat arsip PDF faktur:", err);
+                if (loadingEl) loadingEl.classList.add('hidden');
+                if (badgeTotal) badgeTotal.textContent = "Gagal Memuat";
+                if (emptyEl) emptyEl.classList.remove('hidden');
+            });
+    }
+
+    function renderKartuArsipFaktur(listFaktur) {
+        const gridEl = document.getElementById('grid-hasil-faktur');
+        if (!gridEl) return;
+
+        gridEl.innerHTML = "";
+        listFaktur.forEach(item => {
+            const badgeCatatan = item.adaCatatan
+                ? `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-amber-700 bg-amber-100/80 px-1.5 py-0.5 rounded"><i class="fa-solid fa-note-sticky text-[8px]"></i> Catatan</span>`
+                : "";
+
+            const card = document.createElement('div');
+            card.className = "group bg-pink-50/20 hover:bg-pink-50/70 border border-pink-100 hover:border-pink-300 rounded-2xl p-3.5 cursor-pointer transition-all flex items-center gap-3 shadow-2xs";
+            card.onclick = () => bukaModalViewerFaktur(item);
+
+            card.innerHTML = `
+                <div class="w-12 h-12 rounded-xl bg-rose-50 border border-rose-100 text-rose-500 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-file-pdf text-xl"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                        <span class="inline-block text-[9px] font-black uppercase tracking-wider text-pink-600 bg-pink-100/70 px-2 py-0.5 rounded-md">
+                            ${item.tanggalLengkap || "TANPA TANGGAL"}
+                        </span>
+                        ${badgeCatatan}
+                    </div>
+                    <p class="text-xs font-extrabold text-gray-800 truncate group-hover:text-pink-700 transition-colors">
+                        ${item.namaPbf || item.namaBersih}
+                    </p>
+                    <p class="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1">
+                        <i class="fa-solid fa-expand text-[9px]"></i> Klik buka PDF
+                    </p>
+                </div>
+            `;
+            gridEl.appendChild(card);
+        });
+
+        gridEl.classList.remove('hidden');
+    }
+
+    function resetFilterArsipFaktur() {
+        document.getElementById('filter-faktur-tgl').value = "";
+        document.getElementById('filter-faktur-bulan').value = "";
+        document.getElementById('filter-faktur-tahun').value = "2026";
+
+        const idleEl = document.getElementById('idle-hasil-faktur');
+        const loadingEl = document.getElementById('loading-list-faktur');
+        const gridEl = document.getElementById('grid-hasil-faktur');
+        const emptyEl = document.getElementById('empty-hasil-faktur');
+        const badgeTotal = document.getElementById('badge-total-faktur');
+
+        if (loadingEl) loadingEl.classList.add('hidden');
+        if (gridEl) {
+            gridEl.classList.add('hidden');
+            gridEl.innerHTML = "";
+        }
+        if (emptyEl) emptyEl.classList.add('hidden');
+        if (idleEl) idleEl.classList.remove('hidden');
+        if (badgeTotal) {
+            badgeTotal.className = "text-[10px] font-black bg-gray-100 text-gray-500 px-2.5 py-0.5 rounded-full border border-gray-200/80";
+            badgeTotal.textContent = "Menunggu Pencarian";
+        }
+    }
+
+    /**
+     * ========================================================================
+     * 4. MODAL FULLSCREEN PDF VIEWER + TAMPILAN CATATAN TXT IDENTIK DI BAWAH
+     * ========================================================================
+     */
+    function bukaModalViewerFaktur(item) {
+        const modal = document.getElementById('modal-popup-viewer-faktur');
+        const judulEl = document.getElementById('judul-modal-viewer-faktur');
+        const loadingEl = document.getElementById('loading-viewer-faktur');
+        const iframeCore = document.getElementById('iframe-core-viewer-faktur');
+        const panelCatatan = document.getElementById('panel-catatan-viewer-faktur');
+        const isiCatatan = document.getElementById('isi-catatan-viewer-faktur');
+
+        if (!modal || !iframeCore) return;
+
+        if (judulEl) judulEl.textContent = item.namaBersih || item.namaFile || "Detail Faktur PDF";
+
+        if (panelCatatan && isiCatatan) {
+            if (item.catatan && item.catatan.trim().length > 0) {
+                isiCatatan.textContent = item.catatan.trim();
+                panelCatatan.classList.remove('hidden');
+            } else {
+                isiCatatan.textContent = "";
+                panelCatatan.classList.add('hidden');
+            }
+        }
+
+        resetSkalaZoomFaktur();
+        if (loadingEl) loadingEl.classList.remove('hidden');
+
+        iframeCore.src = `${item.urlPreview}?authuser=0&rm=minimal`;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function tutupModalViewerFaktur() {
+        const modal = document.getElementById('modal-popup-viewer-faktur');
+        const iframeCore = document.getElementById('iframe-core-viewer-faktur');
+        const panelCatatan = document.getElementById('panel-catatan-viewer-faktur');
+
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        if (iframeCore) iframeCore.src = "";
+        if (panelCatatan) panelCatatan.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    function ubahSkalaZoomFaktur(nilaiPerubahan) {
+        const wrapper = document.getElementById('wrapperPenyanggaPdfFaktur');
+        const label = document.getElementById('labelZoomViewerFaktur');
+        const viewport = document.getElementById('viewportScrollFaktur');
+        if (!wrapper || !viewport) return;
+
+        let targetZoom = levelZoomFakturCurrent + nilaiPerubahan;
+        if (targetZoom < 1.0) targetZoom = 1.0;
+        if (targetZoom > 2.2) targetZoom = 2.2;
+
+        levelZoomFakturCurrent = Math.round(targetZoom * 10) / 10;
+        wrapper.style.transform = `scale(${levelZoomFakturCurrent})`;
+
+        if (levelZoomFakturCurrent > 1.0) {
+            viewport.classList.remove('justify-center');
+            viewport.classList.add('justify-start');
+            wrapper.style.marginRight = `-${(levelZoomFakturCurrent - 1) * wrapper.offsetWidth}px`;
+            wrapper.style.marginBottom = `-${(levelZoomFakturCurrent - 1) * wrapper.offsetHeight}px`;
+        } else {
+            viewport.classList.remove('justify-start');
+            viewport.classList.add('justify-center');
+            wrapper.style.marginRight = "0px";
+            wrapper.style.marginBottom = "0px";
+        }
+
+        if (label) label.innerText = `${Math.round(levelZoomFakturCurrent * 100)}%`;
+    }
+
+    function resetSkalaZoomFaktur() {
+        levelZoomFakturCurrent = 1.0;
+        const wrapper = document.getElementById('wrapperPenyanggaPdfFaktur');
+        const label = document.getElementById('labelZoomViewerFaktur');
+        const viewport = document.getElementById('viewportScrollFaktur');
+
+        if (viewport) {
+            viewport.classList.remove('justify-start');
+            viewport.classList.add('justify-center');
+        }
+        if (wrapper) {
+            wrapper.style.transform = "scale(1)";
+            wrapper.style.marginRight = "0px";
+            wrapper.style.marginBottom = "0px";
+        }
+        if (label) label.innerText = "100%";
+    }
+
+    document.addEventListener('keydown', function(e) {
+        const modalCrop = document.getElementById('modal-cropper-faktur');
+        if (modalCrop && !modalCrop.classList.contains('hidden')) {
+            if (e.key === 'ArrowLeft') navigasiLembarCropper(-1);
+            if (e.key === 'ArrowRight') navigasiLembarCropper(1);
+            if (e.key === 'Escape') batalCropFaktur();
+            return;
+        }
+
+        const modalViewer = document.getElementById('modal-popup-viewer-faktur');
+        if (modalViewer && !modalViewer.classList.contains('hidden')) {
+            if (e.key === 'Escape') tutupModalViewerFaktur();
+        }
+    });
+
+   document.addEventListener("DOMContentLoaded", function() {
+        setDefaultTanggalFakturHariIni();
+        // Sengaja TIDAK memanggil muatDataArsipFaktur() agar hemat kuota & nunggu tombol Cari diklik
+    });
+</script><!-- Area Hasil Pencarian -->
+
+
+<!-- ===================================================================== -->
+<!-- MODAL POPUP FULLSCREEN VIEWER: SUMMARY APOTEK                         -->
+<!-- ===================================================================== -->
+<div id="modal-popup-summary-apotek" class="fixed inset-0 z-[999999] hidden flex-col bg-neutral-950/95 backdrop-blur-md transition-all duration-300">
+    
+    <!-- TOP BAR KONTROL (JUDUL, ZOOM, RESET, TUTUP) -->
+    <div class="bg-gray-950 text-white px-3 sm:px-5 py-3 flex items-center justify-between border-b border-gray-800 shrink-0 shadow-lg z-30">
+        
+        <!-- Info Judul & Bulan -->
+        <div class="flex items-center gap-2.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-xl bg-pink-500/20 border border-pink-500/30 text-pink-400 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-receipt text-xs"></i>
+            </div>
+            <div class="truncate">
+                <p class="text-[10px] font-black uppercase tracking-wider text-pink-400 leading-none">Summary Apotek</p>
+                <p id="judul-bulan-modal-summary" class="text-xs font-bold text-white truncate mt-0.5">--</p>
+            </div>
+        </div>
+        
+        <!-- Kontrol Zoom & Reset -->
+        <div class="flex items-center bg-gray-900 rounded-xl p-0.5 border border-gray-800">
+            <button type="button" onclick="ubahSkalaZoomPDF(-0.2)" title="Perkecil"
+                class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center hover:bg-gray-800 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
+                <i class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            
+            <span id="labelPersentaseZoom" class="text-[10px] sm:text-xs font-mono font-black px-2 min-w-[46px] text-center text-pink-400">100%</span>
+            
+            <button type="button" onclick="ubahSkalaZoomPDF(0.2)" title="Perbesar"
+                class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center hover:bg-gray-800 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
+                <i class="fa-solid fa-plus text-[10px]"></i>
+            </button>
+            
+            <div class="w-px h-3.5 bg-gray-800 mx-1"></div>
+            
+            <button type="button" onclick="resetSkalaZoomPDF()" 
+                class="px-2 h-7 sm:h-8 flex items-center justify-center hover:bg-gray-800 text-[9px] sm:text-[10px] font-black rounded-lg text-gray-400 hover:text-white transition-all focus:outline-none">
+                RESET
+            </button>
+        </div>
+        
+        <!-- Tombol Tutup Modal -->
+        <button type="button" onclick="tutupModalSummaryApotek()"
+            class="flex items-center gap-1.5 px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white text-[10px] sm:text-xs font-black uppercase tracking-wider rounded-xl shadow-md transition-all active:scale-95 focus:outline-none shrink-0">
+            <i class="fa-solid fa-xmark text-xs"></i>
+            <span class="hidden sm:inline">Tutup</span>
+        </button>
+    </div>
+
+    <!-- AREA VIEWPORT PDF FULLSCREEN -->
+    <div id="viewportScrollApotek" class="flex-1 overflow-auto p-2 sm:p-4 bg-neutral-900 scrollbar-clean relative flex justify-center items-start" style="-webkit-overflow-scrolling: touch;">
+        
+        <!-- Loading Screen -->
+        <div id="loading-viewer-pink" class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-neutral-900 z-20 select-none animate-pulse">
+            <div class="relative mb-4">
+                <div class="absolute -inset-4 bg-pink-500/20 rounded-full blur-xl opacity-70 animate-ping"></div>
+                <i class="fa-solid fa-file-medical text-5xl text-pink-500 relative animate-bounce"></i>
+            </div>
+            <div class="space-y-2 w-2/3 max-w-xs text-center">
+                <p id="teks-loading-summary" class="text-xs font-black text-pink-400 tracking-wide">Menghubungkan jaringan NSA Cloud...</p>
+                <div class="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden relative">
+                    <div class="h-full w-1/2 bg-pink-500 rounded-full absolute top-0 left-0" style="animation: slide-pink 1.5s infinite"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wrapper Iframe (Full Height & Responsive Width) -->
+        <div id="wrapperPenyanggaIframe" class="bg-white shadow-2xl rounded-xl overflow-hidden transition-transform duration-200 w-full max-w-5xl" 
+            style="height: calc(100vh - 82px); transform-origin: top left; transform: scale(1); flex-shrink: 0;">
+            <iframe id="iframe-core-drive" src="" class="w-full h-full border-none bg-white" allow="autoplay" onload="clearLoadingViewApotek()"></iframe>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ===================================================================== -->
+<!-- MODAL 1: MULTI-PAGE CROPPER (NAVIGASI PANAH DI BAWAH FOTO)            -->
+<!-- ===================================================================== -->
+<div id="modal-cropper-faktur" class="fixed inset-0 z-[999999] hidden flex-col bg-neutral-950/95 backdrop-blur-md">
+    
+    <!-- Header Modal Cropper (Bersih Tanpa Terhalang Navigasi) -->
+    <div class="bg-gray-950 text-white px-4 py-3 flex items-center justify-between border-b border-gray-800 shrink-0 gap-3">
+        <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-xl bg-pink-500/20 border border-pink-500/30 text-pink-400 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-crop-simple text-xs"></i>
+            </div>
+            <div class="min-w-0">
+                <p class="text-xs font-black uppercase tracking-wider text-white">Rapikan Lembar Faktur</p>
+                <p id="subjudul-cropper-faktur" class="text-[10px] text-pink-400 font-bold">Lembar 1 dari 1</p>
+            </div>
+        </div>
+
+        <button type="button" onclick="batalCropFaktur()" class="w-8 h-8 rounded-xl bg-gray-900 hover:bg-rose-600 text-gray-300 hover:text-white flex items-center justify-center transition-colors shrink-0">
+            <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+    </div>
+
+    <!-- Area Canvas Cropper -->
+    <div class="flex-1 overflow-hidden bg-neutral-900 flex items-center justify-center p-3 sm:p-6 relative">
+        <div class="w-full h-full max-w-3xl flex items-center justify-center">
+            <img id="img-target-cropper-faktur" src="" alt="Target Crop" class="max-w-full max-h-[64vh] block">
+        </div>
+    </div>
+
+    <!-- Navigasi Panah Kiri / Kanan di Bawah Foto -->
+    <div class="bg-gray-900/90 border-t border-gray-800 px-4 py-2 flex items-center justify-center shrink-0">
+        <div class="flex items-center bg-gray-950 rounded-xl p-1 border border-gray-800 shadow-inner">
+            <button type="button" id="btn-crop-prev" onclick="navigasiLembarCropper(-1)" title="Lembar Sebelumnya"
+                class="w-9 h-8 flex items-center justify-center rounded-lg text-gray-200 hover:bg-gray-800 disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-95">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+            <span id="indikator-lembar-cropper" class="px-4 text-xs font-mono font-black text-pink-400">1 / 1</span>
+            <button type="button" id="btn-crop-next" onclick="navigasiLembarCropper(1)" title="Lembar Berikutnya"
+                class="w-9 h-8 flex items-center justify-center rounded-lg text-gray-200 hover:bg-gray-800 disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-95">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Toolbar Cropper (Putar, Reset, Oke & Selesai) -->
+    <div class="bg-gray-950 border-t border-gray-800 px-3 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center gap-1.5">
+            <button type="button" onclick="aksiPutarCropperFaktur(-90)" title="Putar Kiri 90°"
+                class="px-3 py-2 bg-gray-900 hover:bg-gray-800 text-gray-200 border border-gray-800 rounded-xl text-xs font-bold flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-rotate-left text-pink-400"></i> <span class="hidden sm:inline">Kiri</span>
+            </button>
+            <button type="button" onclick="aksiPutarCropperFaktur(90)" title="Putar Kanan 90°"
+                class="px-3 py-2 bg-gray-900 hover:bg-gray-800 text-gray-200 border border-gray-800 rounded-xl text-xs font-bold flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-rotate-right text-pink-400"></i> <span class="hidden sm:inline">Kanan</span>
+            </button>
+            <button type="button" onclick="aksiResetCropperFaktur()" title="Reset Area Potong"
+                class="px-3 py-2 bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-white border border-gray-800 rounded-xl text-xs font-bold active:scale-95">
+                Reset
+            </button>
+        </div>
+
+        <div class="flex items-center gap-2 ml-auto">
+            <button type="button" onclick="batalCropFaktur()"
+                class="px-3.5 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold rounded-xl transition-all">
+                Batal
+            </button>
+            <button type="button" onclick="konfirmasiSemuaLembarCropFaktur()"
+                class="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-pink-500 to-pink-600 hover:brightness-110 text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-lg shadow-pink-500/20 flex items-center gap-2 active:scale-95">
+                <i class="fa-solid fa-check"></i> <span>OKE & SELESAI</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- MODAL 2: FULLSCREEN PDF VIEWER + CATATAN TXT IDENTIK DI BAGIAN BAWAH  -->
+<!-- ===================================================================== -->
+<div id="modal-popup-viewer-faktur" class="fixed inset-0 z-[999999] hidden flex-col bg-neutral-950/95 backdrop-blur-md transition-all duration-300">
+    
+    <!-- TOP BAR KONTROL -->
+    <div class="bg-gray-950 text-white px-3 sm:px-5 py-3 flex items-center justify-between border-b border-gray-800 shrink-0 shadow-lg z-30">
+        
+        <div class="flex items-center gap-2.5 overflow-hidden max-w-[45%] sm:max-w-[50%]">
+            <div class="w-8 h-8 rounded-xl bg-pink-500/20 border border-pink-500/30 text-pink-400 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-file-pdf text-xs"></i>
+            </div>
+            <div class="truncate">
+                <p class="text-[10px] font-black uppercase tracking-wider text-pink-400 leading-none">Arsip PDF Faktur</p>
+                <p id="judul-modal-viewer-faktur" class="text-xs font-bold text-white truncate mt-0.5">--</p>
+            </div>
+        </div>
+        
+        <!-- Kontrol Zoom & Reset -->
+        <div class="flex items-center bg-gray-900 rounded-xl p-0.5 border border-gray-800">
+            <button type="button" onclick="ubahSkalaZoomFaktur(-0.2)" title="Perkecil"
+                class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center hover:bg-gray-800 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
+                <i class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            
+            <span id="labelZoomViewerFaktur" class="text-[10px] sm:text-xs font-mono font-black px-2 min-w-[46px] text-center text-pink-400">100%</span>
+            
+            <button type="button" onclick="ubahSkalaZoomFaktur(0.2)" title="Perbesar"
+                class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center hover:bg-gray-800 rounded-lg text-gray-200 active:scale-95 transition-all focus:outline-none">
+                <i class="fa-solid fa-plus text-[10px]"></i>
+            </button>
+            
+            <div class="w-px h-3.5 bg-gray-800 mx-1"></div>
+            
+            <button type="button" onclick="resetSkalaZoomFaktur()" 
+                class="px-2 h-7 sm:h-8 flex items-center justify-center hover:bg-gray-800 text-[9px] sm:text-[10px] font-black rounded-lg text-gray-400 hover:text-white transition-all focus:outline-none">
+                RESET
+            </button>
+        </div>
+        
+        <button type="button" onclick="tutupModalViewerFaktur()"
+            class="flex items-center gap-1.5 px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white text-[10px] sm:text-xs font-black uppercase tracking-wider rounded-xl shadow-md transition-all active:scale-95 focus:outline-none shrink-0">
+            <i class="fa-solid fa-xmark text-xs"></i>
+            <span class="hidden sm:inline">Tutup</span>
+        </button>
+    </div>
+
+    <!-- AREA VIEWPORT PDF FULLSCREEN -->
+    <div id="viewportScrollFaktur" class="flex-1 overflow-auto p-2 sm:p-4 bg-neutral-900 scrollbar-clean relative flex justify-center items-start" style="-webkit-overflow-scrolling: touch;">
+        
+        <div id="loading-viewer-faktur" class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-neutral-900 z-20 select-none animate-pulse">
+            <div class="relative mb-4">
+                <div class="absolute -inset-4 bg-pink-500/20 rounded-full blur-xl opacity-70 animate-ping"></div>
+                <i class="fa-solid fa-file-pdf text-5xl text-pink-500 relative animate-bounce"></i>
+            </div>
+            <p class="text-xs font-black text-pink-400 tracking-wide">Memuat dokumen PDF faktur dari NSA Cloud...</p>
+        </div>
+
+        <div id="wrapperPenyanggaPdfFaktur" class="bg-white shadow-2xl rounded-xl overflow-hidden transition-transform duration-200 w-full max-w-5xl"
+            style="height: 100%; transform-origin: top left; transform: scale(1); flex-shrink: 0;">
+            <iframe id="iframe-core-viewer-faktur" src="" class="w-full h-full border-none bg-white" allow="autoplay"
+                onload="document.getElementById('loading-viewer-faktur').classList.add('hidden')"></iframe>
+        </div>
+
+    </div>
+
+    <!-- PANEL CATATAN TXT IDENTIK (OTOMATIS MUNCUL DI BAWAH JIKA DITEMUKAN) -->
+    <div id="panel-catatan-viewer-faktur" class="hidden bg-gray-950 border-t border-pink-500/40 px-4 py-3.5 shrink-0 z-30 shadow-2xl">
+        <div class="max-w-5xl mx-auto flex items-start gap-3">
+            <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                <i class="fa-solid fa-note-sticky text-xs"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+                <span class="block text-[10px] font-black uppercase tracking-widest text-amber-400">
+                    Keterangan / Catatan Faktur:
+                </span>
+                <p id="isi-catatan-viewer-faktur" class="text-xs text-gray-200 leading-relaxed whitespace-pre-wrap mt-1 max-h-24 overflow-y-auto scrollbar-clean"></p>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
