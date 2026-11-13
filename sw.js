@@ -61,3 +61,12 @@ self.addEventListener('notificationclick', function(event) {
     })
   );
 });
+
+// 5. Pastikan Service Worker versi terbaru langsung aktif tanpa nunggu tab ditutup
+self.addEventListener('install', () => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
