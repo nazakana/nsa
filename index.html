@@ -115,7 +115,7 @@ body {
 
 /* Sisi Atas: Mode Lockscreen (100vh Memenuhi Layar Utama) */
 .nsa-left-panel {
-    background: linear-gradient(180deg, #34d399 0%, #10b981 40%, #047857 100%);
+    background: #047857;
     height: 100vh;
     width: 100%;
     padding: 20px; 
@@ -248,7 +248,7 @@ body {
 .welcome-text-green {
     font-size: 35px;
     font-weight: 800;
-    color: #059669;
+    color: #047857;
     line-height: 1.1;
     letter-spacing: -0.5px;
     margin-top: 2px;
@@ -572,8 +572,8 @@ body {
 }
 
 .btn-fotokopi {
-    background: linear-gradient(135deg, #19c54b 0%, #10b981 100%);
-    box-shadow: 0 8px 20px -6px rgba(25, 197, 75, 0.3);
+    background: #047857;
+    box-shadow: 0 8px 20px -6px rgba(4, 120, 87, 0.3);
 }
 .btn-apotek {
     background: linear-gradient(135deg, #fb18a8 0%, #db2777 100%);
@@ -1452,87 +1452,136 @@ body {
     flex-shrink: 0;
 }
 
-.nsa-dynamic-island.expanded {
-    width: 90vw;
-    max-width: 350px;
-    height: auto;
-    min-height: 62px;
+/* True iOS Liquid Glass Material (Bening, Blur Tinggi, Saturasi, Specular Rim) */
+.ios-liquid-glass-emerald {
+    --tx: -50%; /* Default HP: tengah */
+    background: linear-gradient(
+        135deg,
+        rgba(4, 120, 87, 0.42) 0%,
+        rgba(6, 95, 70, 0.34) 100%
+    );
+    backdrop-filter: blur(28px) saturate(185%);
+    -webkit-backdrop-filter: blur(28px) saturate(185%);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    box-shadow:
+        0 18px 40px -8px rgba(2, 44, 34, 0.38),
+        inset 0 1px 1px rgba(255, 255, 255, 0.48),
+        inset 0 -1px 1px rgba(16, 185, 129, 0.22);
+    /* Bouncy Jelly Spring Transition ala iOS */
+    transition:
+        transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+        border-radius 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background 0.35s ease,
+        box-shadow 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
+}
+
+/* Tablet & Desktop (≥ 768px): posisi kiri atas tanpa offset tengah */
+@media (min-width: 768px) {
+    .ios-liquid-glass-emerald {
+        --tx: 0px;
+    }
+}
+
+/* Efek squish kenyal saat ditekan jari/mouse */
+.ios-liquid-glass-emerald:active:not(.is-expanded) {
+    transform: translateX(var(--tx)) scale(0.95);
+}
+
+/* Efek membal sedikit saat mode Expand aktif */
+.ios-liquid-glass-emerald.is-expanded {
+    background: linear-gradient(
+        145deg,
+        rgba(4, 120, 87, 0.58) 0%,
+        rgba(6, 78, 59, 0.52) 100%
+    );
     border-radius: 28px;
-    padding: 12px 18px;
-    justify-content: flex-start;
+    cursor: default;
+    box-shadow:
+        0 26px 55px -10px rgba(2, 44, 34, 0.52),
+        inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55);
+    animation: iosJellyBounce 0.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.island-expanded-content {
-    display: none;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
+@keyframes iosJellyBounce {
+    0% {
+        transform: translateX(var(--tx)) scale(0.96, 0.94);
+    }
+    38% {
+        transform: translateX(var(--tx)) scale(1.025, 1.035);
+    }
+    68% {
+        transform: translateX(var(--tx)) scale(0.992, 0.99);
+    }
+    100% {
+        transform: translateX(var(--tx)) scale(1, 1);
+    }
+}
+
+/* Animasi Grid Accordion Bouncy untuk Area List */
+.island-expand-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
     opacity: 0;
-    transition: opacity 0.3s ease 0.15s;
+    transition:
+        grid-template-rows 0.52s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.28s ease;
 }
 
-.nsa-dynamic-island.expanded .island-compact-content {
-    display: none;
-    opacity: 0;
-}
-
-.nsa-dynamic-island.expanded .island-expanded-content {
-    display: flex;
+.ios-liquid-glass-emerald.is-expanded .island-expand-wrapper {
+    grid-template-rows: 1fr;
     opacity: 1;
 }
 
-.island-icon-box {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+.island-expand-inner {
+    overflow: hidden;
+}
+
+/* Ikon App Squircle ala iOS */
+.ios-notif-icon-box {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: linear-gradient(145deg, rgba(52, 211, 153, 0.85) 0%, rgba(5, 150, 105, 0.9) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.42);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
     color: #ffffff;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 6px 14px rgba(6, 78, 59, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.55);
 }
 
-.island-text-group {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    min-width: 0;
+/* Custom Scrollbar Halus ala iOS */
+.ios-glass-scrollbar::-webkit-scrollbar {
+    width: 4px;
 }
-
-.island-title {
-    font-size: 11px;
-    font-weight: 900;
-    color: #34d399;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    line-height: 1.2;
+.ios-glass-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
 }
-
-.island-desc {
-    font-size: 11px;
-    font-weight: 600;
-    color: #e2e8f0;
-    line-height: 1.3;
-    margin-top: 2px;
+.ios-glass-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 9999px;
+}
+.ios-glass-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
 }
 
 /* Animasi Neon Emergency Border untuk Status TELAH HABIS */
 @keyframes neon-border-flash-emerald {
     0%, 100% {
-        border-color: rgba(244, 63, 94, 1);
-        box-shadow: 0 0 10px rgba(244, 63, 94, 0.9), inset 0 0 4px rgba(244, 63, 94, 0.4);
+        border-color: rgba(254, 205, 211, 0.95);
+        box-shadow: 0 0 10px rgba(244, 63, 94, 0.85), inset 0 0 4px rgba(244, 63, 94, 0.35);
     }
     50% {
-        border-color: rgba(244, 63, 94, 0.2);
+        border-color: rgba(244, 63, 94, 0.25);
         box-shadow: 0 0 0px transparent;
     }
 }
 
 .animate-border-pulse-fast {
-    animation: neon-border-flash-emerald 0.4s infinite ease-in-out;
+    animation: neon-border-flash-emerald 0.45s infinite ease-in-out;
 }
 </style>
 </head>
@@ -1566,8 +1615,9 @@ body {
                 <path class="sparkle-twinkle-2" d="M78 30L79.5 26L83.5 24.5L79.5 23L78 19L76.5 23L72.5 24.5L76.5 26L78 30Z" fill="#FDE047" />
                 <g class="floating-doc-2">
                     <rect x="34" y="20" width="36" height="46" rx="6" fill="#A7F3D0" />
-                    <rect x="40" y="26" width="20" height="3" rx="1.5" fill="#059669" opacity="0.5" />
-                    <rect x="40" y="32" width="14" height="3" rx="1.5" fill="#059669" opacity="0.3" />
+                    <!-- Diubah ke Emerald 700 (#047857) -->
+                    <rect x="40" y="26" width="20" height="3" rx="1.5" fill="#047857" opacity="0.5" />
+                    <rect x="40" y="32" width="14" height="3" rx="1.5" fill="#047857" opacity="0.3" />
                 </g>
                 <g class="floating-doc-1">
                     <rect x="26" y="26" width="38" height="48" rx="6" fill="#6EE7B7" />
@@ -1576,8 +1626,9 @@ body {
                 </g>
                 <g class="folder-front-bounce">
                     <path d="M18 38C18 34.134 21.134 31 25 31H38.5858C39.6466 31 40.664 31.4214 41.4142 32.1716L46.5858 37.3431C47.336 38.0933 48.3534 38.5147 49.4142 38.5147H75C78.866 38.5147 82 41.6487 82 45.5147V68C82 72.9706 77.9706 77 73 77H27C22.0294 77 18 72.9706 18 68V38Z" fill="#ffffff" />
-                    <rect x="28" y="48" width="30" height="4.5" rx="2.25" fill="#059669" />
-                    <rect x="28" y="57" width="20" height="4.5" rx="2.25" fill="#10B981" />
+                    <!-- Baris pertama & kedua folder diubah ke Emerald 700 (#047857) -->
+                    <rect x="28" y="48" width="30" height="4.5" rx="2.25" fill="#047857" />
+                    <rect x="28" y="57" width="20" height="4.5" rx="2.25" fill="#047857" opacity="0.8" />
                     <circle cx="70" cy="63" r="4.5" fill="#047857" />
                     <path d="M68 63L69.5 64.5L72.5 61.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </g>
@@ -1647,15 +1698,15 @@ body {
                     <i class="fas fa-chevron-right chevron-right"></i>
                 </button>
 
-                <button onclick="bukaModalFaceScanner()" class="btn-unit btn-unit-vertical btn-fotokopi">
+                <button onclick="bukaModalPilihKaryawan()" class="btn-unit btn-unit-vertical btn-fotokopi">
                     <div class="icon-wrapper">
                         <i class="fas fa-user-check style-icon"></i>
                     </div>
                     <div class="btn-content">
                         <span class="btn-text">PRESENSI KARYAWAN</span>
-                        <span class="btn-desc">Absen Cepat via Pemindaian Wajah</span>
+                        <span class="btn-desc">Sistem Pencatatan Kehadiran</span>
                     </div>
-                    <i class="fas fa-camera chevron-right"></i>
+                    <i class="fas fa-users chevron-right"></i>
                 </button>
 
                 <button onclick="bukaModalAksesCepat()" class="btn-unit btn-unit-vertical btn-fotokopi">
@@ -1687,380 +1738,49 @@ body {
 
 
 
-<script src="https://unpkg.com/face-api.js@0.22.2/dist/face-api.min.js"></script>
-
 <script>
 // =========================================================================
-// LOGIKA PEMINDAIAN WAJAH VIA FACE-API (TINYFACE) REALTIME
+// KONTROL MODAL PEMILIH KARYAWAN (PENGGANTI FACE SCANNER)
 // =========================================================================
-
-// Database Gabungan Karyawan NSA (Fotokopi + Apotek)
-const DATABASE_WAJAH_KARYAWAN = [
-    // Unit Fotokopi
-    {
-        nama: "Dadan",
-        namaLengkap: "Dadan Nurfaizal",
-        unit: "fotokopi",
-        descriptor: new Float32Array([
-		-0.11779065430164337,0.12306998670101166,0.007922072894871235,-0.07710947096347809,0.041793011128902435,-0.05309397354722023,-0.06988873332738876,-0.1683637946844101,0.13666890561580658,-0.09785641729831696,0.246070995926857,-0.010115759447216988,-0.15092168748378754,-0.17370843887329102,-0.00023576151579618454,0.18665538728237152,-0.2612951993942261,-0.19058507680892944,-0.02909032255411148,-0.053465329110622406,0.06535819917917252,-0.009028464555740356,0.05517340451478958,0.01953812502324581,-0.11114319413900375,-0.3074604868888855,-0.09886013716459274,-0.12047120928764343,0.05039301514625549,-0.024285389110445976,-0.01846861094236374,-0.043838609009981155,-0.23869453370571136,-0.009007939137518406,0.03641070798039436,0.030305011197924614,0.009764253161847591,-0.0787927582859993,0.26614901423454285,-0.015356769785284996,-0.1774108111858368,-0.007811080664396286,0.06361115723848343,0.2461562305688858,0.1537797600030899,0.008145825937390327,-0.006392539944499731,-0.1310543417930603,0.14342467486858368,-0.06433143466711044,0.05736479163169861,0.1610361635684967,0.09394557029008865,0.09148702025413513,0.014358596876263618,-0.13240565359592438,0.08235572278499603,0.08637183159589767,-0.17346951365470886,-0.011069412343204021,-0.003352307714521885,-0.09330600500106812,-0.014266862533986568,-0.05103429779410362,0.2509922683238983,0.03835640847682953,-0.09469481557607651,-0.21553155779838562,0.11694661527872086,-0.055710986256599426,-0.07983178645372391,0.05924122408032417,-0.182998925447464,-0.17523683607578278,-0.3599672019481659,0.012092219665646553,0.32249605655670166,0.06799454241991043,-0.17854058742523193,0.13289354741573334,-0.01833481341600418,-0.08397432416677475,0.12401781231164932,0.19236548244953156,-0.05648629739880562,0.09300380200147629,-0.06146438792347908,0.03235269710421562,0.20556795597076416,-0.050888873636722565,-0.09914756566286087,0.16802285611629486,-0.08163345605134964,0.06775791198015213,0.0050642285495996475,0.010131430812180042,-0.043553464114665985,0.0630258247256279,-0.10584079474210739,-0.020100638270378113,0.07101255655288696,0.006204073317348957,-0.004746286664158106,0.12910038232803345,-0.16817741096019745,0.04379816725850105,0.04991750046610832,0.007389975246042013,-0.048983134329319,0.011773188598453999,-0.0887710303068161,-0.08768858760595322,0.06147465109825134,-0.25570595264434814,0.27683380246162415,0.2007133811712265,0.06503449380397797,0.13180981576442719,0.09807693958282471,0.04640010744333267,-0.014772703871130943,0.015089833177626133,-0.19498500227928162,0.0011817687191069126,0.11574918031692505,0.05733374506235123,0.15262091159820557,0.04000850394368172
-		])
-    },
-    {
-        nama: "Syamsi",
-        namaLengkap: "Syamsi Nurhakim",
-        unit: "fotokopi",
-        descriptor: new Float32Array([
-		-0.10577306151390076,0.07945366948843002,0.012352822348475456,-0.09075901657342911,-0.0563863106071949,-0.07116706669330597,0.011789320036768913,-0.1618708074092865,0.21981939673423767,-0.16043946146965027,0.2590564489364624,-0.032140761613845825,-0.2047329694032669,-0.06972010433673859,-0.036523547023534775,0.05504155531525612,-0.1828380525112152,-0.14979326725006104,0.0000026244670152664185,-0.05725269019603729,0.09553675353527069,0.004888556897640228,-0.02071608044207096,0.05624544247984886,-0.1322370171546936,-0.2877645194530487,-0.10604914277791977,-0.12519946694374084,0.029199179261922836,-0.14132782816886902,0.02090391144156456,0.044869258999824524,-0.25586917996406555,-0.08658894896507263,-0.004890543408691883,0.08939829468727112,0.011251603253185749,-0.018237996846437454,0.20029786229133606,-0.008807193487882614,-0.16873116791248322,-0.05995276942849159,-0.0450722798705101,0.2666006088256836,0.07861055433750153,-0.005512479692697525,-0.05331404134631157,-0.10988719761371613,0.05339464545249939,-0.15400615334510803,0.03388076648116112,0.14659245312213898,0.07079905271530151,0.03251609578728676,-0.02392170950770378,-0.15651610493659973,0.04513142630457878,0.06372666358947754,-0.19140078127384186,0.009619124233722687,0.05700647085905075,-0.1522020697593689,-0.02890261821448803,0.01963037997484207,0.24110442399978638,0.031669601798057556,-0.09395629167556763,-0.11156659573316574,0.11211267113685608,-0.1392623335123062,-0.037458475679159164,0.07889600843191147,-0.10501577705144882,-0.18585070967674255,-0.26761919260025024,0.03975094109773636,0.46704044938087463,0.0871218740940094,-0.2060685157775879,0.07406890392303467,-0.15701262652873993,-0.03656256943941116,0.16098132729530334,0.09972818195819855,-0.02014581300318241,0.09309691190719604,-0.09401950240135193,0.07221155613660812,0.1765729933977127,-0.02308119460940361,-0.09501217305660248,0.17361193895339966,-0.056690748780965805,0.07320460677146912,0.08148467540740967,-0.020856134593486786,-0.05370768904685974,-0.018038051202893257,-0.10848388075828552,-0.023749835789203644,0.03492762893438339,-0.041014671325683594,-0.07085902243852615,0.15043340623378754,-0.19162847101688385,0.10391701012849808,0.062090057879686356,-0.09580329060554504,-0.020882701501250267,-0.019293339923024178,-0.09364566206932068,-0.11523500084877014,0.13153649866580963,-0.3066033124923706,0.20509576797485352,0.17906849086284637,0.018054477870464325,0.22040893137454987,0.04581082612276077,0.019165514037013054,-0.0017961682751774788,-0.04395680129528046,-0.16833773255348206,-0.024800043553113937,0.10179179161787033,0.02687317691743374,0.1273421049118042,-0.07184184342622757
-		])
-    },
-    // Unit Apotek Nurjaya
-    {
-        nama: "Eka",
-        namaLengkap: "Eka Ainun Nisa",
-        unit: "apotek",
-        descriptor: new Float32Array([
-            -0.095534548163414, 0.01784847490489483, 0.04422074928879738, -0.09854491800069809,
-            -0.09543217718601227, -0.0598411038517952, -0.011354658752679825, -0.116946280002594,
-            0.13830749690532684, -0.09985731542110443, 0.29056817293167114, -0.13835278153419495,
-            -0.20965155959129333, -0.09449013322591782, -0.020396621897816658, 0.22751060128211975,
-            -0.21506597101688385, -0.10832913964986801, -0.03488563373684883, 0.010744006372988224,
-            0.09391243010759354, -0.01732557825744152, 0.0072744316421449184, 0.07487181574106216,
-            -0.18347671627998352, -0.349305123090744, -0.10394719988107681, -0.05463118851184845,
-            -0.09372372925281525, -0.09311622381210327, -0.054641325026750565, 0.08450787514448166,
-            -0.20379643142223358, -0.043867696076631546, 0.03861190751194954, 0.099386066198349,
-            -0.01072440855205059, -0.08106786757707596, 0.15071645379066467, 0.011462346650660038,
-            -0.2577635943889618, 0.054369401186704636, 0.07417517155408859, 0.24937844276428223,
-            0.12089220434427261, 0.0413336306810379, -0.0003095144347753376, -0.13031671941280365,
-            0.08123210072517395, -0.19738715887069702, 0.014737697318196297, 0.12521477043628693,
-            0.012859838083386421, 0.032351989299058914, -0.02138444408774376, -0.07827169448137283,
-            0.017544277012348175, 0.12555667757987976, -0.1982358992099762, 0.007013320457190275,
-            0.12665629386901855, -0.10965650528669357, -0.03755718842148781, -0.1503520905971527,
-            0.20810143649578094, 0.12430193275213242, -0.16168633103370667, -0.18114851415157318,
-            0.05336950346827507, -0.10208547115325928, -0.08689574897289276, 0.07700645923614502,
-            -0.1681859940290451, -0.23166532814502716, -0.34681081771850586, 0.01337278913706541,
-            0.37802210450172424, 0.08612220734357834, -0.18174691498279572, -0.001964930444955826,
-            -0.05070994794368744, 0.012234649620950222, 0.13991031050682068, 0.16915126144886017,
-            0.07432366907596588, 0.054042715579271317, -0.09095495194196701, 0.08208122849464417,
-            0.19559241831302643, -0.09128843247890472, -0.008258801884949207, 0.2506054639816284,
-            -0.03927157446742058, 0.051350075751543045, -0.055869657546281815, 0.0636131763458252,
-            -0.08329996466636658, 0.08257853239774704, -0.08686212450265884, 0.03171825036406517,
-            0.061791565269231796, 0.031471606343984604, 0.026088355109095573, 0.12484755367040634,
-            -0.1416892558336258, 0.11787146329879761, -0.01265950407832861, 0.0004624795983545482,
-            0.012347949668765068, -0.031032802537083626, -0.0632367730140686, -0.07077954709529877,
-            0.06399281322956085, -0.2868642807006836, 0.15650132298469543, 0.1918620616197586,
-            0.05180875211954117, 0.08706071972846985, 0.05214198678731918, 0.05527133867144585,
-            -0.031063593924045563, -0.01770722307264805, -0.23785552382469177, 0.030258288607001305,
-            0.1039629876613617, -0.004405655898153782, 0.10831307619810104, -0.028227511793375015
-        ])
-    },
-    {
-        nama: "Dea",
-        namaLengkap: "Dea Nove Asyari",
-        unit: "apotek",
-        descriptor: new Float32Array([
-            -0.08339402824640274, 0.08243311941623688, 0.06215347722172737, -0.0666724145412445,
-            -0.09432128816843033, -0.0590856671333313, -0.06346116960048676, -0.10726042836904526,
-            0.14596332609653473, -0.18234235048294067, 0.2216089367866516, -0.08183138072490692,
-            -0.24572010338306427, -0.0965452641248703, -0.05121272802352905, 0.24632810056209564,
-            -0.16969920694828033, -0.20539888739585876, -0.06978588551282883, -0.010648028925061226,
-            0.09616957604885101, -0.011465409770607948, 0.007091859821230173, 0.05348536744713783,
-            -0.13586987555027008, -0.3262243866920471, -0.06737049669027328, -0.009639007039368153,
-            -0.04522015154361725, -0.10862462222576141, -0.05882376804947853, 0.02609119936823845,
-            -0.20126834511756897, -0.043143097311258316, 0.026592668145895004, 0.12876005470752716,
-            -0.005864698439836502, -0.09064985811710358, 0.15896376967430115, -0.035417765378952026,
-            -0.29573163390159607, 0.01564338058233261, 0.09086786955595016, 0.22242696583271027,
-            0.15982051193714142, 0.04881971329450607, -0.04409518837928772, -0.14060257375240326,
-            0.1081390529870987, -0.25035375356674194, -0.0011711455881595612, 0.0950157418847084,
-            0.06544452905654907, 0.033337533473968506, -0.02803482860326767, -0.14690905809402466,
-            0.05702614039182663, 0.1025242954492569, -0.20880253612995148, -0.05856689438223839,
-            0.08522195369005203, -0.13769474625587463, -0.05952319875359535, -0.09228241443634033,
-            0.2086138278245926, 0.1014113575220108, -0.12041744589805603, -0.16449260711669922,
-            0.1765289455652237, -0.14882692694664001, -0.03654284402728081, 0.09179726988077164,
-            -0.09027402102947235, -0.17828135192394257, -0.3122936487197876, -0.04185537248849869,
-            0.4494362771511078, 0.09942112118005753, -0.1703169047832489, 0.006844524294137955,
-            -0.022084500640630722, 0.03344634547829628, 0.0948358029127121, 0.08503547310829163,
-            -0.03419812396168709, 0.019317414611577988, -0.14194150269031525, 0.05309431999921799,
-            0.23540028929710388, -0.05343350023031235, -0.033389050513505936, 0.15554068982601166,
-            0.04614821821451187, 0.07885104417800903, 0.040927544236183167, 0.05239131301641464,
-            -0.08020550012588501, 0.036687493324279785, -0.20644478499889374, 0.016237374395132065,
-            -0.005818355828523636, -0.014338750392198563, -0.02744709700345993, 0.11680684983730316,
-            -0.10308381915092468, 0.13788405060768127, 0.03527119755744934, -0.056902915239334106,
-            -0.016656257212162018, 0.04152066260576248, -0.11234836280345917, -0.08576169610023499,
-            0.08616386353969574, -0.20823201537132263, 0.14286942780017853, 0.19974377751350403,
-            0.1059502586722374, 0.13033701479434967, 0.10726362466812134, 0.08514410257339478,
-            -0.029184825718402863, -0.05707506835460663, -0.23607605695724487, -0.05336075648665428,
-            0.10400675237178802, -0.062008608132600784, 0.15595509111881256, 0.007594097871333361
-        ])
-    },
-    {
-        nama: "Fadilla",
-        namaLengkap: "Fadilla Nailul Wafa",
-        unit: "apotek",
-        descriptor: new Float32Array([
-            -0.006647669244557619, 0.080779530107975, 0.06035904586315155, -0.08097623288631439,
-            -0.16957330703735352, 0.047602538019418716, -0.022263677790760994, -0.1334466189146042,
-            0.1966267228126526, -0.14320619404315948, 0.20521438121795654, -0.10413769632577896,
-            -0.21654053032398224, -0.015301388688385487, -0.07505213469266891, 0.19367222487926483,
-            -0.11098030209541321, -0.16410179436206818, -0.035539861768484116, -0.013226894661784172,
-            0.0010871702106669545, -0.030716048553586006, 0.042104706168174744, 0.08098680526018143,
-            -0.053614720702171326, -0.3261363208293915, -0.07957018911838531, -0.07804980874061584,
-            0.03886277973651886, -0.09070606529712677, -0.054916396737098694, 0.0910368338227272,
-            -0.19005794823169708, -0.04168259724974632, -0.0049570840783417225, 0.041629791259765625,
-            -0.002931396709755063, -0.04558191075921059, 0.1682470291852951, -0.0899951159954071,
-            -0.30400940775871277, 0.007508201524615288, 0.05268195644021034, 0.20171867311000824,
-            0.1472063958644867, 0.0890020951628685, -0.014109889045357704, -0.11348217725753784,
-            0.07332219183444977, -0.17804095149040222, 0.06493641436100006, 0.09705116599798203,
-            0.05749111622571945, 0.0020447445567697287, -0.04520750045776367, -0.1932228058576584,
-            0.012166365049779415, 0.059063103049993515, -0.08903302252292633, -0.00024835069780237973,
-            0.10583630204200745, -0.06360214948654175, -0.001034648739732802, -0.06770376116037369,
-            0.3044176995754242, 0.06551611423492432, -0.10685866326093674, -0.16745714843273163,
-            0.15826115012168884, -0.1370985060930252, -0.04061497747898102, 0.06315431743860245,
-            -0.15372911095619202, -0.12175194919109344, -0.2980210781097412, 0.016276607289910316,
-            0.4417007863521576, 0.08252585679292679, -0.14745788276195526, 0.05703216791152954,
-            -0.08468476682901382, 0.07995569705963135, 0.05686649680137634, 0.12694713473320007,
-            -0.07354080677032471, 0.027847878634929657, -0.09206846356391907, -0.011412138119339943,
-            0.2057419866323471, -0.09477149695158005, -0.044031671548366555, 0.21251831948757172,
-            -0.03271884843707085, 0.08255372196435928, -0.013327008113265038, 0.057750899344682693,
-            -0.053168781101703644, 0.0687648132443428, -0.15385203063488007, 0.020407313480973244,
-            0.06667810678482056, 0.010621395893394947, 0.016327211633324623, 0.17744646966457367,
-            -0.23223267495632172, 0.12042227387428284, -0.038972824811935425, 0.03730585426092148,
-            0.07177317142486572, 0.08586625754833221, -0.09403985738754272, -0.10613608360290527,
-            0.16927233338356018, -0.247303307056427, 0.1606932133436203, 0.16599401831626892,
-            0.10021235048770905, 0.10310565680265427, 0.15437732636928558, 0.09853719919919968,
-            0.0473184697329998, -0.03362904489040375, -0.2362222969532013, -0.011945025995373726,
-            0.15599553287029266, -0.10184769332408905, 0.06610126048326492, 0.08643095195293427
-        ])
-    }
-];
-
-let streamKamera = null;
-let intervalDeteksi = null;
-let modelTerpanggil = false;
-
-// =========================================================================
-// PRE-LOADING AI MODEL & WEBGL DI BACKGROUND
-// =========================================================================
-async function preloadFaceModel() {
-    if (modelTerpanggil) return;
-    
-    try {
-        console.log("NSA AI Engine: Menginisialisasi GPU & Model di Background...");
-        
-        if (typeof faceapi !== "undefined" && faceapi.tf) {
-            await faceapi.tf.setBackend('webgl');
-            await faceapi.tf.ready();
-        }
-
-        const MODEL_URL = "https://justadudewhohacks.github.io/face-api.js/models";
-        await Promise.all([
-            faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-            faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-            faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
-        ]);
-
-        modelTerpanggil = true;
-        console.log("NSA AI Engine: Model Wajah Siap Digunakan!");
-    } catch (err) {
-        console.warn("NSA AI Engine Preload Info:", err);
-    }
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-    setTimeout(preloadFaceModel, 1000);
-});
-
-// =========================================================================
-// KONTROL MODAL SCANNER & KAMERA REALTIME
-// =========================================================================
-// =========================================================================
-// REVISI FULL BLOK: KONTROL MODAL SCANNER & KAMERA REALTIME
-// =========================================================================
-
-async function bukaModalFaceScanner() {
-    const modal = document.getElementById("modal-face-scanner");
-    const video = document.getElementById("face-video");
-    const loading = document.getElementById("face-loading");
-    const loadingText = document.getElementById("face-loading-text");
-    const statusText = document.getElementById("face-status-text");
-
+function bukaModalPilihKaryawan() {
+    const modal = document.getElementById("modal-pilih-karyawan");
     if (!modal) return;
 
-    // 1. Tampilkan modal dari display hidden terlebih dahulu
     modal.classList.remove("hidden");
-    
-    // 2. Transisi halus animasi modal
     setTimeout(() => {
         modal.classList.remove("opacity-0", "pointer-events-none");
         const innerBox = modal.querySelector(".transform");
         if (innerBox) innerBox.classList.remove("scale-95");
     }, 10);
-
-    if (typeof faceapi === "undefined") {
-        alert("Library face-api.js belum selesai dimuat!");
-        tutupModalFaceScanner();
-        return;
-    }
-
-    try {
-        try {
-            streamKamera = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-        } catch (e) {
-            streamKamera = await navigator.mediaDevices.getUserMedia({ video: true });
-        }
-        if (video) video.srcObject = streamKamera;
-    } catch (errKamera) {
-        console.error("Gagal Akses Kamera:", errKamera);
-        alert("Kamera tidak ditemukan atau izin ditolak! " + errKamera.message);
-        tutupModalFaceScanner();
-        return;
-    }
-
-    try {
-        if (!modelTerpanggil) {
-            if (loading) loading.classList.remove("hidden");
-            if (loadingText) loadingText.textContent = "Menyiapkan Modul AI TinyFace...";
-            await preloadFaceModel();
-        }
-
-        if (loading) loading.classList.add("hidden");
-        if (statusText) {
-            statusText.textContent = "Arahkan Wajah Anda ke Kamera";
-            statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide";
-        }
-
-        mulaiDeteksiWajahRealtime();
-    } catch (errModel) {
-        console.error("Gagal Load Model:", errModel);
-        alert("Gagal mengunduh file weights AI!");
-        tutupModalFaceScanner();
-    }
 }
 
-let detectorOptionsNsa = null;
+function tutupModalPilihKaryawan() {
+    const modal = document.getElementById("modal-pilih-karyawan");
+    if (!modal) return;
 
-function mulaiDeteksiWajahRealtime() {
-    const video = document.getElementById("face-video");
-    const canvas = document.getElementById("face-canvas");
-    const statusText = document.getElementById("face-status-text");
+    const innerBox = modal.querySelector(".transform");
+    if (innerBox) innerBox.classList.add("scale-95");
+    modal.classList.add("opacity-0", "pointer-events-none");
 
-    if (!video || !canvas) return;
-
-    if (!detectorOptionsNsa && typeof faceapi !== "undefined") {
-        detectorOptionsNsa = new faceapi.TinyFaceDetectorOptions({
-            inputSize: 224,
-            scoreThreshold: 0.5
-        });
-    }
-
-    const displaySize = { width: video.clientWidth || 320, height: video.clientHeight || 320 };
-    faceapi.matchDimensions(canvas, displaySize);
-
-    if (intervalDeteksi) clearInterval(intervalDeteksi);
-
-    intervalDeteksi = setInterval(async () => {
-        if (!video.srcObject) return;
-
-        const detections = await faceapi.detectSingleFace(video, detectorOptionsNsa)
-            .withFaceLandmarks()
-            .withFaceDescriptor();
-
-        if (detections) {
-            const resizedDetections = faceapi.resizeResults(detections, displaySize);
-            const ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            faceapi.draw.drawDetections(canvas, resizedDetections);
-
-            let kecocokanTerbaik = null;
-            let jarakTerpendek = 0.60;
-
-            if (typeof DATABASE_WAJAH_KARYAWAN !== "undefined" && Array.isArray(DATABASE_WAJAH_KARYAWAN)) {
-                DATABASE_WAJAH_KARYAWAN.forEach(item => {
-                    // Cek kelengkapan descriptor agar tidak throw error Float32Array kosong
-                    if (item.descriptor && item.descriptor.length > 0) {
-                        const jarak = faceapi.euclideanDistance(detections.descriptor, item.descriptor);
-                        if (jarak < jarakTerpendek) {
-                            jarakTerpendek = jarak;
-                            kecocokanTerbaik = item;
-                        }
-                    }
-                });
-            }
-
-           if (kecocokanTerbaik) {
-                // Mainkan suara beep canggih & keras
-                mainkanSuaraBeepTech();
-
-                clearInterval(intervalDeteksi);
-                intervalDeteksi = null;
-
-                if (statusText) {
-                    statusText.textContent = `Wajah Terdeteksi: ${kecocokanTerbaik.namaLengkap}`;
-                    statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide animate-pulse";
-                }
-
-                setTimeout(() => {
-                    tutupModalFaceScanner();
-
-                    // ROUTING SINKRONISASI UNIT
-                    if (kecocokanTerbaik.unit === "fotokopi") {
-                        if (typeof eksekusiPresensiFotokopi === "function") {
-                            eksekusiPresensiFotokopi(kecocokanTerbaik.nama);
-                        }
-                    } else if (kecocokanTerbaik.unit === "apotek") {
-                        if (typeof eksekusiPresensiApotek === "function") {
-                            eksekusiPresensiApotek(kecocokanTerbaik.nama);
-                        }
-                    }
-                }, 600);
-            } else {
-                if (statusText) {
-                    statusText.textContent = "Wajah Tidak Dikenali!";
-                    statusText.className = "text-xs font-black text-rose-600 uppercase tracking-wide";
-                }
-            }
-        } else {
-            const ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (statusText) {
-                statusText.textContent = "Arahkan Wajah Anda ke Kamera";
-                statusText.className = "text-xs font-black text-emerald-600 uppercase tracking-wide";
-            }
-        }
-    }, 250);
+    setTimeout(() => {
+        modal.classList.add("hidden");
+    }, 200);
 }
 
-function tutupModalFaceScanner() {
-    const modal = document.getElementById("modal-face-scanner");
-    const video = document.getElementById("face-video");
-    const canvas = document.getElementById("face-canvas");
-
-    if (intervalDeteksi) {
-        clearInterval(intervalDeteksi);
-        intervalDeteksi = null;
-    }
-    
-    if (streamKamera) {
-        streamKamera.getTracks().forEach(track => track.stop());
-        streamKamera = null;
+function pilihKaryawanPresensi(namaKaryawan, unit) {
+    if (typeof mainkanSuaraBeepTech === "function") {
+        mainkanSuaraBeepTech();
     }
 
-    if (canvas) {
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    tutupModalPilihKaryawan();
 
-    if (video) video.srcObject = null;
-
-    if (modal) {
-        const innerBox = modal.querySelector(".transform");
-        if (innerBox) innerBox.classList.add("scale-95");
-        
-        modal.classList.add("opacity-0", "pointer-events-none");
-        
-        setTimeout(() => {
-            modal.classList.add("hidden");
-        }, 200);
-    }
+    setTimeout(() => {
+        if (unit === "fotokopi" && typeof eksekusiPresensiFotokopi === "function") {
+            eksekusiPresensiFotokopi(namaKaryawan);
+        } else if (unit === "apotek" && typeof eksekusiPresensiApotek === "function") {
+            eksekusiPresensiApotek(namaKaryawan);
+        }
+    }, 150);
 }
 
 // =========================================================================
@@ -2512,10 +2232,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const formApotek = document.getElementById("form-presensi-apotek");
     const inputTanggalApotek = document.getElementById("presensi-tanggal-apotek");
 
-    if (inputTanggalApotek) {
-        inputTanggalApotek.value = new Date().toISOString().split('T')[0];
-    }
-
+    
     if (formApotek) {
         formApotek.addEventListener("submit", function(e) {
             e.preventDefault();
@@ -2523,7 +2240,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const namaKaryawan = document.getElementById("presensi-karyawan-apotek").value;
             const btnSubmit = document.getElementById("btn-submit-presensi-apotek");
 
-            if (!namaKaryawan) return alert("Pindai wajah terlebih dahulu!");
+            if (!namaKaryawan) return alert("Pilih profil karyawan terlebih dahulu!");
 
             // =========================================================
             // VALIDASI MANDATORI KONDISIONAL
@@ -2595,6 +2312,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     document.getElementById("presensi-penggantian-jam").value = "";
                     document.getElementById("presensi-dropdown-apotek").value = "Shift 1 (Pagi-Siang)";
                     toggleFormJamKhususApotek();
+
+                    // Tambahan: Reset pilihan tanggal kalender & muat ulang doGet terbaru
+                    if (typeof batalkanPilihanTanggalApt === "function") {
+                        batalkanPilihanTanggalApt();
+                    }
+                    if (typeof muatRiwayatKalenderApotek === "function") {
+                        muatRiwayatKalenderApotek(namaKaryawan);
+                    }
                 } else {
                     alert("Gagal menyimpan: " + result.message);
                 }
@@ -2613,47 +2338,54 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // =========================================================================
-// AUDIO SYNTHESIZER: EFEK SUARA SUKSES / TERDETEKSI (HIGH-TECH CHIME)
+// AUDIO PLAYER: EFEK SUARA SUKSES / TERDETEKSI (assets/presensi.wav + DELAY 1s)
 // =========================================================================
+const audioPresensi = new Audio();
+audioPresensi.src = new URL('assets/presensi.wav', window.location.href).href;
+audioPresensi.preload = 'auto';
+
+// Trik Unlock Autoplay saat layar disentuh/diklik pertama kali
+['click', 'touchstart'].forEach(evt => {
+    document.addEventListener(evt, () => {
+        audioPresensi.load();
+    }, { once: true });
+});
+
 function mainkanSuaraBeepTech() {
-    try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        
-        const audioCtx = new AudioContext();
-        const skrg = audioCtx.currentTime;
+    // Tunda pemutaran selama 1000ms (1 detik) agar pas dengan kemunculan popup
+    setTimeout(() => {
+        try {
+            audioPresensi.currentTime = 0;
+            audioPresensi.volume = 1.0;
 
-        // FUNGSI HELPER NADA INDIVIDUAL
-        function buatNadaChime(frekuensi, waktuMulai, durasi, volume) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-
-            // Gelombang sine jernih bercampur sedikit sinyal halus
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(frekuensi, waktuMulai);
-
-            // Setting volume keras & padat
-            gain.gain.setValueAtTime(volume, waktuMulai);
-            // Decay / gema halus di akhir nada
-            gain.gain.exponentialRampToValueAtTime(0.0001, waktuMulai + durasi);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start(waktuMulai);
-            osc.stop(waktuMulai + durasi);
+            const playPromise = audioPresensi.play();
+            if (playPromise !== undefined) {
+                playPromise.catch((err) => {
+                    console.warn("Gagal memutar assets/presensi.wav:", err.name, err.message);
+                    
+                    // Fallback darurat ke synthesizer asli jika terblokir/404
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioContext) return;
+                    const audioCtx = new AudioContext();
+                    const skrg = audioCtx.currentTime;
+                    [ [659.25, 0, 0.25, 0.7], [987.77, 0.08, 0.45, 0.85] ].forEach(([f, d, dur, v]) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = "sine";
+                        osc.frequency.setValueAtTime(f, skrg + d);
+                        gain.gain.setValueAtTime(v, skrg + d);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, skrg + d + dur);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(skrg + d);
+                        osc.stop(skrg + d + dur);
+                    });
+                });
+            }
+        } catch (err) {
+            console.warn("Error Audio:", err);
         }
-
-        // --- NADA HARMONI BERURUTAN (CHIME SUKSES CHORD E-MAJOR) ---
-        // Nada 1: E5 (659.25 Hz) -> Bunyi pertama sebagai pemicu
-        buatNadaChime(659.25, skrg, 0.25, 0.7);
-
-        // Nada 2: B5 (987.77 Hz) -> Melompat tinggi penanda "SUKSES"
-        buatNadaChime(987.77, skrg + 0.08, 0.45, 0.85);
-
-    } catch (err) {
-        console.warn("Autoplay Audio API dibatasi browser:", err);
-    }
+    }, 600); // <-- Ubah angka ini (dalam milidetik) kalau mau geser timing-nya, misal 800 atau 1200
 }
 </script>
 
@@ -3536,7 +3268,14 @@ document.addEventListener("DOMContentLoaded", function() {
     let panzoomInstance = null;
 
     if (inputTanggal) {
-        inputTanggal.value = new Date().toISOString().split('T')[0];
+        const todayLocal = new Date();
+        const yyyy = todayLocal.getFullYear();
+        const mm = String(todayLocal.getMonth() + 1).padStart(2, '0');
+        const dd = String(todayLocal.getDate()).padStart(2, '0');
+        inputTanggal.value = `${yyyy}-${mm}-${dd}`;
+        if (typeof perbaruiTampilanTriggerKalenderFtk === "function") {
+            perbaruiTampilanTriggerKalenderFtk();
+        }
     }
     
     // Toggle Form Presensi Manual
@@ -4174,6 +3913,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+
 
 // =========================================================================
 // LOGIKA KARTU PRESENSI APOTEK NURJAYA (SEPARATE ID & ENGINE)
@@ -4894,6 +4635,7 @@ function uploadKartuApotekKeDrive() {
 </div>
 
 
+
 <!-- Wrapper Modal Presensi Apotek Nurjaya -->
 <div id="wrapper_form_presensi_apotek" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[12000] flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300 hidden">
     
@@ -4908,12 +4650,12 @@ function uploadKartuApotekKeDrive() {
                 </div>
                 <div>
                     <p class="text-xs font-black text-gray-800 uppercase">Presensi Apotek Nurjaya</p>
-                    <p class="text-[11px] text-pink-700 font-bold">Terverifikasi via Pemindaian Wajah</p>
+                    <p class="text-[11px] text-pink-700 font-bold">Profil Karyawan Terpilih</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button type="button" onclick="bukaModalFaceScanner()" class="px-3 py-2 bg-pink-600 hover:bg-pink-700 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera"></i> Scan
+                <button type="button" onclick="tutupFormPresensiApotekModal(); bukaModalPilihKaryawan();" class="px-3 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-users"></i> Ganti
                 </button>
                 <button type="button" onclick="tutupFormPresensiApotekModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-rose-100 hover:text-rose-600 text-slate-600 flex items-center justify-center transition-colors">
                     <i class="fa-solid fa-xmark"></i>
@@ -5074,38 +4816,122 @@ function uploadKartuApotekKeDrive() {
                 <input type="hidden" id="presensi-karyawan-apotek" name="presensi-karyawan-apotek" value="">
             </div>
 
+
             <!-- Form Presensi Apotek -->
             <form id="form-presensi-apotek" class="space-y-5">
                 <div class="p-4 sm:p-5 bg-pink-50 rounded-[24px] border border-pink-200/80 shadow-sm space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="space-y-1.5">
-                            <label for="presensi-tanggal-apotek" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-calendar-day text-pink-600"></i> Tanggal Kerja
+                    <!-- Kalender Inline Interaktif Presensi Apotek (Pink-600) -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <label class="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-days text-pink-600"></i> Pilih Tanggal & Status Kehadiran
                             </label>
-                            <input type="date" id="presensi-tanggal-apotek" required onchange="perbaruiPeriodeOtomatisRealtime()"
-                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-pink-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
+                            <span id="kal-apt-status-sync" class="text-[10px] font-bold text-pink-700 bg-white px-2.5 py-1 rounded-full border border-pink-200 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-info"></i> Ketuk tanggal
+                            </span>
                         </div>
 
-                        <div class="space-y-1.5">
-                            <label for="presensi-dropdown-apotek" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-circle-check text-pink-600"></i> Status Presensi / Kehadiran
-                            </label>
-                            <div class="relative">
-                                <select id="presensi-dropdown-apotek" required onchange="toggleFormJamKhususApotek()"
-                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-pink-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                                    <option value="Shift 1 (Pagi-Siang)">Shift 1 (Pagi-Siang)</option>
-                                    <option value="Shift 2 (Siang-Malam)">Shift 2 (Siang-Malam)</option>
-                                    <option value="Lembur">Lembur</option>
-                                    <option value="Khusus">Khusus</option>
-                                    <option value="Libur">Libur</option>
-                                    <option value="Izin/Sakit">Izin/Sakit</option>
-                                    <option value="Absen">Absen</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                                </div>
+                        <!-- Kontainer Kalender Utama Apotek -->
+                        <div class="bg-white rounded-[22px] border-2 border-pink-200/90 p-3.5 sm:p-4 shadow-xs space-y-3">
+                            <!-- Navigasi Bulan -->
+                            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                                <button type="button" onclick="geserBulanKalenderApt(-1)" class="w-8 h-8 rounded-xl bg-pink-50 hover:bg-pink-600 hover:text-white text-pink-800 flex items-center justify-center transition-colors">
+                                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                                </button>
+                                <span id="kal-apt-nama-bulan" class="text-xs sm:text-sm font-black text-pink-900 uppercase tracking-wide">Bulan Tahun</span>
+                                <button type="button" onclick="geserBulanKalenderApt(1)" class="w-8 h-8 rounded-xl bg-pink-50 hover:bg-pink-600 hover:text-white text-pink-800 flex items-center justify-center transition-colors">
+                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                </button>
+                            </div>
+
+
+
+                            <!-- Area Info Petunjuk Statis (Anti-Menghalangi Tanggal) -->
+                            <div id="kal-apt-info-banner" class="hidden flex flex-wrap items-center justify-center gap-1.5 pt-1">
+                                <!-- Diisi otomatis oleh JS -->
+                            </div>
+							
+							                            <!-- Header Hari -->
+                            <div class="grid grid-cols-7 gap-1 text-center">
+                                <span class="text-[10px] font-black text-rose-500 uppercase">Min</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Sen</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Sel</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Rab</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Kam</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Jum</span>
+                                <span class="text-[10px] font-black text-pink-600 uppercase">Sab</span>
+                            </div>
+
+                            <!-- Grid Angka Tanggal -->
+                            <div id="grid-kalender-apotek" class="grid grid-cols-7 gap-1.5 pt-1">
+                                <!-- Dirender otomatis oleh JS -->
+                            </div>
+
+                            <!-- Legenda Warna -->
+                            <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2 border-t border-slate-100 text-[10px] font-bold text-slate-500">
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-pink-300 border border-pink-600"></span> Tercatat</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Terakhir Diisi</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Hari Ini</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-pink-600"></span> Dipilih</span>
                             </div>
                         </div>
+
+                        <!-- Pilihan Status Kehadiran Apotek (Selalu Tampil, Greyed Sebelum Pilih Tanggal) -->
+                        <div id="box-pilihan-kehadiran-apt" class="p-3.5 bg-white border-2 border-pink-200 rounded-[20px] space-y-2.5 opacity-40 pointer-events-none transition-all duration-200">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[11px] font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="fa-solid fa-circle-check text-pink-600"></i>
+                                    <span id="label-tanggal-diketuk-apt">Pilih tanggal pada kalender dulu</span>
+                                </span>
+                                <button type="button" id="btn-reset-tanggal-apt" onclick="batalkanPilihanTanggalApt()" class="hidden text-[10px] font-extrabold text-rose-600 hover:underline">
+                                    Batal Pilih
+                                </button>
+                            </div>
+
+                            <!-- Grid 7 Opsi Status Presensi Apotek -->
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                <button type="button" data-status-apt="Shift 1 (Pagi-Siang)" onclick="tetapkanKehadiranKalenderApt('Shift 1 (Pagi-Siang)')"
+                                    class="btn-opsi-status-apt py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-gray-50 border-gray-200 text-gray-600">
+                                    <i class="fa-solid fa-sun"></i> Shift 1
+                                </button>
+                                <button type="button" data-status-apt="Shift 2 (Siang-Malam)" onclick="tetapkanKehadiranKalenderApt('Shift 2 (Siang-Malam)')"
+                                    class="btn-opsi-status-apt py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-gray-50 border-gray-200 text-gray-600">
+                                    <i class="fa-solid fa-moon"></i> Shift 2
+                                </button>
+                                <button type="button" data-status-apt="Lembur" onclick="tetapkanKehadiranKalenderApt('Lembur')"
+                                    class="btn-opsi-status-apt py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-gray-50 border-gray-200 text-gray-600">
+                                    <i class="fa-solid fa-business-time"></i> Lembur
+                                </button>
+                                <button type="button" data-status-apt="Khusus" onclick="tetapkanKehadiranKalenderApt('Khusus')"
+                                    class="btn-opsi-status-apt py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-gray-50 border-gray-200 text-gray-600">
+                                    <i class="fa-solid fa-clock"></i> Khusus
+                                </button>
+                                <button type="button" data-status-apt="Libur" onclick="tetapkanKehadiranKalenderApt('Libur')"
+                                    class="btn-opsi-status-apt py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-gray-50 border-gray-200 text-gray-600">
+                                    <i class="fa-solid fa-umbrella-beach"></i> Libur
+                                </button>
+                                <button type="button" data-status-apt="Izin/Sakit" onclick="tetapkanKehadiranKalenderApt('Izin/Sakit')"
+                                    class="btn-opsi-status-apt py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-gray-50 border-gray-200 text-gray-600">
+                                    <i class="fa-solid fa-notes-medical"></i> Izin/Sakit
+                                </button>
+                                <button type="button" data-status-apt="Absen" onclick="tetapkanKehadiranKalenderApt('Absen')"
+                                    class="btn-opsi-status-apt col-span-2 sm:col-span-3 py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-gray-50 border-gray-200 text-gray-600">
+                                    <i class="fa-solid fa-circle-xmark"></i> Absen
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Elemen Asli Tersembunyi (ID Utuh untuk Integrasi Script & Backend) -->
+                        <input type="date" id="presensi-tanggal-apotek" required onchange="perbaruiPeriodeOtomatisRealtime()" class="hidden">
+                        <select id="presensi-dropdown-apotek" required onchange="toggleFormJamKhususApotek()" class="hidden">
+                            <option value="Shift 1 (Pagi-Siang)">Shift 1 (Pagi-Siang)</option>
+                            <option value="Shift 2 (Siang-Malam)">Shift 2 (Siang-Malam)</option>
+                            <option value="Lembur">Lembur</option>
+                            <option value="Khusus">Khusus</option>
+                            <option value="Libur">Libur</option>
+                            <option value="Izin/Sakit">Izin/Sakit</option>
+                            <option value="Absen">Absen</option>
+                        </select>
                     </div>
 
                     <!-- Input Dynamic Jam Khusus & Alasan Jam Khusus (Sembunyi secara default) -->
@@ -5965,7 +5791,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <script>
 /* ====================================================================
-   MODULE DYNAMIC ISLAND TICKER STOK (INDEPENDENT FLOATING WIDGET)
+   MODULE INTERACTIVE iOS LIQUID GLASS NOTIFICATION STOK
    ==================================================================== */
 (function () {
     const GAS_URL_BARANG_KOSONG = "https://script.google.com/macros/s/AKfycbxEOZBmgmXeFeG_lkkCY5OOUESufebQ2Pj9Y9NiaNcpLde-bPUQshXrlVnzDtf3s1-wfQ/exec";
@@ -5973,6 +5799,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let islandItemsData = [];
     let islandCurrentIndex = 0;
     let islandIntervalTimer = null;
+    let isIslandExpanded = false;
 
     function dapatkanFormatSmartStok(rawStok) {
         if (!rawStok) {
@@ -5981,7 +5808,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const stokStr = rawStok.toString().trim();
         const stokLower = stokStr.toLowerCase();
-
         const isHabis = stokLower.includes("habis") || /\b0\b/.test(stokLower) || stokStr === "0";
 
         if (isHabis) {
@@ -6004,42 +5830,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (islandItemsData.length > 0) {
                     renderIslandTickerHTML();
+                    renderIslandScrollableListHTML();
                     mulaiBergulirIslandTicker();
                 } else {
-                    container.innerHTML = `<span class="block text-emerald-200/70 italic text-[10px] leading-[26px] truncate">Tidak ada daftar barang</span>`;
+                    container.innerHTML = `<span class="block text-white/80 italic text-xs leading-[28px] truncate">Tidak ada daftar barang</span>`;
                 }
             } else {
-                container.innerHTML = `<span class="block text-emerald-200/70 italic text-[10px] leading-[26px] truncate">Stok barang aman</span>`;
+                container.innerHTML = `<span class="block text-white/80 italic text-xs leading-[28px] truncate">Stok barang aman</span>`;
             }
         } catch (error) {
             console.error("Gagal memuat Island Ticker stok:", error);
-            container.innerHTML = `<span class="block text-rose-300/80 italic text-[10px] leading-[26px] truncate">Gagal memuat data stok</span>`;
+            container.innerHTML = `<span class="block text-rose-200 italic text-xs leading-[28px] truncate">Gagal memuat data stok</span>`;
         }
     }
 
+    // 1. Render mode ticker ringkas (1 baris bergulir)
     function renderIslandTickerHTML() {
         const container = document.getElementById("island-ticker-container");
+        const countBadge = document.getElementById("island-count-badge");
         if (!container) return;
 
+        if (countBadge) {
+            countBadge.textContent = `${islandItemsData.length} item`;
+            countBadge.classList.remove("hidden");
+        }
+
         let htmlContent = "";
-        
         islandItemsData.forEach(item => {
             const nama = item["Nama Barang"] || "-";
             const rawStok = item["Stok Saat Ini"] || "";
-            
             const smartStok = dapatkanFormatSmartStok(rawStok);
 
-            // Jika stok HABIS: Chip Merah Gelap + Border Neon Kedip Cepat
-            // Jika ADA STOK: Chip Hijau Emerald Cerah Kontras dengan Latar Hijau Tua
             const chipClass = smartStok.isHabis 
-                ? "bg-rose-950/90 text-rose-200 border-2 animate-border-pulse-fast" 
-                : "bg-emerald-800/80 text-emerald-100 border border-emerald-400/50 shadow-emerald-900/30";
+                ? "bg-rose-600/85 text-white border-[1.5px] animate-border-pulse-fast" 
+                : "bg-white/20 text-white border border-white/30";
 
-            // PERUBAHAN: Padding vertikal dinaikkan jadi py-1 (lebih gendut/tebal) dan ditambahkan tracking-wider
             htmlContent += `
-                <div class="h-[26px] py-0.5 flex items-center justify-between gap-2 text-white font-medium truncate">
-                    <span class="truncate text-emerald-50 text-[10.5px] sm:text-xs font-semibold flex-1 leading-none">${nama}</span>
-                    <span class="px-2.5 py-1 text-[8.5px] sm:text-[9px] font-black rounded-full ${chipClass} shrink-0 uppercase tracking-wider leading-none flex items-center justify-center">
+                <div class="h-[28px] flex items-center justify-between gap-2 text-white truncate">
+                    <span class="truncate text-white text-xs sm:text-[13px] font-semibold tracking-tight flex-1 leading-none drop-shadow-xs">${nama}</span>
+                    <span class="px-2.5 py-1 text-[9px] font-extrabold rounded-full ${chipClass} shrink-0 uppercase tracking-wider leading-none flex items-center justify-center">
                         ${smartStok.label}
                     </span>
                 </div>
@@ -6051,18 +5880,54 @@ document.addEventListener('DOMContentLoaded', () => {
         container.style.transform = `translateY(0px)`;
     }
 
-    function mulaiBergulirIslandTicker() {
-        if (islandIntervalTimer) clearInterval(islandIntervalTimer);
-        if (islandItemsData.length <= 1) return;
+    // 2. Render mode daftar lengkap scrollable (saat di-expand)
+    function renderIslandScrollableListHTML() {
+        const listEl = document.getElementById("island-scrollable-list");
+        if (!listEl) return;
 
-        const ITEM_HEIGHT = 26;
+        if (islandItemsData.length === 0) {
+            listEl.innerHTML = `<p class="text-center text-xs text-white/75 py-3">Tidak ada data barang.</p>`;
+            return;
+        }
+
+        let listHTML = "";
+        islandItemsData.forEach((item, idx) => {
+            const nama = item["Nama Barang"] || "-";
+            const rawStok = item["Stok Saat Ini"] || "";
+            const smartStok = dapatkanFormatSmartStok(rawStok);
+
+            const chipClass = smartStok.isHabis 
+                ? "bg-rose-600/90 text-white border border-rose-200/80" 
+                : "bg-white/20 text-white border border-white/30";
+
+            listHTML += `
+                <div class="flex items-center justify-between gap-2.5 px-3 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 transition-colors">
+                    <div class="flex items-center gap-2 min-w-0 flex-1">
+                        <span class="text-[10px] font-bold text-white/60 w-4 shrink-0">${idx + 1}.</span>
+                        <span class="text-xs font-semibold text-white truncate">${nama}</span>
+                    </div>
+                    <span class="px-2.5 py-1 text-[9px] font-extrabold rounded-full ${chipClass} shrink-0 uppercase tracking-wider leading-none">
+                        ${smartStok.label}
+                    </span>
+                </div>
+            `;
+        });
+
+        listEl.innerHTML = listHTML;
+    }
+
+    function mulaiBergulirIslandTicker() {
+        hentikanBergulirIslandTicker();
+        if (isIslandExpanded || islandItemsData.length <= 1) return;
+
+        const ITEM_HEIGHT = 28;
 
         islandIntervalTimer = setInterval(() => {
+            if (isIslandExpanded) return;
             const container = document.getElementById("island-ticker-container");
             if (!container) return;
 
             islandCurrentIndex++;
-
             if (islandCurrentIndex >= islandItemsData.length) {
                 islandCurrentIndex = 0;
             }
@@ -6072,41 +5937,164 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", muatDataIslandTicker);
+    function hentikanBergulirIslandTicker() {
+        if (islandIntervalTimer) {
+            clearInterval(islandIntervalTimer);
+            islandIntervalTimer = null;
+        }
+    }
+
+function setExpandIsland(expand) {
+    const islandEl = document.getElementById("dynamic-island-stok");
+    const collapsedView = document.getElementById("island-collapsed-view");
+    const expandedSubtitle = document.getElementById("island-expanded-subtitle");
+    const expandHint = document.getElementById("island-expand-hint");
+    const btnClose = document.getElementById("btn-close-island");
+    const timeLabel = document.getElementById("island-time-label");
+
+    if (!islandEl || isIslandExpanded === expand) return;
+    isIslandExpanded = expand;
+
+    if (expand) {
+        hentikanBergulirIslandTicker();
+        islandEl.classList.add("is-expanded");
+        if (collapsedView) collapsedView.classList.add("hidden");
+        if (expandHint) expandHint.classList.add("hidden");
+        if (expandedSubtitle) expandedSubtitle.classList.remove("hidden");
+        if (btnClose) btnClose.classList.remove("hidden");
+        if (timeLabel) timeLabel.classList.add("hidden");
     } else {
+        islandEl.classList.remove("is-expanded");
+        if (collapsedView) collapsedView.classList.remove("hidden");
+        if (expandHint) expandHint.classList.remove("hidden");
+        if (expandedSubtitle) expandedSubtitle.classList.add("hidden");
+        if (btnClose) btnClose.classList.add("hidden");
+        if (timeLabel) timeLabel.classList.remove("hidden");
+        mulaiBergulirIslandTicker();
+    }
+}
+
+    function pasangEventInteraksi() {
+        const islandEl = document.getElementById("dynamic-island-stok");
+        const btnClose = document.getElementById("btn-close-island");
+        if (!islandEl) return;
+
+        // Klik kartu untuk expand (jika belum expand)
+        islandEl.addEventListener("click", (e) => {
+            if (!isIslandExpanded) {
+                e.stopPropagation();
+                setExpandIsland(true);
+            }
+        });
+
+        // Klik tombol X untuk menutup kembali
+        if (btnClose) {
+            btnClose.addEventListener("click", (e) => {
+                e.stopPropagation();
+                setExpandIsland(false);
+            });
+        }
+
+        // Klik di luar area notifikasi untuk menutup otomatis
+        document.addEventListener("click", (e) => {
+            if (isIslandExpanded && !islandEl.contains(e.target)) {
+                setExpandIsland(false);
+            }
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+            pasangEventInteraksi();
+            muatDataIslandTicker();
+        });
+    } else {
+        pasangEventInteraksi();
         muatDataIslandTicker();
     }
 })();
 </script>
 
-<!-- Modal Pengenalan Wajah -->
-<div id="modal-face-scanner" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[30000] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-    <div class="bg-white w-full max-w-md rounded-[28px] p-6 shadow-2xl border border-slate-100 flex flex-col items-center space-y-4 relative transform scale-95 transition-all duration-300">
+<!-- Modal Pemilih Karyawan (Artist Grid Style) -->
+<div id="modal-pilih-karyawan" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[30000] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 hidden">
+    <div class="bg-white w-full max-w-lg max-h-[90vh] rounded-[30px] shadow-2xl border border-emerald-100 flex flex-col overflow-hidden relative transform scale-95 transition-all duration-300">
         
-        <div class="w-full flex justify-between items-center pb-2 border-b border-slate-100">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-face-viewfinder text-emerald-600 text-xl animate-pulse"></i>
-                <h3 class="font-black text-slate-800 text-sm uppercase tracking-wider">Pemindaian Wajah Karyawan</h3>
+        <!-- Header Emerald-700 -->
+        <div class="bg-emerald-700 px-6 py-4 flex items-center justify-between text-white shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-2xl bg-white/15 flex items-center justify-center text-base shadow-inner">
+                    <i class="fa-solid fa-users-viewfinder"></i>
+                </div>
+                <div>
+                    <h3 class="font-black text-sm uppercase tracking-wider leading-tight">Pilih Profil Karyawan</h3>
+                    <p class="text-[11px] text-emerald-100 font-medium">Pilih membuka form presensi</p>
+                </div>
             </div>
-            <button type="button" onclick="tutupModalFaceScanner()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 hover:text-rose-600 text-slate-500 flex items-center justify-center transition-colors">
+            <button type="button" onclick="tutupModalPilihKaryawan()" class="w-8 h-8 rounded-full bg-white/15 hover:bg-rose-500 text-white flex items-center justify-center transition-colors">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
-        <div class="relative w-full aspect-square bg-slate-950 rounded-[20px] overflow-hidden flex items-center justify-center shadow-inner border-2 border-slate-200">
-            <video id="face-video" autoplay muted playsinline class="w-full h-full object-cover transform -scale-x-100"></video>
-            <canvas id="face-canvas" class="absolute inset-0 w-full h-full pointer-events-none transform -scale-x-100"></canvas>
+<!-- Body Grid Profil (Scrollable - Netral & Urut Abjad) -->
+        <div class="p-5 sm:p-6 overflow-y-auto bg-slate-50/70">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-4">
+                
+                <!-- 1. Dadan Nurfaizal -->
+                <button type="button" onclick="pilihKaryawanPresensi('Dadan', 'fotokopi')" class="group flex flex-col items-center justify-start p-4 bg-white rounded-[26px] border border-slate-200/80 hover:border-emerald-700 hover:bg-emerald-50/40 shadow-xs hover:shadow-lg transition-all duration-200 active:scale-95">
+                    <div class="relative w-24 h-24 shrink-0 mb-3">
+                        <img src="https://lh3.googleusercontent.com/d/10JYBt6RxavR18JSpR_vNhO4SAG25gxjL" alt="Dadan Nurfaizal" class="w-full h-full rounded-full object-cover border-4 border-slate-100 group-hover:border-emerald-700 shadow-md transition-all duration-300 group-hover:scale-105">
+                        <span class="absolute bottom-0.5 right-0.5 w-6 h-6 rounded-full bg-emerald-700 text-white text-[10px] flex items-center justify-center border-2 border-white shadow">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                    </div>
+                    <span class="text-xs sm:text-[13px] font-black text-slate-800 group-hover:text-emerald-700 text-center leading-snug">Dadan Nurfaizal</span>
+                </button>
 
-            <div id="face-loading" class="absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center text-white space-y-3 z-10">
-                <i class="fa-solid fa-circle-notch animate-spin text-3xl text-emerald-400"></i>
-                <span id="face-loading-text" class="text-xs font-bold tracking-wide">Memuat Model Deteksi Wajah...</span>
+                <!-- 2. Dea Nove Asyari -->
+                <button type="button" onclick="pilihKaryawanPresensi('Dea', 'apotek')" class="group flex flex-col items-center justify-start p-4 bg-white rounded-[26px] border border-slate-200/80 hover:border-emerald-700 hover:bg-emerald-50/40 shadow-xs hover:shadow-lg transition-all duration-200 active:scale-95">
+                    <div class="relative w-24 h-24 shrink-0 mb-3">
+                        <img src="https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500" alt="Dea Nove Asyari" class="w-full h-full rounded-full object-cover border-4 border-slate-100 group-hover:border-emerald-700 shadow-md transition-all duration-300 group-hover:scale-105">
+                        <span class="absolute bottom-0.5 right-0.5 w-6 h-6 rounded-full bg-emerald-700 text-white text-[10px] flex items-center justify-center border-2 border-white shadow">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                    </div>
+                    <span class="text-xs sm:text-[13px] font-black text-slate-800 group-hover:text-emerald-700 text-center leading-snug">Dea Nove Asyari</span>
+                </button>
+
+                <!-- 3. Eka Ainun Nisa -->
+                <button type="button" onclick="pilihKaryawanPresensi('Eka', 'apotek')" class="group flex flex-col items-center justify-start p-4 bg-white rounded-[26px] border border-slate-200/80 hover:border-emerald-700 hover:bg-emerald-50/40 shadow-xs hover:shadow-lg transition-all duration-200 active:scale-95">
+                    <div class="relative w-24 h-24 shrink-0 mb-3">
+                        <img src="https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500" alt="Eka Ainun Nisa" class="w-full h-full rounded-full object-cover border-4 border-slate-100 group-hover:border-emerald-700 shadow-md transition-all duration-300 group-hover:scale-105">
+                        <span class="absolute bottom-0.5 right-0.5 w-6 h-6 rounded-full bg-emerald-700 text-white text-[10px] flex items-center justify-center border-2 border-white shadow">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                    </div>
+                    <span class="text-xs sm:text-[13px] font-black text-slate-800 group-hover:text-emerald-700 text-center leading-snug">Eka Ainun Nisa</span>
+                </button>
+
+                <!-- 4. Fadilla Nailul Wafa -->
+                <button type="button" onclick="pilihKaryawanPresensi('Fadilla', 'apotek')" class="group flex flex-col items-center justify-start p-4 bg-white rounded-[26px] border border-slate-200/80 hover:border-emerald-700 hover:bg-emerald-50/40 shadow-xs hover:shadow-lg transition-all duration-200 active:scale-95">
+                    <div class="relative w-24 h-24 shrink-0 mb-3">
+                        <img src="https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG" alt="Fadilla Nailul Wafa" class="w-full h-full rounded-full object-cover border-4 border-slate-100 group-hover:border-emerald-700 shadow-md transition-all duration-300 group-hover:scale-105">
+                        <span class="absolute bottom-0.5 right-0.5 w-6 h-6 rounded-full bg-emerald-700 text-white text-[10px] flex items-center justify-center border-2 border-white shadow">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                    </div>
+                    <span class="text-xs sm:text-[13px] font-black text-slate-800 group-hover:text-emerald-700 text-center leading-snug">Fadilla Nailul Wafa</span>
+                </button>
+
+                <!-- 5. Syamsi Nurhakim -->
+                <button type="button" onclick="pilihKaryawanPresensi('Syamsi', 'fotokopi')" class="group flex flex-col items-center justify-start p-4 bg-white rounded-[26px] border border-slate-200/80 hover:border-emerald-700 hover:bg-emerald-50/40 shadow-xs hover:shadow-lg transition-all duration-200 active:scale-95">
+                    <div class="relative w-24 h-24 shrink-0 mb-3">
+                        <img src="https://lh3.googleusercontent.com/d/1-qkxQvcMoriRgQvVnSBQM-ZrNZCVyPDZ" alt="Syamsi Nurhakim" class="w-full h-full rounded-full object-cover border-4 border-slate-100 group-hover:border-emerald-700 shadow-md transition-all duration-300 group-hover:scale-105">
+                        <span class="absolute bottom-0.5 right-0.5 w-6 h-6 rounded-full bg-emerald-700 text-white text-[10px] flex items-center justify-center border-2 border-white shadow">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                    </div>
+                    <span class="text-xs sm:text-[13px] font-black text-slate-800 group-hover:text-emerald-700 text-center leading-snug">Syamsi Nurhakim</span>
+                </button>
+
             </div>
-        </div>
-
-        <div class="w-full text-center space-y-1">
-            <p id="face-status-text" class="text-xs font-black text-emerald-600 uppercase tracking-wide">Arahkan Wajah Anda ke Kamera</p>
-            <p class="text-[11px] text-slate-400 font-medium">Sistem akan mencocokkan identitas secara otomatis</p>
         </div>
     </div>
 </div>
@@ -6158,12 +6146,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div>
                     <p class="text-xs font-black text-gray-800 uppercase">Presensi Nurjaya Abadi Photocopy</p>
-                    <p class="text-[11px] text-emerald-700 font-bold">Terverifikasi via Pemindaian Wajah</p>
+                    <p class="text-[11px] text-emerald-700 font-bold">Profil Karyawan Terpilih</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button type="button" onclick="bukaModalFaceScanner()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera"></i> Scan
+                <button type="button" onclick="tutupFormPresensiModal(); bukaModalPilihKaryawan();" class="px-3 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11px] rounded-[12px] uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-users"></i> Ganti
                 </button>
                 <button type="button" onclick="tutupFormPresensiModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-rose-100 hover:text-rose-600 text-slate-600 flex items-center justify-center transition-colors">
                     <i class="fa-solid fa-xmark"></i>
@@ -6261,32 +6249,92 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- Form Isian Presensi -->
             <form id="form-presensi-nsa" class="space-y-5">
                 <div class="p-4 sm:p-5 bg-emerald-50 rounded-[24px] border border-emerald-200/80 shadow-sm space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="space-y-1.5">
-                            <label for="presensi-tanggal" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-calendar-day text-emerald-600"></i> Hari / Tanggal Kerja
+                    <!-- Kalender Inline Interaktif Presensi Fotokopi (Emerald-700) -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <label class="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-days text-emerald-700"></i> Pilih Tanggal & Kehadiran
                             </label>
-                            <input type="date" id="presensi-tanggal" required onchange="perbaruiPeriodeOtomatisRealtime()"
-                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-emerald-500 font-bold text-sm text-gray-800 transition-colors duration-200 h-[48px] [color-scheme:light]">
+                            <span id="kal-ftk-status-sync" class="text-[10px] font-bold text-emerald-700 bg-white px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-info"></i> Ketuk tanggal
+                            </span>
                         </div>
 
-                        <div class="space-y-1.5">
-                            <label for="presensi-kehadiran" class="block text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-circle-check text-emerald-600"></i> Status Kehadiran
-                            </label>
-                            <div class="relative">
-                                <select id="presensi-kehadiran" required 
-                                    class="w-full pl-4 pr-12 py-3 bg-gray-50 border-2 border-gray-200 rounded-[18px] focus:outline-none focus:border-emerald-500 font-black text-sm text-gray-800 transition-colors duration-200 cursor-pointer appearance-none h-[48px]">
-                                    <option value="YA">YA (Hadir Kerja)</option>
-                                    <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                                </div>
+                        <!-- Kontainer Kalender Utama -->
+                        <div class="bg-white rounded-[22px] border-2 border-emerald-200/90 p-3.5 sm:p-4 shadow-xs space-y-3 overflow-visible">
+						 <!-- Navigasi Bulan -->
+                            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                                <button type="button" onclick="geserBulanKalenderFtk(-1)" class="w-8 h-8 rounded-xl bg-emerald-50 hover:bg-emerald-700 hover:text-white text-emerald-800 flex items-center justify-center transition-colors">
+                                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                                </button>
+                                <span id="kal-ftk-nama-bulan" class="text-xs sm:text-sm font-black text-emerald-900 uppercase tracking-wide">Bulan Tahun</span>
+                                <button type="button" onclick="geserBulanKalenderFtk(1)" class="w-8 h-8 rounded-xl bg-emerald-50 hover:bg-emerald-700 hover:text-white text-emerald-800 flex items-center justify-center transition-colors">
+                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                </button>
+                            </div>
+						 <!-- Area Info Petunjuk Statis (Anti-Menghalangi Tanggal) -->
+                            <div id="kal-ftk-info-banner" class="hidden flex flex-wrap items-center justify-center gap-1.5 pt-1">
+                                <!-- Diisi otomatis oleh JS -->
+                            </div>
+							
+							<!-- Header Hari -->
+                            <div class="grid grid-cols-7 gap-1 text-center">
+                                <span class="text-[10px] font-black text-rose-500 uppercase">Min</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Sen</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Sel</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Rab</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Kam</span>
+                                <span class="text-[10px] font-black text-slate-500 uppercase">Jum</span>
+                                <span class="text-[10px] font-black text-emerald-700 uppercase">Sab</span>
+                            </div>
+
+                            <!-- Grid Angka Tanggal -->
+                            <div id="grid-kalender-fotokopi" class="grid grid-cols-7 gap-1.5 pt-1">
+                                <!-- Dirender otomatis oleh JS -->
+                            </div>
+                           
+
+
+                            <!-- Legenda Warna -->
+                            <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2 border-t border-slate-100 text-[10px] font-bold text-slate-500">
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-300 border border-emerald-600"></span> Tercatat</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Terakhir Diisi</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Hari Ini</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-700"></span> Dipilih</span>
                             </div>
                         </div>
-                    </div>
 
+                        <!-- Dropdown Pilihan YA / TIDAK (Selalu Tampil, Greyed Sebelum Pilih Tanggal) -->
+                        <div id="box-pilihan-kehadiran-ftk" class="p-3.5 bg-white border-2 border-emerald-200 rounded-[20px] space-y-2 opacity-40 pointer-events-none transition-all duration-200">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[11px] font-black text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="fa-solid fa-circle-check text-emerald-700"></i>
+                                    <span id="label-tanggal-diketuk-ftk">Pilih tanggal pada kalender dulu</span>
+                                </span>
+                                <button type="button" id="btn-reset-tanggal-ftk" onclick="batalkanPilihanTanggalFtk()" class="hidden text-[10px] font-extrabold text-rose-600 hover:underline">
+                                    Batal Pilih
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <button type="button" id="btn-opsi-ya-ftk" onclick="tetapkanKehadiranKalenderFtk('YA')"
+                                    class="py-2.5 px-3 rounded-2xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-gray-50 border-gray-200 text-gray-600">
+                                    <i class="fa-solid fa-circle-check"></i> YA (Hadir)
+                                </button>
+                                <button type="button" id="btn-opsi-tidak-ftk" onclick="tetapkanKehadiranKalenderFtk('TIDAK')"
+                                    class="py-2.5 px-3 rounded-2xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-gray-50 border-gray-200 text-gray-600">
+                                    <i class="fa-solid fa-circle-xmark"></i> TIDAK
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Elemen Asli Tersembunyi (ID Utuh untuk Integrasi Script & Backend) -->
+                        <input type="date" id="presensi-tanggal" required onchange="perbaruiPeriodeOtomatisRealtime()" class="hidden">
+                        <select id="presensi-kehadiran" required class="hidden">
+                            <option value="YA">YA (Hadir Kerja)</option>
+                            <option value="TIDAK">TIDAK (Libur / Absen / Sakit)</option>
+                        </select>
+                    </div>
+                 
                     <hr class="border-dashed border-emerald-200/60 my-1">
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -6379,18 +6427,68 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 </div>
 
-<!-- ================= Dynamic Island Ticker Stok Melayang ================= -->
-<div id="dynamic-island-stok" class="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] max-w-lg bg-emerald-950/90 backdrop-blur-md text-white rounded-full p-1.5 px-3 border border-emerald-500/30 shadow-xl shadow-emerald-950/40 flex items-center gap-2.5 transition-all duration-300 hover:scale-[1.01]">
+<!-- ================= iOS Liquid Glass Notification Ticker Stok ================= -->
+<div id="dynamic-island-stok" class="ios-liquid-glass-emerald fixed top-3.5 left-1/2 -translate-x-1/2 md:left-4 md:translate-x-0 z-50 w-[calc(100%-1.5rem)] max-w-md md:w-96 text-white rounded-[26px] pt-3 px-3 pb-2 cursor-pointer select-none overflow-hidden">
     
-    <!-- IKON KAPSUL DYNAMIC ISLAND -->
-    <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 shrink-0 flex items-center justify-center shadow-xs">
-        <i class="fa-solid fa-boxes-stacked text-[10px] animate-pulse"></i>
+    <!-- BARIS UTAMA (SELALU TAMPIL) -->
+    <div class="flex items-center gap-3">
+        <!-- IKON APP ALA iOS (SQUIRCLE GLASS + TITIK MERAH STATIS) -->
+        <div class="ios-notif-icon-box">
+            <i class="fa-solid fa-boxes-stacked text-sm drop-shadow-xs"></i>
+            <span class="absolute -top-0.5 -right-0.5 block h-2.5 w-2.5 rounded-full bg-rose-500 border-[1.5px] border-white shadow-xs"></span>
+        </div>
+
+        <!-- KONTEN HEADER & TICKER RINGKAS -->
+        <div class="flex-1 min-w-0 flex flex-col justify-center">
+            <div class="flex items-center justify-between gap-2 mb-0.5">
+                <div class="flex items-center gap-1.5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white/90 drop-shadow-xs">
+                        INFO STOK • NSA
+                    </span>
+                    <span id="island-count-badge" class="hidden px-1.5 py-0.5 text-[9px] font-extrabold rounded-full bg-white/20 text-white border border-white/25 leading-none">
+                        0
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    <span id="island-time-label" class="text-[10px] font-medium text-white/75">
+                        sekarang
+                    </span>
+                    <!-- Tombol Tutup (Muncul saat mode Expand) -->
+                    <button type="button" id="btn-close-island" aria-label="Tutup daftar stok" class="hidden w-5 h-5 rounded-full bg-white/20 hover:bg-white/30 active:scale-90 text-white flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-xmark text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TICKER BERGULIR (OTOMATIS SEMBUNYI SAAT EXPAND) -->
+            <div id="island-collapsed-view" class="relative w-full h-[28px] overflow-hidden transition-all duration-300">
+                <div id="island-ticker-container" class="absolute w-full transition-transform duration-500 ease-in-out top-0 left-0">
+                    <span class="block text-white/80 italic text-xs leading-[28px] truncate">Memuat data barang...</span>
+                </div>
+            </div>
+
+            <!-- SUBTITLE SAAT EXPAND -->
+            <p id="island-expanded-subtitle" class="hidden text-[11px] font-medium text-emerald-50/90 leading-tight">
+                Daftar lengkap pantauan stok barang
+            </p>
+        </div>
     </div>
 
-    <!-- CONTAINER TEKS BERGULIR -->
-    <div class="relative flex-1 h-[26px] overflow-hidden">
-        <div id="island-ticker-container" class="absolute w-full transition-transform duration-500 ease-in-out top-0 left-0">
-            <span class="block text-emerald-200/70 italic text-[10px] leading-[26px] truncate">Memuat data barang...</span>
+    <!-- HINT PETUNJUK KLIK DI BAWAH (OTOMATIS HILANG SAAT EXPAND) -->
+    <div id="island-expand-hint" class="mt-1.5 pt-1 border-t border-white/10 flex flex-col items-center justify-center leading-none text-white/70">
+        <span class="text-[9px] font-medium tracking-wide lowercase">luaskan</span>
+        <i class="fa-solid fa-chevron-down text-[8px] mt-0.5 opacity-80"></i>
+    </div>
+
+    <!-- AREA LIST SCROLLABLE (MUNCUL SAAT DIKLIK / EXPAND) -->
+    <div id="island-expanded-view" class="island-expand-wrapper">
+        <div class="island-expand-inner">
+            <div class="mt-3 pt-2.5 pb-1 border-t border-white/20">
+                <div id="island-scrollable-list" class="max-h-60 overflow-y-auto pr-1 space-y-1.5 ios-glass-scrollbar">
+                    <!-- Item list dirender otomatis via JS -->
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -6453,5 +6551,1100 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 </script>
+
+<script>
+// =========================================================================
+// LOGIKA KALENDER INLINE PRESENSI FOTOKOPI (EMERALD-700)
+// =========================================================================
+const API_URL_FOTOKOPI_KALENDER = "https://script.google.com/macros/s/AKfycbwyzHl2sdJAaskZR-OZNcAmcjSq4WebF8wfQk7u7He5ceMLcwyIRNPgwo1n-ZFxQyc-_A/exec";
+
+
+
+
+
+
+
+let stateKalenderFtk = {
+    tahun: new Date().getFullYear(),
+    bulan: new Date().getMonth(),
+    sedangMemuat: false,
+    tanggalTercatatMap: {},
+    tanggalTerakhirDiisi: null,
+    tanggalMulaiPeriode: null,
+    tanggalDipilihSesi: null, // null saat awal / uncheck
+    statusDipilihSesi: null
+};
+
+let requestKalenderFtk = null;
+
+function getTodayStrLokalFtk() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function normalisasiTanggalKeISO(rawTgl) {
+    if (!rawTgl) return null;
+    const str = String(rawTgl).trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+
+    // Tangani format tanggal Indonesia seperti "Sabtu, 14 November 2026"
+    const mapBulan = {
+        januari: "01", februari: "02", maret: "03", april: "04",
+        mei: "05", juni: "06", juli: "07", agustus: "08",
+        september: "09", oktober: "10", november: "11", desember: "12"
+    };
+    const matchIndo = str.toLowerCase().match(/(\d{1,2})\s+([a-z]+)\s+(\d{4})/);
+    if (matchIndo && mapBulan[matchIndo[2]]) {
+        const dd = String(matchIndo[1]).padStart(2, '0');
+        const mm = mapBulan[matchIndo[2]];
+        const yyyy = matchIndo[3];
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
+    const parsed = new Date(str);
+    if (!isNaN(parsed)) {
+        const y = parsed.getFullYear();
+        const m = String(parsed.getMonth() + 1).padStart(2, '0');
+        const d = String(parsed.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+    return null;
+}
+
+function formatTanggalIndoLengkapFtk(isoStr) {
+    if (!isoStr) return "Pilih tanggal pada kalender dulu";
+    const [y, m, d] = isoStr.split("-").map(Number);
+    const dt = new Date(y, m - 1, d);
+    return dt.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "short", year: "numeric" });
+}
+
+function muatRiwayatKalenderFotokopi(namaKaryawanParam) {
+    const namaKaryawan = namaKaryawanParam || document.getElementById("presensi-karyawan")?.value || "";
+    const statusSyncEl = document.getElementById("kal-ftk-status-sync");
+
+    // 1. Batalkan request fetch sebelumnya yang masih berjalan agar tidak menimpa data baru
+    if (requestKalenderFtk) {
+        requestKalenderFtk.abort();
+        requestKalenderFtk = null;
+    }
+
+    // 2. Reset total state kalender & pilihan tanggal sesi sebelumnya
+    stateKalenderFtk.tanggalTercatatMap = {};
+    stateKalenderFtk.tanggalTerakhirDiisi = null;
+    stateKalenderFtk.tanggalMulaiPeriode = null;
+    stateKalenderFtk.tanggalDipilihSesi = null;
+    stateKalenderFtk.statusDipilihSesi = null;
+
+    const inputTgl = document.getElementById("presensi-tanggal");
+    if (inputTgl) inputTgl.value = "";
+    perbaruiTampilanBoxDropdownFtk();
+
+    if (!namaKaryawan) {
+        stateKalenderFtk.sedangMemuat = false;
+        renderGridKalenderFotokopi();
+        return;
+    }
+
+    stateKalenderFtk.sedangMemuat = true;
+    renderGridKalenderFotokopi();
+
+    if (statusSyncEl) {
+        statusSyncEl.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Cek riwayat...`;
+    }
+
+    const controller = new AbortController();
+    requestKalenderFtk = controller;
+    const tglRef = getTodayStrLokalFtk();
+
+    fetch(`${API_URL_FOTOKOPI_KALENDER}?karyawan=${encodeURIComponent(namaKaryawan)}&action=getMetaData&tanggal=${encodeURIComponent(tglRef)}`, {
+        signal: controller.signal
+    })
+        .then(res => res.json())
+        .then(result => {
+            // 3. Abaikan jika user sudah berpindah ke karyawan lain saat response ini tiba
+            const namaAktifSekarang = document.getElementById("presensi-karyawan")?.value || "";
+            if (namaAktifSekarang !== namaKaryawan) return;
+
+            const listRecords = Array.isArray(result.records) ? result.records : (Array.isArray(result.data) ? result.data : []);
+            const labelPeriodeDom = (document.getElementById(`label-periode-${namaKaryawan}`)?.textContent || "").trim();
+
+            // Tentukan periode aktif yang valid (HANYA dari result.periode atau label DOM)
+            const periodeTarget = (
+                (result.periode && result.periode !== "Buku Aktif") ? result.periode :
+                (labelPeriodeDom && labelPeriodeDom !== "Memuat..." && labelPeriodeDom !== "Buku Aktif") ? labelPeriodeDom : ""
+            ).trim();
+
+            if (periodeTarget) {
+                const bagianAwal = periodeTarget.split(/\s*(?:-|–|s\/d|sampai)\s*/i)[0]?.trim();
+                if (bagianAwal) {
+                    stateKalenderFtk.tanggalMulaiPeriode = bagianAwal;
+                }
+            }
+
+            // Filter ketat hanya baris yang berada di periodeTarget saat ini
+            const dataPeriodeIni = periodeTarget
+                ? listRecords.filter(row => {
+                    const p = String(row.nama_periode || row.namaperiode || row.periode || "").trim();
+                    return p.toLowerCase() === periodeTarget.toLowerCase();
+                })
+                : [];
+
+            let maxIso = null;
+            dataPeriodeIni.forEach(row => {
+                const iso = normalisasiTanggalKeISO(row.tanggal || row.tanggalraw || row.tanggalRaw);
+                if (iso) {
+                    const hadir = String(row.kehadiran || "YA").toUpperCase();
+                    stateKalenderFtk.tanggalTercatatMap[iso] = hadir;
+                    if (!maxIso || iso > maxIso) {
+                        maxIso = iso;
+                    }
+                }
+            });
+
+            stateKalenderFtk.tanggalTerakhirDiisi = dataPeriodeIni.length > 0 ? maxIso : null;
+            stateKalenderFtk.sedangMemuat = false;
+
+            if (statusSyncEl) {
+                statusSyncEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Tersinkron`;
+            }
+            renderGridKalenderFotokopi();
+        })
+        .catch(err => {
+            if (err.name === "AbortError") return;
+
+            const namaAktifSekarang = document.getElementById("presensi-karyawan")?.value || "";
+            if (namaAktifSekarang !== namaKaryawan) return;
+
+            stateKalenderFtk.sedangMemuat = false;
+            if (statusSyncEl) {
+                statusSyncEl.innerHTML = `<i class="fa-solid fa-wifi text-amber-600"></i> Offline`;
+            }
+            renderGridKalenderFotokopi();
+        })
+        .finally(() => {
+            if (requestKalenderFtk === controller) {
+                requestKalenderFtk = null;
+            }
+        });
+}
+
+function geserBulanKalenderFtk(delta) {
+    stateKalenderFtk.bulan += delta;
+    if (stateKalenderFtk.bulan < 0) {
+        stateKalenderFtk.bulan = 11;
+        stateKalenderFtk.tahun -= 1;
+    } else if (stateKalenderFtk.bulan > 11) {
+        stateKalenderFtk.bulan = 0;
+        stateKalenderFtk.tahun += 1;
+    }
+    renderGridKalenderFotokopi();
+}
+
+function renderGridKalenderFotokopi() {
+    const gridEl = document.getElementById("grid-kalender-fotokopi");
+    const judulBulanEl = document.getElementById("kal-ftk-nama-bulan");
+    const infoBannerEl = document.getElementById("kal-ftk-info-banner");
+    if (!gridEl) return;
+
+    const namaBulanIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    if (judulBulanEl) {
+        judulBulanEl.textContent = `${namaBulanIndo[stateKalenderFtk.bulan]} ${stateKalenderFtk.tahun}`;
+    }
+
+    const hariPertama = new Date(stateKalenderFtk.tahun, stateKalenderFtk.bulan, 1).getDay();
+    const jumlahHari = new Date(stateKalenderFtk.tahun, stateKalenderFtk.bulan + 1, 0).getDate();
+    const todayIso = getTodayStrLokalFtk();
+    const lastFilledIso = stateKalenderFtk.tanggalTerakhirDiisi;
+    const sudahIsiHariIni = Boolean(stateKalenderFtk.tanggalTercatatMap[todayIso]);
+
+    // Render Info Banner Statis (Tidak Menghalangi Tanggal)
+    if (infoBannerEl) {
+        let bannerItems = [];
+        const todayAngka = Number(todayIso.split("-")[2]);
+        const todayBln = namaBulanIndo[Number(todayIso.split("-")[1]) - 1];
+        const todayThn = todayIso.split("-")[0];
+
+        if (stateKalenderFtk.sedangMemuat) {
+            // Kondisi 1: Sedang doGet data dari Google Sheets di background
+            bannerItems.push(`
+                <span class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-900 border border-emerald-300 text-[10px] font-black px-3 py-1.5 rounded-xl">
+                    <i class="fa-solid fa-circle-notch animate-spin text-emerald-700"></i>
+                    <span>Mendeteksi kehadiran...</span>
+                </span>
+            `);
+        } else if (!lastFilledIso && Object.keys(stateKalenderFtk.tanggalTercatatMap).length === 0) {
+            // Kondisi 2: Selesai doGet & karyawan benar-benar belum mengisi presensi di periode ini
+            const tglMulaiTeks = stateKalenderFtk.tanggalMulaiPeriode || "awal periode";
+            bannerItems.push(`
+                <span class="inline-flex items-start gap-1.5 bg-rose-100 text-rose-950 border border-rose-300 text-[10px] leading-snug font-black px-3 py-1.5 rounded-xl text-left">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-600 mt-0.5 shrink-0"></i>
+                    <span>Kamu sama sekali belum mengisi kehadiran periode ini! Isi dari tanggal ${tglMulaiTeks}!</span>
+                </span>
+            `);
+        } else if (lastFilledIso && !sudahIsiHariIni && lastFilledIso < todayIso) {
+            // Kondisi 3: Sudah pernah mengisi sebelumnya, tapi hari ini (atau beberapa hari terakhir) belum diisi
+            const [lastY, lastM, lastD] = lastFilledIso.split("-").map(Number);
+            const [todY, todM, todD] = todayIso.split("-").map(Number);
+
+            const dateLast = new Date(lastY, lastM - 1, lastD);
+            const dateToday = new Date(todY, todM - 1, todD);
+            const selisihHari = Math.round((dateToday - dateLast) / (1000 * 60 * 60 * 24));
+
+            const dateMulaiBelum = new Date(lastY, lastM - 1, lastD + 1);
+            const mulaiAngka = dateMulaiBelum.getDate();
+            const mulaiBln = namaBulanIndo[dateMulaiBelum.getMonth()];
+
+            let teksKeterangan = "";
+            if (selisihHari === 1) {
+                teksKeterangan = `Kamu baru mengisi sampai tanggal kemarin (${lastD} ${namaBulanIndo[lastM - 1]}). Silakan isi presensi hari ini (${todayAngka} ${todayBln}).`;
+            } else {
+                const labelMulai = mulaiBln === todayBln ? `${mulaiAngka}` : `${mulaiAngka} ${mulaiBln}`;
+                teksKeterangan = `Kamu baru mengisi sampai tanggal ${lastD} ${namaBulanIndo[lastM - 1]}. Silakan isi presensi dari tanggal ${labelMulai} sampai ${todayAngka} ${todayBln}.`;
+            }
+
+            bannerItems.push(`
+                <span class="inline-flex items-start gap-1.5 bg-amber-100 text-amber-950 border border-amber-300 text-[10px] leading-snug font-black px-3 py-1.5 rounded-xl text-left">
+                    <i class="fa-solid fa-comment-dots text-amber-600 mt-0.5 shrink-0"></i>
+                    <span>${teksKeterangan}</span>
+                </span>
+            `);
+        }
+
+        bannerItems.push(`
+            <span class="inline-flex items-center gap-1 bg-sky-100 text-sky-900 border border-sky-300 text-[10px] font-black px-2.5 py-1 rounded-xl">
+                <i class="fa-solid fa-calendar-day text-sky-600"></i> Hari ini: ${todayAngka} ${todayBln} ${todayThn}
+            </span>
+        `);
+
+        if (sudahIsiHariIni) {
+            bannerItems.push(`
+                <span class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-900 border border-emerald-300 text-[10px] font-black px-2.5 py-1 rounded-xl">
+                    <i class="fa-solid fa-circle-check text-emerald-700"></i> Hari ini kamu sudah mengisi presensi.
+                </span>
+            `);
+        }
+
+        infoBannerEl.innerHTML = bannerItems.join("");
+        infoBannerEl.classList.remove("hidden");
+    }
+
+    let html = "";
+
+    for (let i = 0; i < hariPertama; i++) {
+        html += `<div class="h-11"></div>`;
+    }
+
+    for (let tgl = 1; tgl <= jumlahHari; tgl++) {
+        const mm = String(stateKalenderFtk.bulan + 1).padStart(2, '0');
+        const dd = String(tgl).padStart(2, '0');
+        const isoDate = `${stateKalenderFtk.tahun}-${mm}-${dd}`;
+
+        const isToday = isoDate === todayIso;
+        const isLastFilled = (isoDate === lastFilledIso) && !sudahIsiHariIni;
+        const statusTercatat = stateKalenderFtk.tanggalTercatatMap[isoDate];
+        const isSelectedSesi = stateKalenderFtk.tanggalDipilihSesi === isoDate;
+
+        // Frame kotak tanggal: animasi fade in-out (animate-pulse) hanya pada frame tanggal terkait
+        let btnClass = "relative h-11 rounded-2xl flex flex-col items-center justify-center font-black text-xs transition-all duration-200 select-none border-2 ";
+
+        if (isSelectedSesi) {
+            btnClass += "bg-emerald-700 text-white border-emerald-900 shadow-md scale-105 z-10 ";
+        } else if (isLastFilled) {
+            btnClass += "bg-amber-50 text-amber-950 border-amber-500 ring-2 ring-amber-400/70 animate-pulse ";
+        } else if (isToday) {
+            btnClass += "bg-sky-50 text-sky-900 border-sky-500 ring-2 ring-sky-400/60 animate-pulse ";
+        } else if (statusTercatat === "YA") {
+            btnClass += "bg-emerald-100/80 text-emerald-900 border-emerald-300 ";
+        } else if (statusTercatat === "TIDAK") {
+            btnClass += "bg-rose-100/80 text-rose-900 border-rose-300 ";
+        } else {
+            btnClass += "bg-slate-50/70 hover:bg-emerald-50 text-slate-700 border-slate-200/80 hover:border-emerald-500 ";
+        }
+
+        let subDotHtml = "";
+        if (isSelectedSesi && stateKalenderFtk.statusDipilihSesi) {
+            subDotHtml = `<span class="text-[7.5px] font-black uppercase tracking-tighter text-emerald-100">${stateKalenderFtk.statusDipilihSesi}</span>`;
+        } else if (statusTercatat) {
+            const dotColor = statusTercatat === "YA" ? "bg-emerald-600" : "bg-rose-600";
+            subDotHtml = `<span class="w-1.5 h-1.5 rounded-full ${dotColor} mt-0.5"></span>`;
+        }
+
+        html += `
+            <button type="button" onclick="klikTanggalKalenderFtk('${isoDate}')" class="${btnClass}">
+                <span>${tgl}</span>
+                ${subDotHtml}
+            </button>
+        `;
+    }
+
+    gridEl.innerHTML = html;
+}
+
+function klikTanggalKalenderFtk(isoDate) {
+    // 1. Jika mengklik tanggal yang sama -> UNCHECK (batal pilih)
+    if (stateKalenderFtk.tanggalDipilihSesi === isoDate) {
+        batalkanPilihanTanggalFtk();
+        return;
+    }
+
+    // 2. Jika sebelumnya memilih tanggal lain (misal tgl 5 -> pindah ke tgl 6), otomatis pindahkan pilihan ke tgl 6
+    stateKalenderFtk.tanggalDipilihSesi = isoDate;
+    if (!stateKalenderFtk.statusDipilihSesi) {
+        stateKalenderFtk.statusDipilihSesi = "YA";
+    }
+
+    sinkronkanPilihanKeFormAsliFtk();
+    perbaruiTampilanBoxDropdownFtk();
+    renderGridKalenderFotokopi();
+}
+
+function tetapkanKehadiranKalenderFtk(statusVal) {
+    if (!stateKalenderFtk.tanggalDipilihSesi) return;
+    stateKalenderFtk.statusDipilihSesi = statusVal;
+    sinkronkanPilihanKeFormAsliFtk();
+    perbaruiTampilanBoxDropdownFtk();
+    renderGridKalenderFotokopi();
+}
+
+function batalkanPilihanTanggalFtk() {
+    stateKalenderFtk.tanggalDipilihSesi = null;
+    stateKalenderFtk.statusDipilihSesi = null;
+
+    const inputTgl = document.getElementById("presensi-tanggal");
+    if (inputTgl) inputTgl.value = "";
+
+    perbaruiTampilanBoxDropdownFtk();
+    renderGridKalenderFotokopi();
+}
+
+function sinkronkanPilihanKeFormAsliFtk() {
+    const inputTgl = document.getElementById("presensi-tanggal");
+    const selHadir = document.getElementById("presensi-kehadiran");
+
+    if (inputTgl && stateKalenderFtk.tanggalDipilihSesi) {
+        inputTgl.value = stateKalenderFtk.tanggalDipilihSesi;
+        inputTgl.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (selHadir && stateKalenderFtk.statusDipilihSesi) {
+        selHadir.value = stateKalenderFtk.statusDipilihSesi;
+        selHadir.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+}
+
+function perbaruiTampilanBoxDropdownFtk() {
+    const boxPilihan = document.getElementById("box-pilihan-kehadiran-ftk");
+    const labelTgl = document.getElementById("label-tanggal-diketuk-ftk");
+    const btnReset = document.getElementById("btn-reset-tanggal-ftk");
+    const btnYa = document.getElementById("btn-opsi-ya-ftk");
+    const btnTidak = document.getElementById("btn-opsi-tidak-ftk");
+
+    const tglTerpilih = stateKalenderFtk.tanggalDipilihSesi;
+    const st = stateKalenderFtk.statusDipilihSesi;
+
+    if (!tglTerpilih) {
+        // Greyed & terkunci saat belum ada tanggal yang diklik
+        if (boxPilihan) {
+            boxPilihan.classList.add("opacity-40", "pointer-events-none");
+            boxPilihan.classList.remove("border-emerald-600", "shadow-sm");
+        }
+        if (labelTgl) labelTgl.textContent = "Pilih tanggal pada kalender dulu";
+        if (btnReset) btnReset.classList.add("hidden");
+        if (btnYa) btnYa.className = "py-2.5 px-3 rounded-2xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition-all bg-gray-50 border-gray-200 text-gray-500";
+        if (btnTidak) btnTidak.className = "py-2.5 px-3 rounded-2xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition-all bg-gray-50 border-gray-200 text-gray-500";
+        return;
+    }
+
+    // Aktif menyala saat tanggal diklik
+    if (boxPilihan) {
+        boxPilihan.classList.remove("opacity-40", "pointer-events-none");
+        boxPilihan.classList.add("border-emerald-600", "shadow-sm");
+    }
+    if (labelTgl) labelTgl.textContent = formatTanggalIndoLengkapFtk(tglTerpilih);
+    if (btnReset) btnReset.classList.remove("hidden");
+
+    if (btnYa) {
+        btnYa.className = st === "YA"
+            ? "py-2.5 px-3 rounded-2xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition-all bg-emerald-700 text-white border-emerald-700 shadow-sm"
+            : "py-2.5 px-3 rounded-2xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition-all bg-white border-emerald-300 text-emerald-800 hover:bg-emerald-50";
+    }
+    if (btnTidak) {
+        btnTidak.className = st === "TIDAK"
+            ? "py-2.5 px-3 rounded-2xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition-all bg-rose-600 text-white border-rose-600 shadow-sm"
+            : "py-2.5 px-3 rounded-2xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition-all bg-white border-rose-300 text-rose-700 hover:bg-rose-50";
+    }
+}
+
+// Inisialisasi awal saat halaman siap & pantau perubahan karyawan
+document.addEventListener("DOMContentLoaded", function() {
+    // Kosongkan tanggal awal agar status awal dropdown greyed menunggu klik tanggal
+    const inputTgl = document.getElementById("presensi-tanggal");
+    if (inputTgl) inputTgl.value = "";
+
+    renderGridKalenderFotokopi();
+    perbaruiTampilanBoxDropdownFtk();
+
+    const selKaryawan = document.getElementById("presensi-karyawan");
+    if (selKaryawan) {
+        selKaryawan.addEventListener("change", function() {
+            muatRiwayatKalenderFotokopi(this.value);
+        });
+        if (selKaryawan.value) {
+            muatRiwayatKalenderFotokopi(selKaryawan.value);
+        }
+    }
+
+    // Jika karyawan dipilih lewat modal profil (pilihKaryawanPresensi), otomatis muat kalendernya
+// Pantau saat modal #wrapper_form_presensi dibuka agar kalender langsung ter-render & tersinkron
+    const modalFormFtk = document.getElementById("wrapper_form_presensi");
+    if (modalFormFtk) {
+        const observerModal = new MutationObserver(() => {
+            if (!modalFormFtk.classList.contains("hidden")) {
+                renderGridKalenderFotokopi();
+                perbaruiTampilanBoxDropdownFtk();
+                const namaAktif = document.getElementById("presensi-karyawan")?.value;
+                if (namaAktif) {
+                    muatRiwayatKalenderFotokopi(namaAktif);
+                }
+            }
+        });
+        observerModal.observe(modalFormFtk, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    // Pantau saat form #form-presensi-nsa disubmit (Simpan Presensi) -> Refresh doGet Kalender Otomatis
+    const formPresensiEl = document.getElementById("form-presensi-nsa");
+    if (formPresensiEl) {
+        formPresensiEl.addEventListener("submit", function() {
+            const namaAktif = document.getElementById("presensi-karyawan")?.value;
+            const tglBaruDisimpan = stateKalenderFtk.tanggalDipilihSesi;
+            const statusBaruDisimpan = stateKalenderFtk.statusDipilihSesi || "YA";
+
+            // 1. Update optimis langsung di UI sambil menunggu doPost selesai menulis ke Sheet
+            if (tglBaruDisimpan) {
+                stateKalenderFtk.tanggalTercatatMap[tglBaruDisimpan] = statusBaruDisimpan;
+                if (!stateKalenderFtk.tanggalTerakhirDiisi || tglBaruDisimpan > stateKalenderFtk.tanggalTerakhirDiisi) {
+                    stateKalenderFtk.tanggalTerakhirDiisi = tglBaruDisimpan;
+                }
+            }
+
+            // 2. Reset pilihan tanggal aktif sesi ini & kembalikan box YA/TIDAK ke mode greyed
+            batalkanPilihanTanggalFtk();
+
+            // 3. Lakukan doGet ulang dari Google Sheets setelah jeda singkat agar data benar-benar sinkron
+            if (namaAktif) {
+                const statusSyncEl = document.getElementById("kal-ftk-status-sync");
+                if (statusSyncEl) {
+                    statusSyncEl.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Memperbarui...`;
+                }
+                setTimeout(() => {
+                    muatRiwayatKalenderFotokopi(namaAktif);
+                }, 1800);
+            }
+        });
+    }
+});
+</script>
+
+<script>
+// =========================================================================
+// LOGIKA KALENDER INLINE PRESENSI APOTEK NURJAYA (PINK-600)
+// =========================================================================
+let stateKalenderApt = {
+    tahun: new Date().getFullYear(),
+    bulan: new Date().getMonth(),
+    sedangMemuat: false,
+    tanggalTercatatMap: {},
+    tanggalTerakhirDiisi: null,
+    tanggalMulaiPeriode: null,
+    tanggalDipilihSesi: null, // null saat awal / uncheck
+    statusDipilihSesi: null
+};
+
+function getTodayStrLokalApt() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function normalisasiTanggalKeISOApt(rawTgl) {
+    if (!rawTgl) return null;
+    const str = String(rawTgl).trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+
+    // Tangani format tanggal Indonesia seperti "Sabtu, 14 November 2026"
+    const mapBulan = {
+        januari: "01", februari: "02", maret: "03", april: "04",
+        mei: "05", juni: "06", juli: "07", agustus: "08",
+        september: "09", oktober: "10", november: "11", desember: "12"
+    };
+    const matchIndo = str.toLowerCase().match(/(\d{1,2})\s+([a-z]+)\s+(\d{4})/);
+    if (matchIndo && mapBulan[matchIndo[2]]) {
+        const dd = String(matchIndo[1]).padStart(2, '0');
+        const mm = mapBulan[matchIndo[2]];
+        const yyyy = matchIndo[3];
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
+    const parsed = new Date(str);
+    if (!isNaN(parsed)) {
+        const y = parsed.getFullYear();
+        const m = String(parsed.getMonth() + 1).padStart(2, '0');
+        const d = String(parsed.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+    return null;
+}
+
+function formatTanggalIndoLengkapApt(isoStr) {
+    if (!isoStr) return "Pilih tanggal pada kalender dulu";
+    const [y, m, d] = isoStr.split("-").map(Number);
+    const dt = new Date(y, m - 1, d);
+    return dt.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "short", year: "numeric" });
+}
+
+function getLabelSingkatStatusApt(statusStr) {
+    const s = String(statusStr || "");
+    if (s.includes("Shift 1")) return "S1";
+    if (s.includes("Shift 2")) return "S2";
+    if (s.includes("Lembur")) return "LMB";
+    if (s.includes("Khusus")) return "KHS";
+    if (s.includes("Libur")) return "LBR";
+    if (s.includes("Izin")) return "IZN";
+    if (s.includes("Absen")) return "ABS";
+    return s.slice(0, 3).toUpperCase();
+}
+
+let requestKalenderApt = null;
+
+function muatRiwayatKalenderApotek(namaKaryawanParam) {
+    const namaKaryawan = namaKaryawanParam || document.getElementById("presensi-karyawan-apotek")?.value || "";
+    const statusSyncEl = document.getElementById("kal-apt-status-sync");
+
+    // 1. Batalkan request fetch sebelumnya yang masih berjalan agar tidak menimpa data baru
+    if (requestKalenderApt) {
+        requestKalenderApt.abort();
+        requestKalenderApt = null;
+    }
+
+    // 2. Reset total state kalender & pilihan tanggal sesi sebelumnya
+    stateKalenderApt.tanggalTercatatMap = {};
+    stateKalenderApt.tanggalTerakhirDiisi = null;
+    stateKalenderApt.tanggalMulaiPeriode = null;
+    stateKalenderApt.tanggalDipilihSesi = null;
+    stateKalenderApt.statusDipilihSesi = null;
+
+    const inputTgl = document.getElementById("presensi-tanggal-apotek");
+    if (inputTgl) inputTgl.value = "";
+    perbaruiTampilanBoxDropdownApt();
+
+    if (!namaKaryawan) {
+        stateKalenderApt.sedangMemuat = false;
+        renderGridKalenderApotek();
+        return;
+    }
+
+    stateKalenderApt.sedangMemuat = true;
+    renderGridKalenderApotek();
+
+    if (statusSyncEl) {
+        statusSyncEl.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Cek riwayat...`;
+    }
+
+    const controller = new AbortController();
+    requestKalenderApt = controller;
+    const tglRef = getTodayStrLokalApt();
+
+    fetch(`${API_URL_KARTU_APOTEK}?sheetName=${encodeURIComponent(namaKaryawan)}&action=getMetaData&tanggal=${encodeURIComponent(tglRef)}`, {
+        signal: controller.signal
+    })
+        .then(res => res.json())
+        .then(result => {
+            // 3. Abaikan jika user sudah berpindah ke karyawan lain saat response ini tiba
+            const namaAktifSekarang = document.getElementById("presensi-karyawan-apotek")?.value || "";
+            if (namaAktifSekarang !== namaKaryawan) return;
+
+            const listRecords = Array.isArray(result.records) ? result.records : (Array.isArray(result.data) ? result.data : []);
+            const labelPeriodeDom = (document.getElementById(`label-periode-${namaKaryawan}`)?.textContent || "").trim();
+
+            const periodeTarget = (
+                (result.periode && result.periode !== "Buku Aktif") ? result.periode :
+                (labelPeriodeDom && labelPeriodeDom !== "Memuat..." && labelPeriodeDom !== "Buku Aktif") ? labelPeriodeDom : ""
+            ).trim();
+
+            if (periodeTarget) {
+                const bagianAwal = periodeTarget.split(/\s*(?:-|–|s\/d|sampai)\s*/i)[0]?.trim();
+                if (bagianAwal) {
+                    stateKalenderApt.tanggalMulaiPeriode = bagianAwal;
+                }
+            }
+
+            const dataPeriodeIni = periodeTarget
+                ? listRecords.filter(row => String(row.periode || "").trim().toLowerCase() === periodeTarget.toLowerCase())
+                : [];
+
+            let maxIso = null;
+            dataPeriodeIni.forEach(row => {
+                const iso = normalisasiTanggalKeISOApt(row.tanggalRaw || row.tanggal_raw || row.tanggal);
+                if (iso) {
+                    const statusVal = String(row.presensi || "Shift 1 (Pagi-Siang)").trim();
+                    stateKalenderApt.tanggalTercatatMap[iso] = statusVal;
+                    if (!maxIso || iso > maxIso) {
+                        maxIso = iso;
+                    }
+                }
+            });
+
+            stateKalenderApt.tanggalTerakhirDiisi = dataPeriodeIni.length > 0 ? maxIso : null;
+            stateKalenderApt.sedangMemuat = false;
+
+            if (statusSyncEl) {
+                statusSyncEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Tersinkron`;
+            }
+            renderGridKalenderApotek();
+        })
+        .catch(err => {
+            if (err.name === "AbortError") return; // Request lama yang dibatalkan tidak boleh mengubah UI
+
+            const namaAktifSekarang = document.getElementById("presensi-karyawan-apotek")?.value || "";
+            if (namaAktifSekarang !== namaKaryawan) return;
+
+            stateKalenderApt.sedangMemuat = false;
+            if (statusSyncEl) {
+                statusSyncEl.innerHTML = `<i class="fa-solid fa-wifi text-amber-600"></i> Offline`;
+            }
+            renderGridKalenderApotek();
+        })
+        .finally(() => {
+            if (requestKalenderApt === controller) {
+                requestKalenderApt = null;
+            }
+        });
+}
+
+function geserBulanKalenderApt(delta) {
+    stateKalenderApt.bulan += delta;
+    if (stateKalenderApt.bulan < 0) {
+        stateKalenderApt.bulan = 11;
+        stateKalenderApt.tahun -= 1;
+    } else if (stateKalenderApt.bulan > 11) {
+        stateKalenderApt.bulan = 0;
+        stateKalenderApt.tahun += 1;
+    }
+    renderGridKalenderApotek();
+}
+
+function renderGridKalenderApotek() {
+    const gridEl = document.getElementById("grid-kalender-apotek");
+    const judulBulanEl = document.getElementById("kal-apt-nama-bulan");
+    const infoBannerEl = document.getElementById("kal-apt-info-banner");
+    if (!gridEl) return;
+
+    const namaBulanIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    if (judulBulanEl) {
+        judulBulanEl.textContent = `${namaBulanIndo[stateKalenderApt.bulan]} ${stateKalenderApt.tahun}`;
+    }
+
+    const hariPertama = new Date(stateKalenderApt.tahun, stateKalenderApt.bulan, 1).getDay();
+    const jumlahHari = new Date(stateKalenderApt.tahun, stateKalenderApt.bulan + 1, 0).getDate();
+    const todayIso = getTodayStrLokalApt();
+    const lastFilledIso = stateKalenderApt.tanggalTerakhirDiisi;
+    const sudahIsiHariIni = Boolean(stateKalenderApt.tanggalTercatatMap[todayIso]);
+
+    // Render Info Banner Statis (Tidak Menghalangi Tanggal)
+    if (infoBannerEl) {
+        let bannerItems = [];
+        const todayAngka = Number(todayIso.split("-")[2]);
+        const todayBln = namaBulanIndo[Number(todayIso.split("-")[1]) - 1];
+        const todayThn = todayIso.split("-")[0];
+
+        if (stateKalenderApt.sedangMemuat) {
+            // Kondisi: Sedang doGet data dari Google Sheets di background
+            bannerItems.push(`
+                <span class="inline-flex items-center gap-1.5 bg-pink-100 text-pink-900 border border-pink-300 text-[10px] font-black px-3 py-1.5 rounded-xl">
+                    <i class="fa-solid fa-circle-notch animate-spin text-pink-600"></i>
+                    <span>Mendeteksi kehadiran...</span>
+                </span>
+            `);
+        } else if (!lastFilledIso && Object.keys(stateKalenderApt.tanggalTercatatMap).length === 0) {
+            // Kondisi: Selesai doGet & karyawan benar-benar belum mengisi presensi di periode ini
+            const tglMulaiTeks = stateKalenderApt.tanggalMulaiPeriode || "awal periode";
+            bannerItems.push(`
+                <span class="inline-flex items-start gap-1.5 bg-rose-100 text-rose-950 border border-rose-300 text-[10px] leading-snug font-black px-3 py-1.5 rounded-xl text-left">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-600 mt-0.5 shrink-0"></i>
+                    <span>Kamu sama sekali belum mengisi kehadiran periode ini! Isi dari tanggal ${tglMulaiTeks}!</span>
+                </span>
+            `);
+        } else if (lastFilledIso && !sudahIsiHariIni && lastFilledIso < todayIso) {
+            const [lastY, lastM, lastD] = lastFilledIso.split("-").map(Number);
+            const [todY, todM, todD] = todayIso.split("-").map(Number);
+
+            const dateLast = new Date(lastY, lastM - 1, lastD);
+            const dateToday = new Date(todY, todM - 1, todD);
+            const selisihHari = Math.round((dateToday - dateLast) / (1000 * 60 * 60 * 24));
+
+            const dateMulaiBelum = new Date(lastY, lastM - 1, lastD + 1);
+            const mulaiAngka = dateMulaiBelum.getDate();
+            const mulaiBln = namaBulanIndo[dateMulaiBelum.getMonth()];
+
+            let teksKeterangan = "";
+            if (selisihHari === 1) {
+                teksKeterangan = `Kamu baru mengisi sampai tanggal kemarin (${lastD} ${namaBulanIndo[lastM - 1]}). Silakan isi presensi hari ini (${todayAngka} ${todayBln}).`;
+            } else {
+                const labelMulai = mulaiBln === todayBln ? `${mulaiAngka}` : `${mulaiAngka} ${mulaiBln}`;
+                teksKeterangan = `Kamu baru mengisi sampai tanggal ${lastD} ${namaBulanIndo[lastM - 1]}. Silakan isi presensi dari tanggal ${labelMulai} sampai ${todayAngka} ${todayBln}.`;
+            }
+
+            bannerItems.push(`
+                <span class="inline-flex items-start gap-1.5 bg-amber-100 text-amber-950 border border-amber-300 text-[10px] leading-snug font-black px-3 py-1.5 rounded-xl text-left">
+                    <i class="fa-solid fa-comment-dots text-amber-600 mt-0.5 shrink-0"></i>
+                    <span>${teksKeterangan}</span>
+                </span>
+            `);
+        }
+
+        bannerItems.push(`
+            <span class="inline-flex items-center gap-1 bg-sky-100 text-sky-900 border border-sky-300 text-[10px] font-black px-2.5 py-1 rounded-xl">
+                <i class="fa-solid fa-calendar-day text-sky-600"></i> Hari ini: ${todayAngka} ${todayBln} ${todayThn}
+            </span>
+        `);
+
+        if (sudahIsiHariIni) {
+            bannerItems.push(`
+                <span class="inline-flex items-center gap-1.5 bg-pink-100 text-pink-900 border border-pink-300 text-[10px] font-black px-2.5 py-1 rounded-xl">
+                    <i class="fa-solid fa-circle-check text-pink-600"></i> Hari ini kamu sudah mengisi presensi.
+                </span>
+            `);
+        }
+
+        infoBannerEl.innerHTML = bannerItems.join("");
+        infoBannerEl.classList.remove("hidden");
+    }
+
+    let html = "";
+
+    for (let i = 0; i < hariPertama; i++) {
+        html += `<div class="h-11"></div>`;
+    }
+
+    for (let tgl = 1; tgl <= jumlahHari; tgl++) {
+        const mm = String(stateKalenderApt.bulan + 1).padStart(2, '0');
+        const dd = String(tgl).padStart(2, '0');
+        const isoDate = `${stateKalenderApt.tahun}-${mm}-${dd}`;
+
+        const isToday = isoDate === todayIso;
+        const isLastFilled = (isoDate === lastFilledIso) && !sudahIsiHariIni;
+        const statusTercatat = stateKalenderApt.tanggalTercatatMap[isoDate];
+        const isSelectedSesi = stateKalenderApt.tanggalDipilihSesi === isoDate;
+
+        // Frame kotak tanggal: animasi fade in-out (animate-pulse) hanya pada frame tanggal terkait
+        let btnClass = "relative h-11 rounded-2xl flex flex-col items-center justify-center font-black text-xs transition-all duration-200 select-none border-2 ";
+
+        if (isSelectedSesi) {
+            btnClass += "bg-pink-600 text-white border-pink-900 shadow-md scale-105 z-10 ";
+        } else if (isLastFilled) {
+            btnClass += "bg-amber-50 text-amber-950 border-amber-500 ring-2 ring-amber-400/70 animate-pulse ";
+        } else if (isToday) {
+            btnClass += "bg-sky-50 text-sky-900 border-sky-500 ring-2 ring-sky-400/60 animate-pulse ";
+        } else if (statusTercatat) {
+            const isTidakHadir = ["Libur", "Izin/Sakit", "Absen"].includes(statusTercatat);
+            btnClass += isTidakHadir
+                ? "bg-rose-100/80 text-rose-900 border-rose-300 "
+                : "bg-pink-100/80 text-pink-900 border-pink-300 ";
+        } else {
+            btnClass += "bg-slate-50/70 hover:bg-pink-50 text-slate-700 border-slate-200/80 hover:border-pink-500 ";
+        }
+
+        let subDotHtml = "";
+        if (isSelectedSesi && stateKalenderApt.statusDipilihSesi) {
+            subDotHtml = `<span class="text-[7.5px] font-black uppercase tracking-tighter text-pink-100">${getLabelSingkatStatusApt(stateKalenderApt.statusDipilihSesi)}</span>`;
+        } else if (statusTercatat) {
+            const isTidakHadir = ["Libur", "Izin/Sakit", "Absen"].includes(statusTercatat);
+            const dotColor = isTidakHadir ? "bg-rose-600" : "bg-pink-600";
+            subDotHtml = `<span class="w-1.5 h-1.5 rounded-full ${dotColor} mt-0.5"></span>`;
+        }
+
+        html += `
+            <button type="button" onclick="klikTanggalKalenderApt('${isoDate}')" class="${btnClass}">
+                <span>${tgl}</span>
+                ${subDotHtml}
+            </button>
+        `;
+    }
+
+    gridEl.innerHTML = html;
+}
+
+function klikTanggalKalenderApt(isoDate) {
+    // Klik tanggal yang sama -> uncheck / batal pilih
+    if (stateKalenderApt.tanggalDipilihSesi === isoDate) {
+        batalkanPilihanTanggalApt();
+        return;
+    }
+
+    stateKalenderApt.tanggalDipilihSesi = isoDate;
+    if (!stateKalenderApt.statusDipilihSesi) {
+        stateKalenderApt.statusDipilihSesi = "Shift 1 (Pagi-Siang)";
+    }
+
+    sinkronkanPilihanKeFormAsliApt();
+    perbaruiTampilanBoxDropdownApt();
+    renderGridKalenderApotek();
+}
+
+function tetapkanKehadiranKalenderApt(statusVal) {
+    if (!stateKalenderApt.tanggalDipilihSesi) return;
+    stateKalenderApt.statusDipilihSesi = statusVal;
+    sinkronkanPilihanKeFormAsliApt();
+    perbaruiTampilanBoxDropdownApt();
+    renderGridKalenderApotek();
+}
+
+function batalkanPilihanTanggalApt() {
+    stateKalenderApt.tanggalDipilihSesi = null;
+    stateKalenderApt.statusDipilihSesi = null;
+
+    const inputTgl = document.getElementById("presensi-tanggal-apotek");
+    if (inputTgl) inputTgl.value = "";
+
+    perbaruiTampilanBoxDropdownApt();
+    renderGridKalenderApotek();
+}
+
+function sinkronkanPilihanKeFormAsliApt() {
+    const inputTgl = document.getElementById("presensi-tanggal-apotek");
+    const selHadir = document.getElementById("presensi-dropdown-apotek");
+
+    if (inputTgl && stateKalenderApt.tanggalDipilihSesi) {
+        inputTgl.value = stateKalenderApt.tanggalDipilihSesi;
+        inputTgl.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (selHadir && stateKalenderApt.statusDipilihSesi) {
+        selHadir.value = stateKalenderApt.statusDipilihSesi;
+        selHadir.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+}
+
+function perbaruiTampilanBoxDropdownApt() {
+    const boxPilihan = document.getElementById("box-pilihan-kehadiran-apt");
+    const labelTgl = document.getElementById("label-tanggal-diketuk-apt");
+    const btnReset = document.getElementById("btn-reset-tanggal-apt");
+    const semuaBtnStatus = document.querySelectorAll(".btn-opsi-status-apt");
+
+    const tglTerpilih = stateKalenderApt.tanggalDipilihSesi;
+    const st = stateKalenderApt.statusDipilihSesi;
+
+    if (!tglTerpilih) {
+        if (boxPilihan) {
+            boxPilihan.classList.add("opacity-40", "pointer-events-none");
+            boxPilihan.classList.remove("border-pink-600", "shadow-sm");
+        }
+        if (labelTgl) labelTgl.textContent = "Pilih tanggal pada kalender dulu";
+        if (btnReset) btnReset.classList.add("hidden");
+
+        semuaBtnStatus.forEach(btn => {
+            const colSpan = btn.dataset.statusApt === "Absen" ? "col-span-2 sm:col-span-3 " : "";
+            btn.className = `btn-opsi-status-apt ${colSpan}py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all bg-gray-50 border-gray-200 text-gray-500`;
+        });
+        return;
+    }
+
+    if (boxPilihan) {
+        boxPilihan.classList.remove("opacity-40", "pointer-events-none");
+        boxPilihan.classList.add("border-pink-600", "shadow-sm");
+    }
+    if (labelTgl) labelTgl.textContent = formatTanggalIndoLengkapApt(tglTerpilih);
+    if (btnReset) btnReset.classList.remove("hidden");
+
+    semuaBtnStatus.forEach(btn => {
+        const valBtn = btn.dataset.statusApt;
+        const colSpan = valBtn === "Absen" ? "col-span-2 sm:col-span-3 " : "";
+        const isAktif = valBtn === st;
+        const isNegatif = ["Libur", "Izin/Sakit", "Absen"].includes(valBtn);
+
+        if (isAktif) {
+            btn.className = isNegatif
+                ? `btn-opsi-status-apt ${colSpan}py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all bg-rose-600 text-white border-rose-600 shadow-sm`
+                : `btn-opsi-status-apt ${colSpan}py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all bg-pink-600 text-white border-pink-600 shadow-sm`;
+        } else {
+            btn.className = isNegatif
+                ? `btn-opsi-status-apt ${colSpan}py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all bg-white border-rose-200 text-rose-700 hover:bg-rose-50`
+                : `btn-opsi-status-apt ${colSpan}py-2 px-2.5 rounded-2xl border-2 font-black text-[11px] flex items-center justify-center gap-1.5 transition-all bg-white border-pink-200 text-pink-800 hover:bg-pink-50`;
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const inputTgl = document.getElementById("presensi-tanggal-apotek");
+    if (inputTgl) inputTgl.value = "";
+
+    renderGridKalenderApotek();
+    perbaruiTampilanBoxDropdownApt();
+
+    // Pantau saat modal #wrapper_form_presensi_apotek dibuka agar kalender langsung render & sinkron
+    const modalFormApt = document.getElementById("wrapper_form_presensi_apotek");
+    if (modalFormApt) {
+        const observerModalApt = new MutationObserver(() => {
+            if (!modalFormApt.classList.contains("hidden")) {
+                renderGridKalenderApotek();
+                perbaruiTampilanBoxDropdownApt();
+                const namaAktif = document.getElementById("presensi-karyawan-apotek")?.value;
+                if (namaAktif) {
+                    muatRiwayatKalenderApotek(namaAktif);
+                }
+            }
+        });
+        observerModalApt.observe(modalFormApt, { attributes: true, attributeFilter: ["class"] });
+    }
+});
+</script>
+
+<!-- =========================================================================
+     UNIVERSAL PATCH: PURE iOS WELCOME "Halo!" OVERLAY (NO CARD, FULL BLUR)
+     ========================================================================= -->
+<style>
+  @keyframes iosPureTextFade {
+    0% {
+      opacity: 0;
+      transform: scale(0.92);
+      filter: blur(8px);
+    }
+    20% {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0px);
+    }
+    78% {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0px);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.04);
+      filter: blur(6px);
+    }
+  }
+
+  @keyframes iosFullGlassFade {
+    0% { opacity: 0; }
+    18% { opacity: 1; }
+    78% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Animasi fokus di tanda seru: membesar membal lalu mengecil presisi */
+  @keyframes iosExclamationPulse {
+    0% {
+      opacity: 0;
+      transform: scale(0.2) translateY(10px) rotate(-10deg);
+    }
+    24% {
+      opacity: 1;
+      transform: scale(1.52) translateY(-5px) rotate(6deg);
+    }
+    42% {
+      transform: scale(0.84) translateY(1px) rotate(-3deg);
+    }
+    58% {
+      transform: scale(1.08) translateY(0) rotate(1deg);
+    }
+    72% {
+      transform: scale(1) translateY(0) rotate(0deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0) rotate(0deg);
+    }
+  }
+
+  .animate-ios-pure-text {
+    animation: iosPureTextFade 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .animate-ios-full-glass {
+    animation: iosFullGlassFade 1s ease-out forwards;
+  }
+
+  .animate-ios-bang {
+    display: inline-block;
+    transform-origin: bottom center;
+    animation: iosExclamationPulse 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+</style>
+
+<script>
+(function initPatchIosPureHalo() {
+  const TARGET_IDS = ['wrapper_form_presensi', 'wrapper_form_presensi_apotek'];
+  const stateTerbuka = new Map();
+  let timerHapus = null;
+
+  function tampilkanIosPureHalo() {
+    const lama = document.getElementById('patch_ios_halo');
+    if (lama) lama.remove();
+    if (timerHapus) clearTimeout(timerHapus);
+
+    const overlayEl = document.createElement('div');
+    overlayEl.id = 'patch_ios_halo';
+    overlayEl.className = 'fixed inset-0 z-[13000] flex items-center justify-center pointer-events-none select-none';
+
+    overlayEl.innerHTML = `
+      <!-- Fullscreen Frosted iOS Glass Blur (Tanpa Kotak/Chip) -->
+      <div class="absolute inset-0 bg-slate-950/45 backdrop-blur-xl animate-ios-full-glass"></div>
+
+      <!-- Teks Halo! Langsung Melayang di Tengah -->
+      <div class="relative flex items-baseline justify-center tracking-tight text-5xl sm:text-6xl font-semibold text-white drop-shadow-[0_6px_28px_rgba(0,0,0,0.45)] animate-ios-pure-text" style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;">
+        <span>Halo</span><span class="animate-ios-bang ml-0.5 text-white font-bold">!</span>
+      </div>
+    `;
+
+    document.body.appendChild(overlayEl);
+
+    timerHapus = setTimeout(() => {
+      if (overlayEl && overlayEl.parentNode) overlayEl.remove();
+    }, 1050);
+  }
+
+  function cekStatusModal(el) {
+    const style = window.getComputedStyle(el);
+    const sedangTampil =
+      !el.classList.contains('hidden') &&
+      style.display !== 'none' &&
+      style.visibility !== 'hidden';
+
+    const sebelumnyaTampil = stateTerbuka.get(el.id) || false;
+
+    if (sedangTampil && !sebelumnyaTampil) {
+      tampilkanIosPureHalo();
+    }
+    stateTerbuka.set(el.id, sedangTampil);
+  }
+
+  function pasangObserver() {
+    TARGET_IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      stateTerbuka.set(id, !el.classList.contains('hidden'));
+
+      const observer = new MutationObserver(() => cekStatusModal(el));
+      observer.observe(el, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', pasangObserver);
+  } else {
+    pasangObserver();
+  }
+})();
+</script>
+
 </body>
 </html>
