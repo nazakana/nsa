@@ -562,6 +562,71 @@ html.dark-mode-active #top-greeting-icon-container,
 html.dark-mode-active #greeting-icon-container {
   filter: none !important;
 }
+
+/* ====================================================
+   IOS ADAPTIVE SHRINK & LIQUID DRAG (FOTOKOPI EMERALD)
+   ==================================================== */
+#nav-glass-container {
+    touch-action: pan-y;
+}
+
+/* State Navbar Menciut Saat Scroll Konten ke Atas */
+#floating-bottom-nav.nav-minimized {
+    bottom: 0.75rem !important;
+    width: 245px !important;
+    max-width: 245px !important;
+}
+
+#floating-bottom-nav.nav-minimized #nav-glass-container {
+    padding: 0.25rem !important;
+    background-color: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+}
+
+#floating-bottom-nav.nav-minimized .nav-link {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+#floating-bottom-nav.nav-minimized .nav-link i {
+    font-size: 1rem !important;
+    transform: translateY(0) !important;
+}
+
+#floating-bottom-nav.nav-minimized .nav-link .nav-svg-icon {
+    width: 1rem !important;
+    height: 1rem !important;
+    transform: translateY(0) !important;
+}
+
+/* Animasi Label Menghilang Halus */
+#floating-bottom-nav .nav-label {
+    max-height: 16px;
+    opacity: 1;
+    transform: scale(1);
+    overflow: hidden;
+    transition: max-height 0.25s ease, opacity 0.2s ease, margin 0.25s ease, transform 0.25s ease;
+}
+
+#floating-bottom-nav.nav-minimized .nav-label {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin-top: 0 !important;
+    transform: scale(0.6);
+    pointer-events: none;
+}
+
+#floating-bottom-nav.nav-minimized #nav-active-bubble {
+    top: 0.25rem !important;
+    bottom: 0.25rem !important;
+}
+
+/* Efek Liquid Stretch Saat Kapsul Dipegang & Digeser Jari */
+#nav-active-bubble.is-dragging {
+    transition: background 0.15s ease, box-shadow 0.15s ease !important;
+    background: linear-gradient(to bottom, rgba(52, 211, 153, 0.45), rgba(16, 185, 129, 0.38), rgba(13, 148, 136, 0.50)) !important;
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.28) !important;
+}
 </style>
 
     <!-- SCRIPT TEMA & LOCKOUT AUTO DARK (LANGSUNG EKSEKUSI DI HEAD) -->
@@ -622,11 +687,11 @@ html.dark-mode-active #greeting-icon-container {
  <!-- MAIN CONTENT (ALL) -->
 <body class="flex flex-col md:flex-row">
 
-<!-- FLOATING LIQUID GLASS BOTTOM NAV (NATIVE STABLE ENGINE) -->
-<aside class="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-[40] w-[90%] max-w-md bg-transparent p-0 m-0 border-none shadow-none outline-none select-none">
+<!-- FLOATING LIQUID GLASS BOTTOM NAV FOTOKOPI (IOS FULL UPGRADE) -->
+<aside id="floating-bottom-nav" class="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-[40] w-[90%] max-w-md bg-transparent p-0 m-0 border-none shadow-none outline-none select-none transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
     
     <!-- Main Container Kaca -->
-    <div id="nav-glass-container" class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden">
+    <div id="nav-glass-container" class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
         
         <!-- FLUID BUBBLE KAPSUL (INDIKATOR AKTIF PRESISI) -->
         <div id="nav-active-bubble" 
@@ -642,38 +707,38 @@ html.dark-mode-active #greeting-icon-container {
         <button onclick="showTab('dashboard')" id="btn-dashboard" 
             class="nav-link active group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
             <i class="fa-solid fa-house-user text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Home</span>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Home</span>
         </button>
 
         <!-- Database Button -->
         <button onclick="showTab('dailyinput')" id="btn-dailyinput" 
             class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20" data-search="daily input">
             <i class="fa-solid fa-pen-to-square text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Database</span>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Database</span>
         </button>
 
         <!-- Arsip Button -->
         <button onclick="showTab('archive')" id="btn-archive" 
             class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 focus:outline-none z-20" data-search="arsip laporan">
             <i class="fa-solid fa-folder-open text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Arsip</span>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Arsip</span>
         </button>
 
         <!-- Slip Gaji Button -->
         <button onclick="showTab('presensi')" id="btn-presensi" 
             class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20" data-search="presensi absensi jadwal kerja">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300 fill-slate-500 group-hover:fill-slate-700 group-[.active]:fill-emerald-700 group-[.active]:-translate-y-0.5 relative z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="nav-svg-icon w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300 fill-slate-500 group-hover:fill-slate-700 group-[.active]:fill-emerald-700 group-[.active]:-translate-y-0.5 relative z-10">
                 <path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-288-160 0c-17.7 0-32-14.3-32-32L320 0 64 0zM256 0l0 128 128 0L256 0zM128 224c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm0 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm32 64l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-96 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/>
             </svg>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
         </button>
 
         <!-- Profil / Akun Button -->
-<button onclick="showTab('about')" id="btn-about" 
-    class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20" data-search="profil nurjaya tentang about akun login owner karyawan">
-    <i class="fa-solid fa-user text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-    <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Akun</span>
-</button>
+        <button onclick="showTab('about')" id="btn-about" 
+            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20" data-search="profil nurjaya tentang about akun login owner karyawan">
+            <i class="fa-solid fa-user text-lg sm:text-xl transition-all duration-300 group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Akun</span>
+        </button>
 
     </div>
 </aside>
@@ -13942,6 +14007,9 @@ async function prosesUploadNota(event) {
 // ====================================================
 // REVISI SHOWTAB (DENGAN PROTEKSI LOCK SLIP GAJI)
 // ====================================================
+
+
+
 // ====================================================
 // REVISI SHOWTAB (DENGAN AUTO-REDIRECT KE TAB AKUN)
 // ====================================================
@@ -14003,23 +14071,224 @@ document.addEventListener("DOMContentLoaded", () => {
     showTab('dashboard');
 });
 
-    // LOGIKA PEMINDAH GELEMBUNG PRESISI MILIMETER
-    function moveBubbleToTab(activeTabName) {
-        const activeBtn = document.getElementById(`btn-${activeTabName}`);
-        const bubble = document.getElementById('nav-active-bubble');
+// ====================================================
+// 1. LOGIKA PEMINDAH GELEMBUNG PRESISI (SUPPORT FULL & MINIMIZED)
+// ====================================================
+function moveBubbleToTab(activeTabName) {
+    const activeBtn = document.getElementById(`btn-${activeTabName}`);
+    const bubble = document.getElementById('nav-active-bubble');
+    const navAside = document.getElementById('floating-bottom-nav');
 
-        if (activeBtn && bubble) {
-            const btnLeft = activeBtn.offsetLeft;
-            const btnWidth = activeBtn.offsetWidth;
+    if (activeBtn && bubble) {
+        const btnLeft = activeBtn.offsetLeft;
+        const btnWidth = activeBtn.offsetWidth;
+        const isMinimized = navAside && navAside.classList.contains('nav-minimized');
 
-            // Rumus Presisi Center Point Sumbu Ikon
-            const centerPos = btnLeft + (btnWidth / 2) - (BUBBLE_WIDTH / 2);
+        // Saat mode penuh pakai lebar ideal BUBBLE_WIDTH (60px), saat menciut ikuti lebar tombol (atau max 42px)
+        const targetWidth = isMinimized ? Math.min(42, btnWidth - 4) : Math.min(BUBBLE_WIDTH, btnWidth - 4);
+        const centerPos = btnLeft + (btnWidth / 2) - (targetWidth / 2);
 
-            bubble.style.width = `${BUBBLE_WIDTH}px`;
-            bubble.style.transform = `translate3d(${centerPos}px, 0px, 0px)`;
-            bubble.style.opacity = '1';
+        bubble.style.width = `${targetWidth}px`;
+        bubble.style.transform = `translate3d(${centerPos}px, 0px, 0px)`;
+        bubble.style.opacity = '1';
+    }
+}
+
+// ====================================================
+// 2. ADAPTIVE SHRINK NAVBAR ON SCROLL (FOTOKOPI)
+// ====================================================
+(function initAdaptiveBottomNavFotokopi() {
+    const navAside = document.getElementById('floating-bottom-nav');
+    const navGlass = document.getElementById('nav-glass-container');
+    if (!navAside || !navGlass) return;
+
+    let lastScrollPos = 0;
+    let isMinimized = false;
+    const SCROLL_THRESHOLD = 12;
+
+    // Sinkronisasi Real-Time Posisi Fluid Bubble saat ukuran container berubah
+    if (typeof ResizeObserver !== 'undefined') {
+        const bubbleObserver = new ResizeObserver(() => {
+            const activeBtn = document.querySelector('.nav-link.active');
+            if (activeBtn) {
+                const currentTab = activeBtn.id.replace('btn-', '');
+                moveBubbleToTab(currentTab);
+            }
+        });
+        bubbleObserver.observe(navGlass);
+    }
+
+    function setNavState(minimize) {
+        if (isMinimized === minimize) return;
+        isMinimized = minimize;
+
+        if (minimize) {
+            navAside.classList.add('nav-minimized');
+        } else {
+            navAside.classList.remove('nav-minimized');
+        }
+
+        setTimeout(() => {
+            const activeBtn = document.querySelector('.nav-link.active');
+            if (activeBtn) {
+                const currentTab = activeBtn.id.replace('btn-', '');
+                moveBubbleToTab(currentTab);
+            }
+        }, 310);
+    }
+
+    function handleScrollActivity(currentPos) {
+        const diff = currentPos - lastScrollPos;
+
+        if (currentPos <= 20) {
+            setNavState(false);
+            lastScrollPos = currentPos;
+            return;
+        }
+
+        if (diff > SCROLL_THRESHOLD) {
+            setNavState(true);
+            lastScrollPos = currentPos;
+        } else if (diff < -SCROLL_THRESHOLD) {
+            setNavState(false);
+            lastScrollPos = currentPos;
         }
     }
+
+    // Dengarkan scroll baik pada window maupun container .main-content
+    window.addEventListener('scroll', () => {
+        handleScrollActivity(window.scrollY);
+    }, { passive: true });
+
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+        mainContent.addEventListener('scroll', () => {
+            handleScrollActivity(mainContent.scrollTop);
+        }, { passive: true });
+    }
+})();
+
+// ====================================================
+// 3. INTERACTIVE LIQUID BUBBLE SCRUBBING (HOLD & DRAG JARI)
+// ====================================================
+(function initLiquidNavScrubbingFotokopi() {
+    const container = document.getElementById('nav-glass-container');
+    const bubble = document.getElementById('nav-active-bubble');
+    const navAside = document.getElementById('floating-bottom-nav');
+    if (!container || !bubble) return;
+
+    const tabOrder = ['dashboard', 'dailyinput', 'archive', 'presensi', 'about'];
+    let isPointerDown = false;
+    let isDragging = false;
+    let startX = 0;
+    let activePointerId = null;
+    let lastHoveredTabId = null;
+
+    function getTabAtClientX(clientX) {
+        const containerRect = container.getBoundingClientRect();
+        const clampedX = Math.max(containerRect.left + 8, Math.min(clientX, containerRect.right - 8));
+        const relativeX = clampedX - containerRect.left;
+        const slotWidth = containerRect.width / tabOrder.length;
+        const index = Math.min(tabOrder.length - 1, Math.max(0, Math.floor(relativeX / slotWidth)));
+
+        const tabId = tabOrder[index];
+        const btn = document.getElementById(`btn-${tabId}`);
+        return { tabId, btn, clampedX, containerRect };
+    }
+
+    function previewTabHighlight(targetBtn) {
+        document.querySelectorAll('.nav-link').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        if (targetBtn) {
+            targetBtn.classList.add('active');
+        }
+    }
+
+    container.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+        isPointerDown = true;
+        isDragging = false;
+        startX = e.clientX;
+        activePointerId = e.pointerId;
+        lastHoveredTabId = null;
+    });
+
+    window.addEventListener('pointermove', (e) => {
+        if (!isPointerDown || e.pointerId !== activePointerId) return;
+
+        const deltaX = Math.abs(e.clientX - startX);
+
+        if (!isDragging && deltaX > 6) {
+            isDragging = true;
+            bubble.classList.add('is-dragging');
+            if (container.setPointerCapture) {
+                try { container.setPointerCapture(e.pointerId); } catch (_) {}
+            }
+        }
+
+        if (!isDragging) return;
+
+        const { tabId, btn, clampedX, containerRect } = getTabAtClientX(e.clientX);
+        if (!btn) return;
+
+        const isMinimized = navAside && navAside.classList.contains('nav-minimized');
+        const bubbleWidth = isMinimized ? Math.min(42, btn.offsetWidth - 4) : Math.min(BUBBLE_WIDTH, btn.offsetWidth - 4);
+
+        // Posisikan tengah kapsul tepat mengikuti ujung jari via GPU translate3d + efek stretch scale
+        let targetX = (clampedX - containerRect.left) - (bubbleWidth / 2);
+        const minX = 6;
+        const maxX = containerRect.width - bubbleWidth - 6;
+        targetX = Math.max(minX, Math.min(targetX, maxX));
+
+        bubble.style.width = `${bubbleWidth}px`;
+        bubble.style.transform = `translate3d(${targetX}px, 0px, 0px) scale(1.08)`;
+        bubble.style.opacity = '1';
+
+        if (lastHoveredTabId !== tabId) {
+            lastHoveredTabId = tabId;
+            previewTabHighlight(btn);
+            if (typeof playClickSound === 'function') playClickSound();
+        }
+    });
+
+    function finishDrag(e) {
+        if (!isPointerDown || e.pointerId !== activePointerId) return;
+
+        const wasDragging = isDragging;
+        isPointerDown = false;
+        isDragging = false;
+        activePointerId = null;
+        bubble.classList.remove('is-dragging');
+
+        if (wasDragging) {
+            const preventClick = (ev) => {
+                ev.stopPropagation();
+                ev.preventDefault();
+            };
+            container.addEventListener('click', preventClick, { capture: true, once: true });
+
+            const { tabId } = getTabAtClientX(e.clientX);
+
+            // Jalankan showTab (otomatis terintegrasi dengan proteksi Slip Gaji -> Auto-redirect ke Akun!)
+            if (tabId && typeof window.showTab === 'function') {
+                window.showTab(tabId);
+            }
+
+            // Snap presisi kembali ke tombol yang benar-benar aktif
+            requestAnimationFrame(() => {
+                const realActiveBtn = document.querySelector('.nav-link.active');
+                if (realActiveBtn) {
+                    moveBubbleToTab(realActiveBtn.id.replace('btn-', ''));
+                }
+            });
+        }
+    }
+
+    window.addEventListener('pointerup', finishDrag);
+    window.addEventListener('pointercancel', finishDrag);
+})();
 
     // Tampilan awal saat DOM selesai dimuat
     document.addEventListener("DOMContentLoaded", () => {
@@ -15191,6 +15460,170 @@ document.addEventListener('DOMContentLoaded', () => {
         </button>
     </div>
 </div>
+
+<!-- ====================================================================
+     PATCH STANDALONE: ANTI-GLITCH + SMOOTH SLIDE-UP MODAL ALERT FOTOKOPI
+     ==================================================================== -->
+<style>
+    #modal-alert-fotokopi {
+        will-change: opacity;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    #fotokopi-box-content {
+        will-change: transform, opacity;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    #fotokopi-wave-l:not(.wave-kiri-aktif),
+    #fotokopi-wave-r:not(.wave-kanan-aktif) {
+        opacity: 0 !important;
+    }
+</style>
+
+<script>
+(function applyFotokopiAlertAntiGlitchPatch() {
+    let closeTimerId = null;
+    let vibrateTimerId = null;
+
+    window.bukaAlertFotokopi = function(tipe, judul, deskripsi) {
+        return new Promise((resolve) => {
+            if (closeTimerId) {
+                clearTimeout(closeTimerId);
+                closeTimerId = null;
+            }
+            if (vibrateTimerId) {
+                clearTimeout(vibrateTimerId);
+                vibrateTimerId = null;
+            }
+
+            if (typeof resolveAlertPromise === 'function') {
+                resolveAlertPromise();
+            }
+            resolveAlertPromise = resolve;
+
+            const modal = document.getElementById('modal-alert-fotokopi');
+            const box = document.getElementById('fotokopi-box-content');
+            const iconBox = document.getElementById('fotokopi-alert-icon-box');
+            const icon = document.getElementById('fotokopi-alert-icon');
+            const waveL = document.getElementById('fotokopi-wave-l');
+            const waveR = document.getElementById('fotokopi-wave-r');
+            const judulElem = document.getElementById('fotokopi-alert-judul');
+            const deskripsiElem = document.getElementById('fotokopi-alert-deskripsi');
+            const btn = document.getElementById('fotokopi-alert-btn');
+
+            if (!modal || !box) {
+                resolve();
+                return;
+            }
+
+            // Reset animasi ikon & gelombang
+            if (iconBox) iconBox.classList.remove('vibrate-aktif');
+            if (waveL) waveL.classList.remove('wave-kiri-aktif', 'text-emerald-400', 'text-rose-400');
+            if (waveR) waveR.classList.remove('wave-kanan-aktif', 'text-emerald-400', 'text-rose-400');
+
+            if (modal.classList.contains('hidden')) {
+                bodyOverflowSebelumnya = document.body.style.overflow;
+            }
+
+            if (judulElem) judulElem.innerHTML = judul;
+            if (deskripsiElem) deskripsiElem.innerHTML = deskripsi;
+
+            if (tipe === 'sukses') {
+                if (iconBox) iconBox.className = "w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-3xl transform-gpu z-10";
+                if (icon) icon.className = "fa-solid fa-bell";
+                if (waveL) waveL.classList.add('text-emerald-400');
+                if (waveR) waveR.classList.add('text-emerald-400');
+                if (btn) btn.className = "w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold tracking-wide uppercase rounded-full shadow-lg shadow-emerald-200 active:scale-95 transition-transform duration-150";
+            } else {
+                if (iconBox) iconBox.className = "w-20 h-20 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center text-3xl transform-gpu z-10";
+                if (icon) icon.className = "fa-solid fa-triangle-exclamation";
+                if (waveL) waveL.classList.add('text-rose-400');
+                if (waveR) waveR.classList.add('text-rose-400');
+                if (btn) btn.className = "w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold tracking-wide uppercase rounded-full shadow-lg shadow-rose-200 active:scale-95 transition-transform duration-150";
+            }
+
+            // 1. Matikan transisi & kunci posisi awal di bawah (36px) secara eksplisit via inline style
+            modal.style.transition = 'none';
+            box.style.transition = 'none';
+            modal.style.opacity = '0';
+            box.style.opacity = '0';
+            box.style.transform = 'translate3d(0, 36px, 0) scale(0.97)';
+
+            // 2. Tampilkan container di DOM
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            // 3. Wajib Force Reflow setelah display: flex aktif agar posisi awal 36px terkunci di frame pertama
+            void modal.offsetWidth;
+            void box.offsetWidth;
+
+            if (typeof putarAudioAlertFotokopi === 'function') {
+                putarAudioAlertFotokopi(tipe);
+            }
+
+            // 4. Jalankan transisi Slide-Up & Fade-In di frame berikutnya
+            requestAnimationFrame(() => {
+                modal.style.transition = 'opacity 220ms ease-out';
+                box.style.transition = 'transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease-out';
+
+                modal.style.opacity = '1';
+                box.style.opacity = '1';
+                box.style.transform = 'translate3d(0, 0, 0) scale(1)';
+
+                vibrateTimerId = setTimeout(() => {
+                    if (iconBox) iconBox.classList.add('vibrate-aktif');
+                    if (waveL) waveL.classList.add('wave-kiri-aktif');
+                    if (waveR) waveR.classList.add('wave-kanan-aktif');
+                }, 150);
+            });
+        });
+    };
+
+    window.tutupAlertFotokopi = function(e) {
+        if (e) {
+            if (typeof e.stopPropagation === 'function') e.stopPropagation();
+            if (typeof e.preventDefault === 'function') e.preventDefault();
+            if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+        }
+
+        const modal = document.getElementById('modal-alert-fotokopi');
+        const box = document.getElementById('fotokopi-box-content');
+        if (!modal || !box) return;
+
+        if (vibrateTimerId) {
+            clearTimeout(vibrateTimerId);
+            vibrateTimerId = null;
+        }
+        if (closeTimerId) {
+            clearTimeout(closeTimerId);
+        }
+
+        modal.style.transition = 'opacity 180ms ease-in';
+        box.style.transition = 'transform 200ms cubic-bezier(0.4, 0, 1, 1), opacity 180ms ease-in';
+
+        modal.style.opacity = '0';
+        box.style.opacity = '0';
+        box.style.transform = 'translate3d(0, 28px, 0) scale(0.98)';
+
+        closeTimerId = setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.style.overflow = bodyOverflowSebelumnya || '';
+            closeTimerId = null;
+
+            if (typeof resolveAlertPromise === 'function') {
+                const currentResolve = resolveAlertPromise;
+                resolveAlertPromise = null;
+                currentResolve();
+            }
+        }, 210);
+    };
+})();
+</script>
 
 </body>
 </html>
