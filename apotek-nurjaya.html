@@ -209,6 +209,64 @@
         transform: rotate(360deg);
     }
 }
+
+/* State Navbar Menciut Saat Scroll Konten ke Atas */
+#floating-bottom-nav.nav-minimized {
+    bottom: 0.75rem !important; /* Turun mendekati tepi bawah layar */
+    width: 245px !important;    /* Mengkerut ramping ke tengah */
+    max-width: 245px !important;
+}
+
+#floating-bottom-nav.nav-minimized #nav-glass-container {
+    padding: 0.25rem !important;
+    background-color: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+}
+
+#floating-bottom-nav.nav-minimized .nav-tab {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+#floating-bottom-nav.nav-minimized .nav-tab i {
+    font-size: 1rem !important; /* Ikon sedikit mengecil proporsional */
+    transform: translateY(0) !important; /* Reset offset vertikal agar persis di tengah kapsul */
+}
+
+/* Animasi Label Menghilang Halus */
+#floating-bottom-nav .nav-label {
+    max-height: 16px;
+    opacity: 1;
+    transform: scale(1);
+    overflow: hidden;
+    transition: max-height 0.25s ease, opacity 0.2s ease, margin 0.25s ease, transform 0.25s ease;
+}
+
+#floating-bottom-nav.nav-minimized .nav-label {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin-top: 0 !important;
+    transform: scale(0.6);
+    pointer-events: none;
+}
+
+#floating-bottom-nav.nav-minimized #nav-active-bubble {
+    top: 0.25rem !important;
+    bottom: 0.25rem !important;
+}
+
+/* State saat kapsul sedang di-drag oleh jari */
+#nav-active-bubble.is-dragging {
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.15s ease !important; /* Hilangkan delay left/width agar 100% nempel jari */
+    transform: scale(1.08);
+    background: linear-gradient(to bottom, rgba(244, 114, 182, 0.42), rgba(236, 72, 153, 0.35), rgba(219, 39, 119, 0.48)) !important;
+    box-shadow: 0 10px 25px rgba(236, 72, 153, 0.25) !important;
+}
+
+/* Mencegah browser menganggap geseran horizontal pada navbar sebagai gestur back/scroll */
+#nav-glass-container {
+    touch-action: pan-y;
+}
 </style>
 	
 	
@@ -514,6 +572,22 @@ html.dark-mode-active .at-a-glance-heading {
 html.dark-mode-active #top-greeting-icon-container,
 html.dark-mode-active #greeting-icon-container {
   filter: none !important;
+}
+
+@keyframes stickerPop {
+    0% { transform: scale(0.5) rotate(-10deg); }
+    60% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+@keyframes stickerFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+}
+.animate-sticker-pop {
+    animation: stickerPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.animate-sticker-float {
+    animation: stickerFloat 2.5s ease-in-out infinite;
 }
 </style>
 
@@ -2839,256 +2913,302 @@ document.addEventListener('keydown', function(e) {
 
 
         <!-- ================= TAB 6: TENTANG APOTEK ================= -->
-        <div id="tab-tentang" class="tab-content hidden fade-in space-y-8">
-    
-    <div class="container mx-auto px-1 md:px-4">
-        <div class="bg-white rounded-[40px] shadow-sm border border-pink-50 overflow-hidden">
-            <div class="p-8 md:p-14">
-                <div class="flex flex-col lg:flex-row gap-10 items-center">
-                    <div class="relative shrink-0">
-                        <img src="https://lh3.googleusercontent.com/d/1ba0QrHW9IQ84MzzbFvZZAUObT4WMHOXl" 
-                             class="w-44 h-44 md:w-60 md:h-60 object-cover rounded-full shadow-2xl border-[10px] border-pink-50">
-                        <div class="absolute -bottom-2 -right-2 bg-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                            <i class="fa-solid fa-briefcase-medical text-xl"></i>
+<!-- ================= TAB 6: AKUN & PROFIL APOTEK ================= -->
+<div id="tab-tentang" class="tab-content hidden fade-in space-y-6 pb-12">
+    <div class="container mx-auto max-w-5xl px-1 md:px-4">
+
+<!-- SUB-TAB TOGGLE SWITCHER (MODE AKUN | PROFIL APOTEK) -->
+<div class="bg-white/80 backdrop-blur-md p-1.5 rounded-full border border-pink-100/60 shadow-xs max-w-md mx-auto mb-8">
+    <div class="grid grid-cols-2 gap-1 relative">
+        <button type="button" id="subtab-btn-account" onclick="switchSubTabTentang('account')"
+            class="py-2.5 px-4 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md shadow-pink-200/50">
+            <i class="fa-solid fa-user-gear"></i> Mode Akun
+        </button>
+        <button type="button" id="subtab-btn-profile" onclick="switchSubTabTentang('profile')"
+            class="py-2.5 px-4 rounded-full text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 text-gray-500 hover:text-pink-600">
+            <i class="fa-solid fa-clinic-medical"></i> Profil Apotek
+        </button>
+    </div>
+</div>
+
+        <!-- SECTION 1: MODE AKUN (DEFAULT DIBUKA - CENTER ALIGNED) -->
+        <div id="subtab-content-account" class="space-y-6">
+            <div class="bg-white/95 backdrop-blur-md rounded-[35px] border border-pink-100 p-6 sm:p-10 shadow-sm relative overflow-hidden">
+                <div class="max-w-md mx-auto space-y-6 text-center flex flex-col items-center">
+                    
+                    <!-- Avatar Icon Profil Rounded -->
+                    <div id="account-avatar-container" class="w-20 h-20 rounded-full bg-gradient-to-tr from-pink-600 to-rose-400 p-1 shadow-lg shadow-pink-500/20 transition-transform hover:scale-105 duration-300">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center overflow-hidden">
+                            <i id="account-avatar-icon" class="fa-solid fa-user-nurse text-3xl text-pink-600"></i>
                         </div>
                     </div>
-                    
-                    <div class="text-center lg:text-left">
-                        <h3 class="text-3xl md:text-5xl font-black text-gray-800 leading-tight tracking-tighter">
-                            apt. Siti Nurjanah, S.Farm.
-                        </h3>
-                        <div class="mt-4 flex flex-wrap justify-center lg:justify-start gap-2">
-                            <span class="bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest border border-pink-200">
-                                Apoteker Penanggung Jawab
-                            </span>
-                            <span class="bg-slate-100 text-slate-700 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest border border-slate-200">
-                                Pemilik Apotek Nurjaya
-                            </span>
+
+                    <!-- Header Text -->
+                    <div class="space-y-1.5">
+                        <h3 class="text-2xl font-black text-slate-800 tracking-tight">Login ke NSA</h3>
+                        <p class="text-xs text-slate-500 font-medium max-w-xs mx-auto">Sesuaikan mode akun perangkat untuk menentukan hak akses fitur.</p>
+                    </div>
+
+                    <!-- Dropdown Mode Akun -->
+                    <div class="w-full space-y-2">
+                        <label class="block text-[11px] font-black uppercase tracking-widest text-slate-400">Pilih mode akun:</label>
+                        <div class="relative w-full max-w-xs mx-auto">
+                            <select id="user-role-select" onchange="handleRoleChange()" 
+                                class="w-full bg-pink-50/50 border border-pink-200 rounded-2xl px-4 py-3.5 text-center text-xs sm:text-sm font-bold text-slate-800 shadow-xs focus:outline-none focus:ring-2 focus:ring-pink-500/40 focus:border-pink-500 transition-all appearance-none cursor-pointer">
+                                <option value="asisten">Asisten Apoteker</option>
+                                <option value="owner">Pemilik Apotek</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-pink-400 text-xs pointer-events-none"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card Status Akses Aktif -->
+                    <div id="role-status-card" class="w-full p-4 rounded-2xl border transition-all duration-300 text-center">
+                        <!-- Konten di-generate otomatis via JS -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PROFIL APOTEK NURJAYA (HIDDEN DEFAULT) -->
+        <div id="subtab-content-profile" class="hidden space-y-8">
+            
+            <!-- KARTU PEMILIK APOTEK -->
+            <div class="bg-white rounded-[40px] shadow-sm border border-pink-50 overflow-hidden">
+                <div class="p-8 md:p-14">
+                    <div class="flex flex-col lg:flex-row gap-10 items-center">
+                        <div class="relative shrink-0">
+                            <img src="https://lh3.googleusercontent.com/d/1ba0QrHW9IQ84MzzbFvZZAUObT4WMHOXl" 
+                                 class="w-44 h-44 md:w-60 md:h-60 object-cover rounded-full shadow-2xl border-[10px] border-pink-50">
+                            <div class="absolute -bottom-2 -right-2 bg-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+                                <i class="fa-solid fa-briefcase-medical text-xl"></i>
+                            </div>
                         </div>
                         
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10">
-                            <a href="https://wa.me/6282126162025" target="_blank" onclick="playClickSound()" 
-                               class="px-6 py-4 bg-pink-600 hover:bg-pink-700 text-white rounded-full flex items-center justify-center gap-3 transition-all hover:scale-105 shadow-md active:scale-95">
-                                <i class="fa-brands fa-whatsapp text-2xl"></i> 
-                                <span class="font-bold text-sm">Konsultasi Apoteker</span>
-                            </a>
-                            <a href="https://wa.me/6281318688449" target="_blank" onclick="playClickSound()" 
-                               class="px-6 py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-full flex items-center justify-center gap-3 transition-all hover:scale-105 shadow-md active:scale-95">
-                                <i class="fa-brands fa-whatsapp text-2xl"></i> 
-                                <span class="font-bold text-sm">Hubungi Admin</span>
-                            </a>
+                        <div class="text-center lg:text-left">
+                            <h3 class="text-3xl md:text-5xl font-black text-gray-800 leading-tight tracking-tighter">
+                                apt. Siti Nurjanah, S.Farm.
+                            </h3>
+                            <div class="mt-4 flex flex-wrap justify-center lg:justify-start gap-2">
+                                <span class="bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest border border-pink-200">
+                                    Apoteker Penanggung Jawab
+                                </span>
+                                <span class="bg-slate-100 text-slate-700 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest border border-slate-200">
+                                    Pemilik Apotek Nurjaya
+                                </span>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10">
+                                <a href="https://wa.me/6282126162025" target="_blank" onclick="playClickSound()" 
+                                   class="px-6 py-4 bg-pink-600 hover:bg-pink-700 text-white rounded-full flex items-center justify-center gap-3 transition-all hover:scale-105 shadow-md active:scale-95">
+                                    <i class="fa-brands fa-whatsapp text-2xl"></i> 
+                                    <span class="font-bold text-sm">Konsultasi Apoteker</span>
+                                </a>
+                                <a href="https://wa.me/6281318688449" target="_blank" onclick="playClickSound()" 
+                                   class="px-6 py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-full flex items-center justify-center gap-3 transition-all hover:scale-105 shadow-md active:scale-95">
+                                    <i class="fa-brands fa-whatsapp text-2xl"></i> 
+                                    <span class="font-bold text-sm">Hubungi Admin</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    
 
-    <div class="container mx-auto px-1 md:px-4 my-6 md:my-10">
-    <div class="flex flex-col items-center mb-16 w-full text-center">
-        
-        <div class="bg-white p-6 rounded-[35px] shadow-sm border border-pink-50 mb-6 flex justify-center items-center">
-            <img src="https://drive.google.com/thumbnail?id=1__gsrUWvCPLv15i6Oa7apTz9IBsJjKit&sz=w500" 
-                 class="w-48 md:w-64 h-auto object-contain" 
-                 alt="Logo Apotek Nurjaya">
-        </div>
-        
-        <div class="bg-pink-600 px-8 py-2.5 rounded-full shadow-lg border border-pink-500 mb-6 inline-block">
-            <span class="text-white font-black text-xs md:text-sm uppercase tracking-[0.2em] block pl-[0.2em]">
-                Logo Apotek Nurjaya
-            </span>
-        </div>
-        
-        <div class="h-1.5 w-24 bg-pink-200 rounded-full"></div>
-        
-    </div>
-</div>
+            <!-- LOGO APOTEK -->
+            <div class="my-6 md:my-10">
+                <div class="flex flex-col items-center mb-12 w-full text-center">
+                    <div class="bg-white p-6 rounded-[35px] shadow-sm border border-pink-50 mb-6 flex justify-center items-center">
+                        <img src="https://drive.google.com/thumbnail?id=1__gsrUWvCPLv15i6Oa7apTz9IBsJjKit&sz=w500" 
+                             class="w-48 md:w-64 h-auto object-contain" 
+                             alt="Logo Apotek Nurjaya">
+                    </div>
+                    <div class="bg-pink-600 px-8 py-2.5 rounded-full shadow-lg border border-pink-500 mb-6 inline-block">
+                        <span class="text-white font-black text-xs md:text-sm uppercase tracking-[0.2em] block pl-[0.2em]">
+                            Logo Apotek Nurjaya
+                        </span>
+                    </div>
+                    <div class="h-1.5 w-24 bg-pink-200 rounded-full"></div>
+                </div>
+            </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-            <div class="bg-white p-8 rounded-[35px] border border-gray-100 shadow-sm">
-                <h4 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-3 uppercase tracking-tight">
-                    <span class="w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center border border-pink-100">
-                        <i class="fa-solid fa-clinic-medical"></i>
+            <!-- TENTANG & LAYANAN -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+                <div class="bg-white p-8 rounded-[35px] border border-gray-100 shadow-sm">
+                    <h4 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-3 uppercase tracking-tight">
+                        <span class="w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center border border-pink-100">
+                            <i class="fa-solid fa-clinic-medical"></i>
+                        </span>
+                        Tentang Apotek
+                    </h4>
+                    <div class="text-gray-600 text-sm md:text-base leading-relaxed space-y-4 text-justify font-medium">
+                        <p>
+                            <span class="text-pink-600 font-black">Apotek Nurjaya</span> adalah institusi pelayanan kefarmasian yang berfokus pada penyediaan obat-obatan berkualitas dan layanan kesehatan primer bagi masyarakat Tasikmalaya. 
+                        </p>
+                        <p>
+                            Apotek ini didirikan dan dikelola secara profesional oleh <span class="font-bold text-gray-800">apt. Siti Nurjanah, S.Farm.</span> Dengan integritas tinggi, kami menjamin seluruh ketersediaan produk farmasi memiliki izin resmi dan tersimpan sesuai standar prosedur kesehatan.
+                        </p>
+                        <p>
+                            Melalui sistem digital <span class="bg-pink-50 text-pink-600 px-2 py-0.5 rounded font-bold italic">NSA (Nurjaya Smart Archive)</span>, kami memastikan pengelolaan stok dan data operasional berjalan transparan untuk pelayanan yang lebih responsif.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-[35px] border border-gray-100 shadow-sm">
+                    <h4 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-3 uppercase tracking-tight">
+                        <span class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center border border-emerald-100">
+                            <i class="fa-solid fa-hand-holding-medical"></i>
+                        </span>
+                        Layanan Unggulan
+                    </h4>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                            <i class="fa-solid fa-pills text-pink-500 w-5"></i>
+                            <span class="text-sm font-bold text-gray-700">Penebusan Resep Dokter & Obat Lengkap</span>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                            <i class="fa-solid fa-stethoscope text-pink-500 w-5"></i>
+                            <span class="text-sm font-bold text-gray-700">Cek Tekanan Darah (Tensi)</span>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                            <i class="fa-solid fa-droplet text-pink-500 w-5"></i>
+                            <span class="text-sm font-bold text-gray-700">Cek Gula Darah, Kolesterol & Asam Urat</span>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                            <i class="fa-solid fa-comments text-pink-500 w-5"></i>
+                            <span class="text-sm font-bold text-gray-700">Konsultasi Kesehatan & Edukasi Obat</span>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
+                            <i class="fa-solid fa-flask text-pink-500 w-5"></i>
+                            <span class="text-sm font-bold text-gray-700">Penyediaan Alat Kesehatan & Vitamin</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIM ASISTEN APOTEKER -->
+            <div class="bg-white p-6 md:p-12 rounded-[40px] border border-pink-100 shadow-sm">
+                <h4 class="text-xl font-black text-gray-800 mb-8 flex items-center justify-center md:justify-start gap-3 uppercase tracking-tight">
+                    <span class="w-10 h-10 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center border border-pink-200">
+                        <i class="fa-solid fa-user-nurse"></i>
                     </span>
-                    Tentang Apotek
+                    Tim Asisten Apoteker
                 </h4>
-                <div class="text-gray-600 text-sm md:text-base leading-relaxed space-y-4 text-justify font-medium">
-                    <p>
-                        <span class="text-pink-600 font-black">Apotek Nurjaya</span> adalah institusi pelayanan kefarmasian yang berfokus pada penyediaan obat-obatan berkualitas dan layanan kesehatan primer bagi masyarakat Tasikmalaya. 
-                    </p>
-                    <p>
-                        Apotek ini didirikan dan dikelola secara profesional oleh <span class="font-bold text-gray-800">apt. Siti Nurjanah, S.Farm.</span> Dengan integritas tinggi, kami menjamin seluruh ketersediaan produk farmasi memiliki izin resmi dan tersimpan sesuai standar prosedur kesehatan.
-                    </p>
-                    <p>
-                        Melalui sistem digital <span class="bg-pink-50 text-pink-600 px-2 py-0.5 rounded font-bold italic">NSA (Nurjaya Smart Archive)</span>, kami memastikan pengelolaan stok dan data operasional berjalan transparan untuk pelayanan yang lebih responsif.
-                    </p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
+                    <div class="bg-gradient-to-br from-white to-pink-50 p-5 rounded-[35px] border border-pink-200 flex flex-col md:flex-row items-center gap-4 md:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full md:max-w-md mx-auto lg:mx-0">
+                        <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500', 'Eka Ainun Nisa')">
+                            <img src="https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500" 
+                                 class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                            <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] md:text-[9px]">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0 flex flex-col items-center text-center md:items-start md:text-left justify-center">
+                            <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Eka Ainun Nisa</h5>
+                            <div class="flex items-center gap-1.5 mt-2">
+                                <a href="https://wa.me/6285523823280" target="_blank" onclick="playClickSound()" 
+                                   class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" title="Hubungi WhatsApp">
+                                    <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                                </a>
+                                <span class="inline-flex items-center h-7 text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 rounded-xl shadow-xs">
+                                    Asisten Apoteker
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-white to-pink-50 p-5 rounded-[35px] border border-pink-200 flex flex-col md:flex-row items-center gap-4 md:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full md:max-w-md mx-auto lg:mx-0">
+                        <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500', 'Fadilla Nailul Wafa')">
+                            <img src="https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500" 
+                                 class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                            <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] md:text-[9px]">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0 flex flex-col items-center text-center md:items-start md:text-left justify-center">
+                            <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Fadilla Nailul Wafa</h5>
+                            <div class="flex items-center gap-1.5 mt-2">
+                                <a href="https://wa.me/6282120737797" target="_blank" onclick="playClickSound()" 
+                                   class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" title="Hubungi WhatsApp">
+                                    <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                                </a>
+                                <span class="inline-flex items-center h-7 text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 rounded-xl shadow-xs">
+                                    Asisten Apoteker
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-white to-pink-50 p-5 rounded-[35px] border border-pink-200 flex flex-col md:flex-row items-center gap-4 md:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full md:max-w-md mx-auto lg:mx-0">
+                        <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500', 'Dea Nove Asyari')">
+                            <img src="https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500" 
+                                 class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
+                            <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] md:text-[9px]">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0 flex flex-col items-center text-center md:items-start md:text-left justify-center">
+                            <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Dea Nove Asyari</h5>
+                            <div class="flex items-center gap-1.5 mt-2">
+                                <a href="https://wa.me/6285220786175" target="_blank" onclick="playClickSound()" 
+                                   class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" title="Hubungi WhatsApp">
+                                    <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
+                                </a>
+                                <span class="inline-flex items-center h-7 text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 rounded-xl shadow-xs">
+                                    Asisten Apoteker
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-[35px] border border-gray-100 shadow-sm">
-                <h4 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-3 uppercase tracking-tight">
-                    <span class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center border border-emerald-100">
-                        <i class="fa-solid fa-hand-holding-medical"></i>
+            <!-- LOKASI OPERASIONAL -->
+            <div class="bg-slate-900 rounded-[40px] p-8 md:p-12 text-white overflow-hidden relative shadow-2xl">
+                <div class="absolute top-0 right-0 p-10 opacity-10">
+                    <i class="fa-solid fa-map-marked-alt text-[150px]"></i>
+                </div>
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <span class="bg-pink-600 px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-pink-500">
+                        Lokasi Operasional
                     </span>
-                    Layanan Unggulan
-                </h4>
-                <div class="grid grid-cols-1 gap-3">
-                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
-                        <i class="fa-solid fa-pills text-pink-500 w-5"></i>
-                        <span class="text-sm font-bold text-gray-700">Penebusan Resep Dokter & Obat Lengkap</span>
+                    <p class="text-lg md:text-xl font-bold max-w-2xl leading-relaxed mb-10">
+                        Jl. Bantar No. 145 RT 02 RW 007 Kel. Argasari Kec. Cihideung Kota Tasikmalaya, Jawa Barat.
+                    </p>
+                    <div class="w-full rounded-[30px] overflow-hidden border-4 border-white/10 shadow-lg mb-10 aspect-video md:aspect-[21/9]">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.2572377438414!2d108.2048648!3d-7.324977400000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f57ea88e53b09%3A0x6a2046b96dc01422!2sApotek%20Nurjaya!5e0!3m2!1sid!2sid!4v1779521742886!5m2!1sid!2sid" 
+                            class="w-full h-full border-0" 
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
                     </div>
-                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
-                        <i class="fa-solid fa-stethoscope text-pink-500 w-5"></i>
-                        <span class="text-sm font-bold text-gray-700">Cek Tekanan Darah (Tensi)</span>
-                    </div>
-                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
-                        <i class="fa-solid fa-droplet text-pink-500 w-5"></i>
-                        <span class="text-sm font-bold text-gray-700">Cek Gula Darah, Kolesterol & Asam Urat</span>
-                    </div>
-                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
-                        <i class="fa-solid fa-comments text-pink-500 w-5"></i>
-                        <span class="text-sm font-bold text-gray-700">Konsultasi Kesehatan & Edukasi Obat</span>
-                    </div>
-                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 transition-hover hover:border-pink-200">
-                        <i class="fa-solid fa-flask text-pink-500 w-5"></i>
-                        <span class="text-sm font-bold text-gray-700">Penyediaan Alat Kesehatan & Vitamin</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-<!-- ================= MODAL ASISTEN APOTEKER ================= -->
-  <div class="container mx-auto px-1 md:px-4 my-6 md:my-10">
-    <div class="bg-white p-6 md:p-12 rounded-[40px] border border-pink-100 shadow-sm">
-        <h4 class="text-xl font-black text-gray-800 mb-8 flex items-center justify-center md:justify-start gap-3 uppercase tracking-tight">
-            <span class="w-10 h-10 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center border border-pink-200">
-                <i class="fa-solid fa-user-nurse"></i>
-            </span>
-            Tim Asisten Apoteker
-        </h4>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
-            
-            <div class="bg-gradient-to-br from-white to-pink-50 p-5 rounded-[35px] border border-pink-200 flex flex-col md:flex-row items-center gap-4 md:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full md:max-w-md mx-auto md:mx-auto lg:mx-0">
-                <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500', 'Eka Ainun Nisa')">
-                    <img src="https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500" 
-                         class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
-                    <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] md:text-[9px]">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                </div>
-                
-                <div class="flex-1 min-w-0 flex flex-col items-center text-center md:items-start md:text-left justify-center">
-                    <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Eka Ainun Nisa</h5>
-                    
-                    <div class="flex items-center gap-1.5 mt-2">
-                        <a href="https://wa.me/6285523823280" target="_blank" onclick="playClickSound()" 
-                           class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
-                           title="Hubungi WhatsApp">
-                            <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
-                        </a>
-                        
-                        <span class="inline-flex items-center h-7 text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 rounded-xl shadow-xs">
-                            Asisten Apoteker
-                        </span>
-                    </div>
+                    <a href="https://maps.app.goo.gl/iTu1NQ7ceQ3Tx1Dy6" 
+                       target="_blank"
+                       class="bg-white text-slate-900 px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs hover:bg-pink-600 hover:text-white transition-all shadow-xl active:scale-95">
+                        Petunjuk Arah Google Maps
+                    </a>
                 </div>
             </div>
 
-            <div class="bg-gradient-to-br from-white to-pink-50 p-5 rounded-[35px] border border-pink-200 flex flex-col md:flex-row items-center gap-4 md:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full md:max-w-md mx-auto md:mx-auto lg:mx-0">
-                <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500', 'Fadilla Nailul Wafa')">
-                    <img src="https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500" 
-                         class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
-                    <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] md:text-[9px]">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                </div>
-                
-                <div class="flex-1 min-w-0 flex flex-col items-center text-center md:items-start md:text-left justify-center">
-                    <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Fadilla Nailul Wafa</h5>
-                    
-                    <div class="flex items-center gap-1.5 mt-2">
-                        <a href="https://wa.me/6282120737797" target="_blank" onclick="playClickSound()" 
-                           class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
-                           title="Hubungi WhatsApp">
-                            <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
-                        </a>
-                        <span class="inline-flex items-center h-7 text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 rounded-xl shadow-xs">
-                            Asisten Apoteker
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gradient-to-br from-white to-pink-50 p-5 rounded-[35px] border border-pink-200 flex flex-col md:flex-row items-center gap-4 md:gap-5 shadow-xs transition-all hover:shadow-md relative overflow-hidden w-full md:max-w-md mx-auto md:mx-auto lg:mx-0">
-                <div class="relative shrink-0 group cursor-pointer" onclick="bukaPreviewKaryawan('https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500', 'Dea Nove Asyari')">
-                    <img src="https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500" 
-                         class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-md transition-transform group-hover:scale-105">
-                    <div class="absolute bottom-0 right-0 bg-pink-600 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center shadow border border-white text-white text-[8px] md:text-[9px]">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                </div>
-                
-                <div class="flex-1 min-w-0 flex flex-col items-center text-center md:items-start md:text-left justify-center">
-                    <h5 class="text-base md:text-lg font-black text-gray-800 leading-tight break-words w-full">Dea Nove Asyari</h5>
-                    
-                    <div class="flex items-center gap-1.5 mt-2">
-                        <a href="https://wa.me/6285220786175" target="_blank" onclick="playClickSound()" 
-                           class="w-7 h-7 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-xs transition-all active:scale-95 shrink-0 group" 
-                           title="Hubungi WhatsApp">
-                            <i class="fa-brands fa-whatsapp text-sm group-hover:rotate-12 transition-transform"></i>
-                        </a>
-                        <span class="inline-flex items-center h-7 text-[10px] md:text-xs font-black text-pink-700 uppercase tracking-widest bg-pink-100 border border-pink-300 px-3 rounded-xl shadow-xs">
-                            Asisten Apoteker
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        </div> <!-- END SECTION 2 -->
     </div>
 </div>
 
-
-
-
-
-
-    <div class="container mx-auto px-1 md:px-4 pb-12">
-    <div class="bg-slate-900 rounded-[40px] p-8 md:p-12 text-white overflow-hidden relative shadow-2xl">
-        
-        <div class="absolute top-0 right-0 p-10 opacity-10">
-            <i class="fa-solid fa-map-marked-alt text-[150px]"></i>
+<!-- MODAL POPUP STIKER KONFIRMASI MODE AKUN (Letakkan di luar tab-content / sebelum </body>) -->
+<div id="role-modal-popup" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-250">
+    <div id="role-modal-card" class="bg-white rounded-[32px] p-7 max-w-xs w-full text-center shadow-2xl border border-pink-100 flex flex-col items-center transform scale-75 transition-transform duration-300">
+        <div id="modal-sticker-box" class="w-20 h-20 mb-4 rounded-3xl bg-pink-100/80 border border-pink-300/80 flex items-center justify-center text-4xl shadow-inner shrink-0">
+            <span id="modal-sticker-emoji" class="block">🔒</span>
         </div>
-
-        <div class="relative z-10 flex flex-col items-center text-center">
-            <span class="bg-pink-600 px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-pink-500">
-                Lokasi Operasional
-            </span>
-            
-            <p class="text-lg md:text-xl font-bold max-w-2xl leading-relaxed mb-10">
-                Jl. Bantar No. 145 RT 02 RW 007 Kel. Argasari Kec. Cihideung Kota Tasikmalaya, Jawa Barat.
-            </p>
-
-            <div class="w-full rounded-[30px] overflow-hidden border-4 border-white/10 shadow-lg mb-10 aspect-video md:aspect-[21/9]">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.2572377438414!2d108.2048648!3d-7.324977400000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f57ea88e53b09%3A0x6a2046b96dc01422!2sApotek%20Nurjaya!5e0!3m2!1sid!2sid!4v1779521742886!5m2!1sid!2sid" 
-                    class="w-full h-full border-0" 
-                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-            </div>
-
-            <a href="https://maps.app.goo.gl/iTu1NQ7ceQ3Tx1Dy6" 
-               target="_blank"
-               class="bg-white text-slate-900 px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs hover:bg-pink-600 hover:text-white transition-all shadow-xl active:scale-95">
-                Petunjuk Arah Google Maps
-            </a>
-        </div>
+        <h4 id="modal-sticker-title" class="text-lg font-black text-amber-800 tracking-tight mb-1">Mode Asisten Apoteker Aktif!</h4>
+        <p id="modal-sticker-desc" class="text-xs text-slate-600 font-medium leading-relaxed mb-6">Perangkat dalam mode asisten apoteker. Akses modul Slip Gaji dikunci oleh sistem.</p>
+        <button onclick="closeRoleModal()" class="w-full py-3 rounded-2xl bg-pink-600 hover:bg-pink-700 text-white font-black text-xs uppercase tracking-wider shadow-md active:scale-95 transition-all">
+            Mengerti
+        </button>
     </div>
 </div>
-
-</div>
-
 
 
 
@@ -3101,16 +3221,15 @@ document.addEventListener('keydown', function(e) {
 
     </main>
 
-<!-- FLOATING LIQUID GLASS BOTTOM NAV APOTEK (NATIVE STABLE ENGINE) -->
-<aside class="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-[40] w-[92%] sm:w-[90%] max-w-md bg-transparent p-0 m-0 border-none shadow-none outline-none select-none">
+<!-- FLOATING LIQUID GLASS BOTTOM NAV APOTEK (ADAPTIVE SHRINK ENGINE) -->
+<aside id="floating-bottom-nav" class="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-[40] w-[92%] sm:w-[90%] max-w-md bg-transparent p-0 m-0 border-none shadow-none outline-none select-none transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
     
     <!-- Main Container Kaca -->
-    <div id="nav-glass-container" class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden">
+    <div id="nav-glass-container" class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
         
         <!-- FLUID BUBBLE KAPSUL (INDIKATOR AKTIF PRESISI) -->
         <div id="nav-active-bubble" 
              class="absolute top-1.5 bottom-1.5 left-0 w-0 rounded-full bg-gradient-to-b from-pink-400/30 via-pink-500/25 to-pink-600/35 border border-pink-400/60 shadow-md shadow-pink-900/10 pointer-events-none z-0 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] opacity-0">
-            <!-- Inner Specular Light Gloss -->
             <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/60 to-transparent rounded-t-full"></div>
         </div>
 
@@ -3121,35 +3240,35 @@ document.addEventListener('keydown', function(e) {
         <button onclick="switchTab('beranda')" id="btn-tab-beranda" 
             class="nav-tab active group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
             <i class="fa-solid fa-house text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Beranda</span>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Beranda</span>
         </button>
 
-        <!-- Tab 2: Pembukuan (Input Harian + Tutup Buku) -->
+        <!-- Tab 2: Pembukuan -->
         <button onclick="switchTab('pembukuan')" id="btn-tab-pembukuan" 
             class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
             <i class="fa-solid fa-calculator text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pembukuan</span>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pembukuan</span>
         </button>
 
-        <!-- Tab 3: Pusat Arsip-->
+        <!-- Tab 3: Pusat Arsip -->
         <button onclick="switchTab('summary')" id="btn-tab-summary" 
             class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 focus:outline-none z-20">
             <i class="fa-solid fa-folder-closed text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pusat Arsip</span>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pusat Arsip</span>
         </button>
 
         <!-- Tab 4: Slip Gaji -->
         <button onclick="switchTab('gaji')" id="btn-tab-gaji" 
             class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
             <i class="fa-solid fa-file-invoice-dollar text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
         </button>
 
         <!-- Tab 5: Profil Apotek -->
         <button onclick="switchTab('tentang')" id="btn-tab-tentang" 
             class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
             <i class="fa-solid fa-clinic-medical text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Apotek</span>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Akun</span>
         </button>
 
     </div>
@@ -3162,7 +3281,7 @@ document.addEventListener('keydown', function(e) {
 	
 	
 
-    <!-- SCRIPT LOGIC -->
+    <!-- SCRIPT LOGIC LIQUID NAVBAR APOTEK -->
    <script>
     // Data Tab State Apotek Nurjaya
     const tabs = {
@@ -3214,46 +3333,275 @@ document.addEventListener('keydown', function(e) {
         bubble.style.opacity = '1';
     }
 
-    // Switch Main Tab Navigation Function (Global Scope Window)
-    window.switchTab = function(tabId) {
-        // 1. Sembunyikan semua konten tab
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-            content.classList.add('hidden');
+// ====================================================
+// 1. UPDATE SWITCHTAB APOTEK (DENGAN PROTEKSI SLIP GAJI)
+// ====================================================
+window.switchTab = function(tabId) {
+    // PROTEKSI AKSES: Jika buka Slip Gaji ('gaji') tapi role bukan 'owner'
+    if (tabId === 'gaji' && getActiveRole() !== 'owner') {
+        alert("Akses Terkunci! Fitur Slip Gaji hanya dapat diakses dalam Mode Pemilik Apotek.");
+        
+        // Otomatis arahkan ke tab Akun & Apotek ('tentang')
+        setTimeout(() => {
+            switchTab('tentang');
+            switchSubTabTentang('account'); // Pastikan langsung terbuka di Mode Akun
+        }, 50);
+        return;
+    }
+
+    // 1. Sembunyikan semua konten tab
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+        content.classList.add('hidden');
+    });
+
+    // 2. Tampilkan tab konten aktif
+    const activeContent = document.getElementById(`tab-${tabId}`);
+    if (activeContent) {
+        activeContent.classList.remove('hidden');
+        activeContent.classList.add('active');
+    }
+
+    // 3. Reset status active tombol navbar
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    // 4. Set status active pada tombol yang dipilih
+    const activeTabButton = document.getElementById(`btn-tab-${tabId}`);
+    if (activeTabButton) {
+        activeTabButton.classList.add('active');
+        if (typeof updateNavBubble === "function") updateNavBubble(activeTabButton);
+    }
+
+    // 5. Trigger Animasi Stagger Bouncy untuk Judul & Subtitle Header
+    const headerTitle = document.getElementById('headerTitle');
+    const headerSubtitle = document.getElementById('headerSubtitle');
+    if (headerTitle && headerSubtitle && typeof tabs !== "undefined" && tabs[tabId]) {
+        animateTextStagger(headerTitle, tabs[tabId].title, 0);
+        animateTextStagger(headerSubtitle, tabs[tabId].subtitle, 80);
+    }
+
+    // 6. Gulir otomatis kembali ke atas
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// ====================================================
+// 2. LOGIKA ROLE AUTHENTICATION & SLIP GAJI LOCK (APOTEK)
+// ====================================================
+function getActiveRole() {
+    return localStorage.getItem('nsa_apotek_user_role') || 'asisten';
+}
+
+function setActiveRole(role) {
+    localStorage.setItem('nsa_apotek_user_role', role);
+    updateRoleStatusUI();
+}
+
+function initRoleUI() {
+    const currentRole = getActiveRole();
+    const roleSelect = document.getElementById('user-role-select');
+    if (roleSelect) roleSelect.value = currentRole;
+    updateRoleStatusUI();
+}
+
+function updateRoleStatusUI() {
+    const role = getActiveRole();
+    const statusCard = document.getElementById('role-status-card');
+    const avatarIcon = document.getElementById('account-avatar-icon');
+    
+    if (avatarIcon) {
+        avatarIcon.className = role === 'owner' 
+            ? "fa-solid fa-user-doctor text-3xl text-pink-600 animate-pulse" 
+            : "fa-solid fa-user-nurse text-3xl text-slate-600";
+    }
+
+    if (!statusCard) return;
+
+    if (role === 'owner') {
+        statusCard.className = "w-full p-4 rounded-2xl bg-pink-50/90 border border-pink-200/80 text-pink-950 flex flex-col items-center gap-1 shadow-xs transition-all text-center";
+        statusCard.innerHTML = `
+            <i class="fa-solid fa-circle-check text-pink-600 text-xl mb-1"></i>
+            <h5 class="font-black text-xs sm:text-sm text-pink-900">Halo, apt. Siti Nurjanah, S.Farm.</h5>
+            <p class="text-[11px] sm:text-xs text-pink-700 font-medium leading-relaxed">Anda masuk menggunakan <strong>mode pemilik apotek</strong>, akses ke pembuatan slip gaji tidak dikunci.</p>
+        `;
+    } else {
+        statusCard.className = "w-full p-4 rounded-2xl bg-amber-50/90 border border-amber-200/80 text-amber-900 flex flex-col items-center gap-1 shadow-xs transition-all text-center";
+        statusCard.innerHTML = `
+            <i class="fa-solid fa-lock text-amber-600 text-xl mb-1"></i>
+            <h5 class="font-black text-xs sm:text-sm text-amber-900">Halo, Tim Apotek Nurjaya!</h5>
+            <p class="text-[11px] sm:text-xs text-amber-700 font-medium leading-relaxed">Anda masuk menggunakan <strong>mode asisten apoteker</strong>, akses ke pembuatan slip gaji dikunci oleh sistem.</p>
+        `;
+    }
+}
+
+function handleRoleChange() {
+    if (typeof playClickSound === "function") playClickSound();
+    const select = document.getElementById('user-role-select');
+    if (select) {
+        const newRole = select.value;
+        setActiveRole(newRole);
+        showRoleStickerModal(newRole);
+    }
+}
+
+function showRoleStickerModal(role) {
+    const modal = document.getElementById('role-modal-popup');
+    const modalCard = document.getElementById('role-modal-card');
+    const stickerBox = document.getElementById('modal-sticker-box');
+    const stickerEmoji = document.getElementById('modal-sticker-emoji');
+    const stickerTitle = document.getElementById('modal-sticker-title');
+    const stickerDesc = document.getElementById('modal-sticker-desc');
+
+    if (!modal || !modalCard || !stickerTitle || !stickerDesc) return;
+
+    stickerTitle.style.display = 'block';
+    stickerTitle.style.opacity = '1';
+    stickerDesc.style.display = 'block';
+    stickerDesc.style.opacity = '1';
+
+    if (role === 'owner') {
+        stickerEmoji.innerText = "👑";
+        stickerTitle.innerText = "Mode Pemilik Apotek Aktif!";
+        stickerTitle.className = "text-lg font-black text-pink-700 tracking-tight mb-1";
+        stickerDesc.innerText = "Akses ke modul pembuatan Slip Gaji diizinkan oleh sistem.";
+        stickerBox.className = "w-20 h-20 mb-4 rounded-3xl bg-pink-100/80 border border-pink-300/80 flex items-center justify-center text-4xl shadow-inner shrink-0";
+    } else {
+        stickerEmoji.innerText = "🔒";
+        stickerTitle.innerText = "Mode Asisten Apoteker Aktif!";
+        stickerTitle.className = "text-lg font-black text-amber-800 tracking-tight mb-1";
+        stickerDesc.innerText = "Perangkat dalam mode asisten apoteker. Akses modul Slip Gaji dikunci oleh sistem.";
+        stickerBox.className = "w-20 h-20 mb-4 rounded-3xl bg-amber-100/80 border border-amber-300/80 flex items-center justify-center text-4xl shadow-inner shrink-0";
+    }
+
+    stickerEmoji.className = "block";
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modalCard.classList.remove('scale-75');
+        modalCard.classList.add('scale-100');
+        
+        stickerEmoji.classList.add('animate-sticker-pop');
+        setTimeout(() => {
+            stickerEmoji.classList.remove('animate-sticker-pop');
+            stickerEmoji.classList.add('animate-sticker-float');
+        }, 500);
+    }, 20);
+}
+
+function closeRoleModal() {
+    if (typeof playClickSound === "function") playClickSound();
+    const modal = document.getElementById('role-modal-popup');
+    const modalCard = document.getElementById('role-modal-card');
+
+    if (!modal || !modalCard) return;
+
+    modalCard.classList.remove('scale-100');
+    modalCard.classList.add('scale-75');
+    modal.classList.add('opacity-0');
+
+    setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }, 250);
+}
+
+function switchSubTabTentang(mode) {
+    if (typeof playClickSound === "function") playClickSound();
+    
+    const btnAcc = document.getElementById('subtab-btn-account');
+    const btnProf = document.getElementById('subtab-btn-profile');
+    const contentAcc = document.getElementById('subtab-content-account');
+    const contentProf = document.getElementById('subtab-content-profile');
+
+    const activeClass = "py-2.5 px-4 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md shadow-pink-200/50";
+    const inactiveClass = "py-2.5 px-4 rounded-full text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 text-gray-500 hover:text-pink-600";
+
+    if (mode === 'account') {
+        btnAcc.className = activeClass;
+        btnProf.className = inactiveClass;
+        contentAcc.classList.remove('hidden');
+        contentProf.classList.add('hidden');
+    } else {
+        btnProf.className = activeClass;
+        btnAcc.className = inactiveClass;
+        contentProf.classList.remove('hidden');
+        contentAcc.classList.add('hidden');
+    }
+}
+
+// ====================================================
+// ADAPTIVE SHRINK NAVBAR ON SCROLL (APOTEK NURJAYA)
+// ====================================================
+(function initAdaptiveBottomNav() {
+    const navAside = document.getElementById('floating-bottom-nav');
+    const navGlass = document.getElementById('nav-glass-container');
+    if (!navAside || !navGlass) return;
+
+    let lastScrollY = window.scrollY;
+    let isMinimized = false;
+    const SCROLL_THRESHOLD = 12; // Jarak minimal scroll (px) agar tidak sensitif getaran jari
+
+    // Sinkronisasi Real-Time Posisi Fluid Bubble saat ukuran container berubah
+    if (typeof ResizeObserver !== 'undefined') {
+        const bubbleObserver = new ResizeObserver(() => {
+            const activeBtn = document.querySelector('.nav-tab.active');
+            if (activeBtn && typeof updateNavBubble === 'function') {
+                updateNavBubble(activeBtn);
+            }
         });
+        bubbleObserver.observe(navGlass);
+    }
 
-        // 2. Tampilkan tab konten aktif
-        const activeContent = document.getElementById(`tab-${tabId}`);
-        if (activeContent) {
-            activeContent.classList.remove('hidden');
-            activeContent.classList.add('active');
+    function setNavState(minimize) {
+        if (isMinimized === minimize) return;
+        isMinimized = minimize;
+
+        if (minimize) {
+            navAside.classList.add('nav-minimized');
+        } else {
+            navAside.classList.remove('nav-minimized');
         }
 
-        // 3. Reset status active tombol navbar
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
+        // Pastikan posisi bubble presisi setelah animasi selesai (310ms)
+        setTimeout(() => {
+            const activeBtn = document.querySelector('.nav-tab.active');
+            if (activeBtn && typeof updateNavBubble === 'function') {
+                updateNavBubble(activeBtn);
+            }
+        }, 310);
+    }
 
-        // 4. Set status active pada tombol yang dipilih
-        const activeTabButton = document.getElementById(`btn-tab-${tabId}`);
-        if (activeTabButton) {
-            activeTabButton.classList.add('active');
-            updateNavBubble(activeTabButton);
+    window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+        const diff = currentScrollY - lastScrollY;
+
+        // Jika sudah di paling atas halaman, selalu tampilkan ukuran penuh
+        if (currentScrollY <= 20) {
+            setNavState(false);
+            lastScrollY = currentScrollY;
+            return;
         }
 
-        // 5. Trigger Animasi Stagger Bouncy untuk Judul & Subtitle Header
-        const headerTitle = document.getElementById('headerTitle');
-        const headerSubtitle = document.getElementById('headerSubtitle');
-        if (headerTitle && headerSubtitle && tabs[tabId]) {
-            // Animasi Judul Utama (Mulai langsung)
-            animateTextStagger(headerTitle, tabs[tabId].title, 0);
-            // Animasi Subtitle (Mulai sedikit setelah judul jalan)
-            animateTextStagger(headerSubtitle, tabs[tabId].subtitle, 80);
+        // Scroll konten ke atas (jari mengusap ke atas -> scrollY bertambah) => Menciut
+        if (diff > SCROLL_THRESHOLD) {
+            setNavState(true);
+            lastScrollY = currentScrollY;
+        } 
+        // Scroll konten ke bawah (jari mengusap ke bawah -> scrollY berkurang) => Membesar lagi
+        else if (diff < -SCROLL_THRESHOLD) {
+            setNavState(false);
+            lastScrollY = currentScrollY;
         }
+    }, { passive: true });
+})();
 
-        // 6. Gulir otomatis kembali ke atas
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+// Jalankan inisialisasi saat halaman selesai dimuat
+document.addEventListener("DOMContentLoaded", () => {
+    initRoleUI();
+});
 
     // Switch Sub-Mode Pembukuan (Input Harian vs Tutup Buku)
     window.switchModePembukuan = function(mode) {
@@ -3278,6 +3626,134 @@ document.addEventListener('keydown', function(e) {
             btnInput.className = "py-2.5 px-4 rounded-full text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 text-gray-500 hover:text-pink-600";
         }
     };
+	
+	// ====================================================
+// INTERACTIVE LIQUID BUBBLE SCRUBBING (HOLD & DRAG JARI)
+// ====================================================
+(function initLiquidNavScrubbing() {
+    const container = document.getElementById('nav-glass-container');
+    const bubble = document.getElementById('nav-active-bubble');
+    if (!container || !bubble) return;
+
+    const tabOrder = ['beranda', 'pembukuan', 'summary', 'gaji', 'tentang'];
+    let isPointerDown = false;
+    let isDragging = false;
+    let startX = 0;
+    let activePointerId = null;
+    let lastHoveredTabId = null;
+
+    // Helper: Deteksi tombol tab mana yang berada di posisi X jari saat ini
+    function getTabAtClientX(clientX) {
+        const containerRect = container.getBoundingClientRect();
+        // Kunci posisi jari agar tidak keluar dari batas kiri & kanan navbar
+        const clampedX = Math.max(containerRect.left + 8, Math.min(clientX, containerRect.right - 8));
+        const relativeX = clampedX - containerRect.left;
+        const slotWidth = containerRect.width / tabOrder.length;
+        const index = Math.min(tabOrder.length - 1, Math.max(0, Math.floor(relativeX / slotWidth)));
+
+        const tabId = tabOrder[index];
+        const btn = document.getElementById(`btn-tab-${tabId}`);
+        return { tabId, btn, clampedX, containerRect };
+    }
+
+    // Helper: Sorot warna ikon/teks sementara saat dilewati kapsul
+    function previewTabHighlight(targetBtn) {
+        document.querySelectorAll('.nav-tab').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        if (targetBtn) {
+            targetBtn.classList.add('active');
+        }
+    }
+
+    container.addEventListener('pointerdown', (e) => {
+        // Hanya proses sentuhan jari atau klik kiri mouse
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+        isPointerDown = true;
+        isDragging = false;
+        startX = e.clientX;
+        activePointerId = e.pointerId;
+        lastHoveredTabId = null;
+    });
+
+    window.addEventListener('pointermove', (e) => {
+        if (!isPointerDown || e.pointerId !== activePointerId) return;
+
+        const deltaX = Math.abs(e.clientX - startX);
+
+        // Mulai masuk mode Liquid Drag setelah jari bergeser minimal 6px
+        if (!isDragging && deltaX > 6) {
+            isDragging = true;
+            bubble.classList.add('is-dragging');
+            if (container.setPointerCapture) {
+                try { container.setPointerCapture(e.pointerId); } catch (_) {}
+            }
+        }
+
+        if (!isDragging) return;
+
+        const { tabId, btn, clampedX, containerRect } = getTabAtClientX(e.clientX);
+        if (!btn) return;
+
+        const btnRect = btn.getBoundingClientRect();
+        const bubbleWidth = btnRect.width;
+
+        // Posisikan tengah kapsul tepat mengikuti ujung jari (dengan batas tepi container)
+        let targetLeft = (clampedX - containerRect.left) - (bubbleWidth / 2);
+        const minLeft = 6; // Sesuai padding p-1.5
+        const maxLeft = containerRect.width - bubbleWidth - 6;
+        targetLeft = Math.max(minLeft, Math.min(targetLeft, maxLeft));
+
+        bubble.style.width = `${bubbleWidth}px`;
+        bubble.style.left = `${targetLeft}px`;
+        bubble.style.opacity = '1';
+
+        // Berikan efek highlight & suara klik halus tiap pindah melewati batas tab
+        if (lastHoveredTabId !== tabId) {
+            lastHoveredTabId = tabId;
+            previewTabHighlight(btn);
+            if (typeof playClickSound === 'function') playClickSound();
+        }
+    });
+
+    function finishDrag(e) {
+        if (!isPointerDown || e.pointerId !== activePointerId) return;
+
+        const wasDragging = isDragging;
+        isPointerDown = false;
+        isDragging = false;
+        activePointerId = null;
+        bubble.classList.remove('is-dragging');
+
+        if (wasDragging) {
+            // Blokir event 'click' bawaan agar tidak memicu klik ganda saat jari diangkat
+            const preventClick = (ev) => {
+                ev.stopPropagation();
+                ev.preventDefault();
+            };
+            container.addEventListener('click', preventClick, { capture: true, once: true });
+
+            const { tabId, btn } = getTabAtClientX(e.clientX);
+
+            // Jalankan switchTab ke tab tujuan (termasuk proteksi lock Slip Gaji!)
+            if (tabId && typeof window.switchTab === 'function') {
+                window.switchTab(tabId);
+            }
+
+            // Pastikan kapsul snap kembali presisi ke tombol yang benar-benar aktif
+            requestAnimationFrame(() => {
+                const realActiveBtn = document.querySelector('.nav-tab.active') || btn;
+                if (realActiveBtn && typeof updateNavBubble === 'function') {
+                    updateNavBubble(realActiveBtn);
+                }
+            });
+        }
+    }
+
+    window.addEventListener('pointerup', finishDrag);
+    window.addEventListener('pointercancel', finishDrag);
+})();
 
     // Inisialisasi posisi bubble navbar saat pertama kali halaman dimuat
     document.addEventListener('DOMContentLoaded', () => {
