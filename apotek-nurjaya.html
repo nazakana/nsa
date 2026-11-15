@@ -2453,30 +2453,29 @@ document.addEventListener('keydown', function(e) {
 <!-- ================= TAB 5: SLIP GAJI APOTEK ================= -->
 <div id="tab-gaji" class="tab-content hidden space-y-6">
     <!-- AT A GLANCE SECTION (Siti Nurjanah - Dynamic Time & Animated Icon) -->
-<div class="px-2 py-3 mb-5 flex items-center justify-between">
-    <!-- Sisi Kiri: Teks Informasi -->
-    <div class="space-y-0.5">
-        <!-- Line 1: Dynamic Greeting -->
-        <h3 id="dynamic-greeting" class="text-sm sm:text-base font-semibold text-slate-700 tracking-tight">
-            Selamat Pagi
-        </h3>
+    <div class="px-2 py-3 mb-5 flex items-center justify-between">
+        <!-- Sisi Kiri: Teks Informasi -->
+        <div class="space-y-0.5">
+            <!-- Line 1: Dynamic Greeting -->
+            <h3 id="dynamic-greeting" class="text-sm sm:text-base font-semibold text-slate-700 tracking-tight">
+                Selamat Pagi
+            </h3>
 
-        <!-- Line 2: Nama User -->
-        <h2 class="at-a-glance-heading text-base sm:text-lg font-bold text-slate-800 tracking-tight">
-            apt. Siti Nurjanah, S.Farm.
-        </h2>
+            <!-- Line 2: Nama User -->
+            <h2 class="at-a-glance-heading text-base sm:text-lg font-bold text-slate-800 tracking-tight">
+                apt. Siti Nurjanah, S.Farm.
+            </h2>
+        </div>
 
-       
-    </div>
-
-    <!-- Sisi Kanan: Animasi Ikon Dinamis Sesuai Waktu -->
-    <div class="pl-3 flex-shrink-0">
-        <div id="greeting-icon-container" class="w-11 h-11 rounded-full flex items-center justify-center text-xl shadow-sm border transition-all duration-500">
-            <i id="dynamic-icon" class="fa-solid fa-sun transition-all duration-500"></i>
+        <!-- Sisi Kanan: Animasi Ikon Dinamis Sesuai Waktu -->
+        <div class="pl-3 flex-shrink-0">
+            <div id="greeting-icon-container" class="w-11 h-11 rounded-full flex items-center justify-center text-xl shadow-sm border transition-all duration-500">
+                <i id="dynamic-icon" class="fa-solid fa-sun transition-all duration-500"></i>
+            </div>
         </div>
     </div>
-</div>
-    <!-- CARD UTAMA: ASISTEN SLIP GAJI -->
+
+    <!-- CARD UTAMA: ASISTEN SLIP GAJI (Tetap Putih Bersih) -->
     <div class="bg-white rounded-[32px] p-4 md:p-6 shadow-sm border border-pink-100/50 w-full overflow-hidden flex flex-col space-y-5">
         
         <!-- Header Section -->
@@ -2488,20 +2487,39 @@ document.addEventListener('keydown', function(e) {
                     <p class="text-[10px] sm:text-[11px] text-slate-500 font-medium mt-1">Mode Khusus Owner (Apotek Nurjaya)</p>
                 </div>
             </div>
-
         </div>
 
         <!-- Body Section -->
         <div class="flex flex-col gap-5">
-           <!-- Dropdown Karyawan Apotek -->
-<div class="bg-slate-50/80 border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-2">
-    <label for="gaji-pilih-karyawan-apotek" class="block font-black text-slate-700 text-[11px] uppercase tracking-wider">Pilih Asisten Apoteker:</label>
-    <select id="gaji-pilih-karyawan-apotek" onchange="muatKartuPresensiApotekDrive()" class="w-full bg-white border border-slate-300 text-slate-800 font-bold text-xs sm:text-sm p-3 rounded-xl focus:border-pink-600 focus:ring-1 focus:ring-pink-600 focus:outline-none transition-all cursor-pointer shadow-xs">
-        <option value="" disabled selected>-- Pilih Karyawan Apotek --</option>
-        <option value="Eka">Eka Ainun Nisa</option>
-        <option value="Dea">Dea Nove Asyari</option>
-        <option value="Fadilla">Fadilla Nailul Wafa</option>
-    </select>
+            <!-- Dropdown Karyawan Apotek (Chip Pink Tua + Foto Squircle iOS) -->
+<div class="bg-pink-900 border border-pink-800 p-4 sm:p-5 rounded-2xl shadow-sm flex flex-col items-center gap-3.5">
+    
+    <!-- Bingkai Foto Squircle iOS -->
+    <div class="relative flex flex-col items-center">
+        <div id="gaji-foto-squircle-wrapper" class="w-24 h-24 sm:w-28 sm:h-28 rounded-[26px] bg-pink-950/80 border-2 border-pink-400/50 shadow-lg overflow-hidden flex items-center justify-center transition-all duration-300">
+            <!-- Placeholder Ikon Awal -->
+            <div id="gaji-foto-placeholder" class="flex flex-col items-center justify-center text-pink-300/70 select-none">
+                <i class="fa-solid fa-user-nurse text-3xl sm:text-4xl"></i>
+            </div>
+            <!-- Gambar Karyawan -->
+            <img id="gaji-foto-karyawan-apotek" 
+                 src="" 
+                 alt="Foto Karyawan" 
+                 class="hidden w-full h-full object-cover transition-opacity duration-300">
+        </div>
+
+    </div>
+
+    <!-- Dropdown Asli -->
+    <div class="w-full flex flex-col gap-1.5">
+        <label for="gaji-pilih-karyawan-apotek" class="block font-black text-pink-100 text-[11px] uppercase tracking-wider text-center">Pilih Asisten Apoteker:</label>
+        <select id="gaji-pilih-karyawan-apotek" onchange="muatKartuPresensiApotekDrive()" class="w-full bg-white border border-pink-300 text-slate-900 font-bold text-xs sm:text-sm p-3 rounded-xl focus:border-pink-400 focus:ring-2 focus:ring-pink-400/50 focus:outline-none transition-all cursor-pointer shadow-xs">
+            <option value="" disabled selected>-- Pilih Karyawan Apotek --</option>
+            <option value="Eka">Eka Ainun Nisa</option>
+            <option value="Dea">Dea Nove Asyari</option>
+            <option value="Fadilla">Fadilla Nailul Wafa</option>
+        </select>
+    </div>
 </div>
 
             <!-- Status Loading & Info Presensi -->
@@ -2513,253 +2531,249 @@ document.addEventListener('keydown', function(e) {
                     </span>
                 </div>
             </div>
-			
-			<!-- CONTAINER Penampil Gambar Presensi dari Drive (Apotek) -->
-<div class="bg-white border-2 border-dashed border-pink-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-2xl w-full aspect-square sm:aspect-[4/3] group">
-    
-    <!-- Placeholder Awal -->
-    <div id="placeholder-pdf-text-apotek" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
-        <i class="fa-solid fa-image text-4xl text-pink-200 mb-3"></i>
-        <p class="text-xs font-bold text-slate-500">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
-    </div>
-
-    <!-- Indikator Loading -->
-    <div id="loading-pdf-animation-apotek" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/95 z-50 select-none transition-all duration-200">
-        <div class="relative mb-4">
-            <div class="absolute -inset-4 bg-pink-100 rounded-full blur-xl opacity-70 animate-ping"></div>
-            <i class="fa-solid fa-file-invoice-dollar text-5xl text-pink-600 relative animate-bounce"></i>
-        </div>
-        <div class="space-y-2 w-2/3 mx-auto">
-            <p id="teks-progres-loading-apotek" class="text-xs font-black text-pink-700 tracking-wide">Menghubungkan ke Drive Cloud Apotek...</p>
-            <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
-                <div class="h-full w-1/2 bg-pink-600 rounded-full absolute top-0 left-0 animate-pulse"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Image Preview Output -->
-    <img id="iframe-preview-pdf-apotek" 
-         class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300 cursor-pointer" 
-         src="" 
-         alt="Preview Kartu Presensi Apotek"
-         onclick="bukaModalZoomApotek()">
-
-    <!-- Overlay Tombol Petunjuk Layar Penuh (Muncul jika gambar terisi) -->
-    <div id="btn-fullscreen-hint-apotek" 
-         onclick="bukaModalZoomApotek()" 
-         class="hidden absolute bottom-3 right-3 z-40 bg-slate-900/75 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg backdrop-blur-md cursor-pointer transition-all duration-200 flex items-center gap-2 border border-white/20 active:scale-95">
-        <i class="fa-solid fa-expand text-pink-400"></i>
-        <span>Klik untuk Layar Penuh</span>
-    </div>
-</div>
-
-<!-- MODAL VIEWER FULLSCREEN PANZOOM -->
-<div id="modal-zoom-apotek" class="fixed inset-0 z-[9999] hidden bg-slate-950/90 backdrop-blur-md flex flex-col justify-between overflow-hidden transition-all duration-300">
-    
-    <!-- Header Modal & Control Bar -->
-    <div class="flex items-center justify-between p-4 bg-slate-900/80 border-b border-slate-800 text-white select-none z-10 shrink-0">
-        <div class="flex items-center gap-2">
-            <i class="fa-solid fa-file-invoice text-pink-500"></i>
-            <span id="modal-zoom-title-apotek" class="text-sm font-bold tracking-wide">Kartu Presensi</span>
-        </div>
-        
-        <!-- Action Buttons -->
-        <div class="flex items-center gap-1.5 sm:gap-2">
-            <button onclick="zoomInApotek()" title="Zoom In" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 transition-all text-xs sm:text-sm">
-                <i class="fa-solid fa-magnifying-glass-plus"></i>
-            </button>
-            <button onclick="zoomOutApotek()" title="Zoom Out" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 transition-all text-xs sm:text-sm">
-                <i class="fa-solid fa-magnifying-glass-minus"></i>
-            </button>
-            <button onclick="resetZoomApotek()" title="Reset Zoom" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 transition-all text-xs sm:text-sm">
-                <i class="fa-solid fa-rotate-left"></i>
-            </button>
-            <button onclick="tutupModalZoomApotek()" title="Tutup (Esc)" class="p-2 ml-2 rounded-lg bg-pink-600 hover:bg-pink-700 text-white active:scale-95 transition-all text-xs sm:text-sm font-bold">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- Canvas Parent Container -->
-    <div id="panzoom-parent-apotek" class="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center p-3 select-none">
-        <!-- Wrapper Panzoom (Elemen ini yang ditempel Panzoom JS) -->
-        <div id="panzoom-wrapper-apotek" class="w-full h-full flex items-center justify-center">
-            <img id="img-panzoom-target-apotek" src="" alt="Zoom Presensi" class="max-w-full max-h-full object-contain cursor-grab active:cursor-grabbing">
-        </div>
-    </div>
-
-    <!-- Footer Tip -->
-    <div class="p-2 text-center text-[11px] text-slate-400 bg-slate-900/80 border-t border-slate-800 select-none shrink-0">
-        <i class="fa-solid fa-hand-pointer text-pink-400 mr-1"></i> Gunakan mouse wheel / pinch gesture untuk Zoom, dan drag untuk menggeser.
-    </div>
-</div>
-			
-			
-			
-			
-
-            <!-- Form Rincian Komponen Gaji -->
-<div id="sg-container-form-owner-apotek" class="flex flex-col gap-4 border-t border-slate-200 pt-4">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-xs text-center">
-            <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">Periode Kerja</span>
-            <span id="sg-text-periode-apotek" class="text-xs sm:text-sm font-extrabold text-slate-700 block mt-1">-</span>
-        </div>
-        <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-xs text-center">
-            <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">HARI PERIODE KERJA</span>
-            <span id="sg-text-total-hari-apotek" class="text-xs sm:text-sm font-extrabold text-slate-700 block mt-1">-</span>
-        </div>
-    </div>
-
-    <h4 class="text-[11px] font-black text-pink-700 uppercase tracking-widest mt-2 px-1">Rincian Shift & Kehadiran:</h4>
-
-    <!-- 1. Shift 1 -->
-    <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-            <span class="text-xs font-black text-slate-700 block">1. Shift 1 (Pagi-Siang)</span>
-            <span id="sg-lbl-shift1-apotek" class="text-[11px] font-bold text-pink-600 bg-pink-50 px-2.5 py-0.5 rounded-md inline-block mt-1">0 hari</span>
-        </div>
-        <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-            <span class="text-xs font-bold text-slate-400">X</span>
-            <div class="relative rounded-xl shadow-inner shrink-0 flex-1 sm:flex-initial">
-                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                <input type="text" id="sg-in-rate-shift1-apotek" class="sg-input-clean w-full sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-2.5 py-2 rounded-xl focus:border-pink-600 focus:outline-none text-right" placeholder="0">
-            </div>
-            <span class="text-xs font-bold text-slate-400">=</span>
-            <span id="sg-out-total-shift1-apotek" class="text-xs font-black text-slate-700 text-right min-w-[85px] sm:min-w-[100px] shrink-0 ml-auto sm:ml-0">Rp 0</span>
-        </div>
-    </div>
-
-    <!-- 2. Shift 2 -->
-    <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-            <span class="text-xs font-black text-slate-700 block">2. Shift 2 (Siang-Malam)</span>
-            <span id="sg-lbl-shift2-apotek" class="text-[11px] font-bold text-pink-600 bg-pink-50 px-2.5 py-0.5 rounded-md inline-block mt-1">0 hari</span>
-        </div>
-        <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-            <span class="text-xs font-bold text-slate-400">X</span>
-            <div class="relative rounded-xl shadow-inner shrink-0 flex-1 sm:flex-initial">
-                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                <input type="text" id="sg-in-rate-shift2-apotek" class="sg-input-clean w-full sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-2.5 py-2 rounded-xl focus:border-pink-600 focus:outline-none text-right" placeholder="0">
-            </div>
-            <span class="text-xs font-bold text-slate-400">=</span>
-            <span id="sg-out-total-shift2-apotek" class="text-xs font-black text-slate-700 text-right min-w-[85px] sm:min-w-[100px] shrink-0 ml-auto sm:ml-0">Rp 0</span>
-        </div>
-    </div>
-
-    <!-- 3. Lembur -->
-    <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-            <span class="text-xs font-black text-slate-700 block">3. Shift Lembur</span>
-            <span id="sg-lbl-lembur-apotek" class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-md inline-block mt-1">0 hari</span>
-        </div>
-        <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-            <span class="text-xs font-bold text-slate-400">X</span>
-            <div class="relative rounded-xl shadow-inner shrink-0 flex-1 sm:flex-initial">
-                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                <input type="text" id="sg-in-rate-lembur-apotek" class="sg-input-clean w-full sm:w-36 bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-2.5 py-2 rounded-xl focus:border-pink-600 focus:outline-none text-right" placeholder="0">
-            </div>
-            <span class="text-xs font-bold text-slate-400">=</span>
-            <span id="sg-out-total-lembur-apotek" class="text-xs font-black text-slate-700 text-right min-w-[85px] sm:min-w-[100px] shrink-0 ml-auto sm:ml-0">Rp 0</span>
-        </div>
-    </div>
-
-    <!-- 4. Shift Khusus -->
-    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-3">
-        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-            <div>
-                <span class="text-xs font-black text-slate-700 block">4. Shift Khusus</span>
-                <span id="sg-lbl-khusus-count-apotek" class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md inline-block mt-0.5">0 event</span>
-            </div>
-            <span id="sg-out-total-khusus-apotek" class="text-xs font-black text-slate-700 text-right">Rp 0</span>
-        </div>
-        
-        <div id="wrapper-shift-khusus-list-apotek" class="flex flex-col gap-2">
-            <p class="text-[11px] text-slate-400 italic">Pilih karyawan untuk menampilkan tanggal shift khusus.</p>
-        </div>
-    </div>
-
-    <!-- 5, 6, 7. Status Libur, Izin/Sakit & Absen -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs text-left">
-            <span class="block text-[9px] font-black text-slate-500 uppercase tracking-wider">5. Libur</span>
-            <span id="sg-out-libur-apotek" class="text-xs sm:text-sm font-extrabold text-indigo-600 block mt-1">0 hari</span>
-        </div>
-        <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs text-left">
-            <span class="block text-[9px] font-black text-slate-500 uppercase tracking-wider">6. Izin / Sakit</span>
-            <span id="sg-out-izin-sakit-apotek" class="text-xs sm:text-sm font-extrabold text-amber-600 block mt-1">0 hari</span>
-        </div>
-        <div class="bg-white border border-slate-200 p-3.5 sm:p-4 rounded-2xl shadow-xs text-left">
-            <span class="block text-[9px] font-black text-slate-500 uppercase tracking-wider">7. Absen Lain</span>
-            <span id="sg-out-absen-lain-apotek" class="text-xs sm:text-sm font-extrabold text-rose-600 block mt-1">0 hari</span>
-        </div>
-    </div>
-
-    <!-- 8. Poin Tambahan -->
-    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-3">
-        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-            <div class="max-w-md">
-                <span class="text-xs font-black text-slate-700 block">8. Poin Tambahan <span class="text-slate-400 font-normal">(Opsional)</span></span>
-                <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                    Insentif khusus yang ditentukan Owner Apotek. Contoh: Farmacare, Insentif A, dll (max 4 poin)
-                </p>
-            </div>
-            <div class="self-end sm:self-start">
-                <select id="sg-sel-poin-apotek" class="bg-white border border-slate-300 text-slate-700 font-bold text-xs p-2 rounded-xl focus:border-pink-600 focus:outline-none cursor-pointer w-28">
-                    <option value="0">0 Poin</option>
-                    <option value="1">1 Poin</option>
-                    <option value="2">2 Poin</option>
-                    <option value="3">3 Poin</option>
-                    <option value="4">4 Poin</option>
-                </select>
-            </div>
-        </div>
-        <div id="sg-wrapper-poin-dinamis-apotek" class="flex flex-col gap-2"></div>
-    </div>
-
-    <!-- Subtotal, Pembulatan & Final -->
-   <div class="border-t-2 border-dashed border-slate-200 pt-5 mt-2 flex flex-col gap-4">
-    <!-- Total Hitungan Gaji -->
-    <div class="bg-pink-700 text-white p-4 sm:p-4.5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 sm:gap-2">
-        <span class="text-xs font-black uppercase tracking-wider shrink-0">Total Hitungan Gaji:</span>
-        <span id="sg-out-total-gaji-bersih-apotek" class="text-base sm:text-xl font-black tracking-wide text-right w-full sm:w-auto break-all">Rp 0</span>
-    </div>
-
-        <!-- Pembulatan Khusus -->
-        <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-3">
-            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                <div class="max-w-md">
-                    <span class="text-xs font-black text-slate-700 block">Pembulatan Khusus <span class="text-slate-400 font-normal">(Kebijakan Owner)</span></span>
-                    <p class="text-[10px] text-slate-500 italic leading-normal mt-0.5">
-                        (Bersifat opsional, kosongkan jika tidak digunakan)
-                    </p>
+            
+            <!-- CONTAINER Penampil Gambar Presensi dari Drive (Apotek) -->
+            <div class="bg-white border-2 border-dashed border-pink-200 flex items-center justify-center text-center shadow-sm relative overflow-hidden rounded-2xl w-full aspect-square sm:aspect-[4/3] group">
+                
+                <!-- Placeholder Awal -->
+                <div id="placeholder-pdf-text-apotek" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-slate-400 select-none bg-white z-40 transition-all duration-200">
+                    <i class="fa-solid fa-image text-4xl text-pink-200 mb-3"></i>
+                    <p class="text-xs font-bold text-slate-500">Silakan pilih nama karyawan di atas untuk memuat kartu presensi.</p>
                 </div>
-                <div class="flex items-center gap-2 self-start sm:self-start w-full sm:w-auto justify-end">
-                    <div class="relative rounded-xl shadow-inner w-36 sm:w-44">
-                        <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">Rp</span>
-                        <input type="text" id="sg-in-pembulatan-apotek" class="sg-input-clean w-full bg-slate-50 border border-slate-300 text-slate-800 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-pink-600 focus:outline-none text-right" placeholder="0">
+
+                <!-- Indikator Loading -->
+                <div id="loading-pdf-animation-apotek" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-50/95 z-50 select-none transition-all duration-200">
+                    <div class="relative mb-4">
+                        <div class="absolute -inset-4 bg-pink-100 rounded-full blur-xl opacity-70 animate-ping"></div>
+                        <i class="fa-solid fa-file-invoice-dollar text-5xl text-pink-600 relative animate-bounce"></i>
+                    </div>
+                    <div class="space-y-2 w-2/3 mx-auto">
+                        <p id="teks-progres-loading-apotek" class="text-xs font-black text-pink-700 tracking-wide">Menghubungkan ke Drive Cloud Apotek...</p>
+                        <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative">
+                            <div class="h-full w-1/2 bg-pink-600 rounded-full absolute top-0 left-0 animate-pulse"></div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Image Preview Output -->
+                <img id="iframe-preview-pdf-apotek" 
+                     class="hidden w-full h-full object-contain rounded-xl z-30 p-2 transition-all duration-300 cursor-pointer" 
+                     src="" 
+                     alt="Preview Kartu Presensi Apotek"
+                     onclick="bukaModalZoomApotek()">
+
+                <!-- Overlay Tombol Petunjuk Layar Penuh (Muncul jika gambar terisi) -->
+                <div id="btn-fullscreen-hint-apotek" 
+                     onclick="bukaModalZoomApotek()" 
+                     class="hidden absolute bottom-3 right-3 z-40 bg-slate-900/75 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg backdrop-blur-md cursor-pointer transition-all duration-200 flex items-center gap-2 border border-white/20 active:scale-95">
+                    <i class="fa-solid fa-expand text-pink-400"></i>
+                    <span>Klik untuk Layar Penuh</span>
+                </div>
             </div>
-        </div>
 
-       <div class="bg-slate-900 text-amber-400 p-4 sm:p-4.5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 sm:gap-2">
-    <span class="text-xs font-black uppercase tracking-wider shrink-0">Gaji Bersih Diterima:</span>
-    <span id="sg-out-final-gaji-apotek" class="text-base sm:text-xl font-black tracking-wide text-right w-full sm:w-auto break-all">Rp 0</span>
-</div>
-        
-        <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs flex flex-col gap-2">
-            <label for="owner-input-catatan-apotek" class="block text-[11px] font-black text-slate-700 uppercase tracking-wider">
-                <i class="fa-solid fa-pen-to-square text-pink-600 mr-1"></i> Catatan Khusus Owner:
-            </label>
-            <textarea id="owner-input-catatan-apotek" rows="4" class="w-full bg-slate-50 border border-slate-300 text-slate-800 font-medium text-xs p-3 rounded-xl focus:border-pink-600 focus:outline-none transition-all resize-none placeholder-slate-400 min-h-[96px] leading-relaxed" placeholder="Contoh: Tingkatkan kreativitas pelayanan pasien, inovatif dan ekspresif dalam menawarkan obat. Terima kasih atas kerja kerasnya :)"></textarea>
-        </div>
+            <!-- MODAL VIEWER FULLSCREEN PANZOOM -->
+            <div id="modal-zoom-apotek" class="fixed inset-0 z-[9999] hidden bg-slate-950/90 backdrop-blur-md flex flex-col justify-between overflow-hidden transition-all duration-300">
+                
+                <!-- Header Modal & Control Bar -->
+                <div class="flex items-center justify-between p-4 bg-slate-900/80 border-b border-slate-800 text-white select-none z-10 shrink-0">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice text-pink-500"></i>
+                        <span id="modal-zoom-title-apotek" class="text-sm font-bold tracking-wide">Kartu Presensi</span>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex items-center gap-1.5 sm:gap-2">
+                        <button onclick="zoomInApotek()" title="Zoom In" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 transition-all text-xs sm:text-sm">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        </button>
+                        <button onclick="zoomOutApotek()" title="Zoom Out" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 transition-all text-xs sm:text-sm">
+                            <i class="fa-solid fa-magnifying-glass-minus"></i>
+                        </button>
+                        <button onclick="resetZoomApotek()" title="Reset Zoom" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 transition-all text-xs sm:text-sm">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button onclick="tutupModalZoomApotek()" title="Tutup (Esc)" class="p-2 ml-2 rounded-lg bg-pink-600 hover:bg-pink-700 text-white active:scale-95 transition-all text-xs sm:text-sm font-bold">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
 
-        <button type="button" id="btn-generate-slip-gaji-apotek" class="w-full mt-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white font-black text-xs uppercase tracking-widest py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
-            <i class="fa-solid fa-receipt text-sm"></i> Generate Slip Gaji Karyawan
-        </button>
-    </div>
-</div>
+                <!-- Canvas Parent Container -->
+                <div id="panzoom-parent-apotek" class="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center p-3 select-none">
+                    <!-- Wrapper Panzoom (Elemen ini yang ditempel Panzoom JS) -->
+                    <div id="panzoom-wrapper-apotek" class="w-full h-full flex items-center justify-center">
+                        <img id="img-panzoom-target-apotek" src="" alt="Zoom Presensi" class="max-w-full max-h-full object-contain cursor-grab active:cursor-grabbing">
+                    </div>
+                </div>
+
+                <!-- Footer Tip -->
+                <div class="p-2 text-center text-[11px] text-slate-400 bg-slate-900/80 border-t border-slate-800 select-none shrink-0">
+                    <i class="fa-solid fa-hand-pointer text-pink-400 mr-1"></i> Gunakan mouse wheel / pinch gesture untuk Zoom, dan drag untuk menggeser.
+                </div>
+            </div>
+
+            <!-- Form Rincian Komponen Gaji -->
+            <div id="sg-container-form-owner-apotek" class="flex flex-col gap-4 border-t border-slate-200 pt-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-pink-900 border border-pink-800 p-3.5 rounded-2xl shadow-sm text-center">
+                        <span class="block text-[9px] font-black text-pink-200 uppercase tracking-wider">Periode Kerja</span>
+                        <span id="sg-text-periode-apotek" class="text-xs sm:text-sm font-extrabold text-white block mt-1">-</span>
+                    </div>
+                    <div class="bg-pink-900 border border-pink-800 p-3.5 rounded-2xl shadow-sm text-center">
+                        <span class="block text-[9px] font-black text-pink-200 uppercase tracking-wider">HARI PERIODE KERJA</span>
+                        <span id="sg-text-total-hari-apotek" class="text-xs sm:text-sm font-extrabold text-white block mt-1">-</span>
+                    </div>
+                </div>
+
+                <h4 class="text-[11px] font-black text-pink-700 uppercase tracking-widest mt-2 px-1">Rincian Shift & Kehadiran:</h4>
+
+                <!-- 1. Shift 1 -->
+                <div class="bg-pink-900 border border-pink-800 p-3.5 sm:p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-black text-white block">1. Shift 1 (Pagi-Siang)</span>
+                        <span id="sg-lbl-shift1-apotek" class="text-[11px] font-extrabold text-pink-950 bg-pink-100 px-2.5 py-0.5 rounded-md inline-block mt-1 shadow-2xs">0 hari</span>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-pink-800">
+                        <span class="text-xs font-bold text-pink-300">X</span>
+                        <div class="relative rounded-xl shadow-inner shrink-0 flex-1 sm:flex-initial">
+                            <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-500">Rp</span>
+                            <input type="text" id="sg-in-rate-shift1-apotek" class="sg-input-clean w-full sm:w-36 bg-white border border-pink-300 text-slate-900 font-extrabold text-xs pl-8 pr-2.5 py-2 rounded-xl focus:border-pink-400 focus:outline-none text-right" placeholder="0">
+                        </div>
+                        <span class="text-xs font-bold text-pink-300">=</span>
+                        <span id="sg-out-total-shift1-apotek" class="text-xs font-black text-white text-right min-w-[85px] sm:min-w-[100px] shrink-0 ml-auto sm:ml-0">Rp 0</span>
+                    </div>
+                </div>
+
+                <!-- 2. Shift 2 -->
+                <div class="bg-pink-900 border border-pink-800 p-3.5 sm:p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-black text-white block">2. Shift 2 (Siang-Malam)</span>
+                        <span id="sg-lbl-shift2-apotek" class="text-[11px] font-extrabold text-pink-950 bg-pink-100 px-2.5 py-0.5 rounded-md inline-block mt-1 shadow-2xs">0 hari</span>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-pink-800">
+                        <span class="text-xs font-bold text-pink-300">X</span>
+                        <div class="relative rounded-xl shadow-inner shrink-0 flex-1 sm:flex-initial">
+                            <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-500">Rp</span>
+                            <input type="text" id="sg-in-rate-shift2-apotek" class="sg-input-clean w-full sm:w-36 bg-white border border-pink-300 text-slate-900 font-extrabold text-xs pl-8 pr-2.5 py-2 rounded-xl focus:border-pink-400 focus:outline-none text-right" placeholder="0">
+                        </div>
+                        <span class="text-xs font-bold text-pink-300">=</span>
+                        <span id="sg-out-total-shift2-apotek" class="text-xs font-black text-white text-right min-w-[85px] sm:min-w-[100px] shrink-0 ml-auto sm:ml-0">Rp 0</span>
+                    </div>
+                </div>
+
+                <!-- 3. Lembur -->
+                <div class="bg-pink-900 border border-pink-800 p-3.5 sm:p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-black text-white block">3. Shift Lembur</span>
+                        <span id="sg-lbl-lembur-apotek" class="text-[11px] font-extrabold text-amber-950 bg-amber-200 px-2.5 py-0.5 rounded-md inline-block mt-1 shadow-2xs">0 hari</span>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-start sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-pink-800">
+                        <span class="text-xs font-bold text-pink-300">X</span>
+                        <div class="relative rounded-xl shadow-inner shrink-0 flex-1 sm:flex-initial">
+                            <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-500">Rp</span>
+                            <input type="text" id="sg-in-rate-lembur-apotek" class="sg-input-clean w-full sm:w-36 bg-white border border-pink-300 text-slate-900 font-extrabold text-xs pl-8 pr-2.5 py-2 rounded-xl focus:border-pink-400 focus:outline-none text-right" placeholder="0">
+                        </div>
+                        <span class="text-xs font-bold text-pink-300">=</span>
+                        <span id="sg-out-total-lembur-apotek" class="text-xs font-black text-white text-right min-w-[85px] sm:min-w-[100px] shrink-0 ml-auto sm:ml-0">Rp 0</span>
+                    </div>
+                </div>
+
+                <!-- 4. Shift Khusus -->
+                <div class="bg-pink-900 border border-pink-800 p-4 rounded-2xl shadow-sm flex flex-col gap-3">
+                    <div class="flex justify-between items-center border-b border-pink-800 pb-2">
+                        <div>
+                            <span class="text-xs font-black text-white block">4. Shift Khusus</span>
+                            <span id="sg-lbl-khusus-count-apotek" class="text-[10px] font-extrabold text-purple-950 bg-purple-200 px-2 py-0.5 rounded-md inline-block mt-0.5 shadow-2xs">0 event</span>
+                        </div>
+                        <span id="sg-out-total-khusus-apotek" class="text-xs font-black text-white text-right">Rp 0</span>
+                    </div>
+                    
+                    <div id="wrapper-shift-khusus-list-apotek" class="flex flex-col gap-2 text-white">
+                        <p class="text-[11px] text-pink-200/80 italic">Pilih karyawan untuk menampilkan tanggal shift khusus.</p>
+                    </div>
+                </div>
+
+                <!-- 5, 6, 7. Status Libur, Izin/Sakit & Absen -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="bg-pink-900 border border-pink-800 p-3.5 sm:p-4 rounded-2xl shadow-sm text-left">
+                        <span class="block text-[9px] font-black text-pink-200 uppercase tracking-wider">5. Libur</span>
+                        <span id="sg-out-libur-apotek" class="text-xs sm:text-sm font-extrabold text-sky-300 block mt-1">0 hari</span>
+                    </div>
+                    <div class="bg-pink-900 border border-pink-800 p-3.5 sm:p-4 rounded-2xl shadow-sm text-left">
+                        <span class="block text-[9px] font-black text-pink-200 uppercase tracking-wider">6. Izin / Sakit</span>
+                        <span id="sg-out-izin-sakit-apotek" class="text-xs sm:text-sm font-extrabold text-amber-300 block mt-1">0 hari</span>
+                    </div>
+                    <div class="bg-pink-900 border border-pink-800 p-3.5 sm:p-4 rounded-2xl shadow-sm text-left">
+                        <span class="block text-[9px] font-black text-pink-200 uppercase tracking-wider">7. Absen Lain</span>
+                        <span id="sg-out-absen-lain-apotek" class="text-xs sm:text-sm font-extrabold text-rose-300 block mt-1">0 hari</span>
+                    </div>
+                </div>
+
+                <!-- 8. Poin Tambahan -->
+                <div class="bg-pink-900 border border-pink-800 p-4 rounded-2xl shadow-sm flex flex-col gap-3">
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div class="max-w-md">
+                            <span class="text-xs font-black text-white block">8. Poin Tambahan <span class="text-pink-200/80 font-normal">(Opsional)</span></span>
+                            <p class="text-[10px] text-pink-200/80 italic leading-normal mt-0.5">
+                                Insentif khusus yang ditentukan Owner Apotek. Contoh: Farmacare, Insentif A, dll (max 4 poin)
+                            </p>
+                        </div>
+                        <div class="self-end sm:self-start">
+                            <select id="sg-sel-poin-apotek" class="bg-white border border-pink-300 text-slate-900 font-bold text-xs p-2 rounded-xl focus:border-pink-400 focus:outline-none cursor-pointer w-28">
+                                <option value="0">0 Poin</option>
+                                <option value="1">1 Poin</option>
+                                <option value="2">2 Poin</option>
+                                <option value="3">3 Poin</option>
+                                <option value="4">4 Poin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="sg-wrapper-poin-dinamis-apotek" class="flex flex-col gap-2"></div>
+                </div>
+
+                <!-- Subtotal, Pembulatan & Final -->
+                <div class="border-t-2 border-dashed border-slate-200 pt-5 mt-2 flex flex-col gap-4">
+                    <!-- Total Hitungan Gaji -->
+                    <div class="bg-pink-700 text-white p-4 sm:p-4.5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 sm:gap-2">
+                        <span class="text-xs font-black uppercase tracking-wider shrink-0">Total Hitungan Gaji:</span>
+                        <span id="sg-out-total-gaji-bersih-apotek" class="text-base sm:text-xl font-black tracking-wide text-right w-full sm:w-auto break-all">Rp 0</span>
+                    </div>
+
+                    <!-- Pembulatan Khusus -->
+                    <div class="bg-pink-900 border border-pink-800 p-4 rounded-2xl shadow-sm flex flex-col gap-3">
+                        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div class="max-w-md">
+                                <span class="text-xs font-black text-white block">Pembulatan Khusus <span class="text-pink-200/80 font-normal">(Kebijakan Owner)</span></span>
+                                <p class="text-[10px] text-pink-200/80 italic leading-normal mt-0.5">
+                                    (Bersifat opsional, kosongkan jika tidak digunakan)
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-2 self-start sm:self-start w-full sm:w-auto justify-end">
+                                <div class="relative rounded-xl shadow-inner w-36 sm:w-44">
+                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-500">Rp</span>
+                                    <input type="text" id="sg-in-pembulatan-apotek" class="sg-input-clean w-full bg-white border border-pink-300 text-slate-900 font-extrabold text-xs pl-8 pr-3 py-2 rounded-xl focus:border-pink-400 focus:outline-none text-right" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 text-amber-400 p-4 sm:p-4.5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 sm:gap-2">
+                        <span class="text-xs font-black uppercase tracking-wider shrink-0">Gaji Bersih Diterima:</span>
+                        <span id="sg-out-final-gaji-apotek" class="text-base sm:text-xl font-black tracking-wide text-right w-full sm:w-auto break-all">Rp 0</span>
+                    </div>
+                    
+                    <div class="bg-pink-900 border border-pink-800 p-4 rounded-2xl shadow-sm flex flex-col gap-2">
+                        <label for="owner-input-catatan-apotek" class="block text-[11px] font-black text-pink-100 uppercase tracking-wider">
+                            <i class="fa-solid fa-pen-to-square text-pink-300 mr-1"></i> Catatan Khusus Owner:
+                        </label>
+                        <textarea id="owner-input-catatan-apotek" rows="4" class="w-full bg-white border border-pink-300 text-slate-900 font-medium text-xs p-3 rounded-xl focus:border-pink-400 focus:outline-none transition-all resize-none placeholder-slate-400 min-h-[96px] leading-relaxed" placeholder="Contoh: Tingkatkan kreativitas pelayanan pasien, inovatif dan ekspresif dalam menawarkan obat. Terima kasih atas kerja kerasnya :)"></textarea>
+                    </div>
+
+                    <button type="button" id="btn-generate-slip-gaji-apotek" class="w-full mt-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white font-black text-xs uppercase tracking-widest py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-receipt text-sm"></i> Generate Slip Gaji Karyawan
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -7277,23 +7291,47 @@ document.addEventListener("DOMContentLoaded", function() {
             if (listKhusus.length === 0) {
                 wrapperKhususList.innerHTML = `<p class="text-[11px] text-slate-400 italic">Tidak ada catatan shift khusus pada periode ini.</p>`;
             } else {
-                listKhusus.forEach((kh, idx) => {
-                    const htmlKh = `
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
-                            <div class="flex flex-col">
-                                <span class="font-bold text-slate-800">${kh.tanggal}</span>
-                                <span class="text-[10px] text-purple-700 font-bold">Jam Kerja: ${kh.jamKerja}</span>
-                                <span class="text-[9.5px] text-slate-500 italic">Deskripsi: "${kh.alasan}"</span>
-                            </div>
-                            <div class="flex items-center gap-2 self-end sm:self-center">
-                                <div class="relative shadow-inner w-32">
-                                    <span class="absolute left-2.5 top-2 text-xs font-bold text-slate-400">Rp</span>
-                                    <input type="text" data-kh-idx="${idx}" class="sg-in-khusus-rp sg-input-clean w-full bg-white border border-slate-300 text-slate-800 font-extrabold text-xs pl-7 pr-2 py-1.5 rounded-lg text-right" placeholder="0">
-                                </div>
-                            </div>
-                        </div>`;
-                    wrapperKhususList.insertAdjacentHTML("beforeend", htmlKh);
-                });
+               const formatterTanggalFull = new Intl.DateTimeFormat('id-ID', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+});
+
+listKhusus.forEach((kh, idx) => {
+    let tanggalFormatted = kh.tanggal;
+    if (kh.tanggal && /^\d{4}-\d{2}-\d{2}/.test(kh.tanggal)) {
+        const [thn, bln, tgl] = kh.tanggal.split('T')[0].split('-');
+        const dateObj = new Date(Number(thn), Number(bln) - 1, Number(tgl));
+        if (!isNaN(dateObj)) {
+            tanggalFormatted = formatterTanggalFull.format(dateObj);
+        }
+    }
+
+    const adaAlasan = kh.alasan && kh.alasan.trim() !== '' && kh.alasan.trim() !== '-';
+    const badgeDeskripsi = adaAlasan
+        ? `<div class="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-100 border-2 border-amber-500 text-slate-950 text-[10.5px] font-extrabold shadow-xs animate-pulse">
+               <i class="fa-solid fa-circle-exclamation text-amber-600"></i>
+               <span>Deskripsi: "${kh.alasan}"</span>
+           </div>`
+        : `<span class="text-[10px] text-slate-600 font-semibold italic mt-0.5">Deskripsi: "-"</span>`;
+
+    const htmlKh = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 bg-white border border-pink-200 rounded-xl text-xs shadow-xs">
+            <div class="flex flex-col items-start">
+                <span class="font-black text-slate-950 text-xs tracking-tight">${tanggalFormatted}</span>
+                <span class="text-[10.5px] text-purple-900 font-extrabold mt-0.5">Jam Kerja: ${kh.jamKerja}</span>
+                ${badgeDeskripsi}
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-center">
+                <div class="relative shadow-inner w-32">
+                    <span class="absolute left-2.5 top-2 text-xs font-extrabold text-slate-600">Rp</span>
+                    <input type="text" data-kh-idx="${idx}" class="sg-in-khusus-rp sg-input-clean w-full bg-white border border-slate-400 text-slate-950 font-black text-xs pl-7 pr-2 py-1.5 rounded-lg text-right focus:border-pink-600 focus:outline-none" placeholder="0">
+                </div>
+            </div>
+        </div>`;
+    wrapperKhususList.insertAdjacentHTML("beforeend", htmlKh);
+});
 
                 wrapperKhususList.querySelectorAll(".sg-in-khusus-rp").forEach(inp => pasangMasking(inp));
             }
@@ -7458,19 +7496,43 @@ document.addEventListener("DOMContentLoaded", function() {
         // 4. Shift Khusus (Menampilkan Alasan Jam Khusus di Render Cetak)
         if (dataPresensiApotekHitung.khususList.length > 0) {
             const inputsKhusus = wrapperKhususList?.querySelectorAll(".sg-in-khusus-rp");
-            dataPresensiApotekHitung.khususList.forEach((kh, idx) => {
-                const rpVal = inputsKhusus && inputsKhusus[idx] ? bersihkanAngkaMurni(inputsKhusus[idx].value) : 0;
-                const ketAlasan = (kh.alasan && kh.alasan !== "-") ? ` | Deskripsi: "${kh.alasan}"` : "";
-                tbodyHtml += `
-                    <tr class="align-middle bg-purple-50/50">
-                        <td class="py-1 text-center text-slate-400 font-bold border-r border-slate-300">${noRow++}</td>
-                        <td class="py-1 pl-1 sm:pl-2 border-r border-slate-300" colspan="3">
-                            <span class="font-bold text-slate-900 block">Shift Khusus (${kh.tanggal})</span>
-                            <span class="text-[9px] text-purple-700 italic block">Jam Kerja ${kh.jamKerja}${ketAlasan}</span>
-                        </td>
-                        <td class="py-1 text-right pr-1 sm:pr-2 font-bold tracking-tighter text-slate-900">${formatRupiah(rpVal)}</td>
-                    </tr>`;
-            });
+            const formatterTanggalFull = new Intl.DateTimeFormat('id-ID', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+});
+
+dataPresensiApotekHitung.khususList.forEach((kh, idx) => {
+    const rpVal = inputsKhusus && inputsKhusus[idx] ? bersihkanAngkaMurni(inputsKhusus[idx].value) : 0;
+
+    let tanggalFormatted = kh.tanggal;
+    if (kh.tanggal && /^\d{4}-\d{2}-\d{2}/.test(kh.tanggal)) {
+        const [thn, bln, tgl] = kh.tanggal.split('T')[0].split('-');
+        const dateObj = new Date(Number(thn), Number(bln) - 1, Number(tgl));
+        if (!isNaN(dateObj)) {
+            tanggalFormatted = formatterTanggalFull.format(dateObj);
+        }
+    }
+
+    const adaAlasan = kh.alasan && kh.alasan.trim() !== "" && kh.alasan.trim() !== "-";
+    const ketAlasan = adaAlasan
+        ? `<div class="mt-1 inline-block px-1.5 py-0.5 rounded bg-amber-100 border border-amber-500 text-slate-950 text-[8.5px] font-extrabold leading-tight">
+               Deskripsi: "${kh.alasan}"
+           </div>`
+        : "";
+
+    tbodyHtml += `
+        <tr class="align-middle bg-purple-50/70">
+            <td class="py-1.5 text-center text-slate-600 font-extrabold border-r border-slate-300">${noRow++}</td>
+            <td class="py-1.5 pl-1.5 sm:pl-2 pr-1 border-r border-slate-300" colspan="3">
+                <span class="font-black text-slate-950 block leading-snug">Shift Khusus (${tanggalFormatted})</span>
+                <span class="text-[9px] text-purple-900 font-extrabold block mt-0.5">Jam Kerja: ${kh.jamKerja}</span>
+                ${ketAlasan}
+            </td>
+            <td class="py-1.5 text-right pr-1.5 sm:pr-2 font-black tracking-tighter text-slate-950">${formatRupiah(rpVal)}</td>
+        </tr>`;
+});
         } else {
             tbodyHtml += `
                 <tr class="align-middle bg-white">
@@ -8234,9 +8296,48 @@ function resetUIPenampilKartuApotek() {
 /**
  * Fungsi Utama: Memuat Gambar Kartu Presensi Apotek dari Drive
  */
+ 
+ const FOTO_KARYAWAN_APOTEK = {
+    "Dea": {
+        nama: "Dea Nove Asyari",
+        foto: "https://drive.google.com/thumbnail?id=1Qpy4p5kR8td6VDoaixvuagHD7c5eH1zB&sz=w500"
+    },
+    "Eka": {
+        nama: "Eka Ainun Nisa",
+        foto: "https://drive.google.com/thumbnail?id=1lBYJ-Bjldb26KTlwHFQf-uvvJdhoehVZ&sz=w500"
+    },
+    "Fadilla": {
+        nama: "Fadilla Nailul Wafa",
+        foto: "https://drive.google.com/thumbnail?id=1rC9SykL6zs6jtXw58ea4DfKyPIuhHAuG&sz=w500"
+    }
+};
+
+function updateFotoSquircleApotek(panggilName) {
+    const imgEl = document.getElementById("gaji-foto-karyawan-apotek");
+    const placeholderEl = document.getElementById("gaji-foto-placeholder");
+    const badgeEl = document.getElementById("gaji-badge-jabatan-apotek");
+    const data = FOTO_KARYAWAN_APOTEK[panggilName];
+
+    if (data && imgEl) {
+        imgEl.src = data.foto;
+        imgEl.alt = data.nama;
+        imgEl.classList.remove("hidden");
+        if (placeholderEl) placeholderEl.classList.add("hidden");
+        if (badgeEl) badgeEl.classList.remove("hidden");
+    } else if (imgEl) {
+        imgEl.src = "";
+        imgEl.classList.add("hidden");
+        if (placeholderEl) placeholderEl.classList.remove("hidden");
+        if (badgeEl) badgeEl.classList.add("hidden");
+    }
+}
+
 function muatKartuPresensiApotekDrive() {
     const selectElem = document.getElementById("gaji-pilih-karyawan-apotek");
     const panggilName = selectElem ? selectElem.value : "";
+
+    // Update foto squircle iOS sesuai karyawan yang dipilih
+    updateFotoSquircleApotek(panggilName);
 
     if (!panggilName) return;
 
