@@ -210,62 +210,58 @@
     }
 }
 
-/* State Navbar Menciut Saat Scroll Konten ke Atas */
+//* ====================================================
+   PURE GPU 120FPS ADAPTIVE SHRINK NAVBAR (ANTI-LAG HP)
+   ==================================================== */
+#floating-bottom-nav {
+    /* Gunakan translate3d murni di GPU, jangan animasikan 'width' atau 'bottom' */
+    transform: translate3d(-50%, 0, 0) scale(1);
+    transform-origin: center bottom;
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    will-change: transform;
+}
+
+/* State Menciut: Turun 14px ke bawah & mengecil secara proporsional di GPU tanpa reflow */
 #floating-bottom-nav.nav-minimized {
-    bottom: 0.75rem !important; /* Turun mendekati tepi bawah layar */
-    width: 245px !important;    /* Mengkerut ramping ke tengah */
-    max-width: 245px !important;
+    transform: translate3d(-50%, 14px, 0) scale(0.76) !important;
+}
+
+/* Kunci properti statis agar tidak memicu layout recalculation saat menciut */
+#nav-glass-container {
+    touch-action: pan-y;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transition: background-color 0.25s ease !important;
 }
 
 #floating-bottom-nav.nav-minimized #nav-glass-container {
-    padding: 0.25rem !important;
-    background-color: rgba(255, 255, 255, 0.72);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+    background-color: rgba(255, 255, 255, 0.78);
 }
 
-#floating-bottom-nav.nav-minimized .nav-tab {
-    padding-top: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
-}
-
-#floating-bottom-nav.nav-minimized .nav-tab i {
-    font-size: 1rem !important; /* Ikon sedikit mengecil proporsional */
-    transform: translateY(0) !important; /* Reset offset vertikal agar persis di tengah kapsul */
-}
-
-/* Animasi Label Menghilang Halus */
+/* Animasi Label: Cukup opacity + scaleY di GPU (tanpa mengubah max-height!) */
 #floating-bottom-nav .nav-label {
-    max-height: 16px;
-    opacity: 1;
-    transform: scale(1);
-    overflow: hidden;
-    transition: max-height 0.25s ease, opacity 0.2s ease, margin 0.25s ease, transform 0.25s ease;
+    transform-origin: center top;
+    transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    will-change: opacity, transform;
 }
 
 #floating-bottom-nav.nav-minimized .nav-label {
-    max-height: 0 !important;
     opacity: 0 !important;
-    margin-top: 0 !important;
-    transform: scale(0.6);
+    transform: scale(0.5) translateY(-4px) !important;
     pointer-events: none;
 }
 
-#floating-bottom-nav.nav-minimized #nav-active-bubble {
-    top: 0.25rem !important;
-    bottom: 0.25rem !important;
+/* Saat menciut, turunkan sedikit posisi ikon & SVG agar tetap persis di tengah kapsul */
+#floating-bottom-nav .nav-link i,
+#floating-bottom-nav .nav-link .nav-svg-icon,
+#floating-bottom-nav .nav-tab i {
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease !important;
 }
 
-/* State saat kapsul sedang di-drag oleh jari */
-#nav-active-bubble.is-dragging {
-    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.15s ease !important; /* Hilangkan delay left/width agar 100% nempel jari */
-    transform: scale(1.08);
-    background: linear-gradient(to bottom, rgba(244, 114, 182, 0.42), rgba(236, 72, 153, 0.35), rgba(219, 39, 119, 0.48)) !important;
-    box-shadow: 0 10px 25px rgba(236, 72, 153, 0.25) !important;
-}
-
-/* Mencegah browser menganggap geseran horizontal pada navbar sebagai gestur back/scroll */
-#nav-glass-container {
-    touch-action: pan-y;
+#floating-bottom-nav.nav-minimized .nav-link i,
+#floating-bottom-nav.nav-minimized .nav-link .nav-svg-icon,
+#floating-bottom-nav.nav-minimized .nav-tab i {
+    transform: translate3d(0, 5px, 0) scale(1.15) !important;
 }
 </style>
 	
@@ -588,6 +584,16 @@ html.dark-mode-active #greeting-icon-container {
 }
 .animate-sticker-float {
     animation: stickerFloat 2.5s ease-in-out infinite;
+}
+#nav-active-bubble {
+    will-change: transform, left, width;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Matikan SEMUA transisi posisi saat jari sedang menggeser agar 100% menempel ke jari tanpa delay */
+#nav-active-bubble.is-dragging {
+    transition: none !important;
 }
 </style>
 
@@ -3533,67 +3539,84 @@ function switchSubTabTentang(mode) {
 }
 
 // ====================================================
-// ADAPTIVE SHRINK NAVBAR ON SCROLL (APOTEK NURJAYA)
+// ULTRA-LIGHTWEIGHT GPU SCROLL LISTENER (INSTANT TURNAROUND)
 // ====================================================
-(function initAdaptiveBottomNav() {
+(function initSmoothGpuBottomNav() {
     const navAside = document.getElementById('floating-bottom-nav');
-    const navGlass = document.getElementById('nav-glass-container');
-    if (!navAside || !navGlass) return;
+    if (!navAside) return;
 
-    let lastScrollY = window.scrollY;
     let isMinimized = false;
-    const SCROLL_THRESHOLD = 12; // Jarak minimal scroll (px) agar tidak sensitif getaran jari
+    let lastPos = 0;
+    let direction = 0;       // 1 = turun (konten naik), -1 = naik (konten turun)
+    let anchorPos = 0;       // Titik koordinat saat arah scroll mulai berbalik
+    let ticking = false;
 
-    // Sinkronisasi Real-Time Posisi Fluid Bubble saat ukuran container berubah
-    if (typeof ResizeObserver !== 'undefined') {
-        const bubbleObserver = new ResizeObserver(() => {
-            const activeBtn = document.querySelector('.nav-tab.active');
-            if (activeBtn && typeof updateNavBubble === 'function') {
-                updateNavBubble(activeBtn);
-            }
-        });
-        bubbleObserver.observe(navGlass);
-    }
+    const MINIMIZE_DISTANCE = 18; // Jarak scroll turun untuk menciut (px)
+    const EXPAND_DISTANCE = 10;   // Jarak scroll naik untuk LANGSUNG mekar (px)
 
-    function setNavState(minimize) {
-        if (isMinimized === minimize) return;
-        isMinimized = minimize;
-
-        if (minimize) {
+    function setMinimized(state) {
+        if (isMinimized === state) return;
+        isMinimized = state;
+        if (state) {
             navAside.classList.add('nav-minimized');
         } else {
             navAside.classList.remove('nav-minimized');
         }
-
-        // Pastikan posisi bubble presisi setelah animasi selesai (310ms)
-        setTimeout(() => {
-            const activeBtn = document.querySelector('.nav-tab.active');
-            if (activeBtn && typeof updateNavBubble === 'function') {
-                updateNavBubble(activeBtn);
-            }
-        }, 310);
     }
 
-    window.addEventListener('scroll', () => {
-        const currentScrollY = window.scrollY;
-        const diff = currentScrollY - lastScrollY;
-
-        // Jika sudah di paling atas halaman, selalu tampilkan ukuran penuh
-        if (currentScrollY <= 20) {
-            setNavState(false);
-            lastScrollY = currentScrollY;
+    function processScroll(currentPos) {
+        // 1. Jika di dekat puncak halaman, selalu mekar penuh
+        if (currentPos <= 20) {
+            setMinimized(false);
+            lastPos = currentPos;
+            anchorPos = currentPos;
+            direction = 0;
             return;
         }
 
-        // Scroll konten ke atas (jari mengusap ke atas -> scrollY bertambah) => Menciut
-        if (diff > SCROLL_THRESHOLD) {
-            setNavState(true);
-            lastScrollY = currentScrollY;
-        } 
-        // Scroll konten ke bawah (jari mengusap ke bawah -> scrollY berkurang) => Membesar lagi
-        else if (diff < -SCROLL_THRESHOLD) {
-            setNavState(false);
-            lastScrollY = currentScrollY;
+        const delta = currentPos - lastPos;
+        if (delta === 0) return;
+
+        if (delta > 0) {
+            // Arah scroll ke bawah (membaca ke bawah -> menciut)
+            if (direction !== 1) {
+                direction = 1;
+                anchorPos = lastPos; // Kunci titik balik
+            }
+            if (!isMinimized && (currentPos - anchorPos) >= MINIMIZE_DISTANCE) {
+                setMinimized(true);
+            }
+        } else {
+            // Arah scroll ke atas (kembali ke atas -> LANGSUNG mekar di mana pun posisinya)
+            if (direction !== -1) {
+                direction = -1;
+                anchorPos = lastPos; // Kunci titik balik saat mulai geser ke atas
+            }
+            if (isMinimized && (anchorPos - currentPos) >= EXPAND_DISTANCE) {
+                setMinimized(false);
+            }
+        }
+
+        lastPos = currentPos;
+    }
+
+    // Tentukan container scroll utama (untuk Fotokopi cek apakah .main-content punya overflow scroll)
+    const mainContent = document.querySelector('.main-content');
+    const useMainContent = mainContent && (mainContent.scrollHeight > mainContent.clientHeight + 10);
+
+    const scrollTarget = useMainContent ? mainContent : window;
+    const getPos = () => useMainContent ? mainContent.scrollTop : (window.scrollY || document.documentElement.scrollTop);
+
+    lastPos = getPos();
+    anchorPos = lastPos;
+
+    scrollTarget.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                processScroll(getPos());
+                ticking = false;
+            });
+            ticking = true;
         }
     }, { passive: true });
 })();
@@ -3627,8 +3650,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 	
-	// ====================================================
-// INTERACTIVE LIQUID BUBBLE SCRUBBING (HOLD & DRAG JARI)
+// ====================================================
+// ZERO-LAG GPU LIQUID SCRUBBING (APOTEK NURJAYA)
 // ====================================================
 (function initLiquidNavScrubbing() {
     const container = document.getElementById('nav-glass-container');
@@ -3641,11 +3664,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let startX = 0;
     let activePointerId = null;
     let lastHoveredTabId = null;
+    let rafPending = false;
+    let latestClientX = 0;
 
-    // Helper: Deteksi tombol tab mana yang berada di posisi X jari saat ini
     function getTabAtClientX(clientX) {
         const containerRect = container.getBoundingClientRect();
-        // Kunci posisi jari agar tidak keluar dari batas kiri & kanan navbar
         const clampedX = Math.max(containerRect.left + 8, Math.min(clientX, containerRect.right - 8));
         const relativeX = clampedX - containerRect.left;
         const slotWidth = containerRect.width / tabOrder.length;
@@ -3656,34 +3679,53 @@ document.addEventListener("DOMContentLoaded", () => {
         return { tabId, btn, clampedX, containerRect };
     }
 
-    // Helper: Sorot warna ikon/teks sementara saat dilewati kapsul
     function previewTabHighlight(targetBtn) {
-        document.querySelectorAll('.nav-tab').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        if (targetBtn) {
-            targetBtn.classList.add('active');
+        document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+        if (targetBtn) targetBtn.classList.add('active');
+    }
+
+    function renderDragFrame() {
+        rafPending = false;
+        if (!isDragging) return;
+
+        const { tabId, btn, clampedX, containerRect } = getTabAtClientX(latestClientX);
+        if (!btn) return;
+
+        const bubbleWidth = btn.offsetWidth;
+        const scaleRatio = containerRect.width / container.offsetWidth;
+        const pointerLocalX = (clampedX - containerRect.left) / scaleRatio;
+        let targetX = pointerLocalX - (bubbleWidth / 2);
+        const maxX = container.offsetWidth - bubbleWidth - 6;
+        targetX = Math.max(6, Math.min(targetX, maxX));
+
+        // Reset 'left' ke 0 dan gerakkan murni pakai GPU translate3d
+        bubble.style.left = '0px';
+        bubble.style.width = `${bubbleWidth}px`;
+        bubble.style.transform = `translate3d(${targetX}px, 0px, 0px) scale(1.06)`;
+        bubble.style.opacity = '1';
+
+        if (lastHoveredTabId !== tabId) {
+            lastHoveredTabId = tabId;
+            previewTabHighlight(btn);
+            if (typeof playClickSound === 'function') playClickSound();
         }
     }
 
     container.addEventListener('pointerdown', (e) => {
-        // Hanya proses sentuhan jari atau klik kiri mouse
         if (e.button !== 0 && e.pointerType === 'mouse') return;
-
         isPointerDown = true;
         isDragging = false;
         startX = e.clientX;
+        latestClientX = e.clientX;
         activePointerId = e.pointerId;
         lastHoveredTabId = null;
     });
 
     window.addEventListener('pointermove', (e) => {
         if (!isPointerDown || e.pointerId !== activePointerId) return;
+        latestClientX = e.clientX;
 
-        const deltaX = Math.abs(e.clientX - startX);
-
-        // Mulai masuk mode Liquid Drag setelah jari bergeser minimal 6px
-        if (!isDragging && deltaX > 6) {
+        if (!isDragging && Math.abs(e.clientX - startX) > 6) {
             isDragging = true;
             bubble.classList.add('is-dragging');
             if (container.setPointerCapture) {
@@ -3691,63 +3733,52 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        if (!isDragging) return;
-
-        const { tabId, btn, clampedX, containerRect } = getTabAtClientX(e.clientX);
-        if (!btn) return;
-
-        const btnRect = btn.getBoundingClientRect();
-        const bubbleWidth = btnRect.width;
-
-        // Posisikan tengah kapsul tepat mengikuti ujung jari (dengan batas tepi container)
-        let targetLeft = (clampedX - containerRect.left) - (bubbleWidth / 2);
-        const minLeft = 6; // Sesuai padding p-1.5
-        const maxLeft = containerRect.width - bubbleWidth - 6;
-        targetLeft = Math.max(minLeft, Math.min(targetLeft, maxLeft));
-
-        bubble.style.width = `${bubbleWidth}px`;
-        bubble.style.left = `${targetLeft}px`;
-        bubble.style.opacity = '1';
-
-        // Berikan efek highlight & suara klik halus tiap pindah melewati batas tab
-        if (lastHoveredTabId !== tabId) {
-            lastHoveredTabId = tabId;
-            previewTabHighlight(btn);
-            if (typeof playClickSound === 'function') playClickSound();
+        if (isDragging && !rafPending) {
+            rafPending = true;
+            requestAnimationFrame(renderDragFrame);
         }
-    });
+    }, { passive: true });
 
     function finishDrag(e) {
         if (!isPointerDown || e.pointerId !== activePointerId) return;
-
         const wasDragging = isDragging;
         isPointerDown = false;
         isDragging = false;
+        rafPending = false;
         activePointerId = null;
-        bubble.classList.remove('is-dragging');
 
         if (wasDragging) {
-            // Blokir event 'click' bawaan agar tidak memicu klik ganda saat jari diangkat
-            const preventClick = (ev) => {
+            container.addEventListener('click', (ev) => {
                 ev.stopPropagation();
                 ev.preventDefault();
-            };
-            container.addEventListener('click', preventClick, { capture: true, once: true });
+            }, { capture: true, once: true });
 
             const { tabId, btn } = getTabAtClientX(e.clientX);
 
-            // Jalankan switchTab ke tab tujuan (termasuk proteksi lock Slip Gaji!)
+            // Hitung posisi pixel saat ini sebelum melepas transform agar transisi snap mulus
+            const currentTransform = new WebKitCSSMatrix(window.getComputedStyle(bubble).transform);
+            const currentX = currentTransform.m41 || 0;
+
+            // Kembalikan basis koordinat ke 'left' tanpa lompat posisi
+            bubble.style.transform = 'none';
+            bubble.style.left = `${currentX}px`;
+            void bubble.offsetWidth; // Force reflow 1x saat jari dilepas
+
+            // Aktifkan kembali transisi CSS untuk efek snap kenyal ke tab tujuan
+            bubble.classList.remove('is-dragging');
+
             if (tabId && typeof window.switchTab === 'function') {
                 window.switchTab(tabId);
             }
 
-            // Pastikan kapsul snap kembali presisi ke tombol yang benar-benar aktif
             requestAnimationFrame(() => {
                 const realActiveBtn = document.querySelector('.nav-tab.active') || btn;
                 if (realActiveBtn && typeof updateNavBubble === 'function') {
                     updateNavBubble(realActiveBtn);
                 }
             });
+        } else {
+            bubble.classList.remove('is-dragging');
         }
     }
 
