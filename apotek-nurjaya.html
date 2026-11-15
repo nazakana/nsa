@@ -210,25 +210,78 @@
     }
 }
 
-//* ====================================================
-   PURE GPU 120FPS ADAPTIVE SHRINK NAVBAR (ANTI-LAG HP)
+/* ====================================================
+   PURE GPU 120FPS ADAPTIVE SHRINK & DRAG (APOTEK HYBRID)
    ==================================================== */
-#floating-bottom-nav {
-    /* Gunakan translate3d murni di GPU, jangan animasikan 'width' atau 'bottom' */
-    transform: translate3d(-50%, 0, 0) scale(1);
-    transform-origin: center bottom;
-    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1) !important;
-    will-change: transform;
+
+/* --- GLASSMORPHISM PRESERVED --- */
+aside [class*="backdrop-blur"],
+aside .backdrop-blur-xl {
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    isolation: isolate;
 }
 
-/* State Menciut: Turun 14px ke bawah & mengecil secara proporsional di GPU tanpa reflow */
-#floating-bottom-nav.nav-minimized {
-    transform: translate3d(-50%, 14px, 0) scale(0.76) !important;
+/* --- MODE 1: MOBILE (< 768px) - BOTTOM FLOATING --- */
+@media (max-width: 767px) {
+    #floating-bottom-nav {
+        bottom: 1.5rem;
+        left: 50%;
+        width: 92%;
+        max-width: 28rem;
+        transform: translate3d(-50%, 0, 0) scale(1);
+        transform-origin: center bottom;
+        transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        will-change: transform;
+    }
+
+    #floating-bottom-nav.nav-minimized {
+        transform: translate3d(-50%, 14px, 0) scale(0.76) !important;
+    }
+
+    #nav-glass-container {
+        touch-action: pan-y;
+    }
 }
 
-/* Kunci properti statis agar tidak memicu layout recalculation saat menciut */
+/* --- MODE 2: TABLET & DESKTOP (>= 768px) - LEFT SIDE FLOATING RAIL --- */
+@media (min-width: 768px) {
+    #floating-bottom-nav {
+        left: 1.25rem;
+        top: 50%;
+        bottom: auto;
+        width: auto;
+        transform: translate3d(0, -50%, 0) scale(1);
+        transform-origin: left center;
+        transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        will-change: transform;
+    }
+
+    /* Menyusut ramping ke sisi kiri saat scroll ke bawah */
+    #floating-bottom-nav.nav-minimized {
+        transform: translate3d(-6px, -50%, 0) scale(0.80) !important;
+    }
+
+    #nav-glass-container {
+        touch-action: pan-x;
+    }
+
+    /* Foto banner tetap full-width 100% dari ujung kiri, hanya teksnya yang bergeser */
+    .header-banner {
+        padding-left: 7rem !important;
+    }
+
+    /* Geser seluruh konten tab (#tab-beranda, #tab-pembukuan, #tab-summary, #tab-gaji, #tab-tentang) */
+    .tab-content {
+        padding-left: 7rem !important;
+        padding-right: 2rem !important;
+    }
+}
+
+/* --- SHARED GPU STYLING (MOBILE & DESKTOP) --- */
 #nav-glass-container {
-    touch-action: pan-y;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transition: background-color 0.25s ease !important;
@@ -238,7 +291,6 @@
     background-color: rgba(255, 255, 255, 0.78);
 }
 
-/* Animasi Label: Cukup opacity + scaleY di GPU (tanpa mengubah max-height!) */
 #floating-bottom-nav .nav-label {
     transform-origin: center top;
     transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
@@ -251,17 +303,29 @@
     pointer-events: none;
 }
 
-/* Saat menciut, turunkan sedikit posisi ikon & SVG agar tetap persis di tengah kapsul */
+#floating-bottom-nav .nav-tab i,
 #floating-bottom-nav .nav-link i,
-#floating-bottom-nav .nav-link .nav-svg-icon,
-#floating-bottom-nav .nav-tab i {
+#floating-bottom-nav .nav-link .nav-svg-icon {
     transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease !important;
 }
 
+#floating-bottom-nav.nav-minimized .nav-tab i,
 #floating-bottom-nav.nav-minimized .nav-link i,
-#floating-bottom-nav.nav-minimized .nav-link .nav-svg-icon,
-#floating-bottom-nav.nav-minimized .nav-tab i {
-    transform: translate3d(0, 5px, 0) scale(1.15) !important;
+#floating-bottom-nav.nav-minimized .nav-link .nav-svg-icon {
+    transform: translate3d(0, 6px, 0) scale(1.16) !important;
+}
+
+#nav-active-bubble {
+    will-change: transform, width, height;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Matikan transisi saat kapsul di-drag jari/mouse agar nempel 100% tanpa delay */
+#nav-active-bubble.is-dragging {
+    transition: none !important;
+    background: linear-gradient(to bottom, rgba(244, 114, 182, 0.45), rgba(236, 72, 153, 0.38), rgba(219, 39, 119, 0.50)) !important;
+    box-shadow: 0 10px 25px rgba(236, 72, 153, 0.28) !important;
 }
 </style>
 	
@@ -3227,54 +3291,54 @@ document.addEventListener('keydown', function(e) {
 
     </main>
 
-<!-- FLOATING LIQUID GLASS BOTTOM NAV APOTEK (ADAPTIVE SHRINK ENGINE) -->
-<aside id="floating-bottom-nav" class="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-[40] w-[92%] sm:w-[90%] max-w-md bg-transparent p-0 m-0 border-none shadow-none outline-none select-none transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
+<!-- FLOATING LIQUID GLASS NAV APOTEK (HYBRID MOBILE BOTTOM + DESKTOP LEFT RAIL) -->
+<aside id="floating-bottom-nav" class="fixed z-[40] bg-transparent p-0 m-0 border-none shadow-none outline-none select-none">
     
     <!-- Main Container Kaca -->
-    <div id="nav-glass-container" class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
+    <div id="nav-glass-container" class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full md:rounded-[2.25rem] p-1.5 md:p-2 flex flex-row md:flex-col items-center justify-between md:justify-center md:gap-2 ring-1 ring-black/5 overflow-hidden">
         
-        <!-- FLUID BUBBLE KAPSUL (INDIKATOR AKTIF PRESISI) -->
+        <!-- FLUID BUBBLE KAPSUL PINK (INDIKATOR AKTIF PRESISI X & Y) -->
         <div id="nav-active-bubble" 
-             class="absolute top-1.5 bottom-1.5 left-0 w-0 rounded-full bg-gradient-to-b from-pink-400/30 via-pink-500/25 to-pink-600/35 border border-pink-400/60 shadow-md shadow-pink-900/10 pointer-events-none z-0 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] opacity-0">
-            <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/60 to-transparent rounded-t-full"></div>
+             class="absolute top-1.5 bottom-1.5 left-0 w-0 md:top-0 md:bottom-auto md:left-2 md:right-2 md:w-auto md:h-0 rounded-full md:rounded-2xl bg-gradient-to-b from-pink-400/30 via-pink-500/25 to-pink-600/35 border border-pink-400/60 shadow-md shadow-pink-900/10 pointer-events-none z-0 transition-[transform,width,height,opacity] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] opacity-0">
+            <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/60 to-transparent rounded-t-full md:rounded-t-2xl"></div>
         </div>
 
         <!-- Glossy Specular Light Reflection -->
-        <div class="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent rounded-t-full z-10"></div>
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent rounded-t-full md:rounded-t-[2.25rem] z-10"></div>
 
         <!-- Tab 1: Beranda -->
         <button onclick="switchTab('beranda')" id="btn-tab-beranda" 
-            class="nav-tab active group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
-            <i class="fa-solid fa-house text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Beranda</span>
+            class="nav-tab active group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 z-20">
+            <i class="fa-solid fa-house text-lg sm:text-xl group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Beranda</span>
         </button>
 
         <!-- Tab 2: Pembukuan -->
         <button onclick="switchTab('pembukuan')" id="btn-tab-pembukuan" 
-            class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
-            <i class="fa-solid fa-calculator text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pembukuan</span>
+            class="nav-tab group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 z-20">
+            <i class="fa-solid fa-calculator text-lg sm:text-xl group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pembukuan</span>
         </button>
 
         <!-- Tab 3: Pusat Arsip -->
         <button onclick="switchTab('summary')" id="btn-tab-summary" 
-            class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 focus:outline-none z-20">
-            <i class="fa-solid fa-folder-closed text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pusat Arsip</span>
+            class="nav-tab group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 focus:outline-none z-20">
+            <i class="fa-solid fa-folder-closed text-lg sm:text-xl group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Pusat Arsip</span>
         </button>
 
         <!-- Tab 4: Slip Gaji -->
         <button onclick="switchTab('gaji')" id="btn-tab-gaji" 
-            class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
-            <i class="fa-solid fa-file-invoice-dollar text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
+            class="nav-tab group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 z-20">
+            <i class="fa-solid fa-file-invoice-dollar text-lg sm:text-xl group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Slip Gaji</span>
         </button>
 
         <!-- Tab 5: Profil Apotek -->
         <button onclick="switchTab('tentang')" id="btn-tab-tentang" 
-            class="nav-tab group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-all duration-300 active:scale-90 z-20">
-            <i class="fa-solid fa-clinic-medical text-lg sm:text-xl transition-all duration-300 group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
-            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight transition-all duration-300 group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Akun</span>
+            class="nav-tab group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 z-20">
+            <i class="fa-solid fa-clinic-medical text-lg sm:text-xl group-[.active]:text-pink-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
+            <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight group-[.active]:font-extrabold group-[.active]:text-pink-900 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Akun</span>
         </button>
 
     </div>
@@ -3287,62 +3351,84 @@ document.addEventListener('keydown', function(e) {
 	
 	
 
-    <!-- SCRIPT LOGIC LIQUID NAVBAR APOTEK -->
-   <script>
-    // Data Tab State Apotek Nurjaya
-    const tabs = {
-        'beranda': { title: 'Dashboard Utama', subtitle: 'Apotek Nurjaya' },
-        'pembukuan': { title: 'Pembukuan Operasional', subtitle: 'Apotek Nurjaya' },
-        'summary': { title: 'Pusat Arsip', subtitle: 'Bank Data Laporan Digital' },
-        'gaji': { title: 'Asisten Slip Gaji', subtitle: 'Penggajian Karyawan Apotek' },
-        'tentang': { title: 'Tentang Apotek', subtitle: 'Profil & Informasi' }
-    };
+   <!-- SCRIPT LOGIC LIQUID NAVBAR APOTEK -->
+<script>
+// Data Tab State Apotek Nurjaya
+const tabs = {
+    'beranda': { title: 'Dashboard Utama', subtitle: 'Apotek Nurjaya' },
+    'pembukuan': { title: 'Pembukuan Operasional', subtitle: 'Apotek Nurjaya' },
+    'summary': { title: 'Pusat Arsip', subtitle: 'Bank Data Laporan Digital' },
+    'gaji': { title: 'Asisten Slip Gaji', subtitle: 'Penggajian Karyawan Apotek' },
+    'tentang': { title: 'Tentang Apotek', subtitle: 'Profil & Informasi' }
+};
 
-    // Fungsi Pembantu: Pecah Teks Menjadi Karakter Bouncy Terpisah (Tanpa Blur & Lebih Rapat)
-    function animateTextStagger(element, text, baseDelay = 0) {
-        if (!element) return;
-        element.innerHTML = '';
-        
-        const wrapper = document.createElement('span');
-        wrapper.className = 'stagger-wrapper';
+const BUBBLE_SIZE_APOTEK = 60; // Ukuran kapsul ideal (px)
 
-        // Pecah teks per karakter
-        const chars = Array.from(text);
-        chars.forEach((char, index) => {
-            const charSpan = document.createElement('span');
-            charSpan.className = 'stagger-char';
-            // Menjaga spasi antar kata agar proporsional
-            charSpan.innerHTML = char === ' ' ? '&nbsp;' : char;
-            // Delay beruntun antar huruf yang lebih rapat & responsif (14ms)
-            charSpan.style.setProperty('--char-delay', `${baseDelay + (index * 14)}ms`);
-            wrapper.appendChild(charSpan);
-        });
+// Fungsi Pembantu: Pecah Teks Menjadi Karakter Bouncy Terpisah (Tanpa Blur & Lebih Rapat)
+function animateTextStagger(element, text, baseDelay = 0) {
+    if (!element) return;
+    element.innerHTML = '';
+    
+    const wrapper = document.createElement('span');
+    wrapper.className = 'stagger-wrapper';
 
-        element.appendChild(wrapper);
+    // Pecah teks per karakter
+    const chars = Array.from(text);
+    chars.forEach((char, index) => {
+        const charSpan = document.createElement('span');
+        charSpan.className = 'stagger-char';
+        // Menjaga spasi antar kata agar proporsional
+        charSpan.innerHTML = char === ' ' ? '&nbsp;' : char;
+        // Delay beruntun antar huruf yang lebih rapat & responsif (14ms)
+        charSpan.style.setProperty('--char-delay', `${baseDelay + (index * 14)}ms`);
+        wrapper.appendChild(charSpan);
+    });
+
+    element.appendChild(wrapper);
+}
+
+// ====================================================
+// 0. UPDATE POSISI FLUID BUBBLE CAPSULE (HYBRID X & Y)
+// ====================================================
+function updateNavBubble(activeBtn) {
+    const bubble = document.getElementById('nav-active-bubble');
+    if (!bubble || !activeBtn) return;
+
+    const isVertical = window.innerWidth >= 768;
+
+    if (isVertical) {
+        // MODE TABLET / DESKTOP (VERTIKAL - SUMBU Y)
+        const btnTop = activeBtn.offsetTop;
+        const btnHeight = activeBtn.offsetHeight;
+        const targetHeight = Math.min(BUBBLE_SIZE_APOTEK, btnHeight - 2);
+        const centerPosY = btnTop + (btnHeight / 2) - (targetHeight / 2);
+
+        bubble.style.left = '';
+        bubble.style.width = '';
+        bubble.style.height = `${targetHeight}px`;
+        bubble.style.transform = `translate3d(0px, ${centerPosY}px, 0px)`;
+    } else {
+        // MODE MOBILE (HORIZONTAL - SUMBU X)
+        const btnLeft = activeBtn.offsetLeft;
+        const btnWidth = activeBtn.offsetWidth;
+        const targetWidth = Math.min(BUBBLE_SIZE_APOTEK, btnWidth - 4);
+        const centerPosX = btnLeft + (btnWidth / 2) - (targetWidth / 2);
+
+        bubble.style.left = '0px';
+        bubble.style.height = '';
+        bubble.style.width = `${targetWidth}px`;
+        bubble.style.transform = `translate3d(${centerPosX}px, 0px, 0px)`;
     }
 
-    // Update Posisi Fluid Bubble Capsule pada Bottom Nav
-    function updateNavBubble(activeBtn) {
-        const bubble = document.getElementById('nav-active-bubble');
-        const container = document.getElementById('nav-glass-container');
-        
-        if (!bubble || !container || !activeBtn) return;
-        
-        const containerRect = container.getBoundingClientRect();
-        const btnRect = activeBtn.getBoundingClientRect();
-        
-        const leftOffset = btnRect.left - containerRect.left;
-        const width = btnRect.width;
-        
-        bubble.style.left = `${leftOffset}px`;
-        bubble.style.width = `${width}px`;
-        bubble.style.opacity = '1';
-    }
+    bubble.style.opacity = '1';
+}
 
 // ====================================================
 // 1. UPDATE SWITCHTAB APOTEK (DENGAN PROTEKSI SLIP GAJI)
 // ====================================================
 window.switchTab = function(tabId) {
+    if (typeof playClickSound === "function") playClickSound();
+
     // PROTEKSI AKSES: Jika buka Slip Gaji ('gaji') tapi role bukan 'owner'
     if (tabId === 'gaji' && getActiveRole() !== 'owner') {
         alert("Akses Terkunci! Fitur Slip Gaji hanya dapat diakses dalam Mode Pemilik Apotek.");
@@ -3373,11 +3459,11 @@ window.switchTab = function(tabId) {
         tab.classList.remove('active');
     });
 
-    // 4. Set status active pada tombol yang dipilih
+    // 4. Set status active pada tombol yang dipilih & geser gelembung pink
     const activeTabButton = document.getElementById(`btn-tab-${tabId}`);
     if (activeTabButton) {
         activeTabButton.classList.add('active');
-        if (typeof updateNavBubble === "function") updateNavBubble(activeTabButton);
+        requestAnimationFrame(() => updateNavBubble(activeTabButton));
     }
 
     // 5. Trigger Animasi Stagger Bouncy untuk Judul & Subtitle Header
@@ -3388,8 +3474,11 @@ window.switchTab = function(tabId) {
         animateTextStagger(headerSubtitle, tabs[tabId].subtitle, 80);
     }
 
-    // 6. Gulir otomatis kembali ke atas
+    // 6. Gulir otomatis kembali ke atas & mekarkan navbar penuh
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) mainContent.scrollTop = 0;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('floating-bottom-nav')?.classList.remove('nav-minimized');
 };
 
 // ====================================================
@@ -3600,7 +3689,7 @@ function switchSubTabTentang(mode) {
         lastPos = currentPos;
     }
 
-    // Tentukan container scroll utama (untuk Fotokopi cek apakah .main-content punya overflow scroll)
+    // Tentukan container scroll utama
     const mainContent = document.querySelector('.main-content');
     const useMainContent = mainContent && (mainContent.scrollHeight > mainContent.clientHeight + 10);
 
@@ -3626,32 +3715,32 @@ document.addEventListener("DOMContentLoaded", () => {
     initRoleUI();
 });
 
-    // Switch Sub-Mode Pembukuan (Input Harian vs Tutup Buku)
-    window.switchModePembukuan = function(mode) {
-        const subInput = document.getElementById('subtab-input');
-        const subClosing = document.getElementById('subtab-closing');
-        const btnInput = document.getElementById('btn-mode-input');
-        const btnClosing = document.getElementById('btn-mode-closing');
+// Switch Sub-Mode Pembukuan (Input Harian vs Tutup Buku)
+window.switchModePembukuan = function(mode) {
+    const subInput = document.getElementById('subtab-input');
+    const subClosing = document.getElementById('subtab-closing');
+    const btnInput = document.getElementById('btn-mode-input');
+    const btnClosing = document.getElementById('btn-mode-closing');
 
-        if (!subInput || !subClosing || !btnInput || !btnClosing) return;
+    if (!subInput || !subClosing || !btnInput || !btnClosing) return;
 
-        if (mode === 'input') {
-            subInput.classList.remove('hidden');
-            subClosing.classList.add('hidden');
+    if (mode === 'input') {
+        subInput.classList.remove('hidden');
+        subClosing.classList.add('hidden');
 
-            btnInput.className = "py-2.5 px-4 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md shadow-pink-200/50";
-            btnClosing.className = "py-2.5 px-4 rounded-full text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 text-gray-500 hover:text-pink-600";
-        } else {
-            subClosing.classList.remove('hidden');
-            subInput.classList.add('hidden');
+        btnInput.className = "py-2.5 px-4 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md shadow-pink-200/50";
+        btnClosing.className = "py-2.5 px-4 rounded-full text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 text-gray-500 hover:text-pink-600";
+    } else {
+        subClosing.classList.remove('hidden');
+        subInput.classList.add('hidden');
 
-            btnClosing.className = "py-2.5 px-4 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md shadow-pink-200/50";
-            btnInput.className = "py-2.5 px-4 rounded-full text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 text-gray-500 hover:text-pink-600";
-        }
-    };
-	
+        btnClosing.className = "py-2.5 px-4 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md shadow-pink-200/50";
+        btnInput.className = "py-2.5 px-4 rounded-full text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 text-gray-500 hover:text-pink-600";
+    }
+};
+
 // ====================================================
-// ZERO-LAG GPU LIQUID SCRUBBING (APOTEK NURJAYA)
+// ZERO-LAG GPU LIQUID SCRUBBING (APOTEK NURJAYA - HYBRID X & Y)
 // ====================================================
 (function initLiquidNavScrubbing() {
     const container = document.getElementById('nav-glass-container');
@@ -3661,22 +3750,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const tabOrder = ['beranda', 'pembukuan', 'summary', 'gaji', 'tentang'];
     let isPointerDown = false;
     let isDragging = false;
-    let startX = 0;
+    let startCoord = 0;
     let activePointerId = null;
     let lastHoveredTabId = null;
     let rafPending = false;
     let latestClientX = 0;
+    let latestClientY = 0;
 
-    function getTabAtClientX(clientX) {
+    function getTabAtPointer(clientX, clientY) {
         const containerRect = container.getBoundingClientRect();
-        const clampedX = Math.max(containerRect.left + 8, Math.min(clientX, containerRect.right - 8));
-        const relativeX = clampedX - containerRect.left;
-        const slotWidth = containerRect.width / tabOrder.length;
-        const index = Math.min(tabOrder.length - 1, Math.max(0, Math.floor(relativeX / slotWidth)));
+        const isVertical = window.innerWidth >= 768;
 
-        const tabId = tabOrder[index];
-        const btn = document.getElementById(`btn-tab-${tabId}`);
-        return { tabId, btn, clampedX, containerRect };
+        if (isVertical) {
+            const clampedY = Math.max(containerRect.top + 8, Math.min(clientY, containerRect.bottom - 8));
+            const relativeY = clampedY - containerRect.top;
+            const slotHeight = containerRect.height / tabOrder.length;
+            const index = Math.min(tabOrder.length - 1, Math.max(0, Math.floor(relativeY / slotHeight)));
+            const tabId = tabOrder[index];
+            return { tabId, btn: document.getElementById(`btn-tab-${tabId}`), clampedPos: clampedY, containerRect, isVertical };
+        } else {
+            const clampedX = Math.max(containerRect.left + 8, Math.min(clientX, containerRect.right - 8));
+            const relativeX = clampedX - containerRect.left;
+            const slotWidth = containerRect.width / tabOrder.length;
+            const index = Math.min(tabOrder.length - 1, Math.max(0, Math.floor(relativeX / slotWidth)));
+            const tabId = tabOrder[index];
+            return { tabId, btn: document.getElementById(`btn-tab-${tabId}`), clampedPos: clampedX, containerRect, isVertical };
+        }
     }
 
     function previewTabHighlight(targetBtn) {
@@ -3688,20 +3787,35 @@ document.addEventListener("DOMContentLoaded", () => {
         rafPending = false;
         if (!isDragging) return;
 
-        const { tabId, btn, clampedX, containerRect } = getTabAtClientX(latestClientX);
+        const { tabId, btn, clampedPos, containerRect, isVertical } = getTabAtPointer(latestClientX, latestClientY);
         if (!btn) return;
 
-        const bubbleWidth = btn.offsetWidth;
-        const scaleRatio = containerRect.width / container.offsetWidth;
-        const pointerLocalX = (clampedX - containerRect.left) / scaleRatio;
-        let targetX = pointerLocalX - (bubbleWidth / 2);
-        const maxX = container.offsetWidth - bubbleWidth - 6;
-        targetX = Math.max(6, Math.min(targetX, maxX));
+        if (isVertical) {
+            const bubbleHeight = Math.min(BUBBLE_SIZE_APOTEK, btn.offsetHeight - 2);
+            const scaleRatio = containerRect.height / container.offsetHeight;
+            const pointerLocalY = (clampedPos - containerRect.top) / scaleRatio;
+            let targetY = pointerLocalY - (bubbleHeight / 2);
+            const maxY = container.offsetHeight - bubbleHeight - 8;
+            targetY = Math.max(8, Math.min(targetY, maxY));
 
-        // Reset 'left' ke 0 dan gerakkan murni pakai GPU translate3d
-        bubble.style.left = '0px';
-        bubble.style.width = `${bubbleWidth}px`;
-        bubble.style.transform = `translate3d(${targetX}px, 0px, 0px) scale(1.06)`;
+            bubble.style.left = '';
+            bubble.style.width = '';
+            bubble.style.height = `${bubbleHeight}px`;
+            bubble.style.transform = `translate3d(0px, ${targetY}px, 0px) scale(1.06)`;
+        } else {
+            const bubbleWidth = Math.min(BUBBLE_SIZE_APOTEK, btn.offsetWidth - 4);
+            const scaleRatio = containerRect.width / container.offsetWidth;
+            const pointerLocalX = (clampedPos - containerRect.left) / scaleRatio;
+            let targetX = pointerLocalX - (bubbleWidth / 2);
+            const maxX = container.offsetWidth - bubbleWidth - 6;
+            targetX = Math.max(6, Math.min(targetX, maxX));
+
+            bubble.style.left = '0px';
+            bubble.style.height = '';
+            bubble.style.width = `${bubbleWidth}px`;
+            bubble.style.transform = `translate3d(${targetX}px, 0px, 0px) scale(1.06)`;
+        }
+
         bubble.style.opacity = '1';
 
         if (lastHoveredTabId !== tabId) {
@@ -3715,8 +3829,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.button !== 0 && e.pointerType === 'mouse') return;
         isPointerDown = true;
         isDragging = false;
-        startX = e.clientX;
+        const isVertical = window.innerWidth >= 768;
+        startCoord = isVertical ? e.clientY : e.clientX;
         latestClientX = e.clientX;
+        latestClientY = e.clientY;
         activePointerId = e.pointerId;
         lastHoveredTabId = null;
     });
@@ -3724,8 +3840,11 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener('pointermove', (e) => {
         if (!isPointerDown || e.pointerId !== activePointerId) return;
         latestClientX = e.clientX;
+        latestClientY = e.clientY;
+        const isVertical = window.innerWidth >= 768;
+        const currentCoord = isVertical ? e.clientY : e.clientX;
 
-        if (!isDragging && Math.abs(e.clientX - startX) > 6) {
+        if (!isDragging && Math.abs(currentCoord - startCoord) > 6) {
             isDragging = true;
             bubble.classList.add('is-dragging');
             if (container.setPointerCapture) {
@@ -3746,6 +3865,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isDragging = false;
         rafPending = false;
         activePointerId = null;
+        bubble.classList.remove('is-dragging');
 
         if (wasDragging) {
             container.addEventListener('click', (ev) => {
@@ -3753,20 +3873,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ev.preventDefault();
             }, { capture: true, once: true });
 
-            const { tabId, btn } = getTabAtClientX(e.clientX);
-
-            // Hitung posisi pixel saat ini sebelum melepas transform agar transisi snap mulus
-            const currentTransform = new WebKitCSSMatrix(window.getComputedStyle(bubble).transform);
-            const currentX = currentTransform.m41 || 0;
-
-            // Kembalikan basis koordinat ke 'left' tanpa lompat posisi
-            bubble.style.transform = 'none';
-            bubble.style.left = `${currentX}px`;
-            void bubble.offsetWidth; // Force reflow 1x saat jari dilepas
-
-            // Aktifkan kembali transisi CSS untuk efek snap kenyal ke tab tujuan
-            bubble.classList.remove('is-dragging');
-
+            const { tabId, btn } = getTabAtPointer(e.clientX, e.clientY);
             if (tabId && typeof window.switchTab === 'function') {
                 window.switchTab(tabId);
             }
@@ -3777,8 +3884,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateNavBubble(realActiveBtn);
                 }
             });
-        } else {
-            bubble.classList.remove('is-dragging');
         }
     }
 
@@ -3786,111 +3891,111 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener('pointercancel', finishDrag);
 })();
 
-    // Inisialisasi posisi bubble navbar saat pertama kali halaman dimuat
-    document.addEventListener('DOMContentLoaded', () => {
-        const defaultActiveBtn = document.querySelector('.nav-tab.active');
-        if (defaultActiveBtn) {
-            setTimeout(() => updateNavBubble(defaultActiveBtn), 150);
-        }
-    });
+// Inisialisasi posisi bubble navbar saat pertama kali halaman dimuat
+document.addEventListener('DOMContentLoaded', () => {
+    const defaultActiveBtn = document.querySelector('.nav-tab.active');
+    if (defaultActiveBtn) {
+        setTimeout(() => updateNavBubble(defaultActiveBtn), 150);
+    }
+});
 
-    // Penyesuaian bubble navbar ketika window di-resize
-    window.addEventListener('resize', () => {
-        const activeBtn = document.querySelector('.nav-tab.active');
-        if (activeBtn) updateNavBubble(activeBtn);
-    });
+// Penyesuaian bubble navbar ketika window di-resize
+window.addEventListener('resize', () => {
+    const activeBtn = document.querySelector('.nav-tab.active');
+    if (activeBtn) updateNavBubble(activeBtn);
+});
 
-    // Memuat grafik saat window siap
-    window.onload = function() {
-        // 1. Grafik Garis (Progres Harian)
-        const elLine = document.getElementById('dailyRevenueChart');
-        if (elLine) {
-            const ctxLine = elLine.getContext('2d');
-            new Chart(ctxLine, {
-                type: 'line',
-                data: {
-                    labels: ['1', '2', '3', '4', '5', '6'],
-                    datasets: [{
-                        label: 'Pendapatan',
-                        data: [235000, 410000, 559000, 556000, 476000, 543000],
-                        borderColor: '#ec4899', /* Pink */
-                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 3,
-                        pointBackgroundColor: '#ec4899',
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointRadius: 5
-                    }]
+// Memuat grafik saat window siap
+window.onload = function() {
+    // 1. Grafik Garis (Progres Harian)
+    const elLine = document.getElementById('dailyRevenueChart');
+    if (elLine) {
+        const ctxLine = elLine.getContext('2d');
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6'],
+                datasets: [{
+                    label: 'Pendapatan',
+                    data: [235000, 410000, 559000, 556000, 476000, 543000],
+                    borderColor: '#ec4899', /* Pink */
+                    backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#ec4899',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
+                scales: {
+                    x: {
+                        grid: { display: false }
                     },
-                    scales: {
-                        x: {
-                            grid: { display: false }
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return value >= 1000 ? (value / 1000) + 'k' : value;
+                            }
                         },
-                        y: {
-                            ticks: {
-                                callback: function(value) {
-                                    return value >= 1000 ? (value / 1000) + 'k' : value;
-                                }
-                            },
-                            grid: { color: '#f3f4f6' }
-                        }
+                        grid: { color: '#f3f4f6' }
                     }
                 }
-            });
-        }
+            }
+        });
+    }
 
-        // 2. Grafik Batang (Statistik Bulanan)
-        const elBar = document.getElementById('monthlyStatChart');
-        if (elBar) {
-            const ctxBar = elBar.getContext('2d');
-            new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: ['Januari', 'Februari', 'Maret', 'April'],
-                    datasets: [{
-                        label: 'Total Pendapatan',
-                        data: [13000000, 10500000, 11800000, 15500000],
-                        backgroundColor: [
-                            '#f472b6', /* Soft Pink */
-                            '#60a5fa', /* Blue */
-                            '#fbbf24', /* Yellow */
-                            '#2dd4bf'  /* Teal */
-                        ],
-                        borderRadius: 8,
-                        borderSkipped: false
-                    }]
+    // 2. Grafik Batang (Statistik Bulanan)
+    const elBar = document.getElementById('monthlyStatChart');
+    if (elBar) {
+        const ctxBar = elBar.getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Januari', 'Februari', 'Maret', 'April'],
+                datasets: [{
+                    label: 'Total Pendapatan',
+                    data: [13000000, 10500000, 11800000, 15500000],
+                    backgroundColor: [
+                        '#f472b6', /* Soft Pink */
+                        '#60a5fa', /* Blue */
+                        '#fbbf24', /* Yellow */
+                        '#2dd4bf'  /* Teal */
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
+                scales: {
+                    x: {
+                        grid: { display: false }
                     },
-                    scales: {
-                        x: {
-                            grid: { display: false }
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return value >= 1000000 ? (value / 1000000) + ' Jt' : value;
+                            }
                         },
-                        y: {
-                            ticks: {
-                                callback: function(value) {
-                                    return value >= 1000000 ? (value / 1000000) + ' Jt' : value;
-                                }
-                            },
-                            grid: { color: '#f3f4f6' }
-                        }
+                        grid: { color: '#f3f4f6' }
                     }
                 }
-            });
-        }
-    };
+            }
+        });
+    }
+};
 </script>
 	
 	
