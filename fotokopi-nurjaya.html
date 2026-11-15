@@ -564,21 +564,71 @@ html.dark-mode-active #greeting-icon-container {
 }
 
 /* ====================================================
-   PURE GPU 120FPS ADAPTIVE SHRINK & DRAG (FOTOKOPI EMERALD)
+   PURE GPU 120FPS ADAPTIVE SHRINK & DRAG (HYBRID MODE)
    ==================================================== */
-#floating-bottom-nav {
-    transform: translate3d(-50%, 0, 0) scale(1);
-    transform-origin: center bottom;
-    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1) !important;
-    will-change: transform;
+
+/* --- MODE 1: MOBILE (< 768px) - BOTTOM FLOATING --- */
+@media (max-width: 767px) {
+    #floating-bottom-nav {
+        bottom: 1.5rem;
+        left: 50%;
+        width: 90%;
+        max-width: 28rem;
+        transform: translate3d(-50%, 0, 0) scale(1);
+        transform-origin: center bottom;
+        transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        will-change: transform;
+    }
+
+    #floating-bottom-nav.nav-minimized {
+        transform: translate3d(-50%, 14px, 0) scale(0.76) !important;
+    }
+
+    #nav-glass-container {
+        touch-action: pan-y; /* Izinkan scroll vertikal, tangkap geser horizontal */
+    }
 }
 
-#floating-bottom-nav.nav-minimized {
-    transform: translate3d(-50%, 14px, 0) scale(0.76) !important;
-}
+/* --- MODE 2: TABLET & DESKTOP (>= 768px) - LEFT SIDE FLOATING RAIL --- */
+@media (min-width: 768px) {
+    #floating-bottom-nav {
+        left: 1.25rem;
+        top: 50%;
+        bottom: auto;
+        width: auto;
+        transform: translate3d(0, -50%, 0) scale(1);
+        transform-origin: left center;
+        transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        will-change: transform;
+    }
 
+    /* Menyusut ramping ke sisi kiri saat scroll ke bawah */
+    #floating-bottom-nav.nav-minimized {
+        transform: translate3d(-6px, -50%, 0) scale(0.80) !important;
+    }
+
+    #nav-glass-container {
+        touch-action: pan-x;
+    }
+
+    /* 1. Biarkan .main-content & .header-banner full width 100% dari ujung kiri */
+    .main-content {
+        padding-left: 0 !important;
+    }
+
+    /* 2. Geser teks di dalam header-banner saja agar sejajar lurus dengan kartu konten */
+    .header-banner {
+        padding-left: 7rem !important;
+    }
+
+    /* 3. Geser semua konten tab (#tab-dashboard, #tab-dailyinput, dll) */
+    .tab-content {
+        padding-left: 7rem !important;
+        padding-right: 2rem !important;
+    }
+}
+/* --- SHARED GPU STYLING (MOBILE & DESKTOP) --- */
 #nav-glass-container {
-    touch-action: pan-y;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transition: background-color 0.25s ease !important;
@@ -605,18 +655,19 @@ html.dark-mode-active #greeting-icon-container {
     transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease, fill 0.2s ease !important;
 }
 
+/* Saat mengecil, ikon turun sedikit agar tepat di tengah kapsul */
 #floating-bottom-nav.nav-minimized .nav-link i,
 #floating-bottom-nav.nav-minimized .nav-link .nav-svg-icon {
-    transform: translate3d(0, 5px, 0) scale(1.15) !important;
+    transform: translate3d(0, 6px, 0) scale(1.16) !important;
 }
 
 #nav-active-bubble {
-    will-change: transform, width;
+    will-change: transform, width, height;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
-/* Matikan SEMUA transisi saat kapsul di-drag jari agar nempel 100% tanpa delay */
+/* Matikan SEMUA transisi saat kapsul di-drag jari/mouse agar nempel 100% tanpa delay */
 #nav-active-bubble.is-dragging {
     transition: none !important;
     background: linear-gradient(to bottom, rgba(52, 211, 153, 0.45), rgba(16, 185, 129, 0.38), rgba(13, 148, 136, 0.50)) !important;
@@ -682,46 +733,46 @@ html.dark-mode-active #greeting-icon-container {
  <!-- MAIN CONTENT (ALL) -->
 <body class="flex flex-col md:flex-row">
 
-<!-- FLOATING LIQUID GLASS BOTTOM NAV FOTOKOPI (IOS FULL UPGRADE - GPU OPTIMIZED) -->
-<aside id="floating-bottom-nav" class="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-[40] w-[90%] max-w-md bg-transparent p-0 m-0 border-none shadow-none outline-none select-none">
+<!-- FLOATING LIQUID GLASS NAV FOTOKOPI (HYBRID MOBILE BOTTOM + DESKTOP LEFT RAIL) -->
+<aside id="floating-bottom-nav" class="fixed z-[40] bg-transparent p-0 m-0 border-none shadow-none outline-none select-none">
     
     <!-- Main Container Kaca -->
-    <div id="nav-glass-container" class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-between ring-1 ring-black/5 overflow-hidden">
+    <div id="nav-glass-container" class="relative bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-full md:rounded-[2.25rem] p-1.5 md:p-2 flex flex-row md:flex-col items-center justify-between md:justify-center md:gap-2 ring-1 ring-black/5 overflow-hidden">
         
-        <!-- FLUID BUBBLE KAPSUL (INDIKATOR AKTIF PRESISI) -->
+        <!-- FLUID BUBBLE KAPSUL (INDIKATOR AKTIF PRESISI X & Y) -->
         <div id="nav-active-bubble" 
-             class="absolute top-1.5 bottom-1.5 left-0 w-0 rounded-full bg-gradient-to-b from-emerald-400/30 via-emerald-500/25 to-teal-600/35 border border-emerald-400/60 shadow-md shadow-emerald-900/10 pointer-events-none z-0 transition-[transform,width,opacity] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] opacity-0">
+             class="absolute top-1.5 bottom-1.5 left-0 w-0 md:top-0 md:bottom-auto md:left-2 md:right-2 md:w-auto md:h-0 rounded-full md:rounded-2xl bg-gradient-to-b from-emerald-400/30 via-emerald-500/25 to-teal-600/35 border border-emerald-400/60 shadow-md shadow-emerald-900/10 pointer-events-none z-0 transition-[transform,width,height,opacity] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] opacity-0">
             <!-- Inner Specular Light Gloss -->
-            <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/60 to-transparent rounded-t-full"></div>
+            <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/60 to-transparent rounded-t-full md:rounded-t-2xl"></div>
         </div>
 
         <!-- Glossy Specular Light Reflection -->
-        <div class="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent rounded-t-full z-10"></div>
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent rounded-t-full md:rounded-t-[2.25rem] z-10"></div>
 
         <!-- Home Button -->
         <button onclick="showTab('dashboard')" id="btn-dashboard" 
-            class="nav-link active group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-transform duration-200 active:scale-90 z-20">
+            class="nav-link active group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 z-20">
             <i class="fa-solid fa-house-user text-lg sm:text-xl group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
             <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Home</span>
         </button>
 
         <!-- Database Button -->
         <button onclick="showTab('dailyinput')" id="btn-dailyinput" 
-            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-transform duration-200 active:scale-90 z-20" data-search="daily input">
+            class="nav-link group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 z-20" data-search="daily input">
             <i class="fa-solid fa-pen-to-square text-lg sm:text-xl group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
             <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Database</span>
         </button>
 
         <!-- Arsip Button -->
         <button onclick="showTab('archive')" id="btn-archive" 
-            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-transform duration-200 active:scale-90 focus:outline-none z-20" data-search="arsip laporan">
+            class="nav-link group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 focus:outline-none z-20" data-search="arsip laporan">
             <i class="fa-solid fa-folder-open text-lg sm:text-xl group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
             <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Arsip</span>
         </button>
 
         <!-- Slip Gaji Button -->
         <button onclick="showTab('presensi')" id="btn-presensi" 
-            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-transform duration-200 active:scale-90 z-20" data-search="presensi absensi jadwal kerja">
+            class="nav-link group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 z-20" data-search="presensi absensi jadwal kerja">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="nav-svg-icon w-5 h-5 sm:w-6 sm:h-6 fill-slate-500 group-hover:fill-slate-700 group-[.active]:fill-emerald-700 group-[.active]:-translate-y-0.5 relative z-10">
                 <path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-288-160 0c-17.7 0-32-14.3-32-32L320 0 64 0zM256 0l0 128 128 0L256 0zM128 224c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm0 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm32 64l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-96 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/>
             </svg>
@@ -730,7 +781,7 @@ html.dark-mode-active #greeting-icon-container {
 
         <!-- Profil / Akun Button -->
         <button onclick="showTab('about')" id="btn-about" 
-            class="nav-link group relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-transform duration-200 active:scale-90 z-20" data-search="profil nurjaya tentang about akun login owner karyawan">
+            class="nav-link group relative flex-1 md:flex-none md:w-[66px] md:h-[60px] flex flex-col items-center justify-center py-2 px-1 rounded-full md:rounded-2xl transition-transform duration-200 active:scale-90 z-20" data-search="profil nurjaya tentang about akun login owner karyawan">
             <i class="fa-solid fa-user text-lg sm:text-xl group-[.active]:text-emerald-700 group-[.active]:-translate-y-0.5 text-slate-500 group-hover:text-slate-700 relative z-10"></i>
             <span class="nav-label text-[9px] sm:text-[10px] font-semibold tracking-tight group-[.active]:font-extrabold group-[.active]:text-emerald-800 text-slate-600 mt-0.5 block truncate w-full text-center relative z-10">Akun</span>
         </button>
@@ -13994,10 +14045,10 @@ async function prosesUploadNota(event) {
         if (passInput) passInput.focus();
     }
 
-    // ====================================================
-    // 3. NATIVE SHOWTAB + SLIDING BUBBLE ENGINE (SWIPER-LESS)
-    // ====================================================
-    const BUBBLE_WIDTH = 60; // Ukuran kapsul ideal (px)
+// ====================================================
+// 3. NATIVE SHOWTAB + SLIDING BUBBLE ENGINE (SWIPER-LESS)
+// ====================================================
+const BUBBLE_WIDTH = 60; // Ukuran kapsul ideal (px)
 
 
 
@@ -14062,22 +14113,40 @@ window.showTab = function(tabId) {
 };
 
 // ====================================================
-// 1. LOGIKA PEMINDAH GELEMBUNG PRESISI (PURE GPU)
+// 1. LOGIKA PEMINDAH GELEMBUNG PRESISI (HYBRID X & Y)
 // ====================================================
+const BUBBLE_SIZE = 60; // Ukuran kapsul ideal (px)
+
 function moveBubbleToTab(activeTabName) {
     const activeBtn = document.getElementById(`btn-${activeTabName}`);
     const bubble = document.getElementById('nav-active-bubble');
+    if (!activeBtn || !bubble) return;
 
-    if (activeBtn && bubble) {
+    const isVertical = window.innerWidth >= 768;
+
+    if (isVertical) {
+        // MODE TABLET / DESKTOP (VERTIKAL - SUMBU Y)
+        const btnTop = activeBtn.offsetTop;
+        const btnHeight = activeBtn.offsetHeight;
+        const targetHeight = Math.min(BUBBLE_SIZE, btnHeight - 2);
+        const centerPosY = btnTop + (btnHeight / 2) - (targetHeight / 2);
+
+        bubble.style.width = ''; // Biarkan Tailwind md:left-2 md:right-2 bekerja
+        bubble.style.height = `${targetHeight}px`;
+        bubble.style.transform = `translate3d(0px, ${centerPosY}px, 0px)`;
+    } else {
+        // MODE MOBILE (HORIZONTAL - SUMBU X)
         const btnLeft = activeBtn.offsetLeft;
         const btnWidth = activeBtn.offsetWidth;
-        const targetWidth = Math.min(BUBBLE_WIDTH, btnWidth - 4);
-        const centerPos = btnLeft + (btnWidth / 2) - (targetWidth / 2);
+        const targetWidth = Math.min(BUBBLE_SIZE, btnWidth - 4);
+        const centerPosX = btnLeft + (btnWidth / 2) - (targetWidth / 2);
 
+        bubble.style.height = ''; // Biarkan Tailwind top-1.5 bottom-1.5 bekerja
         bubble.style.width = `${targetWidth}px`;
-        bubble.style.transform = `translate3d(${centerPos}px, 0px, 0px)`;
-        bubble.style.opacity = '1';
+        bubble.style.transform = `translate3d(${centerPosX}px, 0px, 0px)`;
     }
+
+    bubble.style.opacity = '1';
 }
 
 // ====================================================
@@ -14173,7 +14242,7 @@ function moveBubbleToTab(activeTabName) {
 })();
 
 // ====================================================
-// 3. ZERO-LAG GPU LIQUID BUBBLE SCRUBBING (FOTOKOPI)
+// 3. ZERO-LAG GPU LIQUID BUBBLE SCRUBBING (HYBRID X & Y)
 // ====================================================
 (function initLiquidNavScrubbingFotokopi() {
     const container = document.getElementById('nav-glass-container');
@@ -14183,22 +14252,32 @@ function moveBubbleToTab(activeTabName) {
     const tabOrder = ['dashboard', 'dailyinput', 'archive', 'presensi', 'about'];
     let isPointerDown = false;
     let isDragging = false;
-    let startX = 0;
+    let startCoord = 0;
     let activePointerId = null;
     let lastHoveredTabId = null;
     let rafPending = false;
     let latestClientX = 0;
+    let latestClientY = 0;
 
-    function getTabAtClientX(clientX) {
+    function getTabAtPointer(clientX, clientY) {
         const containerRect = container.getBoundingClientRect();
-        const clampedX = Math.max(containerRect.left + 8, Math.min(clientX, containerRect.right - 8));
-        const relativeX = clampedX - containerRect.left;
-        const slotWidth = containerRect.width / tabOrder.length;
-        const index = Math.min(tabOrder.length - 1, Math.max(0, Math.floor(relativeX / slotWidth)));
+        const isVertical = window.innerWidth >= 768;
 
-        const tabId = tabOrder[index];
-        const btn = document.getElementById(`btn-${tabId}`);
-        return { tabId, btn, clampedX, containerRect };
+        if (isVertical) {
+            const clampedY = Math.max(containerRect.top + 8, Math.min(clientY, containerRect.bottom - 8));
+            const relativeY = clampedY - containerRect.top;
+            const slotHeight = containerRect.height / tabOrder.length;
+            const index = Math.min(tabOrder.length - 1, Math.max(0, Math.floor(relativeY / slotHeight)));
+            const tabId = tabOrder[index];
+            return { tabId, btn: document.getElementById(`btn-${tabId}`), clampedPos: clampedY, containerRect, isVertical };
+        } else {
+            const clampedX = Math.max(containerRect.left + 8, Math.min(clientX, containerRect.right - 8));
+            const relativeX = clampedX - containerRect.left;
+            const slotWidth = containerRect.width / tabOrder.length;
+            const index = Math.min(tabOrder.length - 1, Math.max(0, Math.floor(relativeX / slotWidth)));
+            const tabId = tabOrder[index];
+            return { tabId, btn: document.getElementById(`btn-${tabId}`), clampedPos: clampedX, containerRect, isVertical };
+        }
     }
 
     function previewTabHighlight(targetBtn) {
@@ -14210,18 +14289,33 @@ function moveBubbleToTab(activeTabName) {
         rafPending = false;
         if (!isDragging) return;
 
-        const { tabId, btn, clampedX, containerRect } = getTabAtClientX(latestClientX);
+        const { tabId, btn, clampedPos, containerRect, isVertical } = getTabAtPointer(latestClientX, latestClientY);
         if (!btn) return;
 
-        const bubbleWidth = Math.min(BUBBLE_WIDTH, btn.offsetWidth - 4);
-        const scaleRatio = containerRect.width / container.offsetWidth;
-        const pointerLocalX = (clampedX - containerRect.left) / scaleRatio;
-        let targetX = pointerLocalX - (bubbleWidth / 2);
-        const maxX = container.offsetWidth - bubbleWidth - 6;
-        targetX = Math.max(6, Math.min(targetX, maxX));
+        if (isVertical) {
+            const bubbleHeight = Math.min(BUBBLE_SIZE, btn.offsetHeight - 2);
+            const scaleRatio = containerRect.height / container.offsetHeight;
+            const pointerLocalY = (clampedPos - containerRect.top) / scaleRatio;
+            let targetY = pointerLocalY - (bubbleHeight / 2);
+            const maxY = container.offsetHeight - bubbleHeight - 8;
+            targetY = Math.max(8, Math.min(targetY, maxY));
 
-        bubble.style.width = `${bubbleWidth}px`;
-        bubble.style.transform = `translate3d(${targetX}px, 0px, 0px) scale(1.06)`;
+            bubble.style.width = '';
+            bubble.style.height = `${bubbleHeight}px`;
+            bubble.style.transform = `translate3d(0px, ${targetY}px, 0px) scale(1.06)`;
+        } else {
+            const bubbleWidth = Math.min(BUBBLE_SIZE, btn.offsetWidth - 4);
+            const scaleRatio = containerRect.width / container.offsetWidth;
+            const pointerLocalX = (clampedPos - containerRect.left) / scaleRatio;
+            let targetX = pointerLocalX - (bubbleWidth / 2);
+            const maxX = container.offsetWidth - bubbleWidth - 6;
+            targetX = Math.max(6, Math.min(targetX, maxX));
+
+            bubble.style.height = '';
+            bubble.style.width = `${bubbleWidth}px`;
+            bubble.style.transform = `translate3d(${targetX}px, 0px, 0px) scale(1.06)`;
+        }
+
         bubble.style.opacity = '1';
 
         if (lastHoveredTabId !== tabId) {
@@ -14235,8 +14329,10 @@ function moveBubbleToTab(activeTabName) {
         if (e.button !== 0 && e.pointerType === 'mouse') return;
         isPointerDown = true;
         isDragging = false;
-        startX = e.clientX;
+        const isVertical = window.innerWidth >= 768;
+        startCoord = isVertical ? e.clientY : e.clientX;
         latestClientX = e.clientX;
+        latestClientY = e.clientY;
         activePointerId = e.pointerId;
         lastHoveredTabId = null;
     });
@@ -14244,8 +14340,11 @@ function moveBubbleToTab(activeTabName) {
     window.addEventListener('pointermove', (e) => {
         if (!isPointerDown || e.pointerId !== activePointerId) return;
         latestClientX = e.clientX;
+        latestClientY = e.clientY;
+        const isVertical = window.innerWidth >= 768;
+        const currentCoord = isVertical ? e.clientY : e.clientX;
 
-        if (!isDragging && Math.abs(e.clientX - startX) > 6) {
+        if (!isDragging && Math.abs(currentCoord - startCoord) > 6) {
             isDragging = true;
             bubble.classList.add('is-dragging');
             if (container.setPointerCapture) {
@@ -14274,7 +14373,7 @@ function moveBubbleToTab(activeTabName) {
                 ev.preventDefault();
             }, { capture: true, once: true });
 
-            const { tabId } = getTabAtClientX(e.clientX);
+            const { tabId } = getTabAtPointer(e.clientX, e.clientY);
             if (tabId && typeof window.showTab === 'function') {
                 window.showTab(tabId);
             }
