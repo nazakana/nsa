@@ -9222,8 +9222,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-
-    // =========================================================================
+// =========================================================================
     // 6. RENDER HD + UPLOAD GOOGLE DRIVE + WHATSAPP SHARE
     // =========================================================================
     const btnKirimWaReal = document.getElementById("nsa-btn-wa-kirim-slip");
@@ -9271,6 +9270,8 @@ document.addEventListener("DOMContentLoaded", function() {
             let teksSapaan = `Bismillahirrahmaanirrahiim ...\n*${namaLengkapKaryawan}*, Berikut terlampir dokumen Slip Gaji untuk periode *${periodeGaji}*.\n\nHarap diperiksa kembali dengan baik. Alhamdulillah & terima kasih atas kinerja bulan ini untuk Nurjaya Abadi Photocopy, ya! Jangan lupa untuk selalu bersyukur kepada Allah SWT. 🙏 ✨\n\n*Owner Nurjaya*,\n\n*apt. Siti Nurjanah, S.Farm.*`;
 
             setTimeout(async () => {
+                let sandboxWrapper = null;
+
                 try {
                     if (typeof domtoimage === 'undefined') {
                         alert("Library domtoimage belum terpasang/gagal dimuat!");
@@ -9279,7 +9280,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         return;
                     }
 
-                    if (document.fonts) {
+                    if (document.fonts && document.fonts.ready) {
                         try {
                             await document.fonts.ready;
                         } catch (fontErr) {
@@ -9297,33 +9298,61 @@ document.addEventListener("DOMContentLoaded", function() {
                     const periodeFormatted = teksPeriode.replace(/\s+/g, '_');
                     const namaFileDrive = `${namaLengkapKaryawan}_${periodeFormatted}.jpg`;
 
-                    const originalStyleWidth = targetRenderImage.style.width;
-                    const originalStyleMinWidth = targetRenderImage.style.minWidth;
+                    // 1. Sandbox terisolasi dengan lebar paten (identik di semua device & DPI)
+                    const fixedRenderWidth = 480;
+                    sandboxWrapper = document.createElement('div');
+                    sandboxWrapper.style.cssText = `
+                        position: fixed;
+                        left: -10000px;
+                        top: 0;
+                        width: ${fixedRenderWidth}px;
+                        max-width: none;
+                        margin: 0;
+                        padding: 0;
+                        background: #ffffff;
+                        z-index: -9999;
+                        overflow: visible;
+                        box-sizing: border-box;
+                    `;
 
-                    const targetWidth = 400;
-                    targetRenderImage.style.width = targetWidth + 'px';
-                    targetRenderImage.style.minWidth = targetWidth + 'px';
+                    // 2. Kloning DOM agar preview asli tidak terpengaruh & layout dikunci proporsional
+                    const clonedSlip = targetRenderImage.cloneNode(true);
+                    clonedSlip.removeAttribute('id');
+                    clonedSlip.style.width = `${fixedRenderWidth}px`;
+                    clonedSlip.style.minWidth = `${fixedRenderWidth}px`;
+                    clonedSlip.style.maxWidth = `${fixedRenderWidth}px`;
+                    clonedSlip.style.margin = '0';
+                    clonedSlip.style.boxSizing = 'border-box';
+                    clonedSlip.style.transform = 'none';
+                    clonedSlip.style.webkitTextSizeAdjust = '100%';
+                    clonedSlip.style.textSizeAdjust = '100%';
 
-                    const targetHeight = targetRenderImage.offsetHeight || 700;
-                    const scaleFactor = 2;
+                    sandboxWrapper.appendChild(clonedSlip);
+                    document.body.appendChild(sandboxWrapper);
 
-                    const dataUrl = await domtoimage.toJpeg(targetRenderImage, {
+                    // Tunggu 2 frame browser agar dimensi & wrapping teks selesai dikalkulasi
+                    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+                    const exactWidth = Math.ceil(clonedSlip.getBoundingClientRect().width);
+                    const exactHeight = Math.ceil(clonedSlip.getBoundingClientRect().height);
+                    const scaleFactor = 3; // Resolusi paten 1440px lebar (tajam & bebas pengaruh DPR layar)
+
+                    const dataUrl = await domtoimage.toJpeg(clonedSlip, {
                         quality: 0.98,
                         bgcolor: '#ffffff',
-                        width: targetWidth * scaleFactor,
-                        height: targetHeight * scaleFactor,
+                        width: exactWidth * scaleFactor,
+                        height: exactHeight * scaleFactor,
                         style: {
                             'transform': `scale(${scaleFactor})`,
                             'transform-origin': 'top left',
-                            'width': targetWidth + 'px',
-                            'height': targetHeight + 'px',
+                            'width': `${exactWidth}px`,
+                            'height': `${exactHeight}px`,
+                            'margin': '0',
+                            'box-sizing': 'border-box',
                             'backdrop-filter': 'none',
                             '-webkit-backdrop-filter': 'none'
                         }
                     });
-
-                    targetRenderImage.style.width = originalStyleWidth;
-                    targetRenderImage.style.minWidth = originalStyleMinWidth;
 
                     // UPLOAD BACKGROUND KE GOOGLE DRIVE
                     try {
@@ -9385,8 +9414,9 @@ document.addEventListener("DOMContentLoaded", function() {
                         alert("Gagal me-render slip gaji. Mencoba metode alternatif...");
                     }
                 } finally {
-                    targetRenderImage.style.width = originalStyleWidth;
-                    targetRenderImage.style.minWidth = originalStyleMinWidth;
+                    if (sandboxWrapper && sandboxWrapper.parentNode) {
+                        sandboxWrapper.parentNode.removeChild(sandboxWrapper);
+                    }
 
                     btnKirimWaReal.innerHTML = textAwalTombol;
                     btnKirimWaReal.disabled = false;
