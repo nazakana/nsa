@@ -3470,44 +3470,46 @@ function toggleGatePass() {
             </button>
         </div>
 
-        <!-- Daftar Menu (Tombol-tombol asli dengan ID & Fungsi yang Dipertahankan) -->
-        <div class="flex flex-col gap-3">
-            
-            <!-- 1. Pencarian -->
-            <div onclick="openNSASearch(); toggleMenuSidebar();" 
-                 class="w-full bg-gray-50/80 hover:bg-gray-100 border border-gray-200 px-4 py-3 rounded-2xl shadow-sm flex items-center gap-3 cursor-pointer transition-all group">
-                <i class="fas fa-search text-blue-600 group-hover:scale-110 transition-transform text-base flex-shrink-0"></i>
-                <span class="text-gray-800 font-medium text-sm">Cari laporan atau data</span>
-            </div>
+       <!-- Daftar Menu (Tombol-tombol asli dengan ID & Fungsi yang Dipertahankan) -->
+<div class="flex flex-col gap-3">
+    
+    <!-- 1. Pencarian -->
+    <div onclick="openNSASearch(); toggleMenuSidebar();" 
+         class="w-full bg-gray-50/80 hover:bg-gray-100 border border-gray-200 px-4 py-3 rounded-2xl shadow-sm flex items-center gap-3 cursor-pointer transition-all group">
+        <i class="fas fa-search text-blue-600 group-hover:scale-110 transition-transform text-base flex-shrink-0"></i>
+        <span class="text-gray-800 font-medium text-sm">Cari laporan atau data</span>
+    </div>
 
-            <!-- 2. Baris Notifikasi & Pengaturan Dev -->
-            <div class="grid grid-cols-2 gap-3">
-                <button id="btnNotifAksi" 
-                        class="w-full h-12 bg-white border border-gray-200 text-blue-600 rounded-2xl shadow-sm flex items-center justify-center gap-2 hover:bg-gray-50 focus:outline-none transition-all font-medium text-sm">
-                    <i class="fas fa-bell text-base"></i>
-                    <span>Notifikasi</span>
-                </button>
+    <!-- 2. Baris Notifikasi & Pengaturan Dev -->
+    <div class="grid grid-cols-2 gap-3">
+        <button id="btnNotifAksi" 
+                class="w-full h-12 bg-white border border-gray-200 text-blue-600 rounded-2xl shadow-sm flex items-center justify-center gap-2 hover:bg-gray-50 focus:outline-none transition-all font-medium text-sm">
+            <i class="fas fa-bell text-base"></i>
+            <span>Notifikasi</span>
+        </button>
 
-                <button id="openDevModal" 
-                        class="w-full h-12 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-2xl shadow-sm flex items-center justify-center gap-2 hover:bg-emerald-100 focus:outline-none transition-all font-medium text-sm">
-                    <i class="fas fa-cog text-base"></i>
-                    <span>Pengaturan</span>
-                </button>
-            </div>
-			
-			<!-- 3. Tombol Ganti PIN Privasi (Lebar 1 Baris Penuh) -->
-<button type="button" onclick="bukaModalGantiPinFotokopi(); toggleMenuSidebar();" 
-        class="w-full h-12 bg-gradient-to-r from-pink-600 to-rose-700 hover:from-pink-700 hover:to-rose-800 text-white rounded-2xl shadow-md flex items-center justify-center gap-2.5 focus:outline-none transition-all font-bold text-sm uppercase tracking-wide active:scale-[0.98]">
-    <i class="fa-solid fa-key text-pink-200"></i>
-    <span>Ganti PIN Privasi</span>
-</button>
+        <button id="openDevModal" 
+                class="w-full h-12 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-2xl shadow-sm flex items-center justify-center gap-2 hover:bg-emerald-100 focus:outline-none transition-all font-medium text-sm">
+            <i class="fas fa-cog text-base"></i>
+            <span>Pengaturan</span>
+        </button>
+    </div>
+    
+    <!-- 3. Tombol Ganti PIN Privasi (Lebar 1 Baris Penuh) -->
+    <button type="button" onclick="bukaModalGantiPinFotokopi(); toggleMenuSidebar();" 
+            class="w-full h-12 bg-gradient-to-r from-pink-600 to-rose-700 hover:from-pink-700 hover:to-rose-800 text-white rounded-2xl shadow-md flex items-center justify-center gap-2.5 focus:outline-none transition-all font-bold text-sm uppercase tracking-wide active:scale-[0.98]">
+        <i class="fa-solid fa-key text-pink-200"></i>
+        <span>Ganti PIN Privasi</span>
+    </button>
 
+    <!-- 4. Tombol Trigger Notifikasi Stok Habis Realtime (Lebar 1 Baris Penuh) -->
+    <button type="button" id="btnTriggerNotifStok" onclick="triggerNotifStokHabis();" 
+            class="w-full h-12 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-2xl shadow-md flex items-center justify-center gap-2.5 focus:outline-none transition-all font-bold text-sm uppercase tracking-wide active:scale-[0.98]">
+        <i id="iconTriggerNotifStok" class="fas fa-paper-plane text-amber-100"></i>
+        <span id="textTriggerNotifStok">Kirim Notif Stok Habis</span>
+    </button>
 
-
-
-
-
-        </div>
+</div>
     </div>
 
     <!-- Footer Sidebar (Opsional) -->
@@ -7744,6 +7746,52 @@ function formatRupiahManual(angkaStr) {
     let cleanNumber = angkaStr.toString().replace(/[^0-9]/g, '');
     if (!cleanNumber) return "Rp " + angkaStr;
     return "Rp " + parseInt(cleanNumber, 10).toLocaleString('id-ID');
+}
+
+// ====================================================================
+// HANDLER TRIGGER NOTIFIKASI STOK HABIS REALTIME (FCM)
+// ====================================================================
+async function triggerNotifStokHabis() {
+    const btn = document.getElementById("btnTriggerNotifStok");
+    const icon = document.getElementById("iconTriggerNotifStok");
+    const text = document.getElementById("textTriggerNotifStok");
+
+    // Ubah tombol ke mode loading agar tidak diklik ganda
+    if (btn) {
+        btn.disabled = true;
+        btn.classList.add("opacity-75", "cursor-not-allowed");
+    }
+    if (icon) icon.className = "fas fa-spinner fa-spin text-amber-100";
+    if (text) text.textContent = "Mengecek Stok...";
+
+    try {
+        const response = await fetch(`${API_BARANG_KOSONG}?action=kirim_notif_stok`);
+        const hasil = await response.json();
+
+        if (hasil.status === "success") {
+            alert("✅ " + hasil.message + "\n\nIsi Notifikasi:\n" + hasil.preview_pesan);
+        } else if (hasil.status === "empty") {
+            alert("ℹ️ " + hasil.message);
+        } else {
+            alert("⚠️ Gagal: " + (hasil.message || "Terjadi kesalahan pada server."));
+        }
+    } catch (error) {
+        console.error("Error trigger notif stok:", error);
+        alert("❌ Gagal terhubung ke server Apps Script. Pastikan koneksi internet aktif.");
+    } finally {
+        // Kembalikan tampilan tombol ke kondisi awal
+        if (btn) {
+            btn.disabled = false;
+            btn.classList.remove("opacity-75", "cursor-not-allowed");
+        }
+        if (icon) icon.className = "fas fa-paper-plane text-amber-100";
+        if (text) text.textContent = "Kirim Notif Stok Habis";
+        
+        // Tutup sidebar menu setelah selesai
+        if (typeof toggleMenuSidebar === "function") {
+            toggleMenuSidebar();
+        }
+    }
 }
 </script>
 
