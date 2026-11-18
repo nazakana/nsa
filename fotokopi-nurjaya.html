@@ -673,6 +673,21 @@ html.dark-mode-active #greeting-icon-container {
     background: linear-gradient(to bottom, rgba(52, 211, 153, 0.45), rgba(16, 185, 129, 0.38), rgba(13, 148, 136, 0.50)) !important;
     box-shadow: 0 10px 25px rgba(16, 185, 129, 0.28) !important;
 }
+
+/* Hilangkan tampilan scrollbar tapi tetap bisa digeser (swipe) */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Paksa Chart.js tidak pernah melebihi lebar modal */
+#modal-harian canvas,
+#modal-bulanan canvas {
+    max-width: 100% !important;
+}
 </style>
 
     <!-- SCRIPT TEMA & LOCKOUT AUTO DARK (LANGSUNG EKSEKUSI DI HEAD) -->
@@ -1410,114 +1425,11 @@ html.dark-mode-active #greeting-icon-container {
 </div>
 
 
-<!-- MODAL 2: PROGRES HARIAN (CLEAN FULL-WIDTH BAR HARIAN & CACHED) -->
-<div id="modal-harian" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[99999] hidden items-center justify-center p-3 sm:p-4 transition-opacity duration-200">
-    <div class="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[24px] bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-950 p-5 text-white shadow-2xl border border-emerald-500/30 relative my-auto">
-        
-        <!-- Glow Effect Background -->
-        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-teal-500/20 blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none"></div>
 
-        <!-- STICKY HEADER MODAL 2 -->
-        <div class="relative z-10 pb-4 border-b border-emerald-500/20 flex justify-between items-center mb-4">
-            <div class="flex flex-col justify-center min-w-0 pr-2">
-                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-teal-300">IKHTISAR HARIAN</span>
-                <h4 id="modal-harian-title" class="text-base sm:text-lg font-extrabold text-white leading-tight mt-0.5">Statistik Harian</h4>
-            </div>
-            <button onclick="tutupModal('modal-harian')" class="w-8 h-8 rounded-full bg-white/10 text-teal-200 hover:bg-emerald-500/30 hover:text-white flex items-center justify-center transition-colors border border-white/10 focus:outline-none shrink-0">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
-        </div>
 
-        <div class="p-0 sm:p-1 relative z-10">
-            <div class="n-box-grafik bg-slate-900/80 border border-emerald-500/30 rounded-[20px] overflow-hidden shadow-inner relative flex flex-col justify-between backdrop-blur-sm">
-                
-                <!-- Overlay Loading Material Style -->
-                <div id="loading-layer-harian" class="absolute inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex flex-col justify-center items-center transition-opacity duration-300">
-                    <div class="relative w-9 h-9 flex items-center justify-center">
-                        <div class="absolute inset-0 rounded-full border-2 border-teal-500/20 border-t-teal-400 animate-spin"></div>
-                        <div class="w-5 h-5 rounded-full border-2 border-emerald-500/20 border-b-emerald-300 animate-spin [animation-direction:reverse]"></div>
-                    </div>
-                    <span class="text-xs font-bold text-teal-100 tracking-wide mt-3">Memuat Data Keuangan...</span>
-                </div>
 
-                <!-- KONTEN GRAFIK (FULL-WIDTH 100%) -->
-                <div class="n-container-harian w-full h-[450px] md:h-[500px] overflow-y-auto p-3 md:p-4 bg-transparent custom-scrollbar">
-                    <div class="w-full h-[750px] relative">
-                        <canvas id="statistik_bulan_ini"></canvas>
-                    </div>
-                </div>
 
-            </div>
-        </div>
 
-        <!-- FOOTER INFO -->
-        <div class="relative z-10 pt-3 border-t border-emerald-500/20 mt-3 flex items-center justify-between text-[11px] text-teal-200/70">
-            <span class="flex items-center gap-1.5 font-medium">
-                <i class="fa-solid fa-chart-bar text-teal-400"></i>
-                Nominal harian tertera langsung di dalam batang (Tunai + QRIS)
-            </span>
-        </div>
-
-    </div>
-</div>
-
-<!-- MODAL 3: PROGRES BULANAN / TAHUNAN (PERMANENT HEADER STRUCTURE) -->
-<div id="modal-bulanan" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[99999] hidden items-center justify-center p-3 sm:p-4 transition-opacity duration-200">
-    <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[24px] bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-950 p-5 text-white shadow-2xl border border-emerald-500/30 relative my-auto">
-        
-        <!-- Glow Effect Background -->
-        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-teal-500/15 blur-3xl pointer-events-none"></div>
-
-        <!-- STICKY HEADER MODAL 3 (FIXED TAG STRUCTURE) -->
-        <div class="relative z-10 pb-4 border-b border-emerald-500/20 flex justify-between items-center mb-4">
-            <div class="flex flex-col justify-center min-w-0 pr-2">
-                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">IKHTISAR BULANAN</span>
-                <h4 class="text-base sm:text-lg font-extrabold text-white leading-tight mt-0.5">
-                    Progres Pendapatan <span id="modal-card-a-year-text">2026</span>
-                </h4>
-            </div>
-            <button type="button" onclick="tutupModal('modal-bulanan')" class="w-8 h-8 rounded-full bg-white/10 text-emerald-200 hover:bg-emerald-500/30 hover:text-white flex items-center justify-center transition-colors border border-white/10 focus:outline-none shrink-0">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
-        </div>
-
-        <!-- CONTAINER CANVAS DENGAN LOADER MATERIAL STYLED -->
-        <div class="relative z-10 w-full h-64 sm:h-72 my-2">
-            
-            <!-- Overlay Loading Material Style -->
-            <div id="loader-modal-card-a" class="absolute inset-0 z-20 bg-slate-900/90 backdrop-blur-md rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-300">
-                <div class="relative w-9 h-9 flex items-center justify-center">
-                    <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20 border-t-emerald-400 animate-spin"></div>
-                    <div class="w-5 h-5 rounded-full border-2 border-teal-500/20 border-b-teal-300 animate-spin [animation-direction:reverse]"></div>
-                </div>
-                
-                <div class="text-center">
-                    <span id="loader-text-modal-card-a" class="text-xs font-bold text-emerald-100 tracking-wide block">Mengambil data...</span>
-                    <div class="flex items-center justify-center gap-1 mt-1.5">
-                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-duration:0.6s]"></span>
-                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.15s]"></span>
-                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.3s]"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Canvas Utama -->
-            <canvas id="chartProgresTahunModal"></canvas>
-        </div>
-
-        <!-- FOOTER INFO -->
-        <div class="relative z-10 pt-3 border-t border-white/10 mt-3 flex items-center justify-between text-[11px] text-emerald-200/70">
-            <span class="flex items-center gap-1.5 font-medium">
-                <i class="fa-solid fa-hand-pointer text-emerald-400"></i>
-                Hover / sentuh batang untuk detail akumulasi
-            </span>
-            
-        </div>
-
-    </div>
-</div>
 
 
 		
@@ -14792,20 +14704,16 @@ function bukaModal(idModal) {
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
 
-    const innerContent = modal.querySelector('div');
-    if (innerContent) innerContent.scrollTop = 0;
+    const scrollContainer = modal.querySelector('.n-container-harian');
+    if (scrollContainer) scrollContainer.scrollTop = 0;
 
     setTimeout(() => {
         if (idModal === 'modal-harian') {
-            // Panggil muatStatistikBulanIni (Akan cek cache internal dulu)
             muatStatistikBulanIni();
         }
-
         if (idModal === 'modal-bulanan') {
             bukaModalBulananGrafik();
         }
-
-        window.dispatchEvent(new Event('resize'));
     }, 60);
 }
 
@@ -15315,6 +15223,12 @@ function buatGrafikHarian(labels, dataValues) {
     });
 }
 
+const wrapperHarian = document.getElementById('wrapper-canvas-harian');
+if (wrapperHarian) {
+    // Tinggi pas sesuai jumlah tanggal (minimal 320px, atau 36px per tanggal)
+    wrapperHarian.style.height = Math.max(320, labels.length * 36) + 'px';
+}
+
 function renderChartCardA(labels, dataValues, targetCanvasId = "chartProgresTahun") {
     const canvas = document.getElementById(targetCanvasId);
     if (!canvas) return;
@@ -15815,5 +15729,105 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+
+<!-- MODAL 2: PROGRES HARIAN -->
+<div id="modal-harian" class="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-[99999] hidden items-center justify-center p-3 sm:p-4 overflow-hidden">
+    <div class="w-full max-w-4xl max-h-[88vh] flex flex-col rounded-[24px] bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-950 p-4 sm:p-5 text-white shadow-2xl border border-emerald-500/30 relative overflow-hidden">
+        
+        <!-- Glow Effect Background -->
+        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-teal-500/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none"></div>
+
+        <!-- HEADER MODAL 2 -->
+        <div class="relative z-10 pb-3 border-b border-emerald-500/20 flex justify-between items-center mb-3 shrink-0 min-w-0">
+            <div class="flex flex-col justify-center min-w-0 pr-2">
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-teal-300">IKHTISAR HARIAN</span>
+                <h4 id="modal-harian-title" class="text-base sm:text-lg font-extrabold text-white leading-tight mt-0.5 truncate">Statistik Harian</h4>
+            </div>
+            <button onclick="tutupModal('modal-harian')" class="w-8 h-8 rounded-full bg-white/10 text-teal-200 hover:bg-emerald-500/30 hover:text-white flex items-center justify-center transition-colors border border-white/10 focus:outline-none shrink-0">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+
+        <!-- BODY GRAFIK -->
+        <div class="relative z-10 flex-1 min-h-0 min-w-0 w-full">
+            <div class="n-box-grafik bg-slate-900/80 border border-emerald-500/30 rounded-[20px] overflow-hidden shadow-inner relative w-full h-full">
+                
+                <!-- Overlay Loading -->
+                <div id="loading-layer-harian" class="absolute inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex flex-col justify-center items-center transition-opacity duration-300">
+                    <div class="relative w-9 h-9 flex items-center justify-center">
+                        <div class="absolute inset-0 rounded-full border-2 border-teal-500/20 border-t-teal-400 animate-spin"></div>
+                        <div class="w-5 h-5 rounded-full border-2 border-emerald-500/20 border-b-emerald-300 animate-spin [animation-direction:reverse]"></div>
+                    </div>
+                    <span class="text-xs font-bold text-teal-100 tracking-wide mt-3">Memuat Data Keuangan...</span>
+                </div>
+
+                <!-- KONTEN GRAFIK (Tanpa scrollbar visual, tetap bisa di-swipe) -->
+                <div class="n-container-harian w-full h-[55vh] sm:h-[480px] overflow-y-auto overflow-x-hidden p-3 bg-transparent no-scrollbar">
+                    <div id="wrapper-canvas-harian" class="w-full relative" style="height: 350px;">
+                        <canvas id="statistik_bulan_ini"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER INFO -->
+        <div class="relative z-10 pt-3 border-t border-emerald-500/20 mt-3 flex items-center justify-between text-[11px] text-teal-200/70 shrink-0 min-w-0">
+            <span class="flex items-center gap-1.5 font-medium truncate">
+                <i class="fa-solid fa-chart-bar text-teal-400 shrink-0"></i>
+                <span class="truncate">Nominal harian tertera di batang (Tunai + QRIS)</span>
+            </span>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL 3: PROGRES BULANAN -->
+<div id="modal-bulanan" class="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-[99999] hidden items-center justify-center p-3 sm:p-4 overflow-hidden">
+    <div class="w-full max-w-2xl max-h-[88vh] flex flex-col rounded-[24px] bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-950 p-4 sm:p-5 text-white shadow-2xl border border-emerald-500/30 relative overflow-hidden">
+        
+        <!-- Glow Effect Background -->
+        <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-teal-500/15 blur-3xl pointer-events-none"></div>
+
+        <!-- HEADER MODAL 3 -->
+        <div class="relative z-10 pb-3 border-b border-emerald-500/20 flex justify-between items-center mb-3 shrink-0 min-w-0">
+            <div class="flex flex-col justify-center min-w-0 pr-2">
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">IKHTISAR BULANAN</span>
+                <h4 class="text-base sm:text-lg font-extrabold text-white leading-tight mt-0.5 truncate">
+                    Progres Pendapatan <span id="modal-card-a-year-text">2026</span>
+                </h4>
+            </div>
+            <button type="button" onclick="tutupModal('modal-bulanan')" class="w-8 h-8 rounded-full bg-white/10 text-emerald-200 hover:bg-emerald-500/30 hover:text-white flex items-center justify-center transition-colors border border-white/10 focus:outline-none shrink-0">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+
+        <!-- CONTAINER CANVAS -->
+        <div class="relative z-10 w-full min-w-0 h-64 sm:h-72 my-1 overflow-hidden">
+            <div id="loader-modal-card-a" class="absolute inset-0 z-20 bg-slate-900/90 backdrop-blur-md rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-300">
+                <div class="relative w-9 h-9 flex items-center justify-center">
+                    <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20 border-t-emerald-400 animate-spin"></div>
+                    <div class="w-5 h-5 rounded-full border-2 border-teal-500/20 border-b-teal-300 animate-spin [animation-direction:reverse]"></div>
+                </div>
+                <div class="text-center">
+                    <span id="loader-text-modal-card-a" class="text-xs font-bold text-emerald-100 tracking-wide block">Mengambil data...</span>
+                </div>
+            </div>
+
+            <canvas id="chartProgresTahunModal"></canvas>
+        </div>
+
+        <!-- FOOTER INFO -->
+        <div class="relative z-10 pt-3 border-t border-white/10 mt-3 flex items-center justify-between text-[11px] text-emerald-200/70 shrink-0 min-w-0">
+            <span class="flex items-center gap-1.5 font-medium truncate">
+                <i class="fa-solid fa-hand-pointer text-emerald-400 shrink-0"></i>
+                <span class="truncate">Hover / sentuh batang untuk detail akumulasi</span>
+            </span>
+        </div>
+
+    </div>
+</div>
 </body>
 </html>
